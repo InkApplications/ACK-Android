@@ -8,7 +8,7 @@ plugins {
 android {
     compileSdkVersion(29)
     defaultConfig {
-        minSdkVersion(21)
+        minSdkVersion(19)
         targetSdkVersion(29)
         versionCode = if(project.hasProperty("versionCode")) project.property("versionCode").toString().toInt() else 1
         versionName = if(project.hasProperty("versionName")) project.property("versionName").toString() else "SNAPSHOT"
