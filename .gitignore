@@ -1,0 +1,4 @@
+# Gradle Files.
+.gradle/
+build/
+local.propertie
