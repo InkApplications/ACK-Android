@@ -17,7 +17,7 @@ internal class AudioDataProcessor {
     private var fbuf_cnt = 0
 
     val data = callbackFlow {
-        Multimon.onReceive = { offer(it) }
+        multimon.onReceive = { offer(it) }
 
         audioIn.capture()
 
@@ -33,7 +33,7 @@ internal class AudioDataProcessor {
         }
 
         if (fbuf_cnt > overlap) {
-            Multimon.process(fbuf, fbuf_cnt - overlap)
+            multimon.process(fbuf, fbuf_cnt - overlap)
             System.arraycopy(fbuf, fbuf_cnt - overlap, fbuf, 0, overlap)
             fbuf_cnt = overlap
         }
