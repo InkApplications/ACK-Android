@@ -36,9 +36,15 @@ android {
 
 dependencies {
     implementation(project(":aprs-android"))
+
     implementation(kotlin("stdlib"))
     implementation(Coroutines.android)
-    implementation("androidx.recyclerview:recyclerview:1.1.0")
+
+    implementation(AndroidX.AppCompat.core)
+    implementation(AndroidX.RecyclerView.core)
+
+    implementation(Google.Material.core)
+
     implementation(Groupie.core)
     implementation(Groupie.extensions)
 }
