@@ -7,6 +7,7 @@ plugins {
 
 android {
     compileSdkVersion(29)
+    ndkVersion = "21.3.6528147"
     defaultConfig {
         minSdkVersion(19)
         targetSdkVersion(29)
@@ -34,5 +35,10 @@ android {
 }
 
 dependencies {
+    implementation(project(":aprs-android"))
     implementation(kotlin("stdlib"))
+    implementation(Coroutines.android)
+    implementation("androidx.recyclerview:recyclerview:1.1.0")
+    implementation(Groupie.core)
+    implementation(Groupie.extensions)
 }
