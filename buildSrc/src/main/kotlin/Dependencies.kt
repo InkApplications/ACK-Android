@@ -40,3 +40,11 @@ object Groupie {
     const val core = "$group:groupie:$version"
     const val extensions = "$group:groupie-kotlin-android-extensions:$version"
 }
+
+object Dagger {
+    const val group = "com.google.dagger"
+    const val version = "2.28.1"
+
+    const val runtime = "$group:dagger:$version"
+    const val compiler = "$group:dagger-compiler:$version"
+}

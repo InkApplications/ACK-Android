@@ -1,6 +1,7 @@
 plugins {
     id("com.android.library")
     kotlin("android")
+    kotlin("kapt")
 }
 
 android {
@@ -30,4 +31,7 @@ dependencies {
     api(Coroutines.core)
 
     implementation("com.github.ab0oo:javAPRSlib:859c87ffa5")
+
+    implementation(Dagger.runtime)
+    kapt(Dagger.compiler)
 }

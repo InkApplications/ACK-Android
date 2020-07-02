@@ -47,4 +47,7 @@ dependencies {
 
     implementation(Groupie.core)
     implementation(Groupie.extensions)
+
+    implementation(Dagger.runtime)
+    kapt(Dagger.compiler)
 }

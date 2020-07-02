@@ -4,7 +4,8 @@ import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import com.inkapplications.aprs.android.R
-import com.inkapplications.aprs.data.AndroidAprsModule
+import com.inkapplications.aprs.android.component
+import com.inkapplications.aprs.data.AprsAccess
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.GroupieViewHolder
 import kotlinx.android.synthetic.main.log.*
@@ -15,7 +16,7 @@ import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 class LogActivity: AppCompatActivity() {
-    private val aprs = AndroidAprsModule.aprsAccess
+    private lateinit var aprs: AprsAccess
     private lateinit var foreground: CoroutineScope
     private val adapter = GroupAdapter<GroupieViewHolder>()
 
@@ -23,6 +24,7 @@ class LogActivity: AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.log)
 
+        aprs = component.aprs()
         log_list.adapter = adapter
     }
 

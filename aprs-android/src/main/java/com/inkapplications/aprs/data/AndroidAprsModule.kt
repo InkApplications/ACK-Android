@@ -1,5 +1,12 @@
 package com.inkapplications.aprs.data
 
+import dagger.Module
+import dagger.Provides
+import javax.inject.Singleton
+
+@Module
 object AndroidAprsModule {
-    val aprsAccess: AprsAccess by lazy { AndroidAprs(AudioDataProcessor()) }
+    @Provides
+    @Singleton
+    fun aprsAccess(): AprsAccess = AndroidAprs(AudioDataProcessor())
 }
