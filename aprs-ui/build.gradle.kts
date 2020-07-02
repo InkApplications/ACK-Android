@@ -35,6 +35,8 @@ android {
 }
 
 dependencies {
+    implementation(project(":kotlin-extensions"))
+    implementation(project(":android-extensions"))
     implementation(project(":aprs-android"))
 
     implementation(kotlin("stdlib"))

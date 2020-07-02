@@ -2,6 +2,7 @@ package com.inkapplications.aprs.android
 
 import android.app.Activity
 import android.app.Application
+import com.inkapplications.android.extensions.LifecycleLogger
 import kimchi.Kimchi
 import kimchi.logger.defaultWriter
 
@@ -14,6 +15,9 @@ class AprsApplication: Application() {
         super.onCreate()
 
         Kimchi.addLog(defaultWriter)
+        registerActivityLifecycleCallbacks(LifecycleLogger {
+            Kimchi.trace(it)
+        })
     }
 }
 

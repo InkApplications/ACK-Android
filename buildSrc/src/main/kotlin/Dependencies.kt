@@ -1,5 +1,12 @@
 
 object AndroidX {
+    object Ktx {
+        const val version = "1.3.0"
+        const val group = "androidx.core"
+
+        const val core = "$group:core-ktx:$version"
+    }
+
     object AppCompat {
         const val version = "1.1.0"
         const val group = "androidx.appcompat"

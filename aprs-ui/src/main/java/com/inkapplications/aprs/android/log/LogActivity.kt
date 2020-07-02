@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.inkapplications.aprs.android.R
 import com.inkapplications.aprs.android.component
 import com.inkapplications.aprs.data.AprsAccess
+import com.inkapplications.kotlin.collectOn
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.GroupieViewHolder
 import kimchi.Kimchi
@@ -12,8 +13,6 @@ import kotlinx.android.synthetic.main.log.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.cancel
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.launch
 
 class LogActivity: AppCompatActivity() {
     private lateinit var aprs: AprsAccess
@@ -32,11 +31,9 @@ class LogActivity: AppCompatActivity() {
         super.onStart()
         foreground = MainScope()
 
-        foreground.launch {
-            aprs.data.collect {
-                adapter.add(LogItem(it))
-                Kimchi.info("Received APRS Packet: $it")
-            }
+        aprs.data.collectOn(foreground) {
+            adapter.add(LogItem(it))
+            Kimchi.info("Received APRS Packet: $it")
         }
     }
 
