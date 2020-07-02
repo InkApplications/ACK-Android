@@ -29,6 +29,12 @@ object Google {
 
         const val core = "$group:material:$version"
     }
+    object Maps {
+        const val version = "3.1.0-beta"
+        const val group = "com.google.android.libraries.maps"
+
+        const val core = "$group:maps:$version"
+    }
 }
 
 object Coroutines {

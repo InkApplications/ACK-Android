@@ -20,5 +20,5 @@ android {
 dependencies {
     implementation(kotlin("stdlib"))
 
-    api(AndroidX.Ktx.core)
+//    api(AndroidX.Ktx.core)
 }

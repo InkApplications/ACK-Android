@@ -11,6 +11,8 @@ android {
     defaultConfig {
         minSdkVersion(19)
         targetSdkVersion(29)
+        multiDexEnabled = true
+        resValue("string", "maps_api_key", if (project.hasProperty("mapsKey")) project.property("mapsKey").toString() else "")
         versionCode = if(project.hasProperty("versionCode")) project.property("versionCode").toString().toInt() else 1
         versionName = if(project.hasProperty("versionName")) project.property("versionName").toString() else "SNAPSHOT"
     }
@@ -46,6 +48,7 @@ dependencies {
     implementation(AndroidX.RecyclerView.core)
 
     implementation(Google.Material.core)
+    implementation(Google.Maps.core)
 
     implementation(Groupie.core)
     implementation(Groupie.extensions)
