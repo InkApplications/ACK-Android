@@ -48,3 +48,12 @@ object Dagger {
     const val runtime = "$group:dagger:$version"
     const val compiler = "$group:dagger-compiler:$version"
 }
+
+object Kimchi {
+    const val group = "com.github.inkapplications.kimchi"
+    const val version = "1.0.2"
+
+    const val static = "$group:kimchi:$version"
+    const val android = "$group:logger-android:$version"
+    const val logger = "$group:logger:$version"
+}

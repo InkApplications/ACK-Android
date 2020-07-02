@@ -1,13 +1,13 @@
 package com.inkapplications.aprs.android.log
 
 import android.os.Bundle
-import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import com.inkapplications.aprs.android.R
 import com.inkapplications.aprs.android.component
 import com.inkapplications.aprs.data.AprsAccess
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.GroupieViewHolder
+import kimchi.Kimchi
 import kotlinx.android.synthetic.main.log.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.MainScope
@@ -35,7 +35,7 @@ class LogActivity: AppCompatActivity() {
         foreground.launch {
             aprs.data.collect {
                 adapter.add(LogItem(it))
-                Log.i("APRS", "Packet from ${it.source} sent to ${it.destination}")
+                Kimchi.info("Received APRS Packet: $it")
             }
         }
     }

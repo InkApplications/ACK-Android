@@ -50,4 +50,6 @@ dependencies {
 
     implementation(Dagger.runtime)
     kapt(Dagger.compiler)
+
+    implementation(Kimchi.static)
 }
