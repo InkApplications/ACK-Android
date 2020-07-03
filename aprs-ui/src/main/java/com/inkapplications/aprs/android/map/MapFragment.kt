@@ -52,7 +52,6 @@ class MapFragment: Fragment() {
         foreground = MainScope()
 
         aprs.data.collectOn(foreground) { packet ->
-            Kimchi.info("Packet: $packet")
             when (packet) {
                 is AprsPacket.Location -> {
                     mapFragment.getMapAsync { map ->

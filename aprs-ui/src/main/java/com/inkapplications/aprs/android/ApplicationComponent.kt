@@ -8,7 +8,8 @@ import javax.inject.Singleton
 @Singleton
 @Component(
     modules = [
-        AndroidAprsModule::class
+        AndroidAprsModule::class,
+        ExternalModule::class
     ]
 )
 interface ApplicationComponent {

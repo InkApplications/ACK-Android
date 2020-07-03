@@ -5,14 +5,15 @@ import kotlinx.coroutines.flow.callbackFlow
 
 private const val overlap = 18
 
-internal class AudioDataProcessor {
+internal class AudioDataProcessor(
+    private val audioIn: AudioDataCapture
+) {
     private val multimon by lazy {
         Multimon.apply {
             init()
         }
     }
 
-    private val audioIn = AudioDataCapture()
     private val fbuf = FloatArray(16384)
     private var fbuf_cnt = 0
 

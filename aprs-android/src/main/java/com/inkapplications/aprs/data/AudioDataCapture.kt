@@ -4,6 +4,7 @@ import android.media.AudioFormat
 import android.media.AudioRecord
 import android.media.MediaRecorder
 import android.os.Process
+import kimchi.logger.KimchiLogger
 import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.BroadcastChannel
 import kotlinx.coroutines.channels.ReceiveChannel
@@ -18,7 +19,9 @@ private const val PROCESS_BUFFER_SIZE = 8192
  *
  * Data from this capture can be processed by consuming the [audioData] channel.
  */
-internal class AudioDataCapture {
+internal class AudioDataCapture(
+    private val logger: KimchiLogger
+) {
     private val recorder: AudioRecord = AudioRecord(
         MediaRecorder.AudioSource.DEFAULT,
         SAMPLE_RATE,
@@ -44,6 +47,7 @@ internal class AudioDataCapture {
      * This will suspend until [cancel] is called.
      */
     fun capture() {
+        logger.debug("Audio capture started")
         captureScope.launch {
             Process.setThreadPriority(Process.THREAD_PRIORITY_URGENT_AUDIO)
             recorder.startRecording()
@@ -62,6 +66,7 @@ internal class AudioDataCapture {
      * Stop capturing audio data.
      */
     fun cancel() {
+        logger.debug("Audio capture stopped")
         recorder.stop()
     }
 }

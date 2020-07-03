@@ -32,6 +32,8 @@ dependencies {
 
     implementation("com.github.ab0oo:javAPRSlib:859c87ffa5")
 
+    implementation(Kimchi.logger)
+
     implementation(Dagger.runtime)
     kapt(Dagger.compiler)
 }

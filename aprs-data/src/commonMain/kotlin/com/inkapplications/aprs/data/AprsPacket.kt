@@ -5,14 +5,14 @@ sealed class AprsPacket {
     abstract val destination: Callsign?
     abstract val comment: String?
 
-    class Location(
+    data class Location(
         override val source: Callsign?,
         override val destination: Callsign?,
         override val comment: String?,
         val position: Position
     ): AprsPacket()
 
-    class Unknown(
+    data class Unknown(
         override val source: Callsign?,
         override val destination: Callsign?,
         override val comment: String?
