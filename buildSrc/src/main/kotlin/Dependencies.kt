@@ -20,6 +20,12 @@ object AndroidX {
 
         const val core = "$group:recyclerview:$version"
     }
+    object ConstraintLayout {
+        const val version = "1.1.3"
+        const val group = "androidx.constraintlayout"
+
+        const val core = "$group:constraintlayout:$version"
+    }
 }
 
 object Google {

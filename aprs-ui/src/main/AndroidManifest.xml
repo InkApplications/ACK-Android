@@ -6,7 +6,7 @@
         android:icon="@mipmap/ic_launcher"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:label="@string/app_name"
-        android:theme="@style/Theme.MaterialComponents.DayNight"
+        android:theme="@style/Theme.MaterialComponents.DayNight.NoActionBar"
         android:name=".AprsApplication">
 
         <meta-data
@@ -14,13 +14,13 @@
             android:value="@string/maps_api_key" />
 
         <activity
-            android:name=".DashboardActivity"
+            android:name=".CaptureActivity"
             android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name=".log.LogActivity" />
+        <activity android:name=".log.LogFragment" />
     </application>
 </manifest>

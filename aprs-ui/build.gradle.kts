@@ -45,6 +45,7 @@ dependencies {
     implementation(Coroutines.android)
 
     implementation(AndroidX.AppCompat.core)
+    implementation(AndroidX.ConstraintLayout.core)
     implementation(AndroidX.RecyclerView.core)
 
     implementation(Google.Material.core)

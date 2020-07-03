@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/menu_capture_map"
+        android:enabled="true"
+        android:icon="@drawable/ic_map"
+        android:title="@string/menu_capture_map"/>
+    <item
+        android:id="@+id/menu_capture_log"
+        android:enabled="true"
+        android:icon="@drawable/ic_log"
+        android:title="@string/menu_capture_log"/>
+</menu>
