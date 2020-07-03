@@ -16,6 +16,7 @@ import kotlinx.android.synthetic.main.log.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.cancel
+import kotlinx.coroutines.flow.map
 
 class LogFragment: Fragment() {
     private lateinit var aprs: AprsAccess
@@ -38,9 +39,13 @@ class LogFragment: Fragment() {
         foreground = MainScope()
 
         aprs.data.collectOn(foreground) {
-            adapter.add(LogItem(it))
-            Kimchi.info("Received APRS Packet: $it")
+            Kimchi.debug("New APRS Data received.")
         }
+        aprs.findRecent(50)
+            .map { it.map { LogItem(it) } }
+            .collectOn(foreground) {
+                adapter.update(it)
+            }
     }
 
     override fun onStop() {

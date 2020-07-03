@@ -3,13 +3,16 @@ package com.inkapplications.aprs.android
 import android.app.Activity
 import android.app.Application
 import androidx.fragment.app.Fragment
+import com.inkapplications.android.extensions.ApplicationModule
 import com.inkapplications.android.extensions.LifecycleLogger
 import kimchi.Kimchi
 import kimchi.logger.defaultWriter
 
 class AprsApplication: Application() {
     val component by lazy {
-        DaggerApplicationComponent.builder().build()
+        DaggerApplicationComponent.builder()
+            .applicationModule(ApplicationModule(this))
+            .build()
     }
 
     override fun onCreate() {

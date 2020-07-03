@@ -14,8 +14,6 @@ import com.inkapplications.aprs.android.component
 import com.inkapplications.aprs.data.AprsAccess
 import com.inkapplications.aprs.data.AprsPacket
 import com.inkapplications.kotlin.collectOn
-import kimchi.Kimchi
-import kotlinx.android.synthetic.main.map.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.cancel

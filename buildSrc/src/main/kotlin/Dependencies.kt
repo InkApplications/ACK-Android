@@ -76,3 +76,26 @@ object Kimchi {
     const val android = "$group:logger-android:$version"
     const val logger = "$group:logger:$version"
 }
+
+object ThreeTenBp {
+    const val group = "org.threeten"
+    const val version = "1.4.2"
+
+    const val noTzDb = "$group:threetenbp:$version:no-tzdb"
+
+    object Android {
+        const val group = "com.jakewharton.threetenabp"
+        const val version = "1.2.3"
+
+        const val runtime = "$group:threetenabp:$version"
+    }
+}
+
+object Room {
+    const val group = "androidx.room"
+    const val version = "2.2.5"
+
+    const val runtime = "$group:room-runtime:$version"
+    const val compiler = "$group:room-compiler:$version"
+    const val ktx = "$group:room-ktx:$version"
+}

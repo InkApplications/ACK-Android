@@ -36,4 +36,10 @@ dependencies {
 
     implementation(Dagger.runtime)
     kapt(Dagger.compiler)
+
+    implementation(ThreeTenBp.noTzDb)
+
+    implementation(Room.runtime)
+    implementation(Room.ktx)
+    kapt(Room.compiler)
 }
