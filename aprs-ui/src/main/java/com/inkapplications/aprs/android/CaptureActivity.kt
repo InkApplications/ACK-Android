@@ -16,6 +16,9 @@ class CaptureActivity: AppCompatActivity() {
         setContentView(R.layout.capture)
 
         capture_navigation.setOnNavigationItemSelectedListener(::onNavigationClick)
+        supportFragmentManager.beginTransaction()
+            .replace(R.id.capture_stage, mapFragment)
+            .commit()
     }
 
     private fun onNavigationClick(item: MenuItem): Boolean {

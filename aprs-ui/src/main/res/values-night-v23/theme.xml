@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="AprsTheme.Compat.DayNight">
+        <item name="colorSurface">@color/dark_stroke</item>
+        <item name="colorOnSurface">@color/light_stroke</item>
+        <item name="colorOnBackground">@color/light_stroke</item>
+        <item name="android:colorBackground">@color/dark_stroke</item>
+    </style>
+    <style name="AprsTheme.Compat">
+        <item name="android:statusBarColor">@color/dark_stroke</item>
+        <item name="android:windowLightStatusBar">false</item>
+    </style>
+</resources>

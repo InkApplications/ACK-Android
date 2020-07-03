@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="AprsTheme" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <item name="colorPrimary">@color/brand</item>
+        <item name="colorPrimaryDark">@color/brand_dark</item>
+        <item name="colorPrimaryVariant">@color/brand_light</item>
+        <item name="colorOnPrimary">@color/dark_stroke</item>
+        <item name="colorSecondary">@color/dark_stroke</item>
+        <item name="colorSecondaryVariant">@color/dark_stroke</item>
+        <item name="colorOnSecondary">@color/light_stroke</item>
+        <item name="colorError">@color/error</item>
+        <item name="colorOnError">@color/light_stroke</item>
+        <item name="colorSurface">@color/dark_stroke</item>
+        <item name="colorOnSurface">@color/light_stroke</item>
+        <item name="colorOnBackground">@color/light_stroke</item>
+        <item name="android:colorBackground">@color/dark_stroke</item>
+    </style>
+    <style name="AprsTheme.Compat">
+    </style>
+    <style name="AprsTheme.Compat.DayNight">
+        <item name="colorSurface">@color/light_stroke</item>
+        <item name="colorOnSurface">@color/dark_stroke</item>
+        <item name="colorOnBackground">@color/dark_stroke</item>
+        <item name="android:colorBackground">@color/light_stroke</item>
+    </style>
+</resources>
