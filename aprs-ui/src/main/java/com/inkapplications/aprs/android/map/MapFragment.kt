@@ -9,11 +9,13 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.google.android.libraries.maps.GoogleMap
 import com.google.android.libraries.maps.SupportMapFragment
+import com.google.android.libraries.maps.model.BitmapDescriptorFactory
 import com.google.android.libraries.maps.model.LatLng
 import com.google.android.libraries.maps.model.MapStyleOptions
 import com.google.android.libraries.maps.model.MarkerOptions
 import com.inkapplications.aprs.android.R
 import com.inkapplications.aprs.android.component
+import com.inkapplications.aprs.android.symbol.SymbolFactory
 import com.inkapplications.aprs.data.AprsAccess
 import com.inkapplications.aprs.data.AprsPacket
 import com.inkapplications.kotlin.collectOn
@@ -24,6 +26,7 @@ import kotlinx.coroutines.cancel
 
 class MapFragment: Fragment() {
     private lateinit var aprs: AprsAccess
+    private lateinit var symbolFactory: SymbolFactory
     private lateinit var foreground: CoroutineScope
     private lateinit var mapFragment: SupportMapFragment
 
@@ -34,6 +37,7 @@ class MapFragment: Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         aprs = component.aprs()
+        symbolFactory = component.symbolFactory()
         mapFragment = childFragmentManager.findFragmentById(R.id.map_fragment) as SupportMapFragment
 
         mapFragment.getMapAsync { map ->
@@ -64,6 +68,7 @@ class MapFragment: Fragment() {
                                 map.addMarker(MarkerOptions().apply {
                                     position(LatLng(packet.position.latitude, packet.position.longitude))
                                     title(packet.comment)
+                                    icon(BitmapDescriptorFactory.fromBitmap(symbolFactory.createSymbol(packet.symbol)))
                                 })
                             }
                         }

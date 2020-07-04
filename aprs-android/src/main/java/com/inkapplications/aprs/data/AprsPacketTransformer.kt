@@ -16,7 +16,8 @@ internal object AprsPacketTransformer {
                 destination = destination,
                 comment = comment,
                 timestamp = entity.timestamp,
-                position = Position(info.position.latitude, info.position.longitude)
+                position = Position(info.position.latitude, info.position.longitude),
+                symbol = info.position.symbolTable to info.position.symbolCode
             )
             else -> AprsPacket.Unknown(
                 source = parsed.sourceCall?.let(::Callsign),

@@ -52,6 +52,13 @@ object Coroutines {
     const val android = "$group:kotlinx-coroutines-android:$version"
 }
 
+object JUnit {
+    const val group = "junit"
+    const val version = "4.12"
+
+    const val core = "$group:junit:$version"
+}
+
 object Groupie {
     const val version = "2.8.0"
     const val group = "com.xwray"

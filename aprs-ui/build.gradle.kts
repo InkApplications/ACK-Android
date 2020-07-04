@@ -58,4 +58,6 @@ dependencies {
     kapt(Dagger.compiler)
 
     implementation(Kimchi.static)
+
+    testImplementation(JUnit.core)
 }

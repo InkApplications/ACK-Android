@@ -11,7 +11,8 @@ sealed class AprsPacket {
         override val destination: Callsign?,
         override val comment: String?,
         override val timestamp: Long,
-        val position: Position
+        val position: Position,
+        val symbol: Pair<Char, Char>
     ): AprsPacket()
 
     data class Unknown(
