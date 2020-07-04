@@ -27,6 +27,7 @@ class MapDataRepository @Inject constructor(
     fun findMarkers(limit: Int = 100): Flow<Collection<MarkerOptions>> {
         return aprs.findRecent(limit)
             .map { it.filterIsInstance<AprsPacket.Location>() }
+            .map { it.distinctBy { it.source } }
             .mapEach { packet ->
                 MarkerOptions().apply {
                     position(packet.position.toLatLng())
