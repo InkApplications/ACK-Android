@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="content_padding">16dp</dimen>
+    <dimen name="content_padding">24dp</dimen>
+    <dimen name="item_spacing">8dp</dimen>
+    <dimen name="item_spacing_half">4dp</dimen>
 </resources>

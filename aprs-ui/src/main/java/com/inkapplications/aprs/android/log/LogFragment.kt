@@ -7,7 +7,6 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.inkapplications.aprs.android.R
 import com.inkapplications.aprs.android.component
-import com.inkapplications.aprs.data.AprsAccess
 import com.inkapplications.kotlin.collectOn
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.GroupieViewHolder
@@ -15,10 +14,9 @@ import kotlinx.android.synthetic.main.log.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.cancel
-import kotlinx.coroutines.flow.map
 
 class LogFragment: Fragment() {
-    private lateinit var aprs: AprsAccess
+    private lateinit var data: LogDataAccess
     private lateinit var foreground: CoroutineScope
     private val adapter = GroupAdapter<GroupieViewHolder>()
 
@@ -29,7 +27,7 @@ class LogFragment: Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        aprs = component.aprs()
+        data = component.logData()
         log_list.adapter = adapter
     }
 
@@ -37,11 +35,9 @@ class LogFragment: Fragment() {
         super.onStart()
         foreground = MainScope()
 
-        aprs.findRecent(50)
-            .map { it.map { LogItem(it) } }
-            .collectOn(foreground) {
-                adapter.update(it)
-            }
+        data.items.collectOn(foreground) {
+            adapter.update(it)
+        }
     }
 
     override fun onStop() {
