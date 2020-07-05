@@ -22,13 +22,15 @@ private const val PROCESS_BUFFER_SIZE = 8192
 internal class AudioDataCapture(
     private val logger: KimchiLogger
 ) {
-    private val recorder: AudioRecord = AudioRecord(
-        MediaRecorder.AudioSource.DEFAULT,
-        SAMPLE_RATE,
-        AudioFormat.CHANNEL_IN_MONO,
-        AudioFormat.ENCODING_PCM_16BIT,
-        AUDIO_BUFFER_SIZE
-    )
+    private val recorder: AudioRecord by lazy {
+        AudioRecord(
+            MediaRecorder.AudioSource.DEFAULT,
+            SAMPLE_RATE,
+            AudioFormat.CHANNEL_IN_MONO,
+            AudioFormat.ENCODING_PCM_16BIT,
+            AUDIO_BUFFER_SIZE
+        )
+    }
     private val captureScope = CoroutineScope(SupervisorJob() + newSingleThreadContext("AudioCapture"))
     private val buffers = Array(BUFFER_SIZE) { ShortArray(PROCESS_BUFFER_SIZE) }
     private val audioChannel = BroadcastChannel<ShortArray>(BUFFER_SIZE)

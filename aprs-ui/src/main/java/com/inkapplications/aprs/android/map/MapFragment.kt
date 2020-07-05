@@ -9,15 +9,12 @@ import androidx.fragment.app.Fragment
 import com.google.android.libraries.maps.SupportMapFragment
 import com.inkapplications.aprs.android.R
 import com.inkapplications.aprs.android.component
-import com.inkapplications.aprs.data.AprsAccess
 import com.inkapplications.kotlin.collectOn
-import kimchi.Kimchi
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.cancel
 
 class MapFragment: Fragment() {
-    private lateinit var aprs: AprsAccess
     private lateinit var mapData: MapDataRepository
     private lateinit var foreground: CoroutineScope
     private lateinit var mapFragment: SupportMapFragment
@@ -28,7 +25,6 @@ class MapFragment: Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        aprs = component.aprs()
         mapData = component.mapData()
         mapFragment = childFragmentManager.findFragmentById(R.id.map_fragment) as SupportMapFragment
 
@@ -47,9 +43,6 @@ class MapFragment: Fragment() {
         super.onStart()
         foreground = MainScope()
 
-        aprs.data.collectOn(foreground) {
-            Kimchi.debug("New APRS Data received.")
-        }
         mapData.findMarkers().collectOn(foreground) { packets ->
             mapFragment.getMapAsync { map ->
                 map.clear()

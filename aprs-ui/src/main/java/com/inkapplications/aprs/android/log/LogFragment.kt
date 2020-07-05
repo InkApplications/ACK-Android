@@ -11,7 +11,6 @@ import com.inkapplications.aprs.data.AprsAccess
 import com.inkapplications.kotlin.collectOn
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.GroupieViewHolder
-import kimchi.Kimchi
 import kotlinx.android.synthetic.main.log.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.MainScope
@@ -38,9 +37,6 @@ class LogFragment: Fragment() {
         super.onStart()
         foreground = MainScope()
 
-        aprs.data.collectOn(foreground) {
-            Kimchi.debug("New APRS Data received.")
-        }
         aprs.findRecent(50)
             .map { it.map { LogItem(it) } }
             .collectOn(foreground) {

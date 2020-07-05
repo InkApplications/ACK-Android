@@ -15,4 +15,5 @@ fun GoogleMap.configure(activity: Activity) {
     } else {
         setMapStyle(MapStyleOptions.loadRawResourceStyle(activity, R.raw.map_light))
     }
+    uiSettings.isMapToolbarEnabled = false
 }

@@ -18,4 +18,25 @@
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"
         app:menu="@menu/capture" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/capture_mic"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/capture_navigation"
+        android:layout_margin="@dimen/content_padding"
+        app:backgroundTint="@color/brand"
+        android:src="@drawable/ic_mic" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/capture_mic_off"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/capture_navigation"
+        android:visibility="gone"
+        android:layout_margin="@dimen/content_padding"
+        app:backgroundTint="@color/brand"
+        android:src="@drawable/ic_mic_off" />
 </androidx.constraintlayout.widget.ConstraintLayout>
