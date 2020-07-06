@@ -10,7 +10,7 @@ import kotlinx.android.synthetic.main.log_item.*
 class LogItem(
     val packet: AprsPacket,
     private val symbolFactory: SymbolFactory
-): Item() {
+): Item(packet.hashCode().toLong()) {
     override fun getLayout(): Int = R.layout.log_item
 
     override fun bind(viewHolder: GroupieViewHolder, position: Int) {
@@ -21,5 +21,10 @@ class LogItem(
             is AprsPacket.Location -> viewHolder.log_symbol.setImageBitmap(symbolFactory.createSymbol(packet.symbol))
             else -> viewHolder.log_symbol.setImageResource(R.drawable.symbol_94)
         }
+    }
+
+    override fun hasSameContentAs(other: com.xwray.groupie.Item<*>): Boolean {
+        if (other !is LogItem) return false
+        return packet == other.packet
     }
 }
