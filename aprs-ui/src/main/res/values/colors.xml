@@ -4,6 +4,7 @@
     <color name="brand_light">#FCB652</color>
     <color name="brand_dark">#B16D0D</color>
     <color name="dark_stroke">#212121</color>
+    <color name="dark_stroke_70">#70212121</color>
     <color name="light_stroke">#FFFFFF</color>
     <color name="light_stroke_70">#70FFFFFF</color>
     <color name="error">#FF432B</color>

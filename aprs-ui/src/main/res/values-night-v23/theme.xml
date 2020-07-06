@@ -3,8 +3,10 @@
     <style name="AprsTheme.Compat.DayNight">
         <item name="colorSurface">@color/dark_stroke</item>
         <item name="colorOnSurface">@color/light_stroke</item>
-        <item name="colorOnBackground">@color/light_stroke</item>
+        <item name="colorOnSurfaceDim">@color/light_stroke_70</item>
+
         <item name="android:colorBackground">@color/dark_stroke</item>
+        <item name="colorOnBackground">@color/light_stroke</item>
     </style>
     <style name="AprsTheme.Compat">
         <item name="android:statusBarColor">@color/dark_stroke</item>
