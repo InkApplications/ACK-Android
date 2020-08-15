@@ -26,11 +26,11 @@ android {
 }
 
 dependencies {
-    api(project(":aprs-data"))
     implementation(kotlin("stdlib"))
     api(Coroutines.core)
 
-    implementation("com.github.ab0oo:javAPRSlib:859c87ffa5")
+    implementation(Karps.parser)
+    api(Karps.structures)
 
     implementation(Kimchi.logger)
 

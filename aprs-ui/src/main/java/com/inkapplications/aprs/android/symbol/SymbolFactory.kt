@@ -6,6 +6,7 @@ import android.graphics.BitmapFactory
 import android.graphics.Canvas
 import android.graphics.Matrix
 import com.inkapplications.aprs.android.R
+import com.inkapplications.karps.structures.Symbol
 import dagger.Reusable
 import kimchi.logger.KimchiLogger
 import javax.inject.Inject
@@ -21,7 +22,7 @@ class SymbolFactory @Inject constructor(
 ) {
     private val resources = context.resources
 
-    fun createSymbol(symbol: Pair<Char, Char>): Bitmap {
+    fun createSymbol(symbol: Symbol): Bitmap {
         val base = locator.getBaseResourceName(symbol).let(::findBitmap)
         val overlay = locator.getOverlayResourceName(symbol)?.let(::findBitmap)
 

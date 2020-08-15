@@ -1,5 +1,4 @@
 include("android-extensions")
-include("aprs-data")
 include("aprs-android")
 include("aprs-ui")
 include("kotlin-extensions")

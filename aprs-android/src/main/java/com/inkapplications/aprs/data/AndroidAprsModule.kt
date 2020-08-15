@@ -2,6 +2,7 @@ package com.inkapplications.aprs.data
 
 import android.content.Context
 import androidx.room.Room
+import com.inkapplications.karps.parser.ParserModule
 import dagger.Module
 import dagger.Provides
 import kimchi.logger.KimchiLogger
@@ -22,6 +23,6 @@ object AndroidAprsModule {
             .fallbackToDestructiveMigration()
             .build()
 
-        return AndroidAprs(audioProcessor, database.pinsDao(), logger)
+        return AndroidAprs(audioProcessor, database.pinsDao(), ParserModule().defaultParser(logger), logger)
     }
 }

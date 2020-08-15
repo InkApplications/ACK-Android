@@ -84,6 +84,14 @@ object Kimchi {
     const val logger = "$group:logger:$version"
 }
 
+object Karps {
+    const val group = "com.github.inkapplications.karps"
+    const val version = "0a1a316"
+    
+    const val parser = "$group:parser:$version"
+    const val structures = "$group:structures:$version"
+}
+
 object ThreeTenBp {
     const val group = "org.threeten"
     const val version = "1.4.2"

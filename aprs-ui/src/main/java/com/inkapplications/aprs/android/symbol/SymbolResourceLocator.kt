@@ -1,5 +1,6 @@
 package com.inkapplications.aprs.android.symbol
 
+import com.inkapplications.karps.structures.Symbol
 import dagger.Reusable
 import kimchi.logger.KimchiLogger
 import javax.inject.Inject
@@ -7,14 +8,13 @@ import javax.inject.Inject
 private const val ALT_START = 96
 private const val OVERLAY_START = 207
 private const val PREFIX = "symbol_"
-private const val PRIMARY = '/'
-private const val CHAR_RANGE_START = '!'.toInt()
-private const val CHAR_RANGE_END = '~'.toInt()
-private const val ASC_0 = '0'.toInt()
-private const val ASC_9 = '9'.toInt()
-private const val ASC_A = 'A'.toInt()
-private const val ASC_Z = 'Z'.toInt()
-private const val FAULT_SYMBOL = 127
+private const val CHAR_RANGE_START = '!'
+private const val CHAR_RANGE_END = '~'
+private const val ASC_0 = '0'
+private const val ASC_9 = '9'
+private const val ASC_A = 'A'
+private const val ASC_Z = 'Z'
+private const val FAULT_SYMBOL = 127.toChar()
 private val SUPPORTS_OVERLAY = arrayOf('#','&','0','>','A','W','^','_','s','u','v','z')
 
 /**
@@ -41,30 +41,24 @@ private val SUPPORTS_OVERLAY = arrayOf('#','&','0','>','A','W','^','_','s','u','
 class SymbolResourceLocator @Inject constructor(
     private val logger: KimchiLogger
 ) {
-    fun getBaseResourceName(symbol: Pair<Char, Char>): String {
-        val tableIdentifier = symbol.first
-        val symbolNumber = symbol.second.toInt()
-
-        if (symbolNumber !in CHAR_RANGE_START..CHAR_RANGE_END) {
-            logger.warn("Out-of-bounds symbol requested: ${symbolNumber}")
+    fun getBaseResourceName(symbol: Symbol): String {
+        if (symbol.id !in CHAR_RANGE_START..CHAR_RANGE_END) {
+            logger.warn("Out-of-bounds symbol requested: ${symbol.id}")
             return format(FAULT_SYMBOL - CHAR_RANGE_START)
         }
-
-        return when(tableIdentifier) {
-            PRIMARY -> format(symbolNumber - CHAR_RANGE_START)
-            else -> format(symbolNumber - CHAR_RANGE_START + ALT_START)
+        return when(symbol) {
+            is Symbol.Primary -> format(symbol.id - CHAR_RANGE_START)
+            is Symbol.Alternate -> format(symbol.id - CHAR_RANGE_START + ALT_START)
         }
     }
 
-    fun getOverlayResourceName(symbol: Pair<Char, Char>): String? {
-        if (symbol.second !in SUPPORTS_OVERLAY) {
-            logger.warn("Unsupported overlay requested for icon: ${symbol.second.toInt()}")
-            return null
-        }
-        return when(val overlayNumber = symbol.first.toInt()) {
-            in ASC_0..ASC_9, in ASC_A..ASC_Z -> format(overlayNumber - ASC_0 + OVERLAY_START)
+    fun getOverlayResourceName(symbol: Symbol): String? {
+        if (symbol !is Symbol.Alternate) return null
+        val overlay = symbol.overlay ?: return null
+        return when(overlay) {
+            in ASC_0..ASC_9, in ASC_A..ASC_Z -> format(overlay - ASC_0 + OVERLAY_START)
             else -> null.also {
-                logger.warn("Out-of-bounds overlay requested: $overlayNumber")
+                logger.warn("Out-of-bounds overlay requested: ${overlay.toInt()}")
             }
         }
     }
