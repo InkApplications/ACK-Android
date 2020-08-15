@@ -1,19 +1,24 @@
 package com.inkapplications.aprs.android.map
 
-import com.google.android.libraries.maps.model.BitmapDescriptorFactory
-import com.google.android.libraries.maps.model.LatLng
-import com.google.android.libraries.maps.model.MarkerOptions
+import android.graphics.Bitmap
 import com.inkapplications.aprs.android.symbol.SymbolFactory
 import com.inkapplications.aprs.data.AprsAccess
 import com.inkapplications.karps.structures.AprsPacket
 import com.inkapplications.karps.structures.Symbol
 import com.inkapplications.karps.structures.unit.Coordinates
 import com.inkapplications.kotlin.mapEach
+import com.mapbox.mapboxsdk.geometry.LatLng
+import com.mapbox.mapboxsdk.maps.MapView
+import com.mapbox.mapboxsdk.maps.MapboxMap
+import com.mapbox.mapboxsdk.maps.Style
+import com.mapbox.mapboxsdk.plugins.annotation.SymbolManager
+import com.mapbox.mapboxsdk.plugins.annotation.SymbolOptions
 import dagger.Reusable
 import kimchi.logger.KimchiLogger
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
+import java.util.*
 import javax.inject.Inject
 
 /**
@@ -25,23 +30,54 @@ class MapDataRepository @Inject constructor(
     private var aprs: AprsAccess,
     private var symbolFactory: SymbolFactory
 ) {
-    fun findMarkers(limit: Int = 100): Flow<Collection<MarkerOptions>> {
+    fun findMarkers(limit: Int = 100): Flow<Collection<MarkerViewModel>> {
         return aprs.findRecent(limit)
             .map { it.filterIsInstance<AprsPacket.Position>() }
             .map { it.distinctBy { it.source } }
             .mapEach { packet ->
-                MarkerOptions().apply {
-                    position(packet.coordinates.toLatLng())
-                    title(packet.comment)
-                    icon(packet.symbol.toBitmapDescriptor())
-                }
+                MarkerViewModel(packet.coordinates, packet.comment, symbolFactory.createSymbol(packet.symbol))
             }
             .onEach { logger.info("New set of ${it.size} map markers.") }
     }
+}
 
-    private fun Symbol.toBitmapDescriptor() = symbolFactory
-        .createSymbol(this)
-        .let(BitmapDescriptorFactory::fromBitmap)
+data class MarkerViewModel(
+    val coordinates: Coordinates,
+    val popupText: String,
+    val symbol: Bitmap
+)
 
-    private fun Coordinates.toLatLng() = LatLng(latitude.decimal, longitude.decimal)
+@Reusable
+class MapManagerFactory @Inject constructor() {
+    fun create(view: MapView, map: MapboxMap, style: Style): MapManager {
+        return MapManager(view, map, style)
+    }
+}
+
+class MapManager(
+    private val view: MapView,
+    private val map: MapboxMap,
+    private val style: Style
+) {
+    private val symbolManager = SymbolManager(view, map, style).also {
+        it.iconAllowOverlap = true
+    }
+
+    fun showMarkers(markers: Collection<MarkerViewModel>) {
+        markers
+            .map { marker ->
+                SymbolOptions()
+                    .withLatLng(LatLng(marker.coordinates.latitude.decimal, marker.coordinates.longitude.decimal))
+                    .withIconImage(createImage(marker.symbol, style))
+            }
+            .run { symbolManager.create(this) }
+    }
+
+    private fun createImage(image: Bitmap, style: Style): String {
+        val id = UUID.randomUUID().toString()
+
+        style.addImage(id, image)
+
+        return id
+    }
 }

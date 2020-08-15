@@ -5,6 +5,7 @@ import android.app.Application
 import androidx.fragment.app.Fragment
 import com.inkapplications.android.extensions.ApplicationModule
 import com.inkapplications.android.extensions.LifecycleLogger
+import com.mapbox.mapboxsdk.Mapbox
 import kimchi.Kimchi
 import kimchi.logger.defaultWriter
 
@@ -22,6 +23,8 @@ class AprsApplication: Application() {
         registerActivityLifecycleCallbacks(LifecycleLogger {
             Kimchi.trace(it)
         })
+
+        Mapbox.getInstance(this, BuildConfig.MAPBOX_ACCESS_TOKEN)
     }
 }
 

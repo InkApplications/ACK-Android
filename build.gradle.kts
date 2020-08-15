@@ -16,6 +16,13 @@ subprojects {
         google()
         jcenter()
         maven(url = "https://jitpack.io")
+        maven(url = "https://api.mapbox.com/downloads/v2/releases/maven") {
+            authentication {
+                create<BasicAuthentication>("basic")
+            }
+            credentials.username = "mapbox"
+            credentials.password = stringProperty("mapbox.private", "")
+        }
     }
 
     tasks.withType(Test::class) {

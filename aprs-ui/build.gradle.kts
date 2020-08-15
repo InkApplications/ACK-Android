@@ -12,7 +12,7 @@ android {
         minSdkVersion(19)
         targetSdkVersion(29)
         multiDexEnabled = true
-        resValue("string", "maps_api_key", stringProperty("mapsKey", ""))
+        buildConfigField("String", "MAPBOX_ACCESS_TOKEN", "\"${stringProperty("mapbox.public", "")}\"")
         versionCode = intProperty("versionCode", 1)
         versionName = stringProperty("versionName", "SNAPSHOT")
     }
@@ -49,7 +49,9 @@ dependencies {
     implementation(AndroidX.RecyclerView.core)
 
     implementation(Google.Material.core)
-    implementation(Google.Maps.core)
+
+    implementation("com.mapbox.mapboxsdk:mapbox-android-sdk:9.3.0")
+    implementation("com.mapbox.mapboxsdk:mapbox-android-plugin-annotation-v9:0.9.0")
 
     implementation(Groupie.core)
     implementation(Groupie.extensions)

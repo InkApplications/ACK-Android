@@ -1,23 +1,28 @@
 package com.inkapplications.aprs.android.map
 
+import android.app.Activity
 import android.content.res.Configuration
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import com.google.android.libraries.maps.SupportMapFragment
 import com.inkapplications.aprs.android.R
 import com.inkapplications.aprs.android.component
 import com.inkapplications.kotlin.collectOn
+import com.mapbox.mapboxsdk.maps.MapboxMap
+import com.mapbox.mapboxsdk.maps.Style
+import kotlinx.android.synthetic.main.map.*
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.cancel
 
 class MapFragment: Fragment() {
     private lateinit var mapData: MapDataRepository
+    private lateinit var mapManagerFactory: MapManagerFactory
     private lateinit var foreground: CoroutineScope
-    private lateinit var mapFragment: SupportMapFragment
+    private var markerCollection: Job = Job()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.map, container, false)
@@ -26,27 +31,27 @@ class MapFragment: Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         mapData = component.mapData()
-        mapFragment = childFragmentManager.findFragmentById(R.id.map_fragment) as SupportMapFragment
-
-        mapFragment.getMapAsync { map ->
-            map.configure(activity!!)
-        }
+        mapManagerFactory = component.mapManager()
+        lifecycle.addObserver(map_view.lifecycleObserver)
     }
 
     override fun onConfigurationChanged(newConfig: Configuration) {
         super.onConfigurationChanged(newConfig)
-
-        mapFragment.getMapAsync { map -> map.configure(activity!!) }
+        initializeMap()
     }
 
     override fun onStart() {
         super.onStart()
         foreground = MainScope()
+        initializeMap()
+    }
 
-        mapData.findMarkers().collectOn(foreground) { packets ->
-            mapFragment.getMapAsync { map ->
-                map.clear()
-                packets.forEach { map.addMarker(it) }
+    private fun initializeMap() {
+        map_view.init(activity!!) { map, style ->
+            val manager = mapManagerFactory.create(map_view, map, style)
+            markerCollection.cancel()
+            markerCollection = mapData.findMarkers().collectOn(foreground) { packets ->
+                manager.showMarkers(packets)
             }
         }
     }
@@ -54,5 +59,15 @@ class MapFragment: Fragment() {
     override fun onStop() {
         foreground.cancel()
         super.onStop()
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        map_view.onSaveInstanceState(outState)
+    }
+
+    override fun onLowMemory() {
+        super.onLowMemory()
+        map_view.onLowMemory()
     }
 }
