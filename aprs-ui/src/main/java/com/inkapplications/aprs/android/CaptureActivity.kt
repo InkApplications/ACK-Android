@@ -67,7 +67,7 @@ class CaptureActivity: AppCompatActivity() {
         Kimchi.info("Start Recording")
         capture_mic.visibility = GONE
         capture_mic_off.visibility = VISIBLE
-        recording = aprs.data.collectOn(foreground) {
+        recording = aprs.incoming.collectOn(foreground) {
             Kimchi.debug("APRS Packet Recorded: $it")
         }
     }

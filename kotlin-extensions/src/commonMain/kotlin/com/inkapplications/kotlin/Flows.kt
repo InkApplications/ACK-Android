@@ -31,3 +31,17 @@ suspend inline fun <T> Flow<T>.safeCollect(crossinline action: suspend (T) -> Un
 inline fun <T, R> Flow<Collection<T>>.mapEach(crossinline mapping: suspend (T) -> R): Flow<List<R>> {
     return map { it.map { mapping(it) } }
 }
+
+/**
+ * Filter each list emitted by a flow.
+ */
+inline fun <T> Flow<Collection<T>>.filterEach(crossinline predicate: suspend (T) -> Boolean): Flow<List<T>> {
+    return map { it.filter { predicate(it) } }
+}
+
+/**
+ * Filter each list emitted by a flow.
+ */
+fun <T: Any> Flow<Collection<T?>>.filterEachNotNull(): Flow<List<T>> {
+    return map { it.filterNotNull() }
+}

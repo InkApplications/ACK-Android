@@ -19,7 +19,6 @@ import javax.inject.Singleton
 )
 interface ApplicationComponent {
     fun aprs(): AprsAccess
-    fun mapData(): MapDataRepository
     fun mapManager(): MapManagerFactory
     fun logData(): LogDataAccess
 }

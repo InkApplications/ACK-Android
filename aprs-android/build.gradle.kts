@@ -26,6 +26,7 @@ android {
 }
 
 dependencies {
+    implementation(project(":kotlin-extensions"))
     implementation(kotlin("stdlib"))
     api(Coroutines.core)
 
