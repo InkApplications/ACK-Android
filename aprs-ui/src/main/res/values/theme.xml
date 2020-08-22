@@ -15,6 +15,7 @@
         <item name="colorOnSecondary">@color/dark_stroke</item>
 
         <item name="bottomNavigationStyle">@style/AprsTheme.BottomNavigation</item>
+        <item name="materialAlertDialogTheme">@style/AprsTheme.Alert</item>
     </style>
     <style name="AprsTheme.Compat">
     </style>
@@ -29,5 +30,13 @@
     <style name="AprsTheme.BottomNavigation" parent="Widget.MaterialComponents.BottomNavigationView">
         <item name="itemIconTint">@color/navigation_foreground_color</item>
         <item name="itemTextColor">@color/navigation_foreground_color</item>
+    </style>
+
+    <style name="AprsTheme.Alert" parent="ThemeOverlay.MaterialComponents.MaterialAlertDialog">
+        <item name="buttonBarPositiveButtonStyle">@style/AprsTheme.Alert.Button</item>
+        <item name="buttonBarNegativeButtonStyle">@style/AprsTheme.Alert.Button</item>
+    </style>
+    <style name="AprsTheme.Alert.Button" parent="Widget.MaterialComponents.Button.TextButton.Dialog">
+        <item name="android:textColor">?attr/colorOnSurface</item>
     </style>
 </resources>

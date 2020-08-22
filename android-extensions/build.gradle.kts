@@ -22,6 +22,7 @@ dependencies {
     implementation(kotlin("stdlib"))
 
     api(AndroidX.Ktx.core)
+    implementation(AndroidX.Preference.core)
     api(Dagger.runtime)
     kapt(Dagger.compiler)
 }

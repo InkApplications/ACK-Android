@@ -47,6 +47,8 @@ dependencies {
     implementation(AndroidX.AppCompat.core)
     implementation(AndroidX.ConstraintLayout.core)
     implementation(AndroidX.RecyclerView.core)
+    implementation(AndroidX.Preference.core)
+    implementation(AndroidX.Preference.ktx)
 
     implementation(Google.Material.core)
 

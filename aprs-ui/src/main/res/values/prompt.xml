@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="prompt_save">Save</string>
+    <string name="prompt_cancel">Cancel</string>
+</resources>

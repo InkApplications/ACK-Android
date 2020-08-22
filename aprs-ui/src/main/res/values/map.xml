@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="map_settings_category">Map Settings</string>
+    <string name="map_settings_pins_title">Number of Pins to display</string>
+</resources>

@@ -3,6 +3,7 @@ package com.inkapplications.aprs.android
 import android.Manifest
 import android.content.pm.PackageManager
 import android.os.Bundle
+import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.view.View.GONE
@@ -10,8 +11,11 @@ import android.view.View.VISIBLE
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import com.inkapplications.android.extensions.stopPropagation
+import com.inkapplications.android.extensions.startActivity
 import com.inkapplications.aprs.android.log.LogFragment
 import com.inkapplications.aprs.android.map.MapFragment
+import com.inkapplications.aprs.android.settings.SettingsActivity
 import com.inkapplications.aprs.data.AprsAccess
 import com.inkapplications.kotlin.collectOn
 import kimchi.Kimchi
@@ -33,6 +37,7 @@ class CaptureActivity: AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.capture)
+        setSupportActionBar(capture_toolbar)
         aprs = component.aprs()
 
         supportFragmentManager.beginTransaction()
@@ -41,6 +46,10 @@ class CaptureActivity: AppCompatActivity() {
         capture_navigation.setOnNavigationItemSelectedListener(::onNavigationClick)
         capture_mic.setOnClickListener(::onMicEnableClick)
         capture_mic_off.setOnClickListener(::onMicDisableClick)
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu): Boolean = stopPropagation {
+        menuInflater.inflate(R.menu.capture_toolbar, menu)
     }
 
     override fun onStart() {
@@ -54,6 +63,13 @@ class CaptureActivity: AppCompatActivity() {
             PackageManager.PERMISSION_GRANTED -> onRecordAudio()
             else -> ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.RECORD_AUDIO), RECORD_AUDIO_REQUEST)
         }
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean = when (item.itemId) {
+        R.id.menu_capture_toolbar_settings -> stopPropagation {
+            startActivity(SettingsActivity::class)
+        }
+        else -> super.onOptionsItemSelected(item)
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {

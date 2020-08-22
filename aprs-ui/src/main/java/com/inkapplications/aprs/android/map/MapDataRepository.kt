@@ -1,6 +1,7 @@
 package com.inkapplications.aprs.android.map
 
 import com.inkapplications.aprs.android.log.LogItem
+import com.inkapplications.aprs.android.settings.SettingsReadAccess
 import com.inkapplications.aprs.android.symbol.SymbolFactory
 import com.inkapplications.aprs.data.AprsAccess
 import com.inkapplications.karps.structures.AprsPacket
@@ -9,6 +10,7 @@ import com.inkapplications.kotlin.mapEach
 import dagger.Reusable
 import kimchi.logger.KimchiLogger
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
 import javax.inject.Inject
@@ -19,20 +21,25 @@ import javax.inject.Inject
 @Reusable
 class MapDataRepository @Inject constructor(
     private val logger: KimchiLogger,
-    private var aprs: AprsAccess,
-    private var symbolFactory: SymbolFactory
+    private val aprs: AprsAccess,
+    private val symbolFactory: SymbolFactory,
+    private val settings: SettingsReadAccess,
+    private val mapSettings: MapSettings
 ) {
-    fun findMarkers(limit: Int = 100): Flow<Collection<MarkerViewModel>> {
-        return aprs.findRecent(limit)
-            .map { it.distinctBy { it.data.source } }
-            .mapEach { packet ->
-                when (val data = packet.data) {
-                    is AprsPacket.Position -> MarkerViewModel(packet.id, data.coordinates, symbolFactory.createSymbol(data.symbol))
-                    else -> null
-                }
+    fun findMarkers(): Flow<Collection<MarkerViewModel>> {
+        return settings.observeInt(mapSettings.pinCount)
+            .flatMapLatest { pinCount ->
+                aprs.findRecent(pinCount.getOrElse { 500 })
+                    .map { it.distinctBy { it.data.source } }
+                    .mapEach { packet ->
+                        when (val data = packet.data) {
+                            is AprsPacket.Position -> MarkerViewModel(packet.id, data.coordinates, symbolFactory.createSymbol(data.symbol))
+                            else -> null
+                        }
+                    }
+                    .filterEachNotNull()
+                    .onEach { logger.info("New set of ${it.size} map markers.") }
             }
-            .filterEachNotNull()
-            .onEach { logger.info("New set of ${it.size} map markers.") }
     }
 
     fun findLogItem(id: Long): Flow<LogItem?> {

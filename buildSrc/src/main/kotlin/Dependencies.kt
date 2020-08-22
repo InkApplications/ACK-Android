@@ -26,6 +26,14 @@ object AndroidX {
 
         const val core = "$group:constraintlayout:$version"
     }
+
+    object Preference {
+        const val group = "androidx.preference"
+        const val version = "1.1.1"
+
+        const val core = "$group:preference:$version"
+        const val ktx = "$group:preference-ktx:$version"
+    }
 }
 
 object Google {
