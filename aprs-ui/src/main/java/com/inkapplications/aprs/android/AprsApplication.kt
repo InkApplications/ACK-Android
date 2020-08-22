@@ -3,6 +3,9 @@ package com.inkapplications.aprs.android
 import android.app.Activity
 import android.app.Application
 import androidx.fragment.app.Fragment
+import com.google.firebase.ktx.Firebase
+import com.google.firebase.remoteconfig.ktx.remoteConfig
+import com.google.firebase.remoteconfig.ktx.remoteConfigSettings
 import com.inkapplications.android.extensions.ApplicationModule
 import com.inkapplications.android.extensions.LifecycleLogger
 import com.mapbox.mapboxsdk.Mapbox
@@ -25,6 +28,7 @@ class AprsApplication: Application() {
         })
 
         Mapbox.getInstance(this, BuildConfig.MAPBOX_ACCESS_TOKEN)
+        component.initializers().forEach { it.onCreate(this) }
     }
 }
 

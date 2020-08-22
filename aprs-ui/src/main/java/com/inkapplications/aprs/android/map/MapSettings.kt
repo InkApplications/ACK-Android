@@ -15,7 +15,8 @@ class MapSettings @Inject constructor(
     val pinCount = IntSetting(
         key = "map.pins",
         name = resources.getString(R.string.map_settings_pins_title),
-        categoryName = resources.getString(R.string.map_settings_category)
+        categoryName = resources.getString(R.string.map_settings_category),
+        defaultValue = 500
     )
 
     override val settings: List<Setting> = listOf(pinCount)

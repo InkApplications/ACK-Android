@@ -19,16 +19,16 @@ class SettingsAccess @Inject constructor(
     val settingItems: Flow<List<Item>> = settingsProvider.settings
         .map { setting ->
             when (setting) {
-                is StringSetting -> settingValues.observeString(setting).map {
+                is StringSetting -> settingValues.observeStringState(setting).map {
                     SettingViewModel(
                         name = setting.name,
-                        value = it.getOrNull().orEmpty()
+                        value = it.orEmpty()
                     ).let { SettingStringItem(it, setting) }
                 }
-                is IntSetting -> settingValues.observeInt(setting).map {
+                is IntSetting -> settingValues.observeIntState(setting).map {
                     SettingViewModel(
                         name = setting.name,
-                        value = it.getOrNull()?.toString().orEmpty()
+                        value = it?.toString().orEmpty()
                     ).let { SettingIntItem(it, setting) }
                 }
             }

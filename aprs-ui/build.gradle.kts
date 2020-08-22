@@ -3,6 +3,7 @@ plugins {
     kotlin("android")
     id("kotlin-android-extensions")
     kotlin("kapt")
+    id("com.google.gms.google-services")
 }
 
 android {
@@ -62,6 +63,9 @@ dependencies {
     kapt(Dagger.compiler)
 
     implementation(Kimchi.static)
+
+    implementation("com.google.firebase:firebase-config-ktx:19.2.0")
+    implementation("com.google.firebase:firebase-analytics-ktx:17.5.0")
 
     testImplementation(JUnit.core)
 }

@@ -10,15 +10,11 @@ import java.lang.IllegalStateException
  * successful result.
  */
 class PrioritySettingValues(private vararg val delegates: SettingsReadAccess): SettingsReadAccess {
-    override fun observeString(setting: StringSetting): Flow<Result<String>> {
-        return delegates.map { it.observeString(setting) }.requireTakeFirst(setting.key)
+    override fun observeStringState(setting: StringSetting): Flow<String?> {
+        return delegates.map { it.observeStringState(setting) }.flattenFirst { it != null }
     }
 
-    override fun observeInt(setting: IntSetting): Flow<Result<Int>> {
-        return delegates.map { it.observeInt(setting) }.requireTakeFirst(setting.key)
-    }
-
-    private fun <T> List<Flow<Result<T>>>.requireTakeFirst(key: String): Flow<Result<T>> {
-        return flattenFirst { it.isSuccess }.mapNullToDefault(Result.failure(IllegalStateException("No value found for setting: <$key>")))
+    override fun observeIntState(setting: IntSetting): Flow<Int?> {
+        return delegates.map { it.observeIntState(setting) }.flattenFirst { it != null }
     }
 }

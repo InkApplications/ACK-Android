@@ -2,6 +2,7 @@ package com.inkapplications.aprs.android.map
 
 import com.inkapplications.aprs.android.log.LogItem
 import com.inkapplications.aprs.android.settings.SettingsReadAccess
+import com.inkapplications.aprs.android.settings.observeInt
 import com.inkapplications.aprs.android.symbol.SymbolFactory
 import com.inkapplications.aprs.data.AprsAccess
 import com.inkapplications.karps.structures.AprsPacket
@@ -29,7 +30,7 @@ class MapDataRepository @Inject constructor(
     fun findMarkers(): Flow<Collection<MarkerViewModel>> {
         return settings.observeInt(mapSettings.pinCount)
             .flatMapLatest { pinCount ->
-                aprs.findRecent(pinCount.getOrElse { 500 })
+                aprs.findRecent(pinCount)
                     .map { it.distinctBy { it.data.source } }
                     .mapEach { packet ->
                         when (val data = packet.data) {

@@ -24,22 +24,29 @@ class SharedPreferenceSettings @Inject constructor(
         }
     }
 
-    override fun observeString(setting: StringSetting): Flow<Result<String>> {
+    override fun observeStringState(setting: StringSetting): Flow<String?> {
         return updates
             .filter { it == setting.key }
             .onStart { emit(setting.key) }
             .requireKey()
-            .map { Result.success(preferences.getString(setting.key, null)!!) }
+            .map { preferences.getString(setting.key, null) }
     }
 
     override fun setString(setting: StringSetting, value: String) = preferences.apply { putString(setting.key, value) }
 
-    override fun observeInt(setting: IntSetting): Flow<Result<Int>> {
+    override fun observeIntState(setting: IntSetting): Flow<Int?> {
         return updates
             .filter { it == setting.key }
             .onStart { emit(setting.key) }
-            .requireKey()
-            .map { Result.success(preferences.getInt(setting.key, 0)) }
+            .map { preferences.getOptionalInt(setting.key) }
+    }
+
+    private fun SharedPreferences.getOptionalInt(key: String): Int? {
+        return ifContains(key) { getInt(key, -1) }
+    }
+
+    private fun <T> SharedPreferences.ifContains(key: String, action: () -> T): T? {
+        return if (contains(key)) action() else null
     }
 
     override fun setInt(setting: IntSetting, value: Int) = preferences.apply { putInt(setting.key, value) }
