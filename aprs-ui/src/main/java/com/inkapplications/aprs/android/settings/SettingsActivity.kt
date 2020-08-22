@@ -5,6 +5,7 @@ import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import com.inkapplications.android.extensions.continuePropagation
 import com.inkapplications.android.extensions.stopPropagation
+import com.inkapplications.aprs.android.BuildConfig
 import com.inkapplications.aprs.android.R
 import com.inkapplications.aprs.android.component
 import com.inkapplications.aprs.android.prompt.intPrompt
@@ -31,6 +32,8 @@ class SettingsActivity: AppCompatActivity() {
         settingsAccess = component.settingsRepository()
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         settings_list.adapter = adapter
+        settings_list.isNestedScrollingEnabled = false
+        settings_version.text = getString(R.string.settings_version, BuildConfig.VERSION_NAME, BuildConfig.VERSION_CODE.toString())
     }
 
     override fun onStart() {

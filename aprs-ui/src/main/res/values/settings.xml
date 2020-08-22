@@ -3,4 +3,5 @@
     <string name="settings_title">Settings</string>
     <string name="settings_modify_cancel">Cancel</string>
     <string name="settings_modify_apply">Update</string>
+    <string name="settings_version">APRS %s (%s)</string>
 </resources>
