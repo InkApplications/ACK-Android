@@ -1,9 +1,13 @@
-package com.inkapplications.aprs.android
+package com.inkapplications.aprs.android.startup
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.inkapplications.android.extensions.fadeIn
 import com.inkapplications.android.extensions.startActivity
+import com.inkapplications.aprs.android.BuildConfig
+import com.inkapplications.aprs.android.CaptureActivity
+import com.inkapplications.aprs.android.R
+import com.inkapplications.aprs.android.component
 import kotlinx.android.synthetic.main.splash.*
 import kotlinx.coroutines.*
 
@@ -12,9 +16,11 @@ import kotlinx.coroutines.*
  */
 class StartupActivity: AppCompatActivity() {
     private lateinit var foreground: CoroutineScope
+    private lateinit var initializer: ApplicationInitializer
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        initializer = component.initializer()
         setContentView(R.layout.splash)
         splash_caption.text = getString(R.string.application_version, BuildConfig.VERSION_NAME, BuildConfig.VERSION_CODE.toString())
         splash_wave.fadeIn()
@@ -25,8 +31,9 @@ class StartupActivity: AppCompatActivity() {
         foreground = MainScope()
 
         foreground.launch {
-            delay(500)
+            initializer.initialize(application)
             startActivity(CaptureActivity::class)
+            finish()
         }
     }
 

@@ -1,7 +1,7 @@
 package com.inkapplications.aprs.android.firebase
 
-import com.inkapplications.android.extensions.ApplicationInitializer
 import com.inkapplications.aprs.android.settings.SettingsReadAccess
+import com.inkapplications.aprs.android.startup.ApplicationInitializer
 import dagger.Binds
 import dagger.Module
 import dagger.multibindings.IntoSet

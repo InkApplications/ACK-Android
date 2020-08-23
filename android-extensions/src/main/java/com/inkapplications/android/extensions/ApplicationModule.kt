@@ -7,9 +7,8 @@ import android.content.res.Resources
 import androidx.preference.PreferenceManager
 import dagger.Module
 import dagger.Provides
-import dagger.multibindings.Multibinds
 
-@Module(includes = [ StaticApplicationModule::class ])
+@Module
 class ApplicationModule(private val application: Application) {
     @Provides
     fun context(): Context = application
@@ -19,10 +18,4 @@ class ApplicationModule(private val application: Application) {
 
     @Provides
     fun resources(): Resources = application.resources
-}
-
-@Module
-internal abstract class StaticApplicationModule {
-    @Multibinds
-    abstract fun initializers(): @JvmSuppressWildcards Set<ApplicationInitializer>
 }
