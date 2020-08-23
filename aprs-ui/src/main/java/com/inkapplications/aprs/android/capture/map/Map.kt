@@ -2,6 +2,7 @@ package com.inkapplications.aprs.android.capture.map
 
 import android.graphics.Bitmap
 import com.google.gson.JsonObject
+import com.inkapplications.android.extensions.continuePropagation
 import com.mapbox.mapboxsdk.camera.CameraUpdateFactory
 import com.mapbox.mapboxsdk.geometry.LatLng
 import com.mapbox.mapboxsdk.maps.MapView
@@ -30,6 +31,9 @@ class Map(
             map.animateCamera(CameraUpdateFactory.newLatLng(LatLng(json.get("lat").asDouble, json.get("lon").asDouble)))
             selectedIdState.value = json.get("id").asLong
             true
+        }
+        map.addOnMapClickListener {
+            continuePropagation { selectedIdState.value = null }
         }
     }
 
