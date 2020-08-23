@@ -1,6 +1,7 @@
 package com.inkapplications.aprs.android.capture.map
 
 import android.content.res.Resources
+import com.inkapplications.android.extensions.StringResources
 import com.inkapplications.aprs.android.R
 import com.inkapplications.aprs.android.settings.IntSetting
 import com.inkapplications.aprs.android.settings.Setting
@@ -10,7 +11,7 @@ import javax.inject.Inject
 
 @Reusable
 class MapSettings @Inject constructor(
-    private val resources: Resources
+    private val resources: StringResources
 ): SettingsProvider {
     val pinCount = IntSetting(
         key = "map.pins",

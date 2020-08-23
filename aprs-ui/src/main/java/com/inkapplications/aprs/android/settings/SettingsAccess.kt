@@ -12,9 +12,9 @@ import javax.inject.Inject
  */
 @Reusable
 class SettingsAccess @Inject constructor(
-        private val settingsProvider: SettingsProvider,
-        private val settingValues: SettingsReadAccess,
-        private val settingsStorage: SettingsWriteAccess
+    private val settingsProvider: SettingsProvider,
+    private val settingValues: SettingsReadAccess,
+    private val settingsStorage: SettingsWriteAccess
 ) {
     val settingItems: Flow<List<Item>> = settingsProvider.settings
         .map { setting ->
