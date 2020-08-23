@@ -15,7 +15,6 @@ private const val ASC_9 = '9'
 private const val ASC_A = 'A'
 private const val ASC_Z = 'Z'
 private const val FAULT_SYMBOL = 127.toChar()
-private val SUPPORTS_OVERLAY = arrayOf('#','&','0','>','A','W','^','_','s','u','v','z')
 
 /**
  * Translate a pair of APRS Symbol Chars to symbol resource names.
@@ -55,6 +54,7 @@ class SymbolResourceLocator @Inject constructor(
     fun getOverlayResourceName(symbol: Symbol): String? {
         if (symbol !is Symbol.Alternate) return null
         val overlay = symbol.overlay ?: return null
+        if (!symbol.alphaNumeric) return null
         return when(overlay) {
             in ASC_0..ASC_9, in ASC_A..ASC_Z -> format(overlay - ASC_0 + OVERLAY_START)
             else -> null.also {
