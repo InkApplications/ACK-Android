@@ -1,4 +1,4 @@
-package com.inkapplications.aprs.android.map
+package com.inkapplications.aprs.android.capture.map
 
 import android.content.res.Configuration
 import android.os.Bundle

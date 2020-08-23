@@ -1,4 +1,4 @@
-package com.inkapplications.aprs.android
+package com.inkapplications.aprs.android.capture
 
 import android.Manifest
 import android.content.pm.PackageManager
@@ -13,8 +13,10 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.inkapplications.android.extensions.stopPropagation
 import com.inkapplications.android.extensions.startActivity
-import com.inkapplications.aprs.android.log.LogFragment
-import com.inkapplications.aprs.android.map.MapFragment
+import com.inkapplications.aprs.android.R
+import com.inkapplications.aprs.android.capture.log.LogFragment
+import com.inkapplications.aprs.android.capture.map.MapFragment
+import com.inkapplications.aprs.android.component
 import com.inkapplications.aprs.android.settings.SettingsActivity
 import com.inkapplications.aprs.data.AprsAccess
 import com.inkapplications.kotlin.collectOn

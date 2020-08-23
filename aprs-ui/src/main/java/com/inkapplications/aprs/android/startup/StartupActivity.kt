@@ -5,7 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.inkapplications.android.extensions.fadeIn
 import com.inkapplications.android.extensions.startActivity
 import com.inkapplications.aprs.android.BuildConfig
-import com.inkapplications.aprs.android.CaptureActivity
+import com.inkapplications.aprs.android.capture.CaptureActivity
 import com.inkapplications.aprs.android.R
 import com.inkapplications.aprs.android.component
 import kotlinx.android.synthetic.main.splash.*

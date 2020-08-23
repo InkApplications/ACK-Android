@@ -1,6 +1,6 @@
-package com.inkapplications.aprs.android.map
+package com.inkapplications.aprs.android.capture.map
 
-import com.inkapplications.aprs.android.log.LogItem
+import com.inkapplications.aprs.android.capture.log.LogItem
 import com.inkapplications.aprs.android.settings.SettingsReadAccess
 import com.inkapplications.aprs.android.settings.observeInt
 import com.inkapplications.aprs.android.symbol.SymbolFactory

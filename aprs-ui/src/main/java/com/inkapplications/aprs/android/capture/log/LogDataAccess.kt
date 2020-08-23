@@ -1,4 +1,4 @@
-package com.inkapplications.aprs.android.log
+package com.inkapplications.aprs.android.capture.log
 
 import com.inkapplications.aprs.android.symbol.SymbolFactory
 import com.inkapplications.aprs.data.AprsAccess

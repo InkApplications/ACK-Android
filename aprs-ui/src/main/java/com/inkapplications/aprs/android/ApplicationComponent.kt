@@ -2,9 +2,9 @@ package com.inkapplications.aprs.android
 
 import com.inkapplications.android.extensions.ApplicationModule
 import com.inkapplications.aprs.android.firebase.FirebaseModule
-import com.inkapplications.aprs.android.log.LogDataAccess
-import com.inkapplications.aprs.android.map.MapManagerFactory
-import com.inkapplications.aprs.android.map.MapModule
+import com.inkapplications.aprs.android.capture.log.LogDataAccess
+import com.inkapplications.aprs.android.capture.map.MapManagerFactory
+import com.inkapplications.aprs.android.capture.map.MapModule
 import com.inkapplications.aprs.android.settings.SettingsModule
 import com.inkapplications.aprs.android.settings.SettingsAccess
 import com.inkapplications.aprs.android.startup.ApplicationInitializer

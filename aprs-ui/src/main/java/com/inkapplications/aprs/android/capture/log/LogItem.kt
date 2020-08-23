@@ -1,4 +1,4 @@
-package com.inkapplications.aprs.android.log
+package com.inkapplications.aprs.android.capture.log
 
 import android.view.View
 import com.inkapplications.aprs.android.R
