@@ -33,7 +33,7 @@ class SettingsActivity: AppCompatActivity() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         settings_list.adapter = adapter
         settings_list.isNestedScrollingEnabled = false
-        settings_version.text = getString(R.string.settings_version, BuildConfig.VERSION_NAME, BuildConfig.VERSION_CODE.toString())
+        settings_version.text = getString(R.string.application_version, BuildConfig.VERSION_NAME, BuildConfig.VERSION_CODE.toString())
     }
 
     override fun onStart() {
