@@ -1,5 +1,6 @@
 package com.inkapplications.aprs.android.settings
 
+import com.inkapplications.aprs.android.firebase.FirebaseSettings
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
@@ -10,9 +11,13 @@ import dagger.multibindings.Multibinds
 class SettingsModule {
     @Provides
     @Reusable
-    fun settingsProvider(preferences: SharedPreferenceSettings): SettingsReadAccess {
-        return PrioritySettingValues(preferences)
-    }
+    fun settingsProvider(
+        sharedPreferences: SharedPreferenceSettings,
+        firebaseSettings: FirebaseSettings
+    ): SettingsReadAccess = PrioritySettingValues(
+        sharedPreferences,
+        firebaseSettings
+    )
 }
 
 @Module

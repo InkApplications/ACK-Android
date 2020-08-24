@@ -7,8 +7,6 @@ import org.junit.Assert.*
 class CompositeSettingsProviderTest {
     @Test
     fun getSettings() {
-        val stringSetting = StringSetting("test.string", "test", "category", "default")
-        val intSetting = IntSetting("test.int", "test", "category", 1234)
         val first = object: SettingsProvider {
             override val settings: List<Setting> = listOf(stringSetting)
         }
