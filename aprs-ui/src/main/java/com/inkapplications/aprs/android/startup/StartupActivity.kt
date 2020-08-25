@@ -1,7 +1,7 @@
 package com.inkapplications.aprs.android.startup
 
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
+import com.inkapplications.android.extensions.ExtendedActivity
 import com.inkapplications.android.extensions.fadeIn
 import com.inkapplications.android.extensions.startActivity
 import com.inkapplications.aprs.android.BuildConfig
@@ -14,8 +14,7 @@ import kotlinx.coroutines.*
 /**
  * A screen for initializing application settings.
  */
-class StartupActivity: AppCompatActivity() {
-    private lateinit var foreground: CoroutineScope
+class StartupActivity: ExtendedActivity() {
     private lateinit var initializer: ApplicationInitializer
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -28,17 +27,10 @@ class StartupActivity: AppCompatActivity() {
 
     override fun onStart() {
         super.onStart()
-        foreground = MainScope()
-
-        foreground.launch {
+        foregroundScope.launch {
             initializer.initialize(application)
             startActivity(CaptureActivity::class)
             finish()
         }
-    }
-
-    override fun onStop() {
-        foreground.cancel()
-        super.onStop()
     }
 }

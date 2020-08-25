@@ -8,9 +8,9 @@ import android.view.MenuItem
 import android.view.View
 import android.view.View.GONE
 import android.view.View.VISIBLE
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import com.inkapplications.android.extensions.ExtendedActivity
 import com.inkapplications.android.extensions.stopPropagation
 import com.inkapplications.android.extensions.startActivity
 import com.inkapplications.aprs.android.R
@@ -22,22 +22,18 @@ import com.inkapplications.aprs.data.AprsAccess
 import com.inkapplications.kotlin.collectOn
 import kimchi.Kimchi
 import kotlinx.android.synthetic.main.capture.*
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.MainScope
-import kotlinx.coroutines.cancel
 
 private const val RECORD_AUDIO_REQUEST = 45653
 
-class CaptureActivity: AppCompatActivity() {
+class CaptureActivity: ExtendedActivity() {
     private val mapFragment by lazy { MapFragment() }
     private val logFragment by lazy { LogFragment() }
-    private lateinit var foreground: CoroutineScope
     private var recording: Job? = null
     private lateinit var aprs: AprsAccess
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+    override fun onCreate() {
+        super.onCreate()
         setContentView(R.layout.capture)
         setSupportActionBar(capture_toolbar)
         aprs = component.aprs()
@@ -52,11 +48,6 @@ class CaptureActivity: AppCompatActivity() {
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean = stopPropagation {
         menuInflater.inflate(R.menu.capture_toolbar, menu)
-    }
-
-    override fun onStart() {
-        super.onStart()
-        foreground = MainScope()
     }
 
     private fun onMicEnableClick(view: View) {
@@ -85,7 +76,7 @@ class CaptureActivity: AppCompatActivity() {
         Kimchi.info("Start Recording")
         capture_mic.visibility = GONE
         capture_mic_off.visibility = VISIBLE
-        recording = aprs.incoming.collectOn(foreground) {
+        recording = aprs.incoming.collectOn(foregroundScope) {
             Kimchi.debug("APRS Packet Recorded: $it")
         }
     }
@@ -114,10 +105,5 @@ class CaptureActivity: AppCompatActivity() {
             else -> return false
         }
         return true
-    }
-
-    override fun onStop() {
-        foreground.cancel()
-        super.onStop()
     }
 }

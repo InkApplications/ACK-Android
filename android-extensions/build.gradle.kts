@@ -21,6 +21,8 @@ android {
 dependencies {
     implementation(kotlin("stdlib"))
 
+    implementation(Coroutines.core)
+
     api(AndroidX.Ktx.core)
     implementation(AndroidX.Preference.core)
     api(Dagger.runtime)
