@@ -30,10 +30,12 @@ class SettingsActivity: AppCompatActivity() {
         setContentView(R.layout.settings)
         setSupportActionBar(settings_toolbar)
         settingsAccess = component.settingsRepository()
+        if (savedInstanceState == null) settingsAccess.clearState()
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         settings_list.adapter = adapter
         settings_list.isNestedScrollingEnabled = false
         settings_version.text = getString(R.string.application_version, BuildConfig.VERSION_NAME, BuildConfig.VERSION_CODE.toString())
+        settings_version.setOnLongClickListener { stopPropagation { settingsAccess.showAdvancedSettings() } }
     }
 
     override fun onStart() {

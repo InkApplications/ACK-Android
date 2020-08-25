@@ -1,10 +1,9 @@
 package com.inkapplications.aprs.android.settings
 
+import com.inkapplications.kotlin.mapEach
 import com.xwray.groupie.kotlinandroidextensions.Item
 import dagger.Reusable
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.*
 import javax.inject.Inject
 
 /**
@@ -16,8 +15,13 @@ class SettingsAccess @Inject constructor(
     private val settingValues: SettingsReadAccess,
     private val settingsStorage: SettingsWriteAccess
 ) {
-    val settingItems: Flow<List<Item>> = settingsProvider.settings
-        .map { setting ->
+    private val showingAdvanced = MutableStateFlow(false)
+
+    val settingItems: Flow<List<Item>> = showingAdvanced
+        .map { showAdvanced ->
+            settingsProvider.settings.filter { showAdvanced || !it.advanced }
+        }
+        .mapEach { setting ->
             when (setting) {
                 is StringSetting -> settingValues.observeStringState(setting).map {
                     SettingViewModel(
@@ -33,10 +37,17 @@ class SettingsAccess @Inject constructor(
                 }
             }
         }
-        .let {
+        .flatMapLatest {
             combine(*it.toTypedArray()) { it.toList() }
         }
 
+    fun clearState() {
+        showingAdvanced.value = false
+    }
+
+    fun showAdvancedSettings() {
+        showingAdvanced.value = true
+    }
 
     fun updateInt(key: String, value: Int) {
         val setting = settingsProvider.settings.find { it.key == key } as? IntSetting
