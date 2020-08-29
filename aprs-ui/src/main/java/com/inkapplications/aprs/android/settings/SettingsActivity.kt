@@ -39,7 +39,7 @@ class SettingsActivity: ExtendedActivity() {
 
     override fun onStart() {
         super.onStart()
-        settingsAccess.settingItems.collectOn(foregroundScope) { items -> adapter.update(items) }
+        settingsAccess.getSettingsAsItems(::onSwitchChanged).collectOn(foregroundScope) { items -> adapter.update(items) }
         adapter.setOnItemClickListener { item, _ -> onItemClicked(item) }
     }
 
@@ -52,6 +52,7 @@ class SettingsActivity: ExtendedActivity() {
         when (item) {
             is StringSettingItem -> onStringClicked(item)
             is IntSettingItem -> onIntClicked(item)
+            is BooleanSettingItem -> Kimchi.trace("Boolean row tapped")
             else -> Kimchi.warn { "Unknown Item type clicked: ${item.javaClass.simpleName}" }
         }
     }
@@ -66,5 +67,9 @@ class SettingsActivity: ExtendedActivity() {
         stringPrompt(item.setting.name, item.viewModel.value) { result ->
             settingsAccess.updateString(item.setting.key, result)
         }
+    }
+
+    private fun onSwitchChanged(setting: BooleanSetting, checked: Boolean) {
+        settingsAccess.updateBoolean(setting.key, checked)
     }
 }

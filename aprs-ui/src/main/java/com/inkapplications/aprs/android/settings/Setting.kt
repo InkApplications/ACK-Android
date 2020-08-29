@@ -26,3 +26,11 @@ data class IntSetting(
     override val defaultValue: Int,
     override val advanced: Boolean = false
 ): Setting()
+
+data class BooleanSetting(
+    override val key: String,
+    override val name: String,
+    override val categoryName: String,
+    override val defaultValue: Boolean,
+    override val advanced: Boolean = false
+): Setting()

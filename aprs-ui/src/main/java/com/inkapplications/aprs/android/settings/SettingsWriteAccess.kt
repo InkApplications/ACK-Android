@@ -6,4 +6,5 @@ package com.inkapplications.aprs.android.settings
 interface SettingsWriteAccess {
     fun setString(setting: StringSetting, value: String)
     fun setInt(setting: IntSetting, value: Int)
+    fun setBoolean(setting: BooleanSetting, value: Boolean)
 }

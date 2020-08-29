@@ -17,18 +17,23 @@ class SettingsAccess @Inject constructor(
 ) {
     private val showingAdvanced = MutableStateFlow(false)
 
-    val settingItems: Flow<List<Item>> = showingAdvanced
+    fun getSettingsAsItems(
+        onBooleanChange: (BooleanSetting, Boolean) -> Unit
+    ): Flow<List<Item>> = showingAdvanced
         .map { showAdvanced ->
             settingsProvider.settings.filter { showAdvanced || !it.advanced }
         }
         .mapEach { setting ->
             when (setting) {
-                is StringSetting -> settingValues.observeStringState(setting)
+                is StringSetting -> settingValues.observeString(setting)
                     .map { StringSettingViewModel(setting, it) }
                     .map { StringSettingItem(it, setting) }
-                is IntSetting -> settingValues.observeIntState(setting)
+                is IntSetting -> settingValues.observeInt(setting)
                     .map { IntSettingViewModel(setting, it) }
                     .map { IntSettingItem(it, setting) }
+                is BooleanSetting -> settingValues.observeBoolean(setting)
+                    .map { BooleanSettingViewModel(setting, it) }
+                    .map { BooleanSettingItem(it, setting, onBooleanChange) }
             }
         }
         .flatMapLatest {
@@ -53,5 +58,11 @@ class SettingsAccess @Inject constructor(
         val setting = settingsProvider.settings.find { it.key == key } as? StringSetting
                 ?: throw IllegalArgumentException("Unknown String Setting: <$key>")
         settingsStorage.setString(setting, value)
+    }
+
+    fun updateBoolean(key: String, value: Boolean) {
+        val setting = settingsProvider.settings.find { it.key == key } as? BooleanSetting
+            ?: throw IllegalArgumentException("Unknown Boolean Setting: <$key>")
+        settingsStorage.setBoolean(setting, value)
     }
 }

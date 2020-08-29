@@ -41,8 +41,19 @@ class SharedPreferenceSettings @Inject constructor(
             .map { preferences.getOptionalInt(setting.key) }
     }
 
+    override fun observeBooleanState(setting: BooleanSetting): Flow<Boolean?> {
+        return updates
+            .filter { it == setting.key }
+            .onStart { emit(setting.key) }
+            .map { preferences.getOptionalBoolean(setting.key) }
+    }
+
     private fun SharedPreferences.getOptionalInt(key: String): Int? {
         return ifContains(key) { getInt(key, -1) }
+    }
+
+    private fun SharedPreferences.getOptionalBoolean(key: String): Boolean? {
+        return ifContains(key) { getBoolean(key, false) }
     }
 
     private fun <T> SharedPreferences.ifContains(key: String, action: () -> T): T? {
@@ -50,6 +61,8 @@ class SharedPreferenceSettings @Inject constructor(
     }
 
     override fun setInt(setting: IntSetting, value: Int) = preferences.apply { putInt(setting.key, value) }
+
+    override fun setBoolean(setting: BooleanSetting, value: Boolean) = preferences.apply { putBoolean(setting.key, value) }
 
     private fun Flow<String>.requireKey(): Flow<Result<String>> = map { key ->
         if (preferences.contains(key)) Result.success(key)
