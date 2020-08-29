@@ -68,4 +68,6 @@ dependencies {
     implementation("com.google.firebase:firebase-analytics-ktx:17.5.0")
 
     testImplementation(JUnit.core)
+    testImplementation(Coroutines.test)
+    testImplementation(kotlin("test"))
 }

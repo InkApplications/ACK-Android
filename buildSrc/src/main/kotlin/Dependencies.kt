@@ -58,6 +58,7 @@ object Coroutines {
     const val core = "$group:kotlinx-coroutines-core:$version"
     const val common = "$group:kotlinx-coroutines-core-common:$version"
     const val android = "$group:kotlinx-coroutines-android:$version"
+    const val test = "$group:kotlinx-coroutines-test:$version"
 }
 
 object JUnit {
