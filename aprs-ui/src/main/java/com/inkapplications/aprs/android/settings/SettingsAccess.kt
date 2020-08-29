@@ -23,18 +23,12 @@ class SettingsAccess @Inject constructor(
         }
         .mapEach { setting ->
             when (setting) {
-                is StringSetting -> settingValues.observeStringState(setting).map {
-                    SettingViewModel(
-                        name = setting.name,
-                        value = it.orEmpty()
-                    ).let { SettingStringItem(it, setting) }
-                }
-                is IntSetting -> settingValues.observeIntState(setting).map {
-                    SettingViewModel(
-                        name = setting.name,
-                        value = it?.toString().orEmpty()
-                    ).let { SettingIntItem(it, setting) }
-                }
+                is StringSetting -> settingValues.observeStringState(setting)
+                    .map { StringSettingViewModel(setting, it) }
+                    .map { SettingStringItem(it, setting) }
+                is IntSetting -> settingValues.observeIntState(setting)
+                    .map { IntSettingViewModel(setting, it) }
+                    .map { SettingIntItem(it, setting) }
             }
         }
         .flatMapLatest {

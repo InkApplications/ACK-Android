@@ -1,6 +1,5 @@
 package com.inkapplications.aprs.android.settings
 
-import android.os.Bundle
 import android.view.MenuItem
 import com.inkapplications.android.extensions.ExtendedActivity
 import com.inkapplications.android.extensions.continuePropagation

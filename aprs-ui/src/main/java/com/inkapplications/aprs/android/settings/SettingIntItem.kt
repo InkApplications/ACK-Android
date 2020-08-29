@@ -5,7 +5,7 @@ import com.xwray.groupie.kotlinandroidextensions.GroupieViewHolder
 import com.xwray.groupie.kotlinandroidextensions.Item
 import kotlinx.android.synthetic.main.setting_item_int.*
 
-class SettingIntItem(val viewModel: SettingViewModel, val setting: IntSetting): Item() {
+class SettingIntItem(val viewModel: IntSettingViewModel, val setting: IntSetting): Item() {
     override fun getId(): Long = setting.hashCode().toLong()
     override fun getLayout(): Int = R.layout.setting_item_int
 
