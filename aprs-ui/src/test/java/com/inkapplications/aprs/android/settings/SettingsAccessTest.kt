@@ -19,12 +19,12 @@ class SettingsAccessTest {
 
         assertEquals(2, result.size, "Provider should yield a result for each Setting.")
         val (first, second) = result
-        assertTrue(first is SettingStringItem, "First setting should be a string item.")
+        assertTrue(first is StringSettingItem, "First setting should be a string item.")
         assertEquals(stringSetting, first.setting, "Settings should not be transformed.")
         assertEquals("test string", first.viewModel.name, "Setting name should be reflected in viewmodel.")
         assertEquals("foo - test.string", first.viewModel.value, "Setting value is provided by read access stub.")
 
-        assertTrue(second is SettingIntItem)
+        assertTrue(second is IntSettingItem)
         assertEquals(intSetting, second.setting, "Settings should not be transformed.")
         assertEquals("test int", second.viewModel.name, "Setting name should be reflected in viewmodel.")
         assertEquals("1", second.viewModel.value, "Setting value is provided by read access stub.")
@@ -48,7 +48,7 @@ class SettingsAccessTest {
         val result = access.settingItems.first()
 
         assertEquals(1, result.size, "List is filtered to only simple settigns.")
-        assertEquals(stringSetting, (result.first() as SettingStringItem).setting, "Advanced settings are removed from settings list.")
+        assertEquals(stringSetting, (result.first() as StringSettingItem).setting, "Advanced settings are removed from settings list.")
     }
 
     @Test
@@ -70,7 +70,7 @@ class SettingsAccessTest {
         val result = access.settingItems.first()
 
         assertEquals(2, result.size, "List is filtered to only simple settigns.")
-        assertEquals(stringSetting, (result[0] as SettingStringItem).setting, "Advanced settings are removed from settings list.")
-        assertEquals("advanced", (result[1] as SettingStringItem).setting.key, "Advanced settings are removed from settings list.")
+        assertEquals(stringSetting, (result[0] as StringSettingItem).setting, "Advanced settings are removed from settings list.")
+        assertEquals("advanced", (result[1] as StringSettingItem).setting.key, "Advanced settings are removed from settings list.")
     }
 }

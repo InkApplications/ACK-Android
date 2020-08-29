@@ -25,10 +25,10 @@ class SettingsAccess @Inject constructor(
             when (setting) {
                 is StringSetting -> settingValues.observeStringState(setting)
                     .map { StringSettingViewModel(setting, it) }
-                    .map { SettingStringItem(it, setting) }
+                    .map { StringSettingItem(it, setting) }
                 is IntSetting -> settingValues.observeIntState(setting)
                     .map { IntSettingViewModel(setting, it) }
-                    .map { SettingIntItem(it, setting) }
+                    .map { IntSettingItem(it, setting) }
             }
         }
         .flatMapLatest {

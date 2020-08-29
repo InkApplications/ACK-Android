@@ -50,19 +50,19 @@ class SettingsActivity: ExtendedActivity() {
 
     private fun onItemClicked(item: Item<*>) {
         when (item) {
-            is SettingStringItem -> onStringClicked(item)
-            is SettingIntItem -> onIntClicked(item)
+            is StringSettingItem -> onStringClicked(item)
+            is IntSettingItem -> onIntClicked(item)
             else -> Kimchi.warn { "Unknown Item type clicked: ${item.javaClass.simpleName}" }
         }
     }
 
-    private fun onIntClicked(item: SettingIntItem) {
+    private fun onIntClicked(item: IntSettingItem) {
         intPrompt(item.setting.name, item.viewModel.value.toInt()) { result ->
             settingsAccess.updateInt(item.setting.key, result)
         }
     }
 
-    private fun onStringClicked(item: SettingStringItem) {
+    private fun onStringClicked(item: StringSettingItem) {
         stringPrompt(item.setting.name, item.viewModel.value) { result ->
             settingsAccess.updateString(item.setting.key, result)
         }
