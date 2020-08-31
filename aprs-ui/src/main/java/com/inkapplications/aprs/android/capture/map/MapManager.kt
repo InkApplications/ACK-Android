@@ -1,5 +1,6 @@
 package com.inkapplications.aprs.android.capture.map
 
+import com.inkapplications.aprs.android.map.Map
 import kotlinx.coroutines.flow.*
 
 /**
@@ -13,8 +14,8 @@ class MapManager(
         .flatMapLatest { it?.let { mapData.findLogItem(it) } ?: flowOf(null) }
         .map {
             SelectionViewModel(
-                    visible = it != null,
-                    item = it
+                visible = it != null,
+                item = it
             )
         }
 

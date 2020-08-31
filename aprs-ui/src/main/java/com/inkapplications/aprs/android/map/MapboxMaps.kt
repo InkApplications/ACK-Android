@@ -1,4 +1,4 @@
-package com.inkapplications.aprs.android.capture.map
+package com.inkapplications.aprs.android.map
 
 import android.app.Activity
 import android.content.res.Configuration
@@ -20,5 +20,15 @@ inline fun MapView.init(activity: Activity, crossinline onInit: (MapboxMap, Styl
         map.setStyle(theme) { style ->
             onInit(map, style)
         }
+    }
+}
+
+/**
+ * Get a Map object by initializing a Mapbox Map.
+ */
+inline fun MapView.getMap(activity: Activity, crossinline onInit: (Map) -> Unit) {
+    init(activity) { mapbox, style ->
+        val map = Map(this, mapbox, style)
+        onInit(map)
     }
 }

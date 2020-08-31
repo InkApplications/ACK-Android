@@ -9,9 +9,10 @@ import com.xwray.groupie.kotlinandroidextensions.Item
 import kotlinx.android.synthetic.main.log_item.view.*
 
 class LogItem(
+    id: Long,
     val packet: AprsPacket,
     private val symbolFactory: SymbolFactory
-): Item(packet.hashCode().toLong()) {
+): Item(id) {
     override fun getLayout(): Int = R.layout.log_item
 
     override fun bind(viewHolder: GroupieViewHolder, position: Int) {

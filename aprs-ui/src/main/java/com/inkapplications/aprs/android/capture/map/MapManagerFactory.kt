@@ -1,8 +1,6 @@
 package com.inkapplications.aprs.android.capture.map
 
-import com.mapbox.mapboxsdk.maps.MapView
-import com.mapbox.mapboxsdk.maps.MapboxMap
-import com.mapbox.mapboxsdk.maps.Style
+import com.inkapplications.aprs.android.map.Map
 import dagger.Reusable
 import javax.inject.Inject
 
@@ -16,9 +14,5 @@ import javax.inject.Inject
 class MapManagerFactory @Inject constructor(
     private val mapData: MapDataRepository
 ) {
-    fun create(view: MapView, mapbox: MapboxMap, style: Style): MapManager {
-        val map = Map(view, mapbox, style)
-
-        return MapManager(mapData, map)
-    }
+    fun create(map: Map): MapManager = MapManager(mapData, map)
 }

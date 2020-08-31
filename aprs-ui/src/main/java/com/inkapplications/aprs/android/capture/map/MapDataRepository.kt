@@ -1,6 +1,7 @@
 package com.inkapplications.aprs.android.capture.map
 
 import com.inkapplications.aprs.android.capture.log.LogItem
+import com.inkapplications.aprs.android.map.MarkerViewModel
 import com.inkapplications.aprs.android.settings.SettingsReadAccess
 import com.inkapplications.aprs.android.settings.observeInt
 import com.inkapplications.aprs.android.symbol.SymbolFactory
@@ -44,6 +45,6 @@ class MapDataRepository @Inject constructor(
     }
 
     fun findLogItem(id: Long): Flow<LogItem?> {
-        return aprs.findById(id).map { it?.let { LogItem(it.data, symbolFactory) } }
+        return aprs.findById(id).map { it?.let { LogItem(it.id, it.data, symbolFactory) } }
     }
 }

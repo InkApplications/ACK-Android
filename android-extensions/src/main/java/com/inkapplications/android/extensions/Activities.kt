@@ -9,8 +9,10 @@ import kotlin.reflect.KClass
 /**
  * Start an activity by class reference.
  */
-fun <T: Activity> Activity.startActivity(target: KClass<T>) {
-    Intent(this, target.java).run(this::startActivity)
+fun <T: Activity> Activity.startActivity(target: KClass<T>, intentBuilder: Intent.() -> Unit = {}) {
+    Intent(this, target.java)
+        .apply { intentBuilder(this) }
+        .run(this::startActivity)
 }
 
 /**

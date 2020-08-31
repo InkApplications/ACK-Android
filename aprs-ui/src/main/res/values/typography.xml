@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="AprsTheme.Headline1" parent="TextAppearance.MaterialComponents.Headline4"/>
+    <style name="AprsTheme.Headline2" parent="TextAppearance.MaterialComponents.Headline5"/>
+    <style name="AprsTheme.Headline3" parent="TextAppearance.MaterialComponents.Headline6"/>
+</resources>

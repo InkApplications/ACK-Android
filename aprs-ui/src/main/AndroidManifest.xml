@@ -17,6 +17,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".capture.CaptureActivity" />
+        <activity android:name=".station.StationActivity" />
         <activity android:name=".settings.SettingsActivity" />
     </application>
 </manifest>

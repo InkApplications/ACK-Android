@@ -12,6 +12,6 @@ class LogDataAccess @Inject constructor(
     symbols: SymbolFactory
 ) {
     val items = aprs.findRecent(500).mapEach {
-        LogItem(it.data, symbols)
+        LogItem(it.id, it.data, symbols)
     }
 }

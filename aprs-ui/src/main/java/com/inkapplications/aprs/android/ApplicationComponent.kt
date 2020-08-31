@@ -9,6 +9,7 @@ import com.inkapplications.aprs.android.settings.SettingsModule
 import com.inkapplications.aprs.android.settings.SettingsAccess
 import com.inkapplications.aprs.android.startup.ApplicationInitializer
 import com.inkapplications.aprs.android.startup.StartupModule
+import com.inkapplications.aprs.android.station.StationEvents
 import com.inkapplications.aprs.data.AndroidAprsModule
 import com.inkapplications.aprs.data.AprsAccess
 import dagger.Component
@@ -32,4 +33,5 @@ interface ApplicationComponent {
     fun settingsRepository(): SettingsAccess
     fun logData(): LogDataAccess
     fun initializer(): ApplicationInitializer
+    fun stationEvents(): StationEvents
 }

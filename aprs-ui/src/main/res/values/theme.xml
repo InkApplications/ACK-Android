@@ -16,6 +16,10 @@
 
         <item name="bottomNavigationStyle">@style/AprsTheme.BottomNavigation</item>
         <item name="materialAlertDialogTheme">@style/AprsTheme.Alert</item>
+
+        <item name="textAppearanceHeadline1">@style/AprsTheme.Headline1</item>
+        <item name="textAppearanceHeadline2">@style/AprsTheme.Headline2</item>
+        <item name="textAppearanceHeadline3">@style/AprsTheme.Headline3</item>
     </style>
     <style name="AprsTheme.Compat">
     </style>

@@ -11,13 +11,11 @@ import org.junit.Test
 class PrioritySettingValuesTest {
     @Test
     fun firstIsPrioritized() {
-        val first = object: SettingsReadAccess {
+        val first = object: SettingsReadAccess by SettingsReadAccessStub {
             override fun observeStringState(setting: StringSetting): Flow<String?> = flowOf("first")
-            override fun observeIntState(setting: IntSetting): Flow<Int?> = TODO()
         }
-        val second = object: SettingsReadAccess {
+        val second = object: SettingsReadAccess by SettingsReadAccessStub {
             override fun observeStringState(setting: StringSetting): Flow<String?> = flowOf("second")
-            override fun observeIntState(setting: IntSetting): Flow<Int?> = TODO()
         }
         val values = PrioritySettingValues(first, second)
 
@@ -28,13 +26,11 @@ class PrioritySettingValuesTest {
 
     @Test
     fun secondIsUsed() {
-        val first = object: SettingsReadAccess {
+        val first = object: SettingsReadAccess by SettingsReadAccessStub {
             override fun observeStringState(setting: StringSetting): Flow<String?> = flowOf(null)
-            override fun observeIntState(setting: IntSetting): Flow<Int?> = TODO()
         }
-        val second = object: SettingsReadAccess {
+        val second = object: SettingsReadAccess by SettingsReadAccessStub {
             override fun observeStringState(setting: StringSetting): Flow<String?> = flowOf("second")
-            override fun observeIntState(setting: IntSetting): Flow<Int?> = TODO()
         }
         val values = PrioritySettingValues(first, second)
 
@@ -45,13 +41,11 @@ class PrioritySettingValuesTest {
 
     @Test
     fun noSetting() {
-        val first = object: SettingsReadAccess {
+        val first = object: SettingsReadAccess by SettingsReadAccessStub {
             override fun observeStringState(setting: StringSetting): Flow<String?> = flowOf(null)
-            override fun observeIntState(setting: IntSetting): Flow<Int?> = TODO()
         }
-        val second = object: SettingsReadAccess {
+        val second = object: SettingsReadAccess by SettingsReadAccessStub {
             override fun observeStringState(setting: StringSetting): Flow<String?> = flowOf(null)
-            override fun observeIntState(setting: IntSetting): Flow<Int?> = TODO()
         }
         val values = PrioritySettingValues(first, second)
 

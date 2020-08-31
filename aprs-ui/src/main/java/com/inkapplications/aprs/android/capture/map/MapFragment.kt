@@ -9,6 +9,8 @@ import androidx.fragment.app.Fragment
 import com.inkapplications.android.extensions.setVisibility
 import com.inkapplications.aprs.android.R
 import com.inkapplications.aprs.android.component
+import com.inkapplications.aprs.android.map.getMap
+import com.inkapplications.aprs.android.map.lifecycleObserver
 import com.inkapplications.kotlin.collectOn
 import kotlinx.android.synthetic.main.map.*
 import kotlinx.coroutines.*
@@ -40,10 +42,10 @@ class MapFragment: Fragment() {
     }
 
     private fun initializeMap() {
-        map_view.init(activity!!) { map, style ->
+        map_view.getMap(activity!!) { map ->
             mapJobs.cancel()
             mapJobs = Job()
-            val manager = mapManagerFactory.create(map_view, map, style)
+            val manager = mapManagerFactory.create(map)
 
             manager.selectionState.collectOn(foreground + mapJobs) { state ->
                 map_selected.setVisibility(state.visible)

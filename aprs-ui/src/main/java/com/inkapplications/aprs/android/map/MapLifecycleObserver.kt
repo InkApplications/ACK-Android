@@ -1,4 +1,4 @@
-package com.inkapplications.aprs.android.capture.map
+package com.inkapplications.aprs.android.map
 
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleObserver

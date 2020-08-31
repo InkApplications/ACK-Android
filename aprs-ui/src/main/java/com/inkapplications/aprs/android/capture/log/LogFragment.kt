@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.inkapplications.aprs.android.R
 import com.inkapplications.aprs.android.component
+import com.inkapplications.aprs.android.station.startStationActivity
 import com.inkapplications.kotlin.collectOn
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.GroupieViewHolder
@@ -29,6 +30,7 @@ class LogFragment: Fragment() {
 
         data = component.logData()
         log_list.adapter = adapter
+        adapter.setOnItemClickListener { item, _ ->  requireActivity().startStationActivity((item as LogItem).id) }
     }
 
     override fun onStart() {

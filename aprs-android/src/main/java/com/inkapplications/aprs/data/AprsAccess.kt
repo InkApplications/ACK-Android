@@ -34,7 +34,7 @@ internal class AndroidAprs(
     }
 
     override fun findById(id: Long): Flow<CapturedPacket?> {
-        return packetDao.findById(id).map { tryParse(it) }
+        return packetDao.findById(id).map { it?.let { tryParse(it) } }
     }
 
     private fun tryParse(packet: PacketEntity): CapturedPacket? {

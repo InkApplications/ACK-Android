@@ -15,7 +15,7 @@ class SettingsAccessTest {
             SettingsWriteAccessStub
         )
 
-        val result = access.settingItems.first()
+        val result = access.getSettingsAsItems { _, _ -> }.first()
 
         assertEquals(2, result.size, "Provider should yield a result for each Setting.")
         val (first, second) = result
@@ -45,7 +45,7 @@ class SettingsAccessTest {
             SettingsWriteAccessStub
         )
 
-        val result = access.settingItems.first()
+        val result = access.getSettingsAsItems { _, _ -> }.first()
 
         assertEquals(1, result.size, "List is filtered to only simple settigns.")
         assertEquals(stringSetting, (result.first() as StringSettingItem).setting, "Advanced settings are removed from settings list.")
@@ -67,7 +67,7 @@ class SettingsAccessTest {
         )
 
         access.showAdvancedSettings()
-        val result = access.settingItems.first()
+        val result = access.getSettingsAsItems { _, _ -> }.first()
 
         assertEquals(2, result.size, "List is filtered to only simple settigns.")
         assertEquals(stringSetting, (result[0] as StringSettingItem).setting, "Advanced settings are removed from settings list.")

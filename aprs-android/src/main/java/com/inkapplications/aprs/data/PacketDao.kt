@@ -11,7 +11,7 @@ internal interface PacketDao {
     fun findRecent(count: Int): Flow<List<PacketEntity>>
 
     @Query("SELECT * FROM packets WHERE id = :id")
-    fun findById(id: Long): Flow<PacketEntity>
+    fun findById(id: Long): Flow<PacketEntity?>
 
     @Insert
     suspend fun addPacket(packet: PacketEntity)

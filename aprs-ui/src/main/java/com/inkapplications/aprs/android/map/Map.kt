@@ -1,4 +1,4 @@
-package com.inkapplications.aprs.android.capture.map
+package com.inkapplications.aprs.android.map
 
 import android.graphics.Bitmap
 import com.google.gson.JsonObject
