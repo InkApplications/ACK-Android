@@ -1,10 +1,14 @@
 package com.inkapplications.aprs.android.station
 
 import com.inkapplications.aprs.android.map.MarkerViewModel
+import com.inkapplications.aprs.android.map.ZoomLevels
 import com.inkapplications.aprs.android.symbol.SymbolFactory
 import com.inkapplications.aprs.data.AprsAccess
 import com.inkapplications.aprs.data.CapturedPacket
 import com.inkapplications.karps.structures.AprsPacket
+import com.inkapplications.karps.structures.unit.Coordinates
+import com.inkapplications.karps.structures.unit.Latitude
+import com.inkapplications.karps.structures.unit.Longitude
 import dagger.Reusable
 import kimchi.logger.KimchiLogger
 import kotlinx.coroutines.flow.Flow
@@ -25,11 +29,15 @@ class StationEvents @Inject constructor(
         return when (val data = packet?.data) {
             is AprsPacket.Position -> StationViewModel(
                 markers = listOf(MarkerViewModel(packet.id, data.coordinates, symbolFactory.createSymbol(data.symbol))),
+                center = data.coordinates,
+                zoom = ZoomLevels.ROADS,
                 name = data.source.toString(),
                 comment = data.comment
             )
             else -> StationViewModel(
                 markers = emptyList(),
+                center = Coordinates(Latitude(0.0), Longitude(0.0)),
+                zoom = ZoomLevels.MIN,
                 name = data?.source?.toString().orEmpty(),
                 comment = data?.body.orEmpty()
             )

@@ -30,6 +30,7 @@ class StationActivity: ExtendedActivity() {
 
         station_map.getMap(this) { map ->
             stationEvents.stateEvents(id).collectOn(foregroundScope) { viewModel ->
+                map.zoomTo(viewModel.center, viewModel.zoom)
                 map.showMarkers(viewModel.markers)
                 station_map.setVisibility(viewModel.mapVisible)
                 station_name.text = viewModel.name

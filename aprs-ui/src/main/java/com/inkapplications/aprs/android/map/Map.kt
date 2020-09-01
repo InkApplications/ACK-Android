@@ -3,6 +3,7 @@ package com.inkapplications.aprs.android.map
 import android.graphics.Bitmap
 import com.google.gson.JsonObject
 import com.inkapplications.android.extensions.continuePropagation
+import com.inkapplications.karps.structures.unit.Coordinates
 import com.mapbox.mapboxsdk.camera.CameraUpdateFactory
 import com.mapbox.mapboxsdk.geometry.LatLng
 import com.mapbox.mapboxsdk.maps.MapView
@@ -52,6 +53,13 @@ class Map(
             .run { symbolManager.create(this) }
     }
 
+    fun zoomTo(coordinates: Coordinates, zoom: Double) {
+        map.animateCamera(CameraUpdateFactory.newLatLngZoom(
+            LatLng(coordinates.latitude.decimal, coordinates.longitude.decimal),
+            zoom
+        ))
+    }
+
     private fun createImage(image: Bitmap, style: Style): String {
         val id = UUID.randomUUID().toString()
 
@@ -60,4 +68,3 @@ class Map(
         return id
     }
 }
-
