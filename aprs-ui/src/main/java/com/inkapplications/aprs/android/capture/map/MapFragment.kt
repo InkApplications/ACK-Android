@@ -11,6 +11,7 @@ import com.inkapplications.aprs.android.R
 import com.inkapplications.aprs.android.component
 import com.inkapplications.aprs.android.map.getMap
 import com.inkapplications.aprs.android.map.lifecycleObserver
+import com.inkapplications.aprs.android.station.startStationActivity
 import com.inkapplications.kotlin.collectOn
 import kotlinx.android.synthetic.main.map.*
 import kotlinx.coroutines.*
@@ -50,6 +51,9 @@ class MapFragment: Fragment() {
             manager.selectionState.collectOn(foreground + mapJobs) { state ->
                 map_selected.setVisibility(state.visible)
                 state.item?.bindToView(map_selected)
+                map_selected.setOnClickListener {
+                    activity!!.startStationActivity(state.item!!.id)
+                }
             }
             foreground.launch(mapJobs) { manager.displayMarkers() }
         }
