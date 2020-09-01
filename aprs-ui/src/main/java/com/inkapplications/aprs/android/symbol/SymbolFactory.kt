@@ -7,6 +7,7 @@ import android.graphics.Canvas
 import android.graphics.Matrix
 import com.inkapplications.aprs.android.R
 import com.inkapplications.karps.structures.Symbol
+import com.inkapplications.karps.structures.symbolOf
 import dagger.Reusable
 import kimchi.logger.KimchiLogger
 import javax.inject.Inject
@@ -21,6 +22,10 @@ class SymbolFactory @Inject constructor(
     private val logger: KimchiLogger
 ) {
     private val resources = context.resources
+
+    val defaultSymbol by lazy {
+        createSymbol(symbolOf('/', '"'))
+    }
 
     fun createSymbol(symbol: Symbol): Bitmap {
         val base = locator.getBaseResourceName(symbol).let(::findBitmap)

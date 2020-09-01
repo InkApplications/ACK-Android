@@ -2,7 +2,7 @@ package com.inkapplications.aprs.android
 
 import com.inkapplications.android.extensions.ApplicationModule
 import com.inkapplications.aprs.android.firebase.FirebaseModule
-import com.inkapplications.aprs.android.capture.log.LogDataAccess
+import com.inkapplications.aprs.android.capture.log.LogEvents
 import com.inkapplications.aprs.android.capture.map.MapManagerFactory
 import com.inkapplications.aprs.android.capture.map.MapModule
 import com.inkapplications.aprs.android.settings.SettingsModule
@@ -31,7 +31,7 @@ interface ApplicationComponent {
     fun aprs(): AprsAccess
     fun mapManager(): MapManagerFactory
     fun settingsRepository(): SettingsAccess
-    fun logData(): LogDataAccess
+    fun logData(): LogEvents
     fun initializer(): ApplicationInitializer
     fun stationEvents(): StationEvents
 }

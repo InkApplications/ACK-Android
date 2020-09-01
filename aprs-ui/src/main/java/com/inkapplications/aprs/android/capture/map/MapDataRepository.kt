@@ -1,6 +1,7 @@
 package com.inkapplications.aprs.android.capture.map
 
 import com.inkapplications.aprs.android.capture.log.LogItem
+import com.inkapplications.aprs.android.capture.log.LogViewModelFactory
 import com.inkapplications.aprs.android.map.MarkerViewModel
 import com.inkapplications.aprs.android.settings.SettingsReadAccess
 import com.inkapplications.aprs.android.settings.observeInt
@@ -25,6 +26,7 @@ class MapDataRepository @Inject constructor(
     private val logger: KimchiLogger,
     private val aprs: AprsAccess,
     private val symbolFactory: SymbolFactory,
+    private val logViewModelFactory: LogViewModelFactory,
     private val settings: SettingsReadAccess,
     private val mapSettings: MapSettings
 ) {
@@ -45,6 +47,8 @@ class MapDataRepository @Inject constructor(
     }
 
     fun findLogItem(id: Long): Flow<LogItem?> {
-        return aprs.findById(id).map { it?.let { LogItem(it.id, it.data, symbolFactory) } }
+        return aprs.findById(id)
+            .map { it?.let { logViewModelFactory.create(it.data) } }
+            .map { it?.let { LogItem(id, it) } }
     }
 }

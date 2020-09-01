@@ -17,7 +17,7 @@ import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.cancel
 
 class LogFragment: Fragment() {
-    private lateinit var data: LogDataAccess
+    private lateinit var data: LogEvents
     private lateinit var foreground: CoroutineScope
     private val adapter = GroupAdapter<GroupieViewHolder>()
 
