@@ -8,7 +8,7 @@
     android:padding="@dimen/touch_padding">
 
     <TextView
-        style="?attr/textAppearanceSubtitle1"
+        style="?attr/textAppearanceBody1"
         android:id="@+id/setting_item_string_name"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
