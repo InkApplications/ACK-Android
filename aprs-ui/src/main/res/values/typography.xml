@@ -26,4 +26,8 @@
         <item name="android:textSize">14sp</item>
         <item name="android:textAllCaps">true</item>
     </style>
+    <style name="AprsTheme.Button" parent="Widget.MaterialComponents.Button">
+        <item name="backgroundTint">?attr/colorSecondary</item>
+        <item name="android:textColor">?attr/colorOnSecondary</item>
+    </style>
 </resources>

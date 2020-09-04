@@ -18,17 +18,20 @@
         <item name="materialAlertDialogTheme">@style/AprsTheme.Alert</item>
 
         <item name="textAppearanceBody1">@style/AprsTheme.Text</item>
-        <item name="textAppearanceBody2">@style/AprsTheme.Text</item>
+        <item name="textAppearanceBody2">?attr/textAppearanceBody1</item>
         <item name="textAppearanceCaption">@style/AprsTheme.Text.Caption</item>
-        <item name="textAppearanceHeadline1">@style/AprsTheme.Text.Headline1</item>
-        <item name="textAppearanceHeadline2">@style/AprsTheme.Text.Headline2</item>
-        <item name="textAppearanceHeadline3">@style/AprsTheme.Text.Headline3</item>
+        <item name="textAppearanceHeadline1">?attr/textAppearanceHeadline4</item>
+        <item name="textAppearanceHeadline2">?attr/textAppearanceHeadline5</item>
+        <item name="textAppearanceHeadline3">?attr/textAppearanceHeadline6</item>
         <item name="textAppearanceHeadline4">@style/AprsTheme.Text.Headline1</item>
         <item name="textAppearanceHeadline5">@style/AprsTheme.Text.Headline2</item>
         <item name="textAppearanceHeadline6">@style/AprsTheme.Text.Headline3</item>
-        <item name="textAppearanceSubtitle1">@style/AprsTheme.Text.Headline2</item>
-        <item name="textAppearanceSubtitle2">@style/AprsTheme.Text.Headline3</item>
+
+        <item name="textAppearanceSubtitle1">?attr/textAppearanceHeadline2</item>
+        <item name="textAppearanceSubtitle2">?attr/textAppearanceHeadline3</item>
+
         <item name="textAppearanceButton">@style/AprsTheme.Text.Button</item>
+        <item name="materialButtonStyle">@style/AprsTheme.Button</item>
     </style>
     <style name="AprsTheme.Compat">
     </style>
@@ -53,3 +56,4 @@
         <item name="android:textColor">?attr/colorOnSurface</item>
     </style>
 </resources>
+
