@@ -6,6 +6,7 @@ import com.inkapplications.aprs.android.symbol.SymbolFactory
 import com.inkapplications.aprs.data.AprsAccess
 import com.inkapplications.aprs.data.CapturedPacket
 import com.inkapplications.karps.structures.AprsPacket
+import com.inkapplications.karps.structures.symbolOf
 import com.inkapplications.karps.structures.unit.Coordinates
 import com.inkapplications.karps.structures.unit.Latitude
 import com.inkapplications.karps.structures.unit.Longitude
@@ -26,6 +27,7 @@ class StationEvents @Inject constructor(
     }
 
     private fun createViewModel(packet: CapturedPacket?): StationViewModel {
+        val defaultWeatherSymbol = symbolOf('/' , 'W')
         return when (val data = packet?.data) {
             is AprsPacket.Position -> StationViewModel(
                 markers = listOf(MarkerViewModel(packet.id, data.coordinates, symbolFactory.createSymbol(data.symbol))),
@@ -34,10 +36,21 @@ class StationEvents @Inject constructor(
                 name = data.source.toString(),
                 comment = data.comment
             )
+            is AprsPacket.Weather -> StationViewModel(
+                markers = data.position?.let {
+                    listOf(MarkerViewModel(
+                        id = packet.id,
+                        coordinates = it,
+                        symbol = symbolFactory.createSymbol(data.symbol ?: defaultWeatherSymbol)
+                    ))
+                } ?: emptyList(),
+                weather = "${data.temperature}",
+                center = data.position ?: Coordinates(Latitude(0.0), Longitude(0.0)),
+                zoom = ZoomLevels.ROADS,
+                name = data.source.toString(),
+                comment = data.body
+            )
             else -> StationViewModel(
-                markers = emptyList(),
-                center = Coordinates(Latitude(0.0), Longitude(0.0)),
-                zoom = ZoomLevels.MIN,
                 name = data?.source?.toString().orEmpty(),
                 comment = data?.body.orEmpty()
             )
