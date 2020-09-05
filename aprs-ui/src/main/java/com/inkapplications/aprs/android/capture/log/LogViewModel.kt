@@ -5,5 +5,5 @@ import android.graphics.Bitmap
 data class LogViewModel(
     val origin: String,
     val comment: String,
-    val symbol: Bitmap
+    val symbol: Bitmap?
 )

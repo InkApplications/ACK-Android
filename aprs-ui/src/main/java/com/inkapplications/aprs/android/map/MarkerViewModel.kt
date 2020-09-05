@@ -9,5 +9,5 @@ import com.inkapplications.karps.structures.unit.Coordinates
 data class MarkerViewModel(
     val id: Long,
     val coordinates: Coordinates,
-    val symbol: Bitmap
+    val symbol: Bitmap?
 )

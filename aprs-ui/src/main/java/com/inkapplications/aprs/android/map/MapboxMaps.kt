@@ -28,7 +28,7 @@ inline fun MapView.init(activity: Activity, crossinline onInit: (MapboxMap, Styl
  */
 inline fun MapView.getMap(activity: Activity, crossinline onInit: (Map) -> Unit) {
     init(activity) { mapbox, style ->
-        val map = Map(this, mapbox, style)
+        val map = Map(this, mapbox, style, activity.resources)
         onInit(map)
     }
 }

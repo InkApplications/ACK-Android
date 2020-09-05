@@ -1,8 +1,11 @@
 package com.inkapplications.aprs.android.map
 
+import android.content.res.Resources
 import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import com.google.gson.JsonObject
 import com.inkapplications.android.extensions.continuePropagation
+import com.inkapplications.aprs.android.R
 import com.inkapplications.karps.structures.unit.Coordinates
 import com.mapbox.mapboxsdk.camera.CameraUpdateFactory
 import com.mapbox.mapboxsdk.geometry.LatLng
@@ -20,10 +23,12 @@ import java.util.*
 class Map(
     private val view: MapView,
     private val map: MapboxMap,
-    private val style: Style
+    private val style: Style,
+    private val resources: Resources
 ) {
     private val selectedIdState = MutableStateFlow<Long?>(null)
     val selectedId = selectedIdState
+    private val defaultMarkerId = UUID.randomUUID().toString()
 
     private val symbolManager = SymbolManager(view, map, style).also {
         it.iconAllowOverlap = true
@@ -36,6 +41,7 @@ class Map(
         map.addOnMapClickListener {
             continuePropagation { selectedIdState.value = null }
         }
+        style.addImage(defaultMarkerId, BitmapFactory.decodeResource(resources, R.drawable.symbol_14))
     }
 
     fun showMarkers(markers: Collection<MarkerViewModel>) {
@@ -48,7 +54,7 @@ class Map(
                         it.addProperty("lon", marker.coordinates.longitude.decimal)
                     })
                     .withLatLng(LatLng(marker.coordinates.latitude.decimal, marker.coordinates.longitude.decimal))
-                    .withIconImage(createImage(marker.symbol, style))
+                    .withIconImage(marker.symbol?.let { createImage(it, style) } ?: defaultMarkerId)
             }
             .run { symbolManager.create(this) }
     }

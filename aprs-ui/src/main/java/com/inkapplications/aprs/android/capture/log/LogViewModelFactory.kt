@@ -19,7 +19,7 @@ class LogViewModelFactory @Inject constructor(
             },
             symbol = when (packet) {
                 is AprsPacket.Position -> packet.symbol.let(symbolFactory::createSymbol)
-                is AprsPacket.Weather -> packet.symbol?.let(symbolFactory::createSymbol) ?: symbolFactory.defaultSymbol
+                is AprsPacket.Weather -> packet.symbol?.let(symbolFactory::createSymbol)
                 else -> symbolFactory.defaultSymbol
             }
         )

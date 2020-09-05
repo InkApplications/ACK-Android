@@ -35,6 +35,11 @@ android {
     androidExtensions {
         isExperimental = true
     }
+    testOptions {
+        unitTests {
+            it.isReturnDefaultValues = true
+        }
+    }
 }
 
 dependencies {
