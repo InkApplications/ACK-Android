@@ -35,8 +35,10 @@ class StationActivity: ExtendedActivity() {
                 station_map.setVisibility(viewModel.mapVisible)
                 station_name.text = viewModel.name
                 station_comment.text = viewModel.comment
-                station_weather.setVisibility(viewModel.weatherVisible)
-                station_weather.text = viewModel.weather
+                station_temperature.setVisibility(viewModel.temperatureVisible)
+                station_temperature.text = viewModel.temperature
+                station_wind.setVisibility(viewModel.windVisible)
+                station_wind.text = viewModel.wind
             }
         }
     }
