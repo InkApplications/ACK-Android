@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="locale_setting_category">Locale</string>
+    <string name="locale_setting_metric_name">Prefer Metric Units</string>
+
+    <string name="locale_unit_speed">%smph</string>
+    <string name="locale_unit_speed_metric">%skph</string>
+</resources>

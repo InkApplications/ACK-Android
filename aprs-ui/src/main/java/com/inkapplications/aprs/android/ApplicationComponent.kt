@@ -5,6 +5,7 @@ import com.inkapplications.aprs.android.firebase.FirebaseModule
 import com.inkapplications.aprs.android.capture.log.LogEvents
 import com.inkapplications.aprs.android.capture.map.MapManagerFactory
 import com.inkapplications.aprs.android.capture.map.MapModule
+import com.inkapplications.aprs.android.locale.LocaleModule
 import com.inkapplications.aprs.android.settings.SettingsModule
 import com.inkapplications.aprs.android.settings.SettingsAccess
 import com.inkapplications.aprs.android.startup.ApplicationInitializer
@@ -23,6 +24,7 @@ import javax.inject.Singleton
         ApplicationModule::class,
         ExternalModule::class,
         FirebaseModule::class,
+        LocaleModule::class,
         MapModule::class,
         SettingsModule::class,
         StartupModule::class,

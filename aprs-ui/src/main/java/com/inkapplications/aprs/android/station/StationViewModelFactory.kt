@@ -2,6 +2,7 @@ package com.inkapplications.aprs.android.station
 
 import com.inkapplications.android.extensions.StringResources
 import com.inkapplications.aprs.android.R
+import com.inkapplications.aprs.android.locale.getLocalizedSpeed
 import com.inkapplications.aprs.android.map.MarkerViewModel
 import com.inkapplications.aprs.android.map.ZoomLevels
 import com.inkapplications.aprs.android.symbol.SymbolFactory
@@ -21,7 +22,10 @@ class StationViewModelFactory @Inject constructor(
 ) {
     private val defaultWeatherSymbol = symbolOf('/', 'W')
 
-    fun create(packet: CapturedPacket?) = when (val data = packet?.data) {
+    fun create(
+        packet: CapturedPacket?,
+        metric: Boolean
+    ) = when (val data = packet?.data) {
         is AprsPacket.Position -> StationViewModel(
             markers = listOf(MarkerViewModel(packet.id, data.coordinates, symbolFactory.createSymbol(data.symbol))),
             center = data.coordinates,
@@ -38,7 +42,7 @@ class StationViewModelFactory @Inject constructor(
                 ))
             } ?: emptyList(),
             temperature = data.temperature?.toString().orEmpty(),
-            wind = data.windString,
+            wind = data.windString(metric),
             center = data.position ?: Coordinates(Latitude(0.0), Longitude(0.0)),
             zoom = ZoomLevels.ROADS,
             name = data.source.toString(),
@@ -50,10 +54,10 @@ class StationViewModelFactory @Inject constructor(
         )
     }
 
-    private val AprsPacket.Weather.windString: String get() {
+    private fun AprsPacket.Weather.windString(metricUnits: Boolean): String {
         val direction = windData.direction
-        val speed = windData.speed?.let { "${it.milesPerHour}mph" }
-        val gust = windData.gust?.let { "${it.milesPerHour}mph" }
+        val speed = windData.speed?.let { stringResources.getLocalizedSpeed(it, metricUnits) }
+        val gust = windData.gust?.let { stringResources.getLocalizedSpeed(it, metricUnits) }
 
         return when {
             direction != null && speed != null && gust != null -> stringResources.getString(R.string.station_wind_format_full, direction, speed, gust)
