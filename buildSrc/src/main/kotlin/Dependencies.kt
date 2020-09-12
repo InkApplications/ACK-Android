@@ -91,6 +91,7 @@ object Kimchi {
     const val static = "$group:kimchi:$version"
     const val android = "$group:logger-android:$version"
     const val logger = "$group:logger:$version"
+    const val analytics = "$group:analytics:$version"
 }
 
 object Karps {

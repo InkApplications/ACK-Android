@@ -14,6 +14,8 @@ import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.GroupieViewHolder
 import com.xwray.groupie.Item
 import kimchi.Kimchi
+import kimchi.analytics.intProperty
+import kimchi.analytics.stringProperty
 import kotlinx.android.synthetic.main.settings.*
 
 class SettingsActivity: ExtendedActivity() {
@@ -29,7 +31,12 @@ class SettingsActivity: ExtendedActivity() {
         settings_list.adapter = adapter
         settings_list.isNestedScrollingEnabled = false
         settings_version.text = getString(R.string.application_version, BuildConfig.VERSION_NAME, BuildConfig.VERSION_CODE.toString())
-        settings_version.setOnLongClickListener { stopPropagation { settingsAccess.showAdvancedSettings() } }
+        settings_version.setOnLongClickListener {
+            stopPropagation {
+                Kimchi.trackEvent("settings_show_advanced")
+                settingsAccess.showAdvancedSettings()
+            }
+        }
     }
 
     override fun onFirstCreate() {
@@ -59,17 +66,29 @@ class SettingsActivity: ExtendedActivity() {
 
     private fun onIntClicked(item: IntSettingItem) {
         intPrompt(item.setting.name, item.viewModel.value.toInt()) { result ->
+            Kimchi.trackEvent("settings_change", listOf(
+                stringProperty("setting", item.setting.key),
+                intProperty("value", result)
+            ))
             settingsAccess.updateInt(item.setting.key, result)
         }
     }
 
     private fun onStringClicked(item: StringSettingItem) {
         stringPrompt(item.setting.name, item.viewModel.value) { result ->
+            Kimchi.trackEvent("settings_change", listOf(
+                stringProperty("setting", item.setting.key),
+                stringProperty("value", result)
+            ))
             settingsAccess.updateString(item.setting.key, result)
         }
     }
 
     private fun onSwitchChanged(setting: BooleanSetting, checked: Boolean) {
+        Kimchi.trackEvent("settings_change", listOf(
+            stringProperty("setting", setting.key),
+            stringProperty("value", checked.toString())
+        ))
         settingsAccess.updateBoolean(setting.key, checked)
     }
 }

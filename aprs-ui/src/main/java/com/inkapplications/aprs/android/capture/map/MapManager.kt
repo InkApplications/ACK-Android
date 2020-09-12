@@ -1,6 +1,8 @@
 package com.inkapplications.aprs.android.capture.map
 
 import com.inkapplications.aprs.android.map.Map
+import kimchi.Kimchi
+import kimchi.analytics.intProperty
 import kotlinx.coroutines.flow.*
 
 /**
@@ -21,6 +23,7 @@ class MapManager(
 
     suspend fun displayMarkers() {
         mapData.findMarkers().collect {
+            Kimchi.trackEvent("map_markers", listOf(intProperty("quantity", it.size)))
             map.showMarkers(it)
         }
     }

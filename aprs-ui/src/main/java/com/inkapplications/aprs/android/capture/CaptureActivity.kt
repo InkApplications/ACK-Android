@@ -18,6 +18,7 @@ import com.inkapplications.aprs.android.capture.log.LogFragment
 import com.inkapplications.aprs.android.capture.map.MapFragment
 import com.inkapplications.aprs.android.component
 import com.inkapplications.aprs.android.settings.SettingsActivity
+import com.inkapplications.aprs.android.trackNavigation
 import com.inkapplications.aprs.data.AprsAccess
 import com.inkapplications.kotlin.collectOn
 import kimchi.Kimchi
@@ -51,7 +52,7 @@ class CaptureActivity: ExtendedActivity() {
     }
 
     private fun onMicEnableClick(view: View) {
-        Kimchi.info("Enable Audio Recording Clicked")
+        Kimchi.trackEvent("record_enable")
         when(ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO)) {
             PackageManager.PERMISSION_GRANTED -> onRecordAudio()
             else -> ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.RECORD_AUDIO), RECORD_AUDIO_REQUEST)
@@ -60,6 +61,7 @@ class CaptureActivity: ExtendedActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean = when (item.itemId) {
         R.id.menu_capture_toolbar_settings -> stopPropagation {
+            Kimchi.trackNavigation("settings")
             startActivity(SettingsActivity::class)
         }
         else -> super.onOptionsItemSelected(item)
@@ -67,8 +69,14 @@ class CaptureActivity: ExtendedActivity() {
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         when (requestCode) {
-            RECORD_AUDIO_REQUEST -> if (grantResults.getOrNull(0) == PackageManager.PERMISSION_GRANTED) onRecordAudio()
-            else -> super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+            RECORD_AUDIO_REQUEST -> if (grantResults.getOrNull(0) == PackageManager.PERMISSION_GRANTED) {
+                Kimchi.trackEvent("record_permission_grant")
+                onRecordAudio()
+            }
+            else -> {
+                Kimchi.trackEvent("record_permission_deny")
+                super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+            }
         }
     }
 
@@ -82,7 +90,7 @@ class CaptureActivity: ExtendedActivity() {
     }
 
     private fun onMicDisableClick(view: View) {
-        Kimchi.info("Stop Recording Clicked")
+        Kimchi.trackEvent("record_disable")
         recording?.cancel()
         recording = null
         capture_mic.visibility = VISIBLE
@@ -93,11 +101,13 @@ class CaptureActivity: ExtendedActivity() {
         Kimchi.info("Navigate to ${item.title}")
         when (item.itemId) {
             R.id.menu_capture_map -> {
+                Kimchi.trackNavigation("map")
                 supportFragmentManager.beginTransaction()
                     .replace(R.id.capture_stage, mapFragment)
                     .commit()
             }
             R.id.menu_capture_log -> {
+                Kimchi.trackNavigation("log")
                 supportFragmentManager.beginTransaction()
                     .replace(R.id.capture_stage, logFragment)
                     .commit()

@@ -7,6 +7,8 @@ import com.inkapplications.android.extensions.ApplicationModule
 import com.inkapplications.android.extensions.LifecycleLogger
 import com.mapbox.mapboxsdk.Mapbox
 import kimchi.Kimchi
+import kimchi.KimchiLoggerAnalytics
+import kimchi.analytics.bridge.firebase.FirebaseAnalyticsAdapter
 import kimchi.logger.defaultWriter
 
 class AprsApplication: Application() {
@@ -20,6 +22,9 @@ class AprsApplication: Application() {
         super.onCreate()
 
         Kimchi.addLog(defaultWriter)
+        Kimchi.addAnalytics(KimchiLoggerAnalytics)
+        Kimchi.addAnalytics(FirebaseAnalyticsAdapter())
+
         registerActivityLifecycleCallbacks(LifecycleLogger {
             Kimchi.trace(it)
         })

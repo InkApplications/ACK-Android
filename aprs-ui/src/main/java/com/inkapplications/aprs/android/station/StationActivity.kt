@@ -8,7 +8,9 @@ import com.inkapplications.android.extensions.startActivity
 import com.inkapplications.aprs.android.R
 import com.inkapplications.aprs.android.component
 import com.inkapplications.aprs.android.map.getMap
+import com.inkapplications.aprs.android.trackNavigation
 import com.inkapplications.kotlin.collectOn
+import kimchi.Kimchi
 import kotlinx.android.synthetic.main.station.*
 
 private const val EXTRA_ID = "aprs.station.extra.id"
@@ -45,6 +47,7 @@ class StationActivity: ExtendedActivity() {
 }
 
 fun Activity.startStationActivity(stationId: Long) {
+    Kimchi.trackNavigation("station")
     startActivity(StationActivity::class) {
         putExtra(EXTRA_ID, stationId)
     }

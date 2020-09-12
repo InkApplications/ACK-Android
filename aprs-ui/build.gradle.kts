@@ -46,6 +46,7 @@ dependencies {
     implementation(project(":kotlin-extensions"))
     implementation(project(":android-extensions"))
     implementation(project(":aprs-android"))
+    implementation(project(":analytics-firebase-bridge"))
 
     implementation(kotlin("stdlib"))
     implementation(Coroutines.android)
