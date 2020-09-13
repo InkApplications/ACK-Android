@@ -103,7 +103,7 @@ object Kimchi {
 
 object Karps {
     const val group = "com.github.inkapplications.karps"
-    const val version = "0a1a316"
+    const val version = "f3cab25"
     
     const val parser = "$group:parser:$version"
     const val structures = "$group:structures:$version"

@@ -2,6 +2,7 @@ package com.inkapplications.aprs.android.station
 
 import com.inkapplications.android.extensions.StringResources
 import com.inkapplications.aprs.android.R
+import com.inkapplications.aprs.android.locale.getLocalizedShortDistance
 import com.inkapplications.aprs.android.locale.getLocalizedSpeed
 import com.inkapplications.aprs.android.map.MarkerViewModel
 import com.inkapplications.aprs.android.map.ZoomLevels
@@ -10,6 +11,7 @@ import com.inkapplications.aprs.data.CapturedPacket
 import com.inkapplications.karps.structures.AprsPacket
 import com.inkapplications.karps.structures.symbolOf
 import com.inkapplications.karps.structures.unit.Coordinates
+import com.inkapplications.karps.structures.unit.Distance
 import com.inkapplications.karps.structures.unit.Latitude
 import com.inkapplications.karps.structures.unit.Longitude
 import dagger.Reusable
@@ -31,7 +33,8 @@ class StationViewModelFactory @Inject constructor(
             center = data.coordinates,
             zoom = ZoomLevels.ROADS,
             name = data.source.toString(),
-            comment = data.comment
+            comment = data.comment,
+            altitude = data.altitude.distanceString(metric)
         )
         is AprsPacket.Weather -> StationViewModel(
             markers = data.position?.let {
@@ -46,13 +49,19 @@ class StationViewModelFactory @Inject constructor(
             center = data.position ?: Coordinates(Latitude(0.0), Longitude(0.0)),
             zoom = ZoomLevels.ROADS,
             name = data.source.toString(),
-            comment = data.body
+            comment = data.body,
+            altitude = data.altitude.distanceString(metric)
+
         )
         else -> StationViewModel(
             name = data?.source?.toString().orEmpty(),
             comment = data?.body.orEmpty()
         )
     }
+
+    private fun Distance?.distanceString(metric: Boolean) = this
+            ?.let { stringResources.getLocalizedShortDistance(it, metric) }
+            .orEmpty()
 
     private fun AprsPacket.Weather.windString(metricUnits: Boolean): String {
         val direction = windData.direction

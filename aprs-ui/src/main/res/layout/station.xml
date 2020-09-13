@@ -64,11 +64,28 @@
         />
 
     <TextView
+        android:id="@+id/station_altitude"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:drawableStart="@drawable/ic_altitude"
+        android:textAppearance="?attr/textAppearanceBody1"
+        app:drawableTint="?attr/colorOnSurface"
+        android:visibility="gone"
+        tools:visibility="visible"
+        tools:text="123ft"
+        app:layout_constraintTop_toBottomOf="@id/station_wind"
+        android:layout_marginTop="@dimen/item_spacing"
+        android:layout_marginStart="@dimen/content_padding"
+        android:layout_marginEnd="@dimen/content_padding"
+        android:gravity="center_vertical"
+        />
+
+    <TextView
         android:id="@+id/station_comment"
         android:textAppearance="?attr/textAppearanceBody1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/station_wind"
+        app:layout_constraintTop_toBottomOf="@id/station_altitude"
         android:layout_marginTop="@dimen/item_spacing"
         android:layout_marginStart="@dimen/content_padding"
         android:layout_marginEnd="@dimen/content_padding"

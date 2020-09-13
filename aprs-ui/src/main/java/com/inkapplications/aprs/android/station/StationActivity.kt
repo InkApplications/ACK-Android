@@ -41,6 +41,8 @@ class StationActivity: ExtendedActivity() {
                 station_temperature.text = viewModel.temperature
                 station_wind.setVisibility(viewModel.windVisible)
                 station_wind.text = viewModel.wind
+                station_altitude.setVisibility(viewModel.altitudeVisible)
+                station_altitude.text = viewModel.altitude
             }
         }
     }

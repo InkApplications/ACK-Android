@@ -5,4 +5,6 @@
 
     <string name="locale_unit_speed">%smph</string>
     <string name="locale_unit_speed_metric">%skph</string>
+    <string name="locale_unit_distance_short">%sft</string>
+    <string name="locale_unit_distance_short_metric">%sm</string>
 </resources>

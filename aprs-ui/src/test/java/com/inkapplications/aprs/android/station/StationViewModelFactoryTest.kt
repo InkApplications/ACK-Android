@@ -82,7 +82,8 @@ class StationViewModelFactoryTest {
                 position = Coordinates(Latitude(1.0), Longitude(2.0)),
                 temperature = 72.degreesFahrenheit,
                 precipitation = Precipitation(),
-                windData = WindData(12.degreesBearing, 34.mph, 56.mph)
+                windData = WindData(12.degreesBearing, 34.mph, 56.mph),
+                altitude = 123.feet
             )
         )
         val result = factory.create(packet, false)
@@ -91,8 +92,10 @@ class StationViewModelFactoryTest {
         assertEquals(1, result.markers.size)
         assertTrue(result.temperatureVisible, "Temperature is visible when value is specified")
         assertTrue(result.windVisible, "Wind is visible when value is specified")
+        assertTrue(result.altitudeVisible, "Altitude visible when value is specified")
         assertEquals("72ºF", result.temperature)
         assertEquals("12º|34|56", result.wind)
+        assertEquals("123", result.altitude)
         assertEquals("KE0YOG-1", result.name)
         assertEquals("test", result.comment)
     }
@@ -122,6 +125,7 @@ class StationViewModelFactoryTest {
         assertEquals(1, result.markers.size)
         assertFalse(result.temperatureVisible, "Temperature is hidden when value is null")
         assertFalse(result.windVisible, "Wind is hidden when value is null")
+        assertFalse(result.altitudeVisible, "Altitude is hidden when value is null")
         assertEquals("KE0YOG-1", result.name)
         assertEquals("test", result.comment)
     }

@@ -13,9 +13,11 @@ data class StationViewModel(
     val center: Coordinates = Coordinates(Latitude(0.0), Longitude(0.0)),
     val zoom: Double = ZoomLevels.MIN,
     val temperature: String = "",
-    val wind: String = ""
+    val wind: String = "",
+    val altitude: String = ""
 ) {
     val mapVisible = markers.isNotEmpty()
     val temperatureVisible = temperature.isNotEmpty()
     val windVisible = wind.isNotEmpty()
+    val altitudeVisible = altitude.isNotEmpty()
 }
