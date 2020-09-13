@@ -92,6 +92,13 @@ object Kimchi {
     const val android = "$group:logger-android:$version"
     const val logger = "$group:logger:$version"
     const val analytics = "$group:analytics:$version"
+
+    object Firebase {
+        const val group = "com.github.inkapplications.kimchi-firebase-bridge"
+        const val version = "1.0.0"
+
+        const val analytics = "$group:analytics:$version"
+    }
 }
 
 object Karps {

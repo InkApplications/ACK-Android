@@ -46,7 +46,6 @@ dependencies {
     implementation(project(":kotlin-extensions"))
     implementation(project(":android-extensions"))
     implementation(project(":aprs-android"))
-    implementation(project(":analytics-firebase-bridge"))
 
     implementation(kotlin("stdlib"))
     implementation(Coroutines.android)
@@ -69,6 +68,7 @@ dependencies {
     kapt(Dagger.compiler)
 
     implementation(Kimchi.static)
+    implementation(Kimchi.Firebase.analytics)
 
     implementation("com.google.firebase:firebase-config-ktx:19.2.0")
     implementation("com.google.firebase:firebase-analytics-ktx:17.5.0")

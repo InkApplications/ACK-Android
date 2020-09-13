@@ -6,9 +6,9 @@ import androidx.fragment.app.Fragment
 import com.inkapplications.android.extensions.ApplicationModule
 import com.inkapplications.android.extensions.LifecycleLogger
 import com.mapbox.mapboxsdk.Mapbox
+import kimchi.bridge.firebase.analytics.FirebaseAnalyticsAdapter
 import kimchi.Kimchi
 import kimchi.KimchiLoggerAnalytics
-import kimchi.analytics.bridge.firebase.FirebaseAnalyticsAdapter
 import kimchi.logger.defaultWriter
 
 class AprsApplication: Application() {

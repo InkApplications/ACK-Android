@@ -1,4 +1,3 @@
-include("analytics-firebase-bridge")
 include("android-extensions")
 include("aprs-android")
 include("aprs-ui")
