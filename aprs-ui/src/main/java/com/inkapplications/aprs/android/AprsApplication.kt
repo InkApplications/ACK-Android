@@ -9,7 +9,11 @@ import com.mapbox.mapboxsdk.Mapbox
 import kimchi.bridge.firebase.analytics.FirebaseAnalyticsAdapter
 import kimchi.Kimchi
 import kimchi.KimchiLoggerAnalytics
+import kimchi.bridge.firebase.crashlytics.FirebaseCrashlyticsExceptionAdapter
+import kimchi.bridge.firebase.crashlytics.FirebaseCrashlyticsLogMessageAdapter
+import kimchi.logger.LogLevel
 import kimchi.logger.defaultWriter
+import kimchi.logger.withThreshold
 
 class AprsApplication: Application() {
     val component by lazy {
@@ -22,6 +26,8 @@ class AprsApplication: Application() {
         super.onCreate()
 
         Kimchi.addLog(defaultWriter)
+        Kimchi.addLog(FirebaseCrashlyticsLogMessageAdapter().withThreshold(LogLevel.INFO))
+        Kimchi.addLog(FirebaseCrashlyticsExceptionAdapter())
         Kimchi.addAnalytics(KimchiLoggerAnalytics)
         Kimchi.addAnalytics(FirebaseAnalyticsAdapter())
 

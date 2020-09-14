@@ -95,9 +95,10 @@ object Kimchi {
 
     object Firebase {
         const val group = "com.github.inkapplications.kimchi-firebase-bridge"
-        const val version = "1.0.0"
+        const val version = "0178d25"
 
         const val analytics = "$group:analytics:$version"
+        const val crashlytics = "$group:crashlytics:$version"
     }
 }
 
