@@ -1,14 +1,19 @@
 package com.inkapplications.aprs.android.map
 
+import android.Manifest.permission
+import android.content.Context
 import android.content.res.Resources
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import androidx.annotation.RequiresPermission
 import com.google.gson.JsonObject
 import com.inkapplications.android.extensions.continuePropagation
 import com.inkapplications.aprs.android.R
 import com.inkapplications.karps.structures.unit.Coordinates
 import com.mapbox.mapboxsdk.camera.CameraUpdateFactory
 import com.mapbox.mapboxsdk.geometry.LatLng
+import com.mapbox.mapboxsdk.location.LocationComponentActivationOptions
+import com.mapbox.mapboxsdk.location.LocationComponentOptions
 import com.mapbox.mapboxsdk.maps.MapView
 import com.mapbox.mapboxsdk.maps.MapboxMap
 import com.mapbox.mapboxsdk.maps.Style
@@ -21,6 +26,7 @@ import java.util.*
  * Manipulate the Mapbox Map in a generic way.
  */
 class Map(
+    private val context: Context,
     private val view: MapView,
     private val map: MapboxMap,
     private val style: Style,
@@ -29,6 +35,14 @@ class Map(
     private val selectedIdState = MutableStateFlow<Long?>(null)
     val selectedId = selectedIdState
     private val defaultMarkerId = UUID.randomUUID().toString()
+
+    private val locationComponentOptions = LocationComponentOptions.builder(context)
+        .pulseEnabled(true)
+        .build()
+    private val locationActivationOptions = LocationComponentActivationOptions.builder(context, style)
+        .useDefaultLocationEngine(true)
+        .locationComponentOptions(locationComponentOptions)
+        .build()
 
     private val symbolManager = SymbolManager(view, map, style).also {
         it.iconAllowOverlap = true
@@ -64,6 +78,14 @@ class Map(
             LatLng(coordinates.latitude.decimal, coordinates.longitude.decimal),
             zoom
         ))
+    }
+
+    @RequiresPermission(anyOf = [permission.ACCESS_FINE_LOCATION, permission.ACCESS_COARSE_LOCATION])
+    fun setPositionTracking(enable: Boolean) {
+        map.locationComponent.apply {
+            activateLocationComponent(locationActivationOptions)
+            isLocationComponentEnabled = enable
+        }
     }
 
     private fun createImage(image: Bitmap, style: Style): String {

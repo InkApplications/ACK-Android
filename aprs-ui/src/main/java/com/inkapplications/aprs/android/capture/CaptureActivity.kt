@@ -2,12 +2,8 @@ package com.inkapplications.aprs.android.capture
 
 import android.Manifest
 import android.content.pm.PackageManager
-import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
-import android.view.View
-import android.view.View.GONE
-import android.view.View.VISIBLE
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.inkapplications.android.extensions.ExtendedActivity
@@ -19,11 +15,10 @@ import com.inkapplications.aprs.android.capture.map.MapFragment
 import com.inkapplications.aprs.android.component
 import com.inkapplications.aprs.android.settings.SettingsActivity
 import com.inkapplications.aprs.android.trackNavigation
-import com.inkapplications.aprs.data.AprsAccess
-import com.inkapplications.kotlin.collectOn
 import kimchi.Kimchi
 import kotlinx.android.synthetic.main.capture.*
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 
 private const val RECORD_AUDIO_REQUEST = 45653
 
@@ -31,27 +26,29 @@ class CaptureActivity: ExtendedActivity() {
     private val mapFragment by lazy { MapFragment() }
     private val logFragment by lazy { LogFragment() }
     private var recording: Job? = null
-    private lateinit var aprs: AprsAccess
+    private lateinit var captureEvents: CaptureEvents
+    private lateinit var menuRecordDisabled: MenuItem
+    private lateinit var menuRecordEnabled: MenuItem
 
     override fun onCreate() {
         super.onCreate()
         setContentView(R.layout.capture)
         setSupportActionBar(capture_toolbar)
-        aprs = component.aprs()
+        captureEvents = component.captureEvents()
 
         supportFragmentManager.beginTransaction()
             .replace(R.id.capture_stage, mapFragment)
             .commit()
         capture_navigation.setOnNavigationItemSelectedListener(::onNavigationClick)
-        capture_mic.setOnClickListener(::onMicEnableClick)
-        capture_mic_off.setOnClickListener(::onMicDisableClick)
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean = stopPropagation {
         menuInflater.inflate(R.menu.capture_toolbar, menu)
+        menuRecordEnabled = menu.findItem(R.id.menu_capture_toolbar_mic_enabled)
+        menuRecordDisabled = menu.findItem(R.id.menu_capture_toolbar_mic_disabled)
     }
 
-    private fun onMicEnableClick(view: View) {
+    private fun enableRecording() {
         Kimchi.trackEvent("record_enable")
         when(ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO)) {
             PackageManager.PERMISSION_GRANTED -> onRecordAudio()
@@ -63,6 +60,12 @@ class CaptureActivity: ExtendedActivity() {
         R.id.menu_capture_toolbar_settings -> stopPropagation {
             Kimchi.trackNavigation("settings")
             startActivity(SettingsActivity::class)
+        }
+        R.id.menu_capture_toolbar_mic_disabled -> stopPropagation {
+            enableRecording()
+        }
+        R.id.menu_capture_toolbar_mic_enabled -> stopPropagation {
+            disableRecording()
         }
         else -> super.onOptionsItemSelected(item)
     }
@@ -82,19 +85,17 @@ class CaptureActivity: ExtendedActivity() {
 
     private fun onRecordAudio() {
         Kimchi.info("Start Recording")
-        capture_mic.visibility = GONE
-        capture_mic_off.visibility = VISIBLE
-        recording = aprs.incoming.collectOn(foregroundScope) {
-            Kimchi.debug("APRS Packet Recorded: $it")
-        }
+        menuRecordEnabled.isVisible = true
+        menuRecordDisabled.isVisible = false
+        recording = foregroundScope.launch { captureEvents.listenForPackets() }
     }
 
-    private fun onMicDisableClick(view: View) {
+    private fun disableRecording() {
         Kimchi.trackEvent("record_disable")
+        menuRecordEnabled.isVisible = false
+        menuRecordDisabled.isVisible = true
         recording?.cancel()
         recording = null
-        capture_mic.visibility = VISIBLE
-        capture_mic_off.visibility = GONE
     }
 
     private fun onNavigationClick(item: MenuItem): Boolean {

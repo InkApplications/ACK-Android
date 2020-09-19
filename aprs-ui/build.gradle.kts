@@ -72,6 +72,8 @@ dependencies {
     implementation(Kimchi.Firebase.analytics)
     implementation(Kimchi.Firebase.crashlytics)
 
+    implementation(Watermelon.coroutines)
+
     implementation("com.google.firebase:firebase-config-ktx:19.2.0")
     implementation("com.google.firebase:firebase-analytics-ktx:17.5.0")
 

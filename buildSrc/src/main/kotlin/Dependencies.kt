@@ -102,6 +102,13 @@ object Kimchi {
     }
 }
 
+object Watermelon {
+    const val group = "com.github.inkapplications.watermelon"
+    const val version = "0.0.1"
+
+    const val coroutines = "$group:coroutines:$version"
+}
+
 object Karps {
     const val group = "com.github.inkapplications.karps"
     const val version = "f3cab25"

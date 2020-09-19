@@ -2,6 +2,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
     <com.mapbox.mapboxsdk.maps.MapView
@@ -21,4 +22,30 @@
         android:layout_marginEnd="@dimen/content_padding"
         android:visibility="gone"
         />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/map_position_enabled"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_margin="@dimen/content_padding"
+        app:backgroundTint="?attr/colorSurface"
+        app:tint="?attr/colorAccent"
+        android:visibility="gone"
+        tools:visibility="visible"
+        android:src="@drawable/ic_my_position" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/map_position_disabled"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_margin="@dimen/content_padding"
+        app:backgroundTint="?attr/colorSurface"
+        app:tint="?attr/colorOnSurface"
+        tools:visibility="visible"
+        android:src="@drawable/ic_position_disabled" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

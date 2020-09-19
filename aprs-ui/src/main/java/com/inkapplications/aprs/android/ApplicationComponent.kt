@@ -1,9 +1,10 @@
 package com.inkapplications.aprs.android
 
 import com.inkapplications.android.extensions.ApplicationModule
+import com.inkapplications.aprs.android.capture.CaptureEvents
 import com.inkapplications.aprs.android.firebase.FirebaseModule
 import com.inkapplications.aprs.android.capture.log.LogEvents
-import com.inkapplications.aprs.android.capture.map.MapManagerFactory
+import com.inkapplications.aprs.android.capture.map.MapManager
 import com.inkapplications.aprs.android.capture.map.MapModule
 import com.inkapplications.aprs.android.locale.LocaleModule
 import com.inkapplications.aprs.android.settings.SettingsModule
@@ -13,7 +14,6 @@ import com.inkapplications.aprs.android.startup.StartupModule
 import com.inkapplications.aprs.android.station.StationEvents
 import com.inkapplications.aprs.android.symbol.SymbolModule
 import com.inkapplications.aprs.data.AndroidAprsModule
-import com.inkapplications.aprs.data.AprsAccess
 import dagger.Component
 import javax.inject.Singleton
 
@@ -32,8 +32,8 @@ import javax.inject.Singleton
     ]
 )
 interface ApplicationComponent {
-    fun aprs(): AprsAccess
-    fun mapManager(): MapManagerFactory
+    fun captureEvents(): CaptureEvents
+    fun mapManager(): MapManager
     fun settingsRepository(): SettingsAccess
     fun logData(): LogEvents
     fun initializer(): ApplicationInitializer

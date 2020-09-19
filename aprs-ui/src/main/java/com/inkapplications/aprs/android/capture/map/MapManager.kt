@@ -1,30 +1,36 @@
 package com.inkapplications.aprs.android.capture.map
 
 import com.inkapplications.aprs.android.map.Map
-import kimchi.Kimchi
-import kimchi.analytics.intProperty
-import kotlinx.coroutines.flow.*
+import dagger.Reusable
+import javax.inject.Inject
 
 /**
- * Manage the map's data and states.
+ * Manage services for the map screen.
  */
-class MapManager(
+@Reusable
+class MapManager @Inject constructor(
     private val mapData: MapDataRepository,
-    private val map: Map
+    private val mapState: MapState
 ) {
-    val selectionState: Flow<SelectionViewModel> = map.selectedId
-        .flatMapLatest { it?.let { mapData.findLogItem(it) } ?: flowOf(null) }
-        .map {
-            SelectionViewModel(
-                visible = it != null,
-                item = it
-            )
-        }
-
-    suspend fun displayMarkers() {
-        mapData.findMarkers().collect {
-            Kimchi.trackEvent("map_markers", listOf(intProperty("quantity", it.size)))
-            map.showMarkers(it)
-        }
+    /**
+     * Enable the "show my position" function on the map.
+     */
+    fun enablePositionTracking() {
+        mapState.trackMyPosition.value = true
     }
+
+    /**
+     * Disable the "show my position" function on the map.
+     */
+    fun disablePositionTracking() {
+        mapState.trackMyPosition.value = false
+    }
+
+    /**
+     * Factory to create Map's events access class at runtime.
+     *
+     * Since the mapbox map isn't available until the view is created,
+     * this can create an injected events class with runtime dependencies.
+     */
+    fun createEventsAccess(map: Map): MapEvents = MapEvents(mapData, mapState, map)
 }

@@ -9,17 +9,19 @@ import androidx.fragment.app.Fragment
 import com.inkapplications.android.extensions.setVisibility
 import com.inkapplications.aprs.android.R
 import com.inkapplications.aprs.android.component
+import com.inkapplications.aprs.android.map.Map
 import com.inkapplications.aprs.android.map.getMap
 import com.inkapplications.aprs.android.map.lifecycleObserver
 import com.inkapplications.aprs.android.station.startStationActivity
 import com.inkapplications.kotlin.collectOn
+import kimchi.Kimchi
+import kimchi.analytics.intProperty
 import kotlinx.android.synthetic.main.map.*
 import kotlinx.coroutines.*
 
 class MapFragment: Fragment() {
-    private lateinit var mapManagerFactory: MapManagerFactory
-    private lateinit var foreground: CoroutineScope
-    private var mapJobs = Job()
+    private lateinit var mapManager: MapManager
+    private var mapScope: CoroutineScope = MainScope()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.map, container, false)
@@ -27,40 +29,45 @@ class MapFragment: Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        mapManagerFactory = component.mapManager()
+        mapManager = component.mapManager()
         lifecycle.addObserver(map_view.lifecycleObserver)
+
+        map_position_enabled.setOnClickListener { mapManager.disablePositionTracking() }
+        map_position_disabled.setOnClickListener { mapManager.enablePositionTracking() }
     }
 
     override fun onConfigurationChanged(newConfig: Configuration) {
         super.onConfigurationChanged(newConfig)
-        initializeMap()
+        map_view.getMap(activity!!, ::onMapLoaded)
     }
 
     override fun onStart() {
         super.onStart()
-        foreground = MainScope()
-        initializeMap()
+        map_view.getMap(activity!!, ::onMapLoaded)
     }
 
-    private fun initializeMap() {
-        map_view.getMap(activity!!) { map ->
-            mapJobs.cancel()
-            mapJobs = Job()
-            val manager = mapManagerFactory.create(map)
+    private fun onMapLoaded(map: Map) {
+        mapScope.cancel()
+        mapScope = MainScope()
+        val manager = mapManager.createEventsAccess(map)
 
-            manager.selectionState.collectOn(foreground + mapJobs) { state ->
-                map_selected.setVisibility(state.visible)
-                state.item?.bindToView(map_selected)
-                map_selected.setOnClickListener {
-                    activity!!.startStationActivity(state.item!!.id)
-                }
+        manager.viewState.collectOn(mapScope) { state ->
+            map.setPositionTracking(state.trackPosition)
+            map_position_enabled.setVisibility(state.positionEnabledVisible)
+            map_position_disabled.setVisibility(state.positionDisabledVisible)
+            map_selected.setVisibility(state.selectedItemVisible)
+            state.selectedItem?.bindToView(map_selected)
+            map_selected.setOnClickListener {
+                activity!!.startStationActivity(state.selectedItem!!.id)
             }
-            foreground.launch(mapJobs) { manager.displayMarkers() }
+            Kimchi.trackEvent("map_markers", listOf(intProperty("quantity", state.markers.size)))
+            map.showMarkers(state.markers)
+
         }
     }
 
     override fun onStop() {
-        foreground.cancel()
+        mapScope.cancel()
         super.onStop()
     }
 
