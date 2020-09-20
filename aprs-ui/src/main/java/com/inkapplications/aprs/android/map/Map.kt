@@ -1,6 +1,7 @@
 package com.inkapplications.aprs.android.map
 
 import android.Manifest.permission
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.res.Resources
 import android.graphics.Bitmap
@@ -14,6 +15,8 @@ import com.mapbox.mapboxsdk.camera.CameraUpdateFactory
 import com.mapbox.mapboxsdk.geometry.LatLng
 import com.mapbox.mapboxsdk.location.LocationComponentActivationOptions
 import com.mapbox.mapboxsdk.location.LocationComponentOptions
+import com.mapbox.mapboxsdk.location.OnLocationCameraTransitionListener
+import com.mapbox.mapboxsdk.location.modes.CameraMode
 import com.mapbox.mapboxsdk.maps.MapView
 import com.mapbox.mapboxsdk.maps.MapboxMap
 import com.mapbox.mapboxsdk.maps.Style
@@ -89,17 +92,18 @@ class Map(
     }
 
     @RequiresPermission(anyOf = [permission.ACCESS_FINE_LOCATION, permission.ACCESS_COARSE_LOCATION])
-    fun setPositionTracking(enable: Boolean) {
-        positionTrackingState.value = enable
-        map.locationComponent.isLocationComponentEnabled = enable
-    }
-
-    @RequiresPermission(anyOf = [permission.ACCESS_FINE_LOCATION, permission.ACCESS_COARSE_LOCATION])
     fun enablePositionTracking() {
         positionTrackingState.value = true
         map.locationComponent.isLocationComponentEnabled = true
+        map.locationComponent.setCameraMode(CameraMode.TRACKING_GPS, object: OnLocationCameraTransitionListener {
+            override fun onLocationCameraTransitionFinished(cameraMode: Int) {
+                map.locationComponent.zoomWhileTracking(ZoomLevels.ROADS)
+            }
+            override fun onLocationCameraTransitionCanceled(cameraMode: Int) {}
+        })
     }
 
+    @SuppressLint("MissingPermission")
     fun disablePositionTracking() {
         positionTrackingState.value = false
         map.locationComponent.isLocationComponentEnabled = false
