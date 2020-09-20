@@ -18,9 +18,26 @@ android {
         versionCode = intProperty("versionCode", 1)
         versionName = stringProperty("versionName", "SNAPSHOT")
     }
+
+    signingConfigs {
+        create("parameterSigning") {
+            storeFile = project.properties.getOrDefault("signingFile", null)
+                ?.toString()
+                ?.let { File("${project.rootDir}/$it") }
+            keyAlias = project.properties.getOrDefault("signingAlias", null)?.toString()
+            keyPassword = project.properties.getOrDefault("signingKeyPassword", null)?.toString()
+            storePassword = project.properties.getOrDefault("signingStorePassword", null)?.toString()
+        }
+    }
+
     buildTypes {
         getByName("release") {
-            signingConfig = signingConfigs.getByName("debug")
+            signingConfig = if (project.hasProperty("signingFile")) {
+                signingConfigs.getByName("parameterSigning")
+            } else {
+                signingConfigs.getByName("debug")
+            }
+
             isMinifyEnabled = false
         }
     }
