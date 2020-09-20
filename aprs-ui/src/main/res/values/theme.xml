@@ -32,6 +32,7 @@
 
         <item name="textAppearanceButton">@style/AprsTheme.Text.Button</item>
         <item name="materialButtonStyle">@style/AprsTheme.Button</item>
+        <item name="android:itemTextAppearance">@style/AprsTheme.Text</item>
     </style>
     <style name="AprsTheme.Compat">
     </style>
