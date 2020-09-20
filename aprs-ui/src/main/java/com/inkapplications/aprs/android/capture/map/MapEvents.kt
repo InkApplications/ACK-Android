@@ -10,7 +10,6 @@ import kotlinx.coroutines.flow.*
  */
 class MapEvents(
     private val mapData: MapDataRepository,
-    private val mapState: MapState,
     private val map: Map
 ) {
     private val selectedItem = map.selectedId.flatMapLatest {
@@ -19,7 +18,7 @@ class MapEvents(
 
     val viewState: Flow<MapViewModel> = mapData.findMarkers()
         .combinePair(selectedItem)
-        .combineTriple(mapState.trackMyPosition)
+        .combineTriple(map.trackingState)
         .map { (markers, selected, tracking) ->
             MapViewModel(markers, selected, tracking)
         }

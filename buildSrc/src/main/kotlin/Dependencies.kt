@@ -104,7 +104,7 @@ object Kimchi {
 
 object Watermelon {
     const val group = "com.github.inkapplications.watermelon"
-    const val version = "0.0.1"
+    const val version = "0.0.2"
 
     const val coroutines = "$group:coroutines:$version"
 }

@@ -19,6 +19,7 @@ import com.mapbox.mapboxsdk.maps.MapboxMap
 import com.mapbox.mapboxsdk.maps.Style
 import com.mapbox.mapboxsdk.plugins.annotation.SymbolManager
 import com.mapbox.mapboxsdk.plugins.annotation.SymbolOptions
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import java.util.*
 
@@ -43,6 +44,13 @@ class Map(
         .useDefaultLocationEngine(true)
         .locationComponentOptions(locationComponentOptions)
         .build()
+
+    private val positionTrackingState by lazy {
+        map.locationComponent.activateLocationComponent(locationActivationOptions)
+        MutableStateFlow(map.locationComponent.isLocationComponentEnabled)
+    }
+
+    val trackingState: Flow<Boolean> = positionTrackingState
 
     private val symbolManager = SymbolManager(view, map, style).also {
         it.iconAllowOverlap = true
@@ -82,10 +90,19 @@ class Map(
 
     @RequiresPermission(anyOf = [permission.ACCESS_FINE_LOCATION, permission.ACCESS_COARSE_LOCATION])
     fun setPositionTracking(enable: Boolean) {
-        map.locationComponent.apply {
-            activateLocationComponent(locationActivationOptions)
-            isLocationComponentEnabled = enable
-        }
+        positionTrackingState.value = enable
+        map.locationComponent.isLocationComponentEnabled = enable
+    }
+
+    @RequiresPermission(anyOf = [permission.ACCESS_FINE_LOCATION, permission.ACCESS_COARSE_LOCATION])
+    fun enablePositionTracking() {
+        positionTrackingState.value = true
+        map.locationComponent.isLocationComponentEnabled = true
+    }
+
+    fun disablePositionTracking() {
+        positionTrackingState.value = false
+        map.locationComponent.isLocationComponentEnabled = false
     }
 
     private fun createImage(image: Bitmap, style: Style): String {

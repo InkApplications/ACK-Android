@@ -71,15 +71,15 @@ class CaptureActivity: ExtendedActivity() {
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
-        when (requestCode) {
-            RECORD_AUDIO_REQUEST -> if (grantResults.getOrNull(0) == PackageManager.PERMISSION_GRANTED) {
+        when {
+            requestCode == RECORD_AUDIO_REQUEST -> if (grantResults.getOrNull(0) == PackageManager.PERMISSION_GRANTED) {
                 Kimchi.trackEvent("record_permission_grant")
                 onRecordAudio()
             }
-            else -> {
+            requestCode == RECORD_AUDIO_REQUEST -> {
                 Kimchi.trackEvent("record_permission_deny")
-                super.onRequestPermissionsResult(requestCode, permissions, grantResults)
             }
+            else -> super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         }
     }
 

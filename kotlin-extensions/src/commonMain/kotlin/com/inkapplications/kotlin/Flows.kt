@@ -10,6 +10,7 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import kotlin.coroutines.coroutineContext
 
+@Deprecated("Use Watermelon")
 inline fun <T> Flow<T>.collectOn(scope: CoroutineScope, crossinline collector: (T) -> Unit): Job {
     return scope.launch {
         safeCollect { collector(it) }
@@ -19,6 +20,7 @@ inline fun <T> Flow<T>.collectOn(scope: CoroutineScope, crossinline collector: (
 /**
  * Collect a flow after ensuring that the context is currently active.
  */
+@Deprecated("Use Watermelon")
 suspend inline fun <T> Flow<T>.safeCollect(crossinline action: suspend (T) -> Unit) {
     collect {
         coroutineContext.ensureActive()
@@ -29,6 +31,7 @@ suspend inline fun <T> Flow<T>.safeCollect(crossinline action: suspend (T) -> Un
 /**
  * Map each item in the emitted lists for the flow.
  */
+@Deprecated("Use Watermelon")
 inline fun <T, R> Flow<Collection<T>>.mapEach(crossinline mapping: suspend (T) -> R): Flow<List<R>> {
     return map { it.map { mapping(it) } }
 }
@@ -36,6 +39,7 @@ inline fun <T, R> Flow<Collection<T>>.mapEach(crossinline mapping: suspend (T) -
 /**
  * Filter each list emitted by a flow.
  */
+@Deprecated("Use Watermelon")
 inline fun <T> Flow<Collection<T>>.filterEach(crossinline predicate: suspend (T) -> Boolean): Flow<List<T>> {
     return map { it.filter { predicate(it) } }
 }
@@ -43,6 +47,7 @@ inline fun <T> Flow<Collection<T>>.filterEach(crossinline predicate: suspend (T)
 /**
  * Filter each list emitted by a flow.
  */
+@Deprecated("Use Watermelon")
 fun <T: Any> Flow<Collection<T?>>.filterEachNotNull(): Flow<List<T>> {
     return map { it.filterNotNull() }
 }

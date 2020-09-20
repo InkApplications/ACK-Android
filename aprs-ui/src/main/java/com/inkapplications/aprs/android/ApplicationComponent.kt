@@ -4,7 +4,7 @@ import com.inkapplications.android.extensions.ApplicationModule
 import com.inkapplications.aprs.android.capture.CaptureEvents
 import com.inkapplications.aprs.android.firebase.FirebaseModule
 import com.inkapplications.aprs.android.capture.log.LogEvents
-import com.inkapplications.aprs.android.capture.map.MapManager
+import com.inkapplications.aprs.android.capture.map.MapEventsFactory
 import com.inkapplications.aprs.android.capture.map.MapModule
 import com.inkapplications.aprs.android.locale.LocaleModule
 import com.inkapplications.aprs.android.settings.SettingsModule
@@ -33,7 +33,7 @@ import javax.inject.Singleton
 )
 interface ApplicationComponent {
     fun captureEvents(): CaptureEvents
-    fun mapManager(): MapManager
+    fun mapManager(): MapEventsFactory
     fun settingsRepository(): SettingsAccess
     fun logData(): LogEvents
     fun initializer(): ApplicationInitializer
