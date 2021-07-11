@@ -53,48 +53,50 @@ android {
     androidExtensions {
         isExperimental = true
     }
+    packagingOptions {
+        exclude("META-INF/core.kotlin_module")
+    }
+
     testOptions {
         unitTests {
-            it.isReturnDefaultValues = true
+            isReturnDefaultValues = true
         }
     }
 }
 
 dependencies {
-    implementation(project(":kotlin-extensions"))
-    implementation(project(":android-extensions"))
-    implementation(project(":aprs-android"))
+    implementation(projects.kotlinExtensions)
+    implementation(projects.androidExtensions)
+    implementation(projects.aprsAndroid)
 
-    implementation(kotlin("stdlib"))
-    implementation(Coroutines.android)
+    implementation(libraries.coroutines.android)
 
-    implementation(AndroidX.AppCompat.core)
-    implementation(AndroidX.ConstraintLayout.core)
-    implementation(AndroidX.RecyclerView.core)
-    implementation(AndroidX.Preference.core)
-    implementation(AndroidX.Preference.ktx)
+    implementation(libraries.androidx.appcompat)
+    implementation(libraries.androidx.constraintlayout)
+    implementation(libraries.androidx.recyclerview)
+    implementation(libraries.androidx.preference)
 
-    implementation(Google.Material.core)
+    implementation(libraries.material.core)
 
     implementation("com.mapbox.mapboxsdk:mapbox-android-sdk:9.3.0")
     implementation("com.mapbox.mapboxsdk:mapbox-android-plugin-annotation-v9:0.9.0")
 
-    implementation(Groupie.core)
-    implementation(Groupie.extensions)
+    implementation(libraries.groupie.core)
+    implementation(libraries.groupie.extensions)
 
-    implementation(Dagger.runtime)
-    kapt(Dagger.compiler)
+    implementation(libraries.dagger.core)
+    kapt(libraries.dagger.compiler)
 
-    implementation(Kimchi.static)
-    implementation(Kimchi.Firebase.analytics)
-    implementation(Kimchi.Firebase.crashlytics)
+    implementation(libraries.kimchi.core)
+    implementation(libraries.kimchi.firebase.analytics)
+    implementation(libraries.kimchi.firebase.crashlytics)
 
-    implementation(Watermelon.coroutines)
+    implementation(libraries.watermelon)
 
     implementation("com.google.firebase:firebase-config-ktx:19.2.0")
     implementation("com.google.firebase:firebase-analytics-ktx:17.5.0")
 
-    testImplementation(JUnit.core)
-    testImplementation(Coroutines.test)
-    testImplementation(kotlin("test"))
+    testImplementation(libraries.junit)
+    testImplementation(libraries.coroutines.test)
+    testImplementation(libraries.kotlin.test.core)
 }

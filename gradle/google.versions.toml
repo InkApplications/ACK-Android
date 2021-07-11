@@ -1,0 +1,14 @@
+[versions]
+dagger = "2.37"
+
+[libraries.material-core]
+version = "1.4.0"
+module = "com.google.android.material:material"
+
+[libraries.dagger-core]
+version.ref = "dagger"
+module = "com.google.dagger:dagger"
+
+[libraries.dagger-compiler]
+version.ref = "dagger"
+module = "com.google.dagger:dagger-compiler"

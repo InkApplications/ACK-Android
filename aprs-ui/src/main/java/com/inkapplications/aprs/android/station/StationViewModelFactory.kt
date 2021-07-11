@@ -10,12 +10,16 @@ import com.inkapplications.aprs.android.symbol.SymbolFactory
 import com.inkapplications.aprs.data.CapturedPacket
 import com.inkapplications.karps.structures.AprsPacket
 import com.inkapplications.karps.structures.symbolOf
-import com.inkapplications.karps.structures.unit.Coordinates
-import com.inkapplications.karps.structures.unit.Distance
-import com.inkapplications.karps.structures.unit.Latitude
-import com.inkapplications.karps.structures.unit.Longitude
 import dagger.Reusable
+import inkapplications.spondee.measure.Fahrenheit
+import inkapplications.spondee.measure.Length
+import inkapplications.spondee.spatial.Degrees
+import inkapplications.spondee.spatial.GeoCoordinates
+import inkapplications.spondee.spatial.latitude
+import inkapplications.spondee.spatial.longitude
+import inkapplications.spondee.structure.value
 import javax.inject.Inject
+import kotlin.math.roundToInt
 
 @Reusable
 class StationViewModelFactory @Inject constructor(
@@ -34,37 +38,60 @@ class StationViewModelFactory @Inject constructor(
             zoom = ZoomLevels.ROADS,
             name = data.source.toString(),
             comment = data.comment,
-            altitude = data.altitude.distanceString(metric)
+            altitude = data.altitude.distanceString(metric),
         )
         is AprsPacket.Weather -> StationViewModel(
-            markers = data.position?.let {
+            markers = data.coordinates?.let {
                 listOf(MarkerViewModel(
                     id = packet.id,
                     coordinates = it,
                     symbol = symbolFactory.createSymbol(data.symbol ?: defaultWeatherSymbol)
                 ))
             } ?: emptyList(),
-            temperature = data.temperature?.toString().orEmpty(),
+            temperature = data.temperature?.let { "${it.value(Fahrenheit).roundToInt()}ºF" }.orEmpty(), //TODO: Fix unit formatting
             wind = data.windString(metric),
-            center = data.position ?: Coordinates(Latitude(0.0), Longitude(0.0)),
+            center = data.coordinates ?: GeoCoordinates(0.latitude, 0.longitude),
             zoom = ZoomLevels.ROADS,
             name = data.source.toString(),
-            comment = data.body,
-            altitude = data.altitude.distanceString(metric)
+            comment = "", // TODO: Some things don't have comments. Remove
 
         )
-        else -> StationViewModel(
-            name = data?.source?.toString().orEmpty(),
-            comment = data?.body.orEmpty()
+        is AprsPacket.ObjectReport -> StationViewModel(
+            markers = listOf(MarkerViewModel(packet.id, data.coordinates, symbolFactory.createSymbol(data.symbol))),
+            center = data.coordinates,
+            zoom = ZoomLevels.ROADS,
+            name = data.source.toString(),
+            comment = data.comment,
+            altitude = data.altitude.distanceString(metric),
+        )
+        is AprsPacket.ItemReport -> StationViewModel(
+            markers = listOf(MarkerViewModel(packet.id, data.coordinates, symbolFactory.createSymbol(data.symbol))),
+            center = data.coordinates,
+            zoom = ZoomLevels.ROADS,
+            name = data.source.toString(),
+            comment = data.comment,
+            altitude = data.altitude.distanceString(metric),
+        )
+        is AprsPacket.Message -> StationViewModel(
+            name = data.source.toString(),
+            comment = data.message,
+        )
+        is AprsPacket.Unknown -> StationViewModel(
+            name = data.source.toString(),
+            comment = "",
+        )
+        null -> StationViewModel(
+            name = "",
+            comment = "",
         )
     }
 
-    private fun Distance?.distanceString(metric: Boolean) = this
+    private fun Length?.distanceString(metric: Boolean) = this
             ?.let { stringResources.getLocalizedShortDistance(it, metric) }
             .orEmpty()
 
     private fun AprsPacket.Weather.windString(metricUnits: Boolean): String {
-        val direction = windData.direction
+        val direction = windData.direction?.value(Degrees)?.roundToInt()?.let { "${it}º" }
         val speed = windData.speed?.let { stringResources.getLocalizedSpeed(it, metricUnits) }
         val gust = windData.gust?.let { stringResources.getLocalizedSpeed(it, metricUnits) }
 

@@ -10,7 +10,6 @@ import androidx.annotation.RequiresPermission
 import com.google.gson.JsonObject
 import com.inkapplications.android.extensions.continuePropagation
 import com.inkapplications.aprs.android.R
-import com.inkapplications.karps.structures.unit.Coordinates
 import com.mapbox.mapboxsdk.camera.CameraUpdateFactory
 import com.mapbox.mapboxsdk.geometry.LatLng
 import com.mapbox.mapboxsdk.location.LocationComponentActivationOptions
@@ -22,6 +21,7 @@ import com.mapbox.mapboxsdk.maps.MapboxMap
 import com.mapbox.mapboxsdk.maps.Style
 import com.mapbox.mapboxsdk.plugins.annotation.SymbolManager
 import com.mapbox.mapboxsdk.plugins.annotation.SymbolOptions
+import inkapplications.spondee.spatial.GeoCoordinates
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import java.util.*
@@ -75,18 +75,18 @@ class Map(
                 SymbolOptions()
                     .withData(JsonObject().also {
                         it.addProperty("id", marker.id)
-                        it.addProperty("lat", marker.coordinates.latitude.decimal)
-                        it.addProperty("lon", marker.coordinates.longitude.decimal)
+                        it.addProperty("lat", marker.coordinates.latitude.asDecimal)
+                        it.addProperty("lon", marker.coordinates.longitude.asDecimal)
                     })
-                    .withLatLng(LatLng(marker.coordinates.latitude.decimal, marker.coordinates.longitude.decimal))
+                    .withLatLng(LatLng(marker.coordinates.latitude.asDecimal, marker.coordinates.longitude.asDecimal))
                     .withIconImage(marker.symbol?.let { createImage(it, style) } ?: defaultMarkerId)
             }
             .run { symbolManager.create(this) }
     }
 
-    fun zoomTo(coordinates: Coordinates, zoom: Double) {
+    fun zoomTo(coordinates: GeoCoordinates, zoom: Double) {
         map.animateCamera(CameraUpdateFactory.newLatLngZoom(
-            LatLng(coordinates.latitude.decimal, coordinates.longitude.decimal),
+            LatLng(coordinates.latitude.asDecimal, coordinates.longitude.asDecimal),
             zoom
         ))
     }

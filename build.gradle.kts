@@ -1,22 +1,9 @@
 import org.gradle.api.tasks.testing.logging.TestExceptionFormat
 
-buildscript {
-    repositories {
-        google()
-        jcenter()
-    }
-    dependencies {
-        classpath("com.android.tools.build:gradle:4.0.0")
-        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:1.3.72")
-        classpath("com.google.gms:google-services:4.3.3")
-        classpath("com.google.firebase:firebase-crashlytics-gradle:2.3.0")
-    }
-}
-
 subprojects {
     repositories {
+        mavenCentral()
         google()
-        jcenter()
         maven(url = "https://jitpack.io")
         maven(url = "https://api.mapbox.com/downloads/v2/releases/maven") {
             authentication {
@@ -25,6 +12,7 @@ subprojects {
             credentials.username = "mapbox"
             credentials.password = stringProperty("mapbox.private", "")
         }
+        mavenLocal()
     }
 
     tasks.withType(Test::class) {

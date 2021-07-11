@@ -1,0 +1,36 @@
+[versions]
+karps = "0.0.0"
+kimchi-core = "1.1.0"
+kimchi-firebase = "1.2.0"
+
+[libraries.kimchi-logger]
+version.ref = "kimchi-core"
+module = "com.inkapplications.kimchi:logger"
+
+[libraries.kimchi-core]
+version.ref = "kimchi-core"
+module = "com.inkapplications.kimchi:core"
+
+[libraries.kimchi-analytics]
+version.ref = "kimchi-core"
+module = "com.inkapplications.kimchi:analytics"
+
+[libraries.kimchi-firebase-crashlytics]
+version.ref = "kimchi-firebase"
+module = "com.github.inkapplications.kimchi-firebase-bridge:crashlytics"
+
+[libraries.kimchi-firebase-analytics]
+version.ref = "kimchi-firebase"
+module = "com.github.inkapplications.kimchi-firebase-bridge:analytics"
+
+[libraries.karps-parser]
+version.ref = "karps"
+module = "com.inkapplications.karps:parser"
+
+[libraries.karps-structures]
+version.ref = "karps"
+module = "com.inkapplications.karps:structures"
+
+[libraries.watermelon]
+version = "0.0.2"
+module = "com.github.inkapplications.watermelon:coroutines"

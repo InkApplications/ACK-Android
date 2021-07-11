@@ -20,27 +20,26 @@ android {
     externalNativeBuild {
         cmake {
             version = "3.10.2"
-            setPath("src/main/cpp/CMakeLists.txt")
+            path = File("${projectDir}/src/main/cpp/CMakeLists.txt")
         }
     }
 }
 
 dependencies {
-    implementation(project(":kotlin-extensions"))
-    implementation(kotlin("stdlib"))
-    api(Coroutines.core)
+    implementation(projects.kotlinExtensions)
+    api(libraries.coroutines.core)
 
-    implementation(Karps.parser)
-    api(Karps.structures)
+    implementation(libraries.karps.parser)
+    api(libraries.karps.structures)
 
-    implementation(Kimchi.logger)
+    api(libraries.kimchi.logger)
 
-    implementation(Dagger.runtime)
-    kapt(Dagger.compiler)
+    implementation(libraries.dagger.core)
+    kapt(libraries.dagger.compiler)
 
     implementation(ThreeTenBp.noTzDb)
 
-    implementation(Room.runtime)
-    implementation(Room.ktx)
-    kapt(Room.compiler)
+    implementation(libraries.androidx.room.runtime)
+    implementation(libraries.androidx.room.ktx)
+    kapt(libraries.androidx.room.compiler)
 }

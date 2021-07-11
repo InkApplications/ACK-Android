@@ -13,9 +13,12 @@ class LogViewModelFactory @Inject constructor(
         return LogViewModel(
             origin = packet.source.toString(),
             comment = when (packet) {
-                is AprsPacket.Position -> packet.comment
+                is AprsPacket.Position -> "🌎 ${packet.coordinates} ${packet.comment}"
                 is AprsPacket.Weather -> "🌡 ${packet.temperature}"
                 is AprsPacket.Unknown -> "⚠️ ${packet.body}"
+                is AprsPacket.ObjectReport -> "📍 ${packet.comment} @ ${packet.coordinates}"
+                is AprsPacket.ItemReport -> "📦 ${packet.comment} @ ${packet.coordinates}"
+                is AprsPacket.Message -> "✉️ ${packet.addressee} ${packet.message} ${packet.messageNumber?.let { "($it)" }.orEmpty()}"
             },
             symbol = when (packet) {
                 is AprsPacket.Position -> packet.symbol.let(symbolFactory::createSymbol)

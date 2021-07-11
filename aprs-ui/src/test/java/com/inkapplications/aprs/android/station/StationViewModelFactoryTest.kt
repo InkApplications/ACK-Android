@@ -5,6 +5,13 @@ import com.inkapplications.aprs.android.symbol.SymbolFactoryStub
 import com.inkapplications.aprs.data.CapturedPacket
 import com.inkapplications.karps.structures.*
 import com.inkapplications.karps.structures.unit.*
+import inkapplications.spondee.measure.Fahrenheit
+import inkapplications.spondee.measure.MilesPerHour
+import inkapplications.spondee.spatial.Degrees
+import inkapplications.spondee.spatial.GeoCoordinates
+import inkapplications.spondee.spatial.latitude
+import inkapplications.spondee.spatial.longitude
+import kotlinx.datetime.Instant
 import org.junit.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
@@ -18,7 +25,7 @@ class StationViewModelFactoryTest {
             id = 1,
             received = 2,
             data = AprsPacket.Unknown(
-                received = 0L.asTimestamp,
+                received = Instant.fromEpochMilliseconds(0),
                 dataTypeIdentifier = '!',
                 source = Address("KE0YOG", "1"),
                 destination = Address("KE0YOG", "2"),
@@ -32,7 +39,6 @@ class StationViewModelFactoryTest {
         assertFalse(result.temperatureVisible, "Temperature is hidden for non weather packet")
         assertFalse(result.windVisible, "Wind is hidden for non weather packet")
         assertEquals("KE0YOG-1", result.name)
-        assertEquals("test", result.comment)
     }
 
     @Test
@@ -43,15 +49,20 @@ class StationViewModelFactoryTest {
             id = 1,
             received = 2,
             data = AprsPacket.Weather(
-                received = 0L.asTimestamp,
+                received = Instant.fromEpochMilliseconds(0),
                 dataTypeIdentifier = '!',
                 source = Address("KE0YOG", "1"),
                 destination = Address("KE0YOG", "2"),
                 digipeaters = emptyList(),
-                body = "test",
-                temperature = 72.degreesFahrenheit,
+                temperature = Fahrenheit.of(72),
                 precipitation = Precipitation(),
-                windData = WindData(12.degreesBearing, 34.mph, 56.mph)
+                windData = WindData(Degrees.of(12), MilesPerHour.of(34), MilesPerHour.of(56)),
+                coordinates = null,
+                humidity = null,
+                irradiance = null,
+                timestamp = null,
+                symbol = null,
+                pressure = null,
             )
         )
         val result = factory.create(packet, false)
@@ -62,7 +73,6 @@ class StationViewModelFactoryTest {
         assertEquals("72ºF", result.temperature)
         assertEquals("12º|34|56", result.wind)
         assertEquals("KE0YOG-1", result.name)
-        assertEquals("test", result.comment)
     }
 
     @Test
@@ -73,17 +83,20 @@ class StationViewModelFactoryTest {
             id = 1,
             received = 2,
             data = AprsPacket.Weather(
-                received = 0L.asTimestamp,
+                received = Instant.fromEpochMilliseconds(0L),
                 dataTypeIdentifier = '!',
                 source = Address("KE0YOG", "1"),
                 destination = Address("KE0YOG", "2"),
                 digipeaters = emptyList(),
-                body = "test",
-                position = Coordinates(Latitude(1.0), Longitude(2.0)),
-                temperature = 72.degreesFahrenheit,
+                coordinates = GeoCoordinates(1.0.latitude, 2.0.longitude),
+                temperature = Fahrenheit.of(72),
                 precipitation = Precipitation(),
-                windData = WindData(12.degreesBearing, 34.mph, 56.mph),
-                altitude = 123.feet
+                windData = WindData(Degrees.of(12), MilesPerHour.of(34), MilesPerHour.of(56)),
+                humidity = null,
+                irradiance = null,
+                timestamp = null,
+                symbol = null,
+                pressure = null,
             )
         )
         val result = factory.create(packet, false)
@@ -92,12 +105,10 @@ class StationViewModelFactoryTest {
         assertEquals(1, result.markers.size)
         assertTrue(result.temperatureVisible, "Temperature is visible when value is specified")
         assertTrue(result.windVisible, "Wind is visible when value is specified")
-        assertTrue(result.altitudeVisible, "Altitude visible when value is specified")
+        assertFalse(result.altitudeVisible, "Altitude visible when value is unspecified")
         assertEquals("72ºF", result.temperature)
         assertEquals("12º|34|56", result.wind)
-        assertEquals("123", result.altitude)
         assertEquals("KE0YOG-1", result.name)
-        assertEquals("test", result.comment)
     }
 
     @Test
@@ -108,15 +119,20 @@ class StationViewModelFactoryTest {
             id = 1,
             received = 2,
             data = AprsPacket.Weather(
-                received = 0L.asTimestamp,
+                received = Instant.fromEpochMilliseconds(0),
                 dataTypeIdentifier = '!',
                 source = Address("KE0YOG", "1"),
                 destination = Address("KE0YOG", "2"),
                 digipeaters = emptyList(),
-                body = "test",
-                position = Coordinates(Latitude(1.0), Longitude(2.0)),
+                coordinates = GeoCoordinates(1.latitude, 2.longitude),
                 precipitation = Precipitation(),
-                windData = WindData(null, null, null)
+                windData = WindData(null, null, null),
+                temperature = null,
+                humidity = null,
+                irradiance = null,
+                timestamp = null,
+                symbol = null,
+                pressure = null,
             )
         )
         val result = factory.create(packet, false)
@@ -127,7 +143,6 @@ class StationViewModelFactoryTest {
         assertFalse(result.windVisible, "Wind is hidden when value is null")
         assertFalse(result.altitudeVisible, "Altitude is hidden when value is null")
         assertEquals("KE0YOG-1", result.name)
-        assertEquals("test", result.comment)
     }
 
     @Test
@@ -138,14 +153,21 @@ class StationViewModelFactoryTest {
             id = 1,
             received = 2,
             data = AprsPacket.Position(
-                received = 0L.asTimestamp,
+                received = Instant.fromEpochMilliseconds(0),
                 dataTypeIdentifier = '!',
                 source = Address("KE0YOG", "1"),
                 destination = Address("KE0YOG", "2"),
                 digipeaters = emptyList(),
-                body = "test",
-                coordinates = Coordinates(Latitude(1.0), Longitude(2.0)),
-                symbol = symbolOf('/', 'a')
+                coordinates = GeoCoordinates(1.latitude, 2.longitude),
+                symbol = symbolOf('/', 'a'),
+                comment = "test",
+                altitude = null,
+                timestamp = null,
+                trajectory = null,
+                range = null,
+                transmitterInfo = null,
+                signalInfo = null,
+                directionReportExtra = null,
             )
         )
         val result = factory.create(packet, false)

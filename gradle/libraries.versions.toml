@@ -1,0 +1,14 @@
+[versions]
+groupie = "2.9.0"
+
+[libraries.junit]
+version = "4.12"
+module = "junit:junit"
+
+[libraries.groupie-core]
+version.ref = "groupie"
+module = "com.github.lisawray.groupie:groupie"
+
+[libraries.groupie-extensions]
+version.ref = "groupie"
+module = "com.github.lisawray.groupie:groupie-kotlin-android-extensions"

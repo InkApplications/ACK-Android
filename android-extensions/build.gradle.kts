@@ -19,12 +19,9 @@ android {
 }
 
 dependencies {
-    implementation(kotlin("stdlib"))
-
-    implementation(Coroutines.core)
-
-    api(AndroidX.Ktx.core)
-    implementation(AndroidX.Preference.core)
-    api(Dagger.runtime)
-    kapt(Dagger.compiler)
+    implementation(libraries.coroutines.core)
+    api(libraries.androidx.core)
+    implementation(libraries.androidx.preference)
+    api(libraries.dagger.core)
+    kapt(libraries.dagger.compiler)
 }

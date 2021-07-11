@@ -1,13 +1,13 @@
 package com.inkapplications.aprs.android.map
 
 import android.graphics.Bitmap
-import com.inkapplications.karps.structures.unit.Coordinates
+import inkapplications.spondee.spatial.GeoCoordinates
 
 /**
  * View data for a marker displayed on the map.
  */
 data class MarkerViewModel(
     val id: Long,
-    val coordinates: Coordinates,
+    val coordinates: GeoCoordinates,
     val symbol: Bitmap?
 )
