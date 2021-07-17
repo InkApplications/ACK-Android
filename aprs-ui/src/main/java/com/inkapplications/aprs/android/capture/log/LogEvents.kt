@@ -1,16 +1,16 @@
 package com.inkapplications.aprs.android.capture.log
 
 import com.inkapplications.aprs.data.AprsAccess
-import com.inkapplications.kotlin.mapEach
+import com.inkapplications.coroutines.mapEach
 import dagger.Reusable
 import javax.inject.Inject
 
 @Reusable
 class LogEvents @Inject constructor(
     aprs: AprsAccess,
-    viewModelFactory: LogViewModelFactory
+    stateFactory: LogStateFactory
 ) {
-    val items = aprs.findRecent(500).mapEach {
-        LogItem(it.id, viewModelFactory.create(it.data))
+    val logViewModels = aprs.findRecent(500).mapEach {
+        stateFactory.create(it.id, it.data)
     }
 }

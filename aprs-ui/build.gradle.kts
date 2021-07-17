@@ -8,16 +8,20 @@ plugins {
 }
 
 android {
-    compileSdkVersion(29)
+    compileSdkVersion(30)
     ndkVersion = "21.3.6528147"
     defaultConfig {
-        minSdkVersion(19)
-        targetSdkVersion(29)
+        minSdkVersion(21)
+        targetSdkVersion(30)
         multiDexEnabled = true
         buildConfigField("String", "MAPBOX_ACCESS_TOKEN", "\"${stringProperty("mapbox.public", "")}\"")
         versionCode = intProperty("versionCode", 1)
         versionName = stringProperty("versionName", "SNAPSHOT")
     }
+    buildFeatures {
+        compose = true
+    }
+
 
     signingConfigs {
         create("parameterSigning") {
@@ -50,6 +54,17 @@ android {
         targetCompatibility = JavaVersion.VERSION_1_8
         sourceCompatibility = JavaVersion.VERSION_1_8
     }
+
+    kotlinOptions {
+        jvmTarget = "1.8"
+        useIR = true
+    }
+
+    composeOptions {
+        kotlinCompilerVersion = "1.5.10"
+        kotlinCompilerExtensionVersion = "1.0.0-rc02"
+    }
+
     androidExtensions {
         isExperimental = true
     }
@@ -75,6 +90,7 @@ dependencies {
     implementation(libraries.androidx.constraintlayout)
     implementation(libraries.androidx.recyclerview)
     implementation(libraries.androidx.preference)
+    implementation(libraries.bundles.androidx.compose.full)
 
     implementation(libraries.material.core)
 

@@ -4,46 +4,32 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.runtime.collectAsState
+import androidx.compose.ui.platform.ComposeView
 import androidx.fragment.app.Fragment
-import com.inkapplications.aprs.android.R
+import com.inkapplications.aprs.android.AprsTheme
 import com.inkapplications.aprs.android.component
 import com.inkapplications.aprs.android.station.startStationActivity
-import com.inkapplications.kotlin.collectOn
-import com.xwray.groupie.GroupAdapter
-import com.xwray.groupie.GroupieViewHolder
-import kotlinx.android.synthetic.main.log.*
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.MainScope
-import kotlinx.coroutines.cancel
 
 class LogFragment: Fragment() {
-    private lateinit var data: LogEvents
-    private lateinit var foreground: CoroutineScope
-    private val adapter = GroupAdapter<GroupieViewHolder>()
-
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.log, container, false)
-    }
-
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-
-        data = component.logData()
-        log_list.adapter = adapter
-        adapter.setOnItemClickListener { item, _ ->  requireActivity().startStationActivity((item as LogItem).id) }
-    }
-
-    override fun onStart() {
-        super.onStart()
-        foreground = MainScope()
-
-        data.items.collectOn(foreground) {
-            adapter.update(it)
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+        return ComposeView(context!!).apply {
+            setContent {
+                val listState = component.logData().logViewModels.collectAsState(emptyList())
+                AprsTheme {
+                    LazyColumn {
+                        items(listState.value) { log ->
+                            AprsLogItem(log, ::onLogClick)
+                        }
+                    }
+                }
+            }
         }
     }
 
-    override fun onStop() {
-        foreground.cancel()
-        super.onStop()
+    private fun onLogClick(log: LogItemState) {
+        activity!!.startStationActivity(log.id)
     }
 }

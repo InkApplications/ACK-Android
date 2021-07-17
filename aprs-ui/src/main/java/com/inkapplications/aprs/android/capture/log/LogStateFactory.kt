@@ -6,11 +6,12 @@ import dagger.Reusable
 import javax.inject.Inject
 
 @Reusable
-class LogViewModelFactory @Inject constructor(
+class LogStateFactory @Inject constructor(
     private val symbolFactory: SymbolFactory
 ) {
-    fun create(packet: AprsPacket): LogViewModel {
-        return LogViewModel(
+    fun create(id: Long, packet: AprsPacket): LogItemState {
+        return LogItemState(
+            id = id,
             origin = packet.source.toString(),
             comment = when (packet) {
                 is AprsPacket.Position -> "🌎 ${packet.coordinates} ${packet.comment}"

@@ -6,9 +6,10 @@ import com.xwray.groupie.kotlinandroidextensions.GroupieViewHolder
 import com.xwray.groupie.kotlinandroidextensions.Item
 import kotlinx.android.synthetic.main.log_item.view.*
 
+@Deprecated("Use Compose AprsLogItem")
 class LogItem(
     id: Long,
-    val viewModel: LogViewModel
+    val viewModel: LogItemState
 ): Item(id) {
     override fun getLayout(): Int = R.layout.log_item
 
