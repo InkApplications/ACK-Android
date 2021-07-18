@@ -10,7 +10,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.unit.dp
-import com.inkapplications.aprs.android.AprsTheme
+import com.inkapplications.aprs.android.ui.AprsTheme
 
 @Composable
 fun AprsSymbol(symbol: Bitmap?) {

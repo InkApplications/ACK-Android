@@ -9,16 +9,16 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.platform.ComposeView
 import androidx.fragment.app.Fragment
-import com.inkapplications.aprs.android.AprsTheme
 import com.inkapplications.aprs.android.component
 import com.inkapplications.aprs.android.station.startStationActivity
+import com.inkapplications.aprs.android.ui.AprsScreen
 
 class LogFragment: Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         return ComposeView(context!!).apply {
             setContent {
                 val listState = component.logData().logViewModels.collectAsState(emptyList())
-                AprsTheme {
+                AprsScreen {
                     LazyColumn {
                         items(listState.value) { log ->
                             AprsLogItem(log, ::onLogClick)

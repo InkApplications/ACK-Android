@@ -1,7 +1,6 @@
 package com.inkapplications.aprs.android.settings
 
-import com.inkapplications.kotlin.mapEach
-import com.xwray.groupie.kotlinandroidextensions.Item
+import com.inkapplications.coroutines.mapEach
 import dagger.Reusable
 import kotlinx.coroutines.flow.*
 import javax.inject.Inject
@@ -17,28 +16,34 @@ class SettingsAccess @Inject constructor(
 ) {
     private val showingAdvanced = MutableStateFlow(false)
 
-    fun getSettingsAsItems(
-        onBooleanChange: (BooleanSetting, Boolean) -> Unit
-    ): Flow<List<Item>> = showingAdvanced
+    val settingsStateGrouped = showingAdvanced
         .map { showAdvanced ->
             settingsProvider.settings.filter { showAdvanced || !it.advanced }
         }
-        .mapEach { setting ->
-            when (setting) {
-                is StringSetting -> settingValues.observeString(setting)
-                    .map { StringSettingViewModel(setting, it) }
-                    .map { StringSettingItem(it, setting) }
-                is IntSetting -> settingValues.observeInt(setting)
-                    .map { IntSettingViewModel(setting, it) }
-                    .map { IntSettingItem(it, setting) }
-                is BooleanSetting -> settingValues.observeBoolean(setting)
-                    .map { BooleanSettingViewModel(setting, it) }
-                    .map { BooleanSettingItem(it, setting, onBooleanChange) }
+        .map {
+            it.groupBy { it.categoryName }.map { (key, settings) ->
+                settings.map { setting ->
+                        when (setting) {
+                            is StringSetting -> settingValues.observeString(setting)
+                                .map { SettingState.StringState(setting.key, setting.name, it) }
+                            is IntSetting -> settingValues.observeInt(setting)
+                                .map { SettingState.IntState(setting.key, setting.name, it) }
+                            is BooleanSetting -> settingValues.observeBoolean(setting)
+                                .map { SettingState.BooleanState(setting.key, setting.name, it) }
+                        }
+                    }
+                    .let { combine(*it.toTypedArray()) { it.toList() } }
+                    .map { SettingsGroup(key, it) }
+
             }
         }
         .flatMapLatest {
             combine(*it.toTypedArray()) { it.toList() }
         }
+        .mapEach {
+            it.copy(settings = it.settings.sortedBy { it.name })
+        }
+        .map { it.sortedBy { it.name } }
 
     fun clearState() {
         showingAdvanced.value = false

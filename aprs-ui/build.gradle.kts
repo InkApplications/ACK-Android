@@ -22,7 +22,6 @@ android {
         compose = true
     }
 
-
     signingConfigs {
         create("parameterSigning") {
             storeFile = project.properties.getOrDefault("signingFile", null)
@@ -90,6 +89,7 @@ dependencies {
     implementation(libraries.androidx.constraintlayout)
     implementation(libraries.androidx.recyclerview)
     implementation(libraries.androidx.preference)
+    implementation(libraries.androidx.activity.ktx)
     implementation(libraries.bundles.androidx.compose.full)
 
     implementation(libraries.material.core)

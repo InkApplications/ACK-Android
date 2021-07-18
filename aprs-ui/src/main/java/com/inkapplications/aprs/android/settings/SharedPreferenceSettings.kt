@@ -28,7 +28,6 @@ class SharedPreferenceSettings @Inject constructor(
         return updates
             .filter { it == setting.key }
             .onStart { emit(setting.key) }
-            .requireKey()
             .map { preferences.getString(setting.key, null) }
     }
 
