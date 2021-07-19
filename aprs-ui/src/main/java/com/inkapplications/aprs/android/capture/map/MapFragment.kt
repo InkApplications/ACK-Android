@@ -1,55 +1,64 @@
 package com.inkapplications.aprs.android.capture.map
 
 import android.Manifest
+import android.content.Context
 import android.content.pm.PackageManager
-import android.content.res.Configuration
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.compose.runtime.collectAsState
+import androidx.compose.ui.platform.ComposeView
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
-import com.inkapplications.android.extensions.setVisibility
-import com.inkapplications.aprs.android.R
+import com.inkapplications.aprs.android.capture.log.LogItemState
 import com.inkapplications.aprs.android.component
 import com.inkapplications.aprs.android.map.Map
 import com.inkapplications.aprs.android.map.getMap
 import com.inkapplications.aprs.android.map.lifecycleObserver
 import com.inkapplications.aprs.android.station.startStationActivity
 import com.inkapplications.coroutines.collectOn
+import com.mapbox.mapboxsdk.maps.MapView
 import kimchi.Kimchi
 import kimchi.analytics.intProperty
 import kotlinx.android.synthetic.main.map.*
 import kotlinx.coroutines.*
+import kotlinx.coroutines.flow.MutableSharedFlow
 
 private const val LOCATION_REQUEST = 3684
 
 class MapFragment: Fragment() {
     private lateinit var mapEventsFactory: MapEventsFactory
+    private val mapViewModel = MutableSharedFlow<MapViewModel>()
+    private var mapView: MapView? = null
     private var map: Map? = null
     private var mapScope: CoroutineScope = MainScope()
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.map, container, false)
-    }
-
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         mapEventsFactory = component.mapManager()
-        lifecycle.addObserver(map_view.lifecycleObserver)
 
-        map_position_enabled.setOnClickListener { map?.disablePositionTracking() }
-        map_position_disabled.setOnClickListener { enablePositionTracking() }
+        return ComposeView(context!!).apply {
+            setContent {
+                val viewState = mapViewModel.collectAsState(MapViewModel(emptySet(), null, false))
+
+                MapScreen(
+                    state = viewState.value,
+                    mapFactory = ::createMapView,
+                    onLogItemClick = ::onLogItemClick,
+                    onEnableLocation = ::enablePositionTracking,
+                    onDisableLocation = { map?.disablePositionTracking() },
+                )
+            }
+        }
     }
 
-    override fun onConfigurationChanged(newConfig: Configuration) {
-        super.onConfigurationChanged(newConfig)
-        map_view.getMap(activity!!, ::onMapLoaded)
-    }
+    private fun createMapView(context: Context): View = MapView(context).also { mapView ->
+        this.mapView = mapView
 
-    override fun onStart() {
-        super.onStart()
-        map_view.getMap(activity!!, ::onMapLoaded)
+        mapView.getMap(activity!!, ::onMapLoaded)
+        lifecycle.addObserver(mapView.lifecycleObserver)
+
+        return mapView
     }
 
     private fun onMapLoaded(map: Map) {
@@ -59,17 +68,15 @@ class MapFragment: Fragment() {
         val manager = mapEventsFactory.createEventsAccess(map)
 
         manager.viewState.collectOn(mapScope) { state ->
-            map_position_enabled.setVisibility(state.positionEnabledVisible)
-            map_position_disabled.setVisibility(state.positionDisabledVisible)
-            map_selected.setVisibility(state.selectedItemVisible)
-            state.selectedItem?.bindToView(map_selected)
-            map_selected.setOnClickListener {
-                activity!!.startStationActivity(state.selectedItem!!.id)
-            }
             Kimchi.trackEvent("map_markers", listOf(intProperty("quantity", state.markers.size)))
+            mapViewModel.emit(state)
             map.showMarkers(state.markers)
 
         }
+    }
+
+    private fun onLogItemClick(state: LogItemState) {
+        activity!!.startStationActivity(state.id)
     }
 
     private fun enablePositionTracking() {
@@ -92,15 +99,15 @@ class MapFragment: Fragment() {
         }
     }
 
-    override fun onStop() {
+    override fun onDestroyView() {
         mapScope.cancel()
         map = null
-        super.onStop()
+        super.onDestroyView()
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
+        mapView?.onSaveInstanceState(outState)
         super.onSaveInstanceState(outState)
-        map_view.onSaveInstanceState(outState)
     }
 
     override fun onLowMemory() {
