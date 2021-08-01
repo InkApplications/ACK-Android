@@ -5,8 +5,8 @@ import com.inkapplications.aprs.android.map.ZoomLevels
 import inkapplications.spondee.spatial.*
 
 data class StationViewModel(
-    val name: String,
-    val comment: String,
+    val name: String = "",
+    val comment: String = "",
     val markers: List<MarkerViewModel> = emptyList(),
     val center: GeoCoordinates = GeoCoordinates(0.latitude, 0.longitude),
     val zoom: Double = ZoomLevels.MIN,

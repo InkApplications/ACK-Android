@@ -1,49 +1,54 @@
 package com.inkapplications.aprs.android.station
 
 import android.app.Activity
+import android.content.Context
 import android.os.Bundle
+import androidx.activity.compose.setContent
+import androidx.compose.runtime.collectAsState
 import com.inkapplications.android.extensions.ExtendedActivity
-import com.inkapplications.android.extensions.setVisibility
 import com.inkapplications.android.extensions.startActivity
-import com.inkapplications.aprs.android.R
 import com.inkapplications.aprs.android.component
 import com.inkapplications.aprs.android.map.getMap
+import com.inkapplications.aprs.android.map.lifecycleObserver
+import com.inkapplications.aprs.android.map.Map
 import com.inkapplications.aprs.android.trackNavigation
-import com.inkapplications.kotlin.collectOn
+import com.inkapplications.coroutines.collectOn
+import com.mapbox.mapboxsdk.maps.MapView
 import kimchi.Kimchi
-import kotlinx.android.synthetic.main.station.*
 
 private const val EXTRA_ID = "aprs.station.extra.id"
 
 class StationActivity: ExtendedActivity() {
+    private var mapView: MapView? = null
     private lateinit var stationEvents: StationEvents
 
     private val id get() = intent.getLongExtra(EXTRA_ID, -1)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.station)
-
         stationEvents = component.stationEvents()
+
+        setContent {
+            val viewState = stationEvents.stateEvents(id).collectAsState(StationViewModel())
+            StationScreen(
+                viewState = viewState,
+                createMapView = ::createMapView,
+                onBackPressed = ::onBackPressed,
+            )
+        }
     }
 
-    override fun onStart() {
-        super.onStart()
+    private fun createMapView(context: Context) = mapView ?: MapView(context).also { mapView ->
+        this.mapView = mapView
 
-        station_map.getMap(this) { map ->
-            stationEvents.stateEvents(id).collectOn(foregroundScope) { viewModel ->
-                map.zoomTo(viewModel.center, viewModel.zoom)
-                map.showMarkers(viewModel.markers)
-                station_map.setVisibility(viewModel.mapVisible)
-                station_name.text = viewModel.name
-                station_comment.text = viewModel.comment
-                station_temperature.setVisibility(viewModel.temperatureVisible)
-                station_temperature.text = viewModel.temperature
-                station_wind.setVisibility(viewModel.windVisible)
-                station_wind.text = viewModel.wind
-                station_altitude.setVisibility(viewModel.altitudeVisible)
-                station_altitude.text = viewModel.altitude
-            }
+        mapView.getMap(this, ::onMapLoaded)
+        lifecycle.addObserver(mapView.lifecycleObserver)
+    }
+
+    private fun onMapLoaded(map: Map) {
+        stationEvents.stateEvents(id).collectOn(foregroundScope) { viewModel ->
+            map.zoomTo(viewModel.center, viewModel.zoom)
+            map.showMarkers(viewModel.markers)
         }
     }
 }
