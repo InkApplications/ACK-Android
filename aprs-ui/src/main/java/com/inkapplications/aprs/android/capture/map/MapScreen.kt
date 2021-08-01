@@ -33,7 +33,7 @@ fun MapScreen(
         factory = mapFactory,
         modifier = Modifier.fillMaxSize()
     )
-    val logState = state.selectedItem?.viewModel
+    val logState = state.selectedItem
     if (state.selectedItemVisible && logState != null) {
         Row {
             AprsLogItem(
@@ -70,5 +70,4 @@ fun LocationStateButton(
             Icon(Icons.Default.LocationDisabled, "")
         }
     }
-    LinearProgressIndicator()
 }

@@ -2,4 +2,6 @@
 <resources>
     <string name="menu_capture_map">Map</string>
     <string name="menu_capture_log">Log</string>
+    <string name="capture_record_enable">Enable Recording</string>
+    <string name="capture_record_disable">Disable Recording</string>
 </resources>

@@ -1,120 +1,166 @@
 package com.inkapplications.aprs.android.capture
 
 import android.Manifest
+import android.content.Context
 import android.content.pm.PackageManager
-import android.view.Menu
-import android.view.MenuItem
-import androidx.core.app.ActivityCompat
+import android.os.Bundle
+import android.os.PersistableBundle
+import android.view.View
+import androidx.activity.compose.setContent
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.material.*
+import androidx.compose.material.icons.filled.*
+import androidx.compose.runtime.collectAsState
 import androidx.core.content.ContextCompat
 import com.inkapplications.android.extensions.ExtendedActivity
-import com.inkapplications.android.extensions.stopPropagation
 import com.inkapplications.android.extensions.startActivity
-import com.inkapplications.aprs.android.R
-import com.inkapplications.aprs.android.capture.log.LogFragment
-import com.inkapplications.aprs.android.capture.map.MapFragment
+import com.inkapplications.aprs.android.capture.log.LogItemState
+import com.inkapplications.aprs.android.capture.map.*
 import com.inkapplications.aprs.android.component
+import com.inkapplications.aprs.android.map.Map
+import com.inkapplications.aprs.android.map.getMap
+import com.inkapplications.aprs.android.map.lifecycleObserver
 import com.inkapplications.aprs.android.settings.SettingsActivity
+import com.inkapplications.aprs.android.station.startStationActivity
 import com.inkapplications.aprs.android.trackNavigation
+import com.inkapplications.coroutines.collectOn
+import com.mapbox.mapboxsdk.maps.MapView
 import kimchi.Kimchi
-import kotlinx.android.synthetic.main.capture.*
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.launch
-
-private const val RECORD_AUDIO_REQUEST = 45653
+import kimchi.analytics.intProperty
+import kotlinx.coroutines.*
+import kotlinx.coroutines.flow.MutableStateFlow
 
 class CaptureActivity: ExtendedActivity() {
-    private val mapFragment by lazy { MapFragment() }
-    private val logFragment by lazy { LogFragment() }
+    private val captureScreenState = MutableStateFlow(CaptureScreenState())
+    private lateinit var mapEventsFactory: MapEventsFactory
+    private var mapView: MapView? = null
+    private var map: Map? = null
+    private var mapScope: CoroutineScope = MainScope()
+    private val mapViewModel = MutableStateFlow(MapViewModel())
     private var recording: Job? = null
     private lateinit var captureEvents: CaptureEvents
-    private lateinit var menuRecordDisabled: MenuItem
-    private lateinit var menuRecordEnabled: MenuItem
+
+    private val locationPermissionRequest: ActivityResultLauncher<String> = registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted: Boolean ->
+        if (isGranted) {
+            Kimchi.trackEvent("location_permission_grant")
+            onLocationEnableClick()
+        } else {
+            Kimchi.trackEvent("location_permission_deny")
+        }
+    }
+
+    private val micPermissionRequest: ActivityResultLauncher<String> = registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted: Boolean ->
+        if (isGranted) {
+            Kimchi.trackEvent("record_permission_grant")
+            onRecordingPermissionsGranted()
+        } else {
+            Kimchi.trackEvent("record_permission_deny")
+        }
+    }
 
     override fun onCreate() {
         super.onCreate()
-        setContentView(R.layout.capture)
-        setSupportActionBar(capture_toolbar)
+        mapEventsFactory = component.mapManager()
+        val logData = component.logData()
+
+        setContent {
+            val captureState = captureScreenState.collectAsState()
+            val mapState = mapViewModel.collectAsState()
+            val logState = logData.logViewModels.collectAsState(emptyList())
+
+            CaptureScreen(
+                captureScreenState = captureState,
+                mapState = mapState,
+                logs = logState,
+                mapFactory = ::createMapView,
+                onRecordingEnableClick = ::onRecordingEnableClick,
+                onRecordingDisableClick = ::onRecordingDisableClick,
+                onSettingsClick = ::onSettingsClick,
+                onLogClick = ::onLogClick,
+                onLocationEnableClick = ::onLocationEnableClick,
+                onLocationDisableClick = ::onLocationDisableClick,
+            )
+        }
         captureEvents = component.captureEvents()
-
-        supportFragmentManager.beginTransaction()
-            .replace(R.id.capture_stage, mapFragment)
-            .commit()
-        capture_navigation.setOnNavigationItemSelectedListener(::onNavigationClick)
     }
 
-    override fun onCreateOptionsMenu(menu: Menu): Boolean = stopPropagation {
-        menuInflater.inflate(R.menu.capture_toolbar, menu)
-        menuRecordEnabled = menu.findItem(R.id.menu_capture_toolbar_mic_enabled)
-        menuRecordDisabled = menu.findItem(R.id.menu_capture_toolbar_mic_disabled)
+    private fun createMapView(context: Context): View {
+        return if(mapView != null) mapView!! else  MapView(context).also { mapView ->
+            this.mapView = mapView
+
+            mapView.getMap(this, ::onMapLoaded)
+            lifecycle.addObserver(mapView.lifecycleObserver)
+
+            return mapView
+        }
     }
 
-    private fun enableRecording() {
+    private fun onMapLoaded(map: Map) {
+        this.map = map
+        mapScope.cancel()
+        mapScope = MainScope()
+        val manager = mapEventsFactory.createEventsAccess(map)
+
+        manager.viewState.collectOn(mapScope) { state ->
+            Kimchi.trackEvent("map_markers", listOf(intProperty("quantity", state.markers.size)))
+            mapViewModel.emit(state)
+            map.showMarkers(state.markers)
+        }
+    }
+
+
+    private fun onLogClick(state: LogItemState) {
+        startStationActivity(state.id)
+    }
+
+    private fun onLocationEnableClick() {
+        when(ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)) {
+            PackageManager.PERMISSION_GRANTED -> map?.enablePositionTracking()
+            else -> locationPermissionRequest.launch(Manifest.permission.ACCESS_FINE_LOCATION)
+        }
+    }
+
+    private fun onLocationDisableClick() {
+        map?.disablePositionTracking()
+    }
+    private fun onRecordingEnableClick() {
         Kimchi.trackEvent("record_enable")
         when(ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO)) {
-            PackageManager.PERMISSION_GRANTED -> onRecordAudio()
-            else -> ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.RECORD_AUDIO), RECORD_AUDIO_REQUEST)
+            PackageManager.PERMISSION_GRANTED -> onRecordingPermissionsGranted()
+            else -> micPermissionRequest.launch(Manifest.permission.RECORD_AUDIO)
         }
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean = when (item.itemId) {
-        R.id.menu_capture_toolbar_settings -> stopPropagation {
-            Kimchi.trackNavigation("settings")
-            startActivity(SettingsActivity::class)
-        }
-        R.id.menu_capture_toolbar_mic_disabled -> stopPropagation {
-            enableRecording()
-        }
-        R.id.menu_capture_toolbar_mic_enabled -> stopPropagation {
-            disableRecording()
-        }
-        else -> super.onOptionsItemSelected(item)
-    }
-
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
-        when {
-            requestCode == RECORD_AUDIO_REQUEST -> if (grantResults.getOrNull(0) == PackageManager.PERMISSION_GRANTED) {
-                Kimchi.trackEvent("record_permission_grant")
-                onRecordAudio()
-            }
-            requestCode == RECORD_AUDIO_REQUEST -> {
-                Kimchi.trackEvent("record_permission_deny")
-            }
-            else -> super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        }
-    }
-
-    private fun onRecordAudio() {
+    private fun onRecordingPermissionsGranted() {
         Kimchi.info("Start Recording")
-        menuRecordEnabled.isVisible = true
-        menuRecordDisabled.isVisible = false
+        captureScreenState.value = captureScreenState.value.copy(
+            recordingEnabled = true,
+        )
         recording = foregroundScope.launch { captureEvents.listenForPackets() }
     }
 
-    private fun disableRecording() {
+    private fun onRecordingDisableClick() {
         Kimchi.trackEvent("record_disable")
-        menuRecordEnabled.isVisible = false
-        menuRecordDisabled.isVisible = true
+        captureScreenState.value = captureScreenState.value.copy(
+            recordingEnabled = false,
+        )
         recording?.cancel()
         recording = null
     }
 
-    private fun onNavigationClick(item: MenuItem): Boolean {
-        Kimchi.info("Navigate to ${item.title}")
-        when (item.itemId) {
-            R.id.menu_capture_map -> {
-                Kimchi.trackNavigation("map")
-                supportFragmentManager.beginTransaction()
-                    .replace(R.id.capture_stage, mapFragment)
-                    .commit()
-            }
-            R.id.menu_capture_log -> {
-                Kimchi.trackNavigation("log")
-                supportFragmentManager.beginTransaction()
-                    .replace(R.id.capture_stage, logFragment)
-                    .commit()
-            }
-            else -> return false
-        }
-        return true
+    private fun onSettingsClick() {
+        Kimchi.trackNavigation("settings")
+        startActivity(SettingsActivity::class)
+    }
+
+    override fun onSaveInstanceState(outState: Bundle, outPersistentState: PersistableBundle) {
+        mapView?.onSaveInstanceState(outState)
+        super.onSaveInstanceState(outState, outPersistentState)
+    }
+
+    override fun onLowMemory() {
+        mapView?.onLowMemory()
+        super.onLowMemory()
     }
 }

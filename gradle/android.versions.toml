@@ -59,6 +59,10 @@ module = "androidx.activity:activity-compose"
 version.ref = "activity"
 module = "androidx.activity:activity-ktx"
 
+[libraries.androidx-compose-navigation]
+version = "2.4.0-alpha04"
+module = "androidx.navigation:navigation-compose"
+
 [libraries.androidx-compose-material-icons-core]
 version.ref = "material-icons"
 module = "androidx.compose.material:material-icons-core"
@@ -78,6 +82,7 @@ androidx-compose-full = [
     "androidx-compose-material-core",
     "androidx-compose-material-icons-core",
     "androidx-compose-material-icons-extended",
+    "androidx-compose-navigation",
     "androidx-activity-compose",
 ]
 

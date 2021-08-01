@@ -1,6 +1,6 @@
 package com.inkapplications.aprs.android.capture.map
 
-import com.inkapplications.aprs.android.capture.log.LogItem
+import com.inkapplications.aprs.android.capture.log.LogItemState
 import com.inkapplications.aprs.android.capture.log.LogStateFactory
 import com.inkapplications.aprs.android.map.MarkerViewModel
 import com.inkapplications.aprs.android.settings.SettingsReadAccess
@@ -46,9 +46,8 @@ class MapDataRepository @Inject constructor(
             }
     }
 
-    fun findLogItem(id: Long): Flow<LogItem?> {
+    fun findLogItem(id: Long): Flow<LogItemState?> {
         return aprs.findById(id)
             .map { it?.let { logStateFactory.create(it.id, it.data) } }
-            .map { it?.let { LogItem(id, it) } }
     }
 }
