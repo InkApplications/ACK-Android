@@ -9,6 +9,7 @@ import com.inkapplications.aprs.android.map.ZoomLevels
 import com.inkapplications.aprs.android.symbol.SymbolFactory
 import com.inkapplications.aprs.data.CapturedPacket
 import com.inkapplications.karps.structures.AprsPacket
+import com.inkapplications.karps.structures.Capability
 import com.inkapplications.karps.structures.symbolOf
 import dagger.Reusable
 import inkapplications.spondee.measure.Fahrenheit
@@ -53,8 +54,6 @@ class StationViewModelFactory @Inject constructor(
             center = data.coordinates ?: GeoCoordinates(0.latitude, 0.longitude),
             zoom = ZoomLevels.ROADS,
             name = data.source.toString(),
-            comment = "", // TODO: Some things don't have comments. Remove
-
         )
         is AprsPacket.ObjectReport -> StationViewModel(
             markers = listOf(MarkerViewModel(packet.id, data.coordinates, symbolFactory.createSymbol(data.symbol))),
@@ -80,10 +79,18 @@ class StationViewModelFactory @Inject constructor(
             name = data.source.toString(),
             comment = "",
         )
-        null -> StationViewModel(
-            name = "",
-            comment = "",
+        is AprsPacket.TelemetryReport -> StationViewModel(
+            name = data.source.toString(),
+            comment = data.comment,
         )
+        is AprsPacket.StatusReport -> StationViewModel(
+            name = data.source.toString(),
+            comment = data.status,
+        )
+        is AprsPacket.CapabilityReport -> StationViewModel(
+            name = data.source.toString(),
+        )
+        null -> StationViewModel()
     }
 
     private fun Length?.distanceString(metric: Boolean) = this

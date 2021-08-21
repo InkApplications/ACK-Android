@@ -20,6 +20,9 @@ class LogStateFactory @Inject constructor(
                 is AprsPacket.ObjectReport -> "📍 ${packet.comment} @ ${packet.coordinates}"
                 is AprsPacket.ItemReport -> "📦 ${packet.comment} @ ${packet.coordinates}"
                 is AprsPacket.Message -> "✉️ ${packet.addressee} ${packet.message} ${packet.messageNumber?.let { "($it)" }.orEmpty()}"
+                is AprsPacket.TelemetryReport -> "\uD83D\uDCE1 ${packet.comment}"
+                is AprsPacket.StatusReport -> "✅ ${packet.status}"
+                is AprsPacket.CapabilityReport -> "\uD83D\uDCD1 ${packet.capabilityData}"
             },
             symbol = when (packet) {
                 is AprsPacket.Position -> packet.symbol.let(symbolFactory::createSymbol)
