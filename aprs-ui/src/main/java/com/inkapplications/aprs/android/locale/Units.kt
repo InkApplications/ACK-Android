@@ -1,27 +1,42 @@
 package com.inkapplications.aprs.android.locale
 
-import com.inkapplications.android.extensions.StringResources
-import com.inkapplications.aprs.android.R
+import inkapplications.spondee.format.SimpleNumberFormats
+import inkapplications.spondee.format.formatDecimal
 import inkapplications.spondee.measure.*
-import inkapplications.spondee.structure.Kilo
-import inkapplications.spondee.structure.value
-import kotlin.math.roundToInt
+import inkapplications.spondee.structure.*
+import kotlin.time.Duration
+import kotlin.time.DurationUnit
+import kotlin.time.ExperimentalTime
 
-/**
- * Get a formatted string for a speed unit, based on system of measurement.
- */
-fun StringResources.getLocalizedSpeed(speed: Speed, metric: Boolean) = when {
-    metric -> getString(R.string.locale_unit_speed_metric, speed.value(Kilo, MetersPerSecond).roundToInt() * 3600)
-    else -> getString(R.string.locale_unit_speed, speed.value(MilesPerHour).roundToInt())
+fun Length.format(metric: Boolean) = when {
+    metric && value(Meters) > 1000 -> "${Meters.format(this, Kilo)}"
+    metric -> Meters.format(this)
+    !metric && value(Feet) > 1000 -> Miles.format(this)
+    else -> Feet.format(this)
 }
 
-/**
- * Get a short-distance string.
- *
- * In this case "short" is referring to feet/meters as opposed to
- * miles/kilometers.
- */
-fun StringResources.getLocalizedShortDistance(distance: Length, metric: Boolean) = when {
-    metric -> getString(R.string.locale_unit_distance_short_metric, distance.value(Meters).roundToInt())
-    else -> getString(R.string.locale_unit_distance_short, distance.value(Feet).roundToInt())
+fun Speed.format(metric: Boolean) = when {
+    metric && value(MetersPerSecond) >= 1000 -> KilometersPerHour.format(this)
+    metric -> MetersPerSecond.format(this)
+    else -> MilesPerHour.format(this)
+}
+
+fun Temperature.format(metric: Boolean) = when {
+    metric -> Celsius.format(this, decimals = 1)
+    else -> Fahrenheit.format(this, decimals = 0)
+}
+
+@OptIn(ExperimentalTime::class, SimpleNumberFormats::class)
+private object KilometersPerHour: DoubleUnit<Speed>, Symbolized, UnitFormatter<Speed> {
+    override val symbol: String = "km/h"
+    override fun convertValue(value: Speed): Double {
+        return value.lengthComponent.value(Kilo, Meters) / value.durationComponent.toDouble(DurationUnit.HOURS)
+    }
+
+    override fun of(value: Number): Speed {
+        return MetersPerSecond.of(Meters.of(Kilo, value).value(Meters) / Duration.hours(1).toDouble(DurationUnit.SECONDS))
+    }
+
+    override fun format(measurement: Speed, decimals: Int, decimalSeparator: Char): String = "${MilesPerHour.convertValue(measurement).formatDecimal(decimals, true, decimalSeparator)}${MilesPerHour.symbol}"
+    override fun format(measurement: Speed, siScale: SiScale, decimals: Int, decimalSeparator: Char): String = "${measurement.value(siScale, this).formatDecimal(decimals, true, decimalSeparator)}${siScale.symbol}${MilesPerHour.symbol}"
 }

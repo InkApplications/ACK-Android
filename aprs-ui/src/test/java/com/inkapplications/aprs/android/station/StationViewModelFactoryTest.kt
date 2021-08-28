@@ -71,7 +71,7 @@ class StationViewModelFactoryTest {
         assertTrue(result.temperatureVisible, "Temperature is visible when value is specified")
         assertTrue(result.windVisible, "Wind is visible when value is specified")
         assertEquals("72ºF", result.temperature)
-        assertEquals("12º|34|56", result.wind)
+        assertEquals("12º|34.0mph|56.0mph", result.wind)
         assertEquals("KE0YOG-1", result.name)
     }
 
@@ -107,7 +107,7 @@ class StationViewModelFactoryTest {
         assertTrue(result.windVisible, "Wind is visible when value is specified")
         assertFalse(result.altitudeVisible, "Altitude visible when value is unspecified")
         assertEquals("72ºF", result.temperature)
-        assertEquals("12º|34|56", result.wind)
+        assertEquals("12º|34.0mph|56.0mph", result.wind)
         assertEquals("KE0YOG-1", result.name)
     }
 

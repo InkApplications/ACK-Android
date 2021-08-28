@@ -107,6 +107,10 @@ dependencies {
     implementation(libraries.kimchi.firebase.analytics)
     implementation(libraries.kimchi.firebase.crashlytics)
 
+    // Force latest local spondee snapshot for development.
+    // TODO: Remove before release.
+    api("com.inkapplications.spondee:measures:1.0-SNAPSHOT")
+
     implementation(libraries.watermelon)
 
     implementation("com.google.firebase:firebase-config-ktx:19.2.0")

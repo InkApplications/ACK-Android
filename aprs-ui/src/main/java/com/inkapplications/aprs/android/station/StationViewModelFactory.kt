@@ -2,14 +2,12 @@ package com.inkapplications.aprs.android.station
 
 import com.inkapplications.android.extensions.StringResources
 import com.inkapplications.aprs.android.R
-import com.inkapplications.aprs.android.locale.getLocalizedShortDistance
-import com.inkapplications.aprs.android.locale.getLocalizedSpeed
+import com.inkapplications.aprs.android.locale.format
 import com.inkapplications.aprs.android.map.MarkerViewModel
 import com.inkapplications.aprs.android.map.ZoomLevels
 import com.inkapplications.aprs.android.symbol.SymbolFactory
 import com.inkapplications.aprs.data.CapturedPacket
 import com.inkapplications.karps.structures.AprsPacket
-import com.inkapplications.karps.structures.Capability
 import com.inkapplications.karps.structures.symbolOf
 import dagger.Reusable
 import inkapplications.spondee.measure.Fahrenheit
@@ -49,7 +47,7 @@ class StationViewModelFactory @Inject constructor(
                     symbol = symbolFactory.createSymbol(data.symbol ?: defaultWeatherSymbol)
                 ))
             } ?: emptyList(),
-            temperature = data.temperature?.let { "${it.value(Fahrenheit).roundToInt()}ºF" }.orEmpty(), //TODO: Fix unit formatting
+            temperature = data.temperature?.format(metric).orEmpty(),
             wind = data.windString(metric),
             center = data.coordinates ?: GeoCoordinates(0.latitude, 0.longitude),
             zoom = ZoomLevels.ROADS,
@@ -93,14 +91,12 @@ class StationViewModelFactory @Inject constructor(
         null -> StationViewModel()
     }
 
-    private fun Length?.distanceString(metric: Boolean) = this
-            ?.let { stringResources.getLocalizedShortDistance(it, metric) }
-            .orEmpty()
+    private fun Length?.distanceString(metric: Boolean) = this?.format(metric).orEmpty()
 
     private fun AprsPacket.Weather.windString(metricUnits: Boolean): String {
         val direction = windData.direction?.value(Degrees)?.roundToInt()?.let { "${it}º" }
-        val speed = windData.speed?.let { stringResources.getLocalizedSpeed(it, metricUnits) }
-        val gust = windData.gust?.let { stringResources.getLocalizedSpeed(it, metricUnits) }
+        val speed = windData.speed?.format(metricUnits)
+        val gust = windData.gust?.format(metricUnits)
 
         return when {
             direction != null && speed != null && gust != null -> stringResources.getString(R.string.station_wind_format_full, direction, speed, gust)

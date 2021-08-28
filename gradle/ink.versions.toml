@@ -1,5 +1,6 @@
 [versions]
-karps = "0.0.0"
+# TODO: Freeze before release
+karps = "1.0-SNAPSHOT"
 kimchi-core = "1.1.0"
 kimchi-firebase = "1.2.0"
 
