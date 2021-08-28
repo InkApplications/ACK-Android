@@ -4,6 +4,7 @@ import com.inkapplications.android.extensions.ApplicationModule
 import com.inkapplications.aprs.android.capture.CaptureEvents
 import com.inkapplications.aprs.android.firebase.FirebaseModule
 import com.inkapplications.aprs.android.capture.log.LogEvents
+import com.inkapplications.aprs.android.capture.log.LogModule
 import com.inkapplications.aprs.android.capture.map.MapEventsFactory
 import com.inkapplications.aprs.android.capture.map.MapModule
 import com.inkapplications.aprs.android.locale.LocaleModule
@@ -26,11 +27,12 @@ import javax.inject.Singleton
         ExternalModule::class,
         FirebaseModule::class,
         LocaleModule::class,
+        LogModule::class,
         MapModule::class,
         SettingsModule::class,
         StartupModule::class,
-        SymbolModule::class,
         StationModule::class,
+        SymbolModule::class,
     ]
 )
 interface ApplicationComponent {

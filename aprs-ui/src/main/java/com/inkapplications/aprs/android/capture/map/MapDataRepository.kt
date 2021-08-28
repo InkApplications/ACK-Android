@@ -2,8 +2,10 @@ package com.inkapplications.aprs.android.capture.map
 
 import com.inkapplications.aprs.android.capture.log.LogItemState
 import com.inkapplications.aprs.android.capture.log.LogStateFactory
+import com.inkapplications.aprs.android.locale.LocaleSettings
 import com.inkapplications.aprs.android.map.MarkerViewModel
 import com.inkapplications.aprs.android.settings.SettingsReadAccess
+import com.inkapplications.aprs.android.settings.observeBoolean
 import com.inkapplications.aprs.android.settings.observeInt
 import com.inkapplications.aprs.android.symbol.SymbolFactory
 import com.inkapplications.aprs.data.AprsAccess
@@ -28,7 +30,8 @@ class MapDataRepository @Inject constructor(
     private val symbolFactory: SymbolFactory,
     private val logStateFactory: LogStateFactory,
     private val settings: SettingsReadAccess,
-    private val mapSettings: MapSettings
+    private val mapSettings: MapSettings,
+    private val localeSettings: LocaleSettings,
 ) {
     fun findMarkers(): Flow<Collection<MarkerViewModel>> {
         return settings.observeInt(mapSettings.pinCount)
@@ -47,7 +50,9 @@ class MapDataRepository @Inject constructor(
     }
 
     fun findLogItem(id: Long): Flow<LogItemState?> {
-        return aprs.findById(id)
-            .map { it?.let { logStateFactory.create(it.id, it.data) } }
+        return settings.observeBoolean(localeSettings.preferMetric).flatMapLatest { metric ->
+            aprs.findById(id).map { it?.let { logStateFactory.create(it.id, it.data, metric) } }
+        }
     }
 }
+
