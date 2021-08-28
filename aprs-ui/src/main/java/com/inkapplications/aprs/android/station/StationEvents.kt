@@ -14,12 +14,16 @@ class StationEvents @Inject constructor(
     private val aprs: AprsAccess,
     private val stationViewModelFactory: StationViewModelFactory,
     private val settings: SettingsReadAccess,
-    private val localeSettings: LocaleSettings
+    private val localeSettings: LocaleSettings,
+    private val stationSettings: StationSettings,
 )  {
     fun stateEvents(id: Long): Flow<StationViewModel> {
         return aprs.findById(id)
             .combine(settings.observeBoolean(localeSettings.preferMetric)) { packet, metric ->
-                stationViewModelFactory.create(packet, metric)
+                packet to metric
+            }
+            .combine(settings.observeBoolean(stationSettings.showDebugData)) { (packet, metric), debugData ->
+                stationViewModelFactory.create(packet, metric, debugData)
             }
     }
 }

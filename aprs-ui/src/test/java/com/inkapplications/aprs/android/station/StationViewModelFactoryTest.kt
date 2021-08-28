@@ -30,15 +30,17 @@ class StationViewModelFactoryTest {
                 source = Address("KE0YOG", "1"),
                 destination = Address("KE0YOG", "2"),
                 digipeaters = emptyList(),
-                body = "test"
+                body = "test",
+                raw = "",
             )
         )
-        val result = factory.create(packet, false)
+        val result = factory.create(packet, false, false)
 
         assertFalse(result.mapVisible, "Map is hidden for unknown packet")
         assertFalse(result.temperatureVisible, "Temperature is hidden for non weather packet")
         assertFalse(result.windVisible, "Wind is hidden for non weather packet")
         assertEquals("KE0YOG-1", result.name)
+        assertFalse(result.debugDataVisible)
     }
 
     @Test
@@ -63,9 +65,10 @@ class StationViewModelFactoryTest {
                 timestamp = null,
                 symbol = null,
                 pressure = null,
+                raw = "",
             )
         )
-        val result = factory.create(packet, false)
+        val result = factory.create(packet, false, false)
 
         assertFalse(result.mapVisible, "Map is hidden for positionless weather")
         assertTrue(result.temperatureVisible, "Temperature is visible when value is specified")
@@ -73,6 +76,7 @@ class StationViewModelFactoryTest {
         assertEquals("72ºF", result.temperature)
         assertEquals("12º|34.0mph|56.0mph", result.wind)
         assertEquals("KE0YOG-1", result.name)
+        assertFalse(result.debugDataVisible)
     }
 
     @Test
@@ -97,9 +101,10 @@ class StationViewModelFactoryTest {
                 timestamp = null,
                 symbol = null,
                 pressure = null,
+                raw = "",
             )
         )
-        val result = factory.create(packet, false)
+        val result = factory.create(packet, false, false)
 
         assertTrue(result.mapVisible, "Map is visible for positioned weather packet")
         assertEquals(1, result.markers.size)
@@ -109,6 +114,7 @@ class StationViewModelFactoryTest {
         assertEquals("72ºF", result.temperature)
         assertEquals("12º|34.0mph|56.0mph", result.wind)
         assertEquals("KE0YOG-1", result.name)
+        assertFalse(result.debugDataVisible)
     }
 
     @Test
@@ -133,9 +139,10 @@ class StationViewModelFactoryTest {
                 timestamp = null,
                 symbol = null,
                 pressure = null,
+                raw = "",
             )
         )
-        val result = factory.create(packet, false)
+        val result = factory.create(packet, false, false)
 
         assertTrue(result.mapVisible, "Map is shown for positioned weather packet")
         assertEquals(1, result.markers.size)
@@ -143,6 +150,7 @@ class StationViewModelFactoryTest {
         assertFalse(result.windVisible, "Wind is hidden when value is null")
         assertFalse(result.altitudeVisible, "Altitude is hidden when value is null")
         assertEquals("KE0YOG-1", result.name)
+        assertFalse(result.debugDataVisible)
     }
 
     @Test
@@ -168,9 +176,10 @@ class StationViewModelFactoryTest {
                 transmitterInfo = null,
                 signalInfo = null,
                 directionReportExtra = null,
+                raw = "",
             )
         )
-        val result = factory.create(packet, false)
+        val result = factory.create(packet, false, false)
 
         assertTrue(result.mapVisible, "Map is visible for position packet")
         assertFalse(result.temperatureVisible, "Temperature is hidden for non weather packet")
@@ -178,5 +187,6 @@ class StationViewModelFactoryTest {
         assertEquals(1, result.markers.size)
         assertEquals("KE0YOG-1", result.name)
         assertEquals("test", result.comment)
+        assertFalse(result.debugDataVisible)
     }
 }

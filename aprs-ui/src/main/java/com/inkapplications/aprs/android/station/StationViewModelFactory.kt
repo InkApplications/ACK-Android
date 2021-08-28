@@ -10,7 +10,6 @@ import com.inkapplications.aprs.data.CapturedPacket
 import com.inkapplications.karps.structures.AprsPacket
 import com.inkapplications.karps.structures.symbolOf
 import dagger.Reusable
-import inkapplications.spondee.measure.Fahrenheit
 import inkapplications.spondee.measure.Length
 import inkapplications.spondee.spatial.Degrees
 import inkapplications.spondee.spatial.GeoCoordinates
@@ -29,7 +28,8 @@ class StationViewModelFactory @Inject constructor(
 
     fun create(
         packet: CapturedPacket?,
-        metric: Boolean
+        metric: Boolean,
+        showDebug: Boolean,
     ) = when (val data = packet?.data) {
         is AprsPacket.Position -> StationViewModel(
             markers = listOf(MarkerViewModel(packet.id, data.coordinates, symbolFactory.createSymbol(data.symbol))),
@@ -38,6 +38,8 @@ class StationViewModelFactory @Inject constructor(
             name = data.source.toString(),
             comment = data.comment,
             altitude = data.altitude.distanceString(metric),
+            rawPacket = data,
+            debugDataVisible = showDebug,
         )
         is AprsPacket.Weather -> StationViewModel(
             markers = data.coordinates?.let {
@@ -52,6 +54,8 @@ class StationViewModelFactory @Inject constructor(
             center = data.coordinates ?: GeoCoordinates(0.latitude, 0.longitude),
             zoom = ZoomLevels.ROADS,
             name = data.source.toString(),
+            rawPacket = data,
+            debugDataVisible = showDebug,
         )
         is AprsPacket.ObjectReport -> StationViewModel(
             markers = listOf(MarkerViewModel(packet.id, data.coordinates, symbolFactory.createSymbol(data.symbol))),
@@ -60,6 +64,8 @@ class StationViewModelFactory @Inject constructor(
             name = data.source.toString(),
             comment = data.comment,
             altitude = data.altitude.distanceString(metric),
+            rawPacket = data,
+            debugDataVisible = showDebug,
         )
         is AprsPacket.ItemReport -> StationViewModel(
             markers = listOf(MarkerViewModel(packet.id, data.coordinates, symbolFactory.createSymbol(data.symbol))),
@@ -68,25 +74,37 @@ class StationViewModelFactory @Inject constructor(
             name = data.source.toString(),
             comment = data.comment,
             altitude = data.altitude.distanceString(metric),
+            rawPacket = data,
+            debugDataVisible = showDebug,
         )
         is AprsPacket.Message -> StationViewModel(
             name = data.source.toString(),
             comment = data.message,
+            rawPacket = data,
+            debugDataVisible = showDebug,
         )
         is AprsPacket.Unknown -> StationViewModel(
             name = data.source.toString(),
             comment = "",
+            rawPacket = data,
+            debugDataVisible = showDebug,
         )
         is AprsPacket.TelemetryReport -> StationViewModel(
             name = data.source.toString(),
             comment = data.comment,
+            rawPacket = data,
+            debugDataVisible = showDebug,
         )
         is AprsPacket.StatusReport -> StationViewModel(
             name = data.source.toString(),
             comment = data.status,
+            rawPacket = data,
+            debugDataVisible = showDebug,
         )
         is AprsPacket.CapabilityReport -> StationViewModel(
             name = data.source.toString(),
+            rawPacket = data,
+            debugDataVisible = showDebug,
         )
         null -> StationViewModel()
     }

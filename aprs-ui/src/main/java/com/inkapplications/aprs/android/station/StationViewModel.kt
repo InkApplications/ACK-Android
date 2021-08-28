@@ -2,6 +2,7 @@ package com.inkapplications.aprs.android.station
 
 import com.inkapplications.aprs.android.map.MarkerViewModel
 import com.inkapplications.aprs.android.map.ZoomLevels
+import com.inkapplications.karps.structures.AprsPacket
 import inkapplications.spondee.spatial.*
 
 data class StationViewModel(
@@ -12,7 +13,9 @@ data class StationViewModel(
     val zoom: Double = ZoomLevels.MIN,
     val temperature: String = "",
     val wind: String = "",
-    val altitude: String = ""
+    val altitude: String = "",
+    val rawPacket: AprsPacket? = null,
+    val debugDataVisible: Boolean = false,
 ) {
     val mapVisible = markers.isNotEmpty()
     val temperatureVisible = temperature.isNotEmpty()

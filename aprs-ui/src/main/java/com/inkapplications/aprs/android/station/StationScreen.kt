@@ -3,6 +3,7 @@ package com.inkapplications.aprs.android.station
 import android.content.Context
 import android.view.View
 import androidx.compose.foundation.layout.*
+import androidx.compose.material.Card
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.Text
@@ -10,6 +11,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.painterResource
@@ -79,6 +81,21 @@ fun StationScreen(
                 InfoRow(painterResource(R.drawable.ic_altitude), viewState.value.altitude)
             }
             Text(viewState.value.comment)
+
+            if (viewState.value.debugDataVisible) {
+                Card(modifier = Modifier.padding(vertical = AprsTheme.Spacing.content)) {
+                    Column(modifier = Modifier.padding(AprsTheme.Spacing.content)) {
+                        Text("Debug Info", style = AprsTheme.Typography.h2)
+                        Text("Raw Data", style = AprsTheme.Typography.h3)
+                        Text(viewState.value.rawPacket?.raw.toString(), style = AprsTheme.Typography.caption)
+                        Spacer(Modifier.height(AprsTheme.Spacing.content))
+                        Text("Parsing Info", style = AprsTheme.Typography.h3)
+                        Text("Data Type Identifier: ${viewState.value.rawPacket?.dataTypeIdentifier}", style = AprsTheme.Typography.caption)
+                        Text("Receive timestamp: ${viewState.value.rawPacket?.received}", style = AprsTheme.Typography.caption)
+                        Text("Digipeater list: ${viewState.value.rawPacket?.digipeaters}", style = AprsTheme.Typography.caption)
+                    }
+                }
+            }
         }
     }
 }
@@ -87,7 +104,7 @@ fun StationScreen(
 fun InfoRow(
     icon: Painter,
     text: String,
-) = Row {
+) = Row(verticalAlignment = Alignment.CenterVertically) {
     Icon(icon, null, modifier = Modifier.padding(AprsTheme.Spacing.icon))
     Text(text)
 }
