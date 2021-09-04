@@ -2,6 +2,7 @@ package com.inkapplications.aprs.data
 
 import android.content.Context
 import androidx.room.Room
+import com.inkapplications.karps.client.AprsClientModule
 import com.inkapplications.karps.parser.ParserModule
 import dagger.Module
 import dagger.Provides
@@ -14,7 +15,8 @@ object AndroidAprsModule {
     @Singleton
     fun aprsAccess(
         logger: KimchiLogger,
-        context: Context
+        context: Context,
+        androidLocationProvider: AndroidLocationProvider,
     ): AprsAccess {
         val audioCapture = AudioDataCapture(logger)
         val audioProcessor = AudioDataProcessor(audioCapture)
@@ -23,6 +25,6 @@ object AndroidAprsModule {
             .fallbackToDestructiveMigration()
             .build()
 
-        return AndroidAprs(audioProcessor, database.pinsDao(), ParserModule().defaultParser(logger), logger)
+        return AndroidAprs(audioProcessor, database.pinsDao(), AprsClientModule.createDataClient(), androidLocationProvider, ParserModule().defaultParser(logger), logger)
     }
 }

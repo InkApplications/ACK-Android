@@ -3,10 +3,7 @@ package com.inkapplications.kotlin
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.ensureActive
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import kotlin.coroutines.coroutineContext
 
@@ -63,3 +60,11 @@ inline fun <reified T> List<Flow<T>>.flattenFirst(crossinline predicate: (T) -> 
  * Make a flow of nullable values non-null by mapping nulls to a default given value.
  */
 inline fun <T: Any> Flow<T?>.mapNullToDefault(default: T): Flow<T> = map { it ?: default }
+
+/**
+ * Make a flow nullable and emit null on start.
+ *
+ * This is useful when merging flows when you do not want to wait for
+ * a flow to emit an item before the merge operation begins.
+ */
+fun <T> Flow<T>.startNull() = map { it as T? }.onStart { emit(null) }

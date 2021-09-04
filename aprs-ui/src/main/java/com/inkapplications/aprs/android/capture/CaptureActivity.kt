@@ -39,12 +39,22 @@ class CaptureActivity: ExtendedActivity() {
     private var mapScope: CoroutineScope = MainScope()
     private val mapViewModel = MutableStateFlow(MapViewModel())
     private var recording: Job? = null
+    private var isConnection: Job? = null
     private lateinit var captureEvents: CaptureEvents
 
-    private val locationPermissionRequest: ActivityResultLauncher<String> = registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted: Boolean ->
+    private val mapLocationPermissionRequest: ActivityResultLauncher<String> = registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted: Boolean ->
         if (isGranted) {
             Kimchi.trackEvent("location_permission_grant")
             onLocationEnableClick()
+        } else {
+            Kimchi.trackEvent("location_permission_deny")
+        }
+    }
+
+    private val internetLocationPermissionRequest: ActivityResultLauncher<String> = registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted: Boolean ->
+        if (isGranted) {
+            Kimchi.trackEvent("location_permission_grant")
+            onInternetLocationPermissionGranted()
         } else {
             Kimchi.trackEvent("location_permission_deny")
         }
@@ -80,6 +90,8 @@ class CaptureActivity: ExtendedActivity() {
                 onLogClick = ::onLogClick,
                 onLocationEnableClick = ::onLocationEnableClick,
                 onLocationDisableClick = ::onLocationDisableClick,
+                onInternetServiceDisableClick = ::onInternetServiceDisableClick,
+                onInternetServiceEnableClick = ::onInternetServiceEnableClick,
             )
         }
         captureEvents = component.captureEvents()
@@ -117,7 +129,7 @@ class CaptureActivity: ExtendedActivity() {
     private fun onLocationEnableClick() {
         when(ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)) {
             PackageManager.PERMISSION_GRANTED -> map?.enablePositionTracking()
-            else -> locationPermissionRequest.launch(Manifest.permission.ACCESS_FINE_LOCATION)
+            else -> mapLocationPermissionRequest.launch(Manifest.permission.ACCESS_FINE_LOCATION)
         }
     }
 
@@ -147,6 +159,31 @@ class CaptureActivity: ExtendedActivity() {
         )
         recording?.cancel()
         recording = null
+    }
+
+    private fun onInternetServiceEnableClick() {
+        Kimchi.trackEvent("internet_enable")
+        when (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)) {
+            PackageManager.PERMISSION_GRANTED -> onInternetLocationPermissionGranted()
+            else -> internetLocationPermissionRequest.launch(Manifest.permission.ACCESS_FINE_LOCATION)
+        }
+    }
+
+    private fun onInternetLocationPermissionGranted() {
+        Kimchi.info("Enable Internet Service")
+        captureScreenState.value = captureScreenState.value.copy(
+            internetServiceEnabled = true,
+        )
+        isConnection = foregroundScope.launch { captureEvents.listenForInternetPackets() }
+    }
+
+    private fun onInternetServiceDisableClick() {
+        Kimchi.trackEvent("internet_disable")
+        captureScreenState.value = captureScreenState.value.copy(
+            internetServiceEnabled = false,
+        )
+        isConnection?.cancel()
+        isConnection = null
     }
 
     private fun onSettingsClick() {

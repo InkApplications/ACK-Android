@@ -4,6 +4,7 @@ import android.app.Application
 import android.content.Context
 import android.content.SharedPreferences
 import android.content.res.Resources
+import android.location.LocationManager
 import androidx.preference.PreferenceManager
 import dagger.Binds
 import dagger.Module
@@ -19,6 +20,9 @@ class ApplicationModule(private val application: Application) {
 
     @Provides
     fun resources(): Resources = application.resources
+
+    @Provides
+    fun locationManager() = application.getSystemService(Context.LOCATION_SERVICE) as LocationManager
 }
 
 @Module

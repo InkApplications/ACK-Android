@@ -38,6 +38,8 @@ fun CaptureScreen(
     onLogClick: (LogItemState) -> Unit,
     onLocationEnableClick: () -> Unit,
     onLocationDisableClick: () -> Unit,
+    onInternetServiceDisableClick: () -> Unit,
+    onInternetServiceEnableClick: () -> Unit,
 ) = AprsScreen {
     val navController = rememberNavController()
 
@@ -47,6 +49,9 @@ fun CaptureScreen(
             onRecordingEnableClick = onRecordingEnableClick,
             onRecordingDisableClick = onRecordingDisableClick,
             onSettingsClick = onSettingsClick,
+            internetServiceEnabled = captureScreenState.value.internetServiceEnabled,
+            onInternetServiceDisableClick = onInternetServiceDisableClick,
+            onInternetServiceEnableClick = onInternetServiceEnableClick,
         )
 
         NavHost(
@@ -104,6 +109,9 @@ fun CaptureAppBar(
     recordingEnabled: Boolean,
     onRecordingEnableClick: () -> Unit,
     onRecordingDisableClick: () -> Unit,
+    internetServiceEnabled: Boolean,
+    onInternetServiceDisableClick: () -> Unit,
+    onInternetServiceEnableClick: () -> Unit,
     onSettingsClick: () -> Unit,
 ) {
     TopAppBar(
@@ -128,6 +136,26 @@ fun CaptureAppBar(
                     Icon(
                         Icons.Default.MicOff,
                         contentDescription = stringResource(R.string.capture_record_enable),
+                    )
+                }
+            }
+            if (internetServiceEnabled) {
+                IconButton(
+                    onClick = onInternetServiceDisableClick,
+                ) {
+                    Icon(
+                        Icons.Default.Cloud,
+                        contentDescription = "Disable APRS-IS",
+                        tint = AprsTheme.Colors.brand,
+                    )
+                }
+            } else {
+                IconButton(
+                    onClick = onInternetServiceEnableClick,
+                ) {
+                    Icon(
+                        Icons.Default.CloudOff,
+                        contentDescription = "Disable APRS-IS"
                     )
                 }
             }

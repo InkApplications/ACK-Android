@@ -28,6 +28,10 @@ module = "com.github.inkapplications.kimchi-firebase-bridge:analytics"
 version.ref = "karps"
 module = "com.inkapplications.karps:parser"
 
+[libraries.karps-client]
+version.ref = "karps"
+module = "com.inkapplications.karps:client"
+
 [libraries.karps-structures]
 version.ref = "karps"
 module = "com.inkapplications.karps:structures"

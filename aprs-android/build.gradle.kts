@@ -9,7 +9,7 @@ android {
     ndkVersion = "21.3.6528147"
 
     defaultConfig {
-        minSdkVersion(5)
+        minSdkVersion(8)
     }
 
     lintOptions {
@@ -30,6 +30,7 @@ dependencies {
     api(libraries.coroutines.core)
 
     implementation(libraries.karps.parser)
+    implementation(libraries.karps.client)
     api(libraries.karps.structures)
 
     api(libraries.kimchi.logger)
