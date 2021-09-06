@@ -78,21 +78,21 @@ fun AprsScreen(content: @Composable () -> Unit) {
 private fun AprsTheme(content: @Composable () -> Unit) {
     MaterialTheme(
         colors = if (isSystemInDarkTheme()) darkColors(
-            primary = AprsTheme.Colors.darkStroke,
-            primaryVariant = AprsTheme.Colors.darkStroke,
+            primary = AprsTheme.Colors.brand,
+            primaryVariant = AprsTheme.Colors.brand,
             secondary = AprsTheme.Colors.brand,
             secondaryVariant = AprsTheme.Colors.brand,
             background = AprsTheme.Colors.darkStroke,
             surface = AprsTheme.Colors.darkStroke,
             error = AprsTheme.Colors.error,
-            onPrimary = AprsTheme.Colors.lightStroke,
+            onPrimary = AprsTheme.Colors.darkStroke,
             onSecondary = AprsTheme.Colors.darkStroke,
             onBackground = AprsTheme.Colors.lightStroke,
             onSurface = AprsTheme.Colors.lightStroke,
             onError = AprsTheme.Colors.lightStroke,
         ) else lightColors(
-            primary = AprsTheme.Colors.lightStroke,
-            primaryVariant = AprsTheme.Colors.lightStroke,
+            primary = AprsTheme.Colors.brand,
+            primaryVariant = AprsTheme.Colors.brand,
             secondary = AprsTheme.Colors.brand,
             secondaryVariant = AprsTheme.Colors.brand,
             background = AprsTheme.Colors.lightStroke,

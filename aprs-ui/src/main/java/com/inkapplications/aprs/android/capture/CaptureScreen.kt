@@ -79,7 +79,10 @@ fun CaptureScreen(
             }
         }
 
-        BottomNavigation {
+        BottomNavigation(
+            backgroundColor = MaterialTheme.colors.surface,
+            contentColor = contentColorFor(MaterialTheme.colors.surface),
+        ) {
             BottomNavigationItem(
                 icon = { Icon(Icons.Default.Map, contentDescription = null) },
                 label = { Text(stringResource(R.string.menu_capture_map)) },
@@ -118,6 +121,8 @@ fun CaptureAppBar(
         title = {
             Text(stringResource(R.string.app_name))
         },
+        backgroundColor = MaterialTheme.colors.surface,
+        contentColor = contentColorFor(MaterialTheme.colors.surface),
         actions = {
             if (recordingEnabled) {
                 IconButton(

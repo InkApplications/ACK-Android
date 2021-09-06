@@ -6,9 +6,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.FloatingActionButton
-import androidx.compose.material.Icon
-import androidx.compose.material.LinearProgressIndicator
+import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.LocationDisabled
 import androidx.compose.material.icons.filled.MyLocation
@@ -58,14 +56,18 @@ fun LocationStateButton(
     if (isTracking) {
         FloatingActionButton(
             onClick = onDisableTrackingClick,
-            Modifier.padding(AprsTheme.Spacing.gutter)
+            backgroundColor = MaterialTheme.colors.surface,
+            contentColor = MaterialTheme.colors.primary,
+            modifier = Modifier.padding(AprsTheme.Spacing.gutter)
         ) {
             Icon(Icons.Default.MyLocation, "")
         }
     } else {
         FloatingActionButton(
             onClick = onEnableTrackingClick,
-            Modifier.padding(AprsTheme.Spacing.gutter)
+            backgroundColor = MaterialTheme.colors.surface,
+            contentColor = contentColorFor(MaterialTheme.colors.surface),
+            modifier = Modifier.padding(AprsTheme.Spacing.gutter)
         ) {
             Icon(Icons.Default.LocationDisabled, "")
         }
