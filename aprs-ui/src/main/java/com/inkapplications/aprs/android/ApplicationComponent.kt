@@ -8,6 +8,8 @@ import com.inkapplications.aprs.android.capture.log.LogModule
 import com.inkapplications.aprs.android.capture.map.MapEventsFactory
 import com.inkapplications.aprs.android.capture.map.MapModule
 import com.inkapplications.aprs.android.locale.LocaleModule
+import com.inkapplications.aprs.android.onboard.OnboardingModule
+import com.inkapplications.aprs.android.onboard.OnboardingStateAccess
 import com.inkapplications.aprs.android.settings.SettingsModule
 import com.inkapplications.aprs.android.settings.SettingsAccess
 import com.inkapplications.aprs.android.startup.ApplicationInitializer
@@ -29,6 +31,7 @@ import javax.inject.Singleton
         LocaleModule::class,
         LogModule::class,
         MapModule::class,
+        OnboardingModule::class,
         SettingsModule::class,
         StartupModule::class,
         StationModule::class,
@@ -42,4 +45,5 @@ interface ApplicationComponent {
     fun logData(): LogEvents
     fun initializer(): ApplicationInitializer
     fun stationEvents(): StationEvents
+    fun onboardingStateAccess(): OnboardingStateAccess
 }

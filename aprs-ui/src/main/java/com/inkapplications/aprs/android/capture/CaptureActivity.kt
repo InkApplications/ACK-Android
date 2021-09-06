@@ -41,7 +41,6 @@ class CaptureActivity: ExtendedActivity() {
     private var recording: Job? = null
     private var isConnection: Job? = null
     private lateinit var captureEvents: CaptureEvents
-
     private val mapLocationPermissionRequest: ActivityResultLauncher<String> = registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted: Boolean ->
         if (isGranted) {
             Kimchi.trackEvent("location_permission_grant")
