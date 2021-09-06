@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.Card
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
@@ -37,17 +38,21 @@ fun SettingsScreen(
             onBackPressed = onBackPressed,
         )
         state.value.forEach { group ->
-            SettingsCategoryRow(group.name)
-            group.settings.forEach { item ->
-                when (item) {
-                    is SettingState.BooleanState -> BooleanStateRow(item) {
-                        onSwitchChanged(item, it)
-                    }
-                    is SettingState.IntState -> IntStateRow(item) {
-                        onIntClicked(item)
-                    }
-                    is SettingState.StringState -> StringStateRow(item) {
-                        onStringClicked(item)
+            Card(modifier = Modifier.padding(vertical = AprsTheme.Spacing.item)) {
+                Column {
+                    SettingsCategoryRow(group.name)
+                    group.settings.forEach { item ->
+                        when (item) {
+                            is SettingState.BooleanState -> BooleanStateRow(item) {
+                                onSwitchChanged(item, it)
+                            }
+                            is SettingState.IntState -> IntStateRow(item) {
+                                onIntClicked(item)
+                            }
+                            is SettingState.StringState -> StringStateRow(item) {
+                                onStringClicked(item)
+                            }
+                        }
                     }
                 }
             }

@@ -13,18 +13,3 @@ class CompositeSettingsProvider @Inject constructor(
 ): SettingsProvider {
     override val settings: List<Setting> = providers.map { it.settings }.flatten()
 }
-
-@Reusable
-class ExampleSettingsProvider @Inject constructor(): SettingsProvider {
-    override val settings: List<Setting> = if (BuildConfig.DEBUG) {
-        listOf(
-            StringSetting(
-                key = "example.string",
-                name = "Example String",
-                categoryName = "Example",
-                defaultValue = "hello wald",
-                advanced = true,
-            ),
-        )
-    } else emptyList()
-}

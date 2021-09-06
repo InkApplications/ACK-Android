@@ -5,7 +5,6 @@ import dagger.Binds
 import dagger.Module
 import dagger.Provides
 import dagger.Reusable
-import dagger.multibindings.IntoSet
 import dagger.multibindings.Multibinds
 
 @Module(includes = [StaticSettingsModule::class])
@@ -33,8 +32,4 @@ abstract class StaticSettingsModule {
     @Binds
     @Reusable
     abstract fun settingsProvider(provider: CompositeSettingsProvider): SettingsProvider
-
-    @Binds
-    @IntoSet
-    abstract fun exampleProvider(provider: ExampleSettingsProvider): SettingsProvider
 }
