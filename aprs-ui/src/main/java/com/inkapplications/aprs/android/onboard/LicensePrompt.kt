@@ -12,6 +12,7 @@ import com.inkapplications.aprs.android.ui.AprsTheme
 
 @Composable
 fun LicensePrompt(
+    state: OnboardingState,
     onContinue: (String, String) -> Unit,
 ) {
     Column (
@@ -29,17 +30,21 @@ fun LicensePrompt(
         TextField(
             value = callsign.value,
             label = { Text("Callsign") },
-            onValueChange = { callsign.value = it },
+            onValueChange = { callsign.value = it; passcode.value = "" },
+            isError = state.callsignError != null,
             modifier = Modifier.fillMaxWidth(),
         )
+        if (state.callsignError != null) Text(state.callsignError, style = AprsTheme.Typography.errorCaption)
         Spacer(Modifier.height(AprsTheme.Spacing.item))
         TextField(
             value = passcode.value,
             label = { Text("APRS-IS Passcode") },
             onValueChange = { passcode.value = it },
             enabled = callsign.value.isNotBlank(),
+            isError = state.passcodeError != null,
             modifier = Modifier.fillMaxWidth(),
         )
+        if (state.passcodeError != null) Text(state.passcodeError, style = AprsTheme.Typography.errorCaption)
         Spacer(Modifier.weight(1f))
         Button(
             onClick = { onContinue(callsign.value, passcode.value) },

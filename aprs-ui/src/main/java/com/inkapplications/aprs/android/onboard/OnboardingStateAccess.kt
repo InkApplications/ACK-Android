@@ -3,8 +3,9 @@ package com.inkapplications.aprs.android.onboard
 import com.inkapplications.aprs.android.settings.SettingsReadAccess
 import com.inkapplications.aprs.android.settings.SettingsWriteAccess
 import com.inkapplications.aprs.android.settings.observeBoolean
-import com.inkapplications.coroutines.combinePair
 import dagger.Reusable
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
@@ -14,13 +15,21 @@ class OnboardingStateAccess @Inject constructor(
     private val writeSettings: SettingsWriteAccess,
     private val onboardingSettings: OnboardSettings,
 ) {
+    private val callsignError = MutableStateFlow<String?>(null)
+    private val passcodeError = MutableStateFlow<String?>(null)
+
     val screenState = readSettings.observeIntState(onboardingSettings.agreementRevision)
-        .combinePair(readSettings.observeBoolean(onboardingSettings.completedLicensePrompt))
-        .map { (agreementRevision, completedLicense) ->
-            OnboardingState(
-                agreementRequired = agreementRevision != AGREEMENT_REVISION,
-                licensePromptRequired = !completedLicense,
-            )
+        .map {
+            OnboardingState(agreementRequired = it != AGREEMENT_REVISION)
+        }
+        .combine(readSettings.observeBoolean(onboardingSettings.completedLicensePrompt))  { state, completedLicense ->
+            state.copy(licensePromptRequired = !completedLicense)
+        }
+        .combine(callsignError) { state, callsignError ->
+            state.copy(callsignError = callsignError)
+        }
+        .combine(passcodeError) { state, passcodeError ->
+            state.copy(passcodeError = passcodeError)
         }
 
     fun setUserAgreed() {
@@ -28,8 +37,19 @@ class OnboardingStateAccess @Inject constructor(
     }
 
     fun setLicense(callsign: String, passcode: String) {
-        writeSettings.setString(onboardingSettings.callsign, callsign.trim())
-        writeSettings.setString(onboardingSettings.passcode, passcode.trim())
+        val cleanCallsign = callsign.trim()
+        val cleanPasscode = passcode.trim().toIntOrNull()
+
+        val validCallsign = LicenseValidator.validateCallsign(callsign) || callsign.isBlank()
+        val validPasscode = cleanCallsign.isBlank() || passcode.isBlank() || (cleanPasscode != null && LicenseValidator.validatePasscode(cleanCallsign, cleanPasscode))
+
+        callsignError.value = if (!validCallsign) "Invalid callsign" else null
+        passcodeError.value = if (!validPasscode) "Incorrect Passcode" else null
+
+        if (!validCallsign || !validPasscode) return
+
+        writeSettings.setString(onboardingSettings.callsign, cleanCallsign)
+        writeSettings.setInt(onboardingSettings.passcode, cleanPasscode ?: -1)
         writeSettings.setBoolean(onboardingSettings.completedLicensePrompt, true)
     }
 }

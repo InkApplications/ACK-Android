@@ -17,6 +17,7 @@ fun OnboardScreen(
             onAgreeClick = onAgreeClick,
         )
         state.value.licensePromptRequired -> LicensePrompt(
+            state = state.value,
             onContinue = onLicenseContinueClick,
         )
     }

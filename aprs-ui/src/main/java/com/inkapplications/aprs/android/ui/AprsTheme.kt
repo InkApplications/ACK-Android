@@ -52,6 +52,9 @@ object AprsTheme {
         val caption @Composable get() = MaterialTheme.typography.caption.copy(
             fontFamily = titleFont,
         )
+        val errorCaption @Composable get() = caption.copy(
+            color = Colors.error,
+        )
 
         val titleFont = FontFamily(
             Font(R.font.anonymous_pro, FontWeight.Normal),

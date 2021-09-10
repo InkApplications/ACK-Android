@@ -29,11 +29,11 @@ class OnboardSettings @Inject constructor(
         categoryName = "Onboarding",
         defaultValue = "",
     )
-    val passcode = StringSetting(
+    val passcode = IntSetting(
         key = "onboarding.passcode",
         name = "APRS-IS Passcode",
         categoryName = "Onboarding",
-        defaultValue = "",
+        defaultValue = -1,
     )
 
     override val settings: List<Setting> = listOf(
