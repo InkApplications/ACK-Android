@@ -10,6 +10,11 @@ android {
 
     defaultConfig {
         minSdkVersion(8)
+        kapt {
+            arguments {
+                arg("room.schemaLocation", "$projectDir/src/main/schema")
+            }
+        }
     }
 
     lintOptions {
