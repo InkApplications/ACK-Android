@@ -4,16 +4,13 @@ import com.inkapplications.karps.client.AprsDataClient
 import com.inkapplications.karps.parser.AprsParser
 import com.inkapplications.kotlin.filterEachNotNull
 import com.inkapplications.kotlin.mapEach
-import com.inkapplications.kotlin.startNull
 import inkapplications.spondee.measure.Meters
 import inkapplications.spondee.structure.Kilo
 import inkapplications.spondee.structure.value
 import kimchi.logger.KimchiLogger
-import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.channels.consumeEach
 import kotlinx.coroutines.flow.*
 import org.threeten.bp.Instant
-import kotlin.math.min
 
 internal class AndroidAprs(
     private val audioProcessor: AudioDataProcessor,
@@ -23,8 +20,6 @@ internal class AndroidAprs(
     private val parser: AprsParser,
     private val logger: KimchiLogger
 ): AprsAccess {
-    private val internetBuffer = MutableSharedFlow<CapturedPacket>(replay = 10000, onBufferOverflow = BufferOverflow.DROP_OLDEST)
-
     private val mutableIncoming = MutableSharedFlow<CapturedPacket>()
     override val incoming: Flow<CapturedPacket> = mutableIncoming
 
@@ -57,9 +52,9 @@ internal class AndroidAprs(
             }
             .onEach { if (it.startsWith('#')) { logger.info("APRS-IS: $it") } }
             .filter { !it.startsWith('#') }
-            .map { parser.fromString(it) }
-            .map { CapturedPacket(Math.random().toLong(), Instant.now().toEpochMilli(), it) }
-            .onEach { internetBuffer.emit(it) }
+            .map { PacketEntity(null, Instant.now().toEpochMilli(), it.toByteArray(Charsets.UTF_8), PacketSource.AprsIs) }
+            .onEach { packetDao.addPacket(it) }
+            .mapNotNull { tryParse(it) }
             .onEach { mutableIncoming.emit(it) }
             .onEach { logger.debug("IS Packet Parsed: $it") }
 
@@ -69,8 +64,6 @@ internal class AndroidAprs(
         return packetDao.findRecent(count)
             .mapEach { tryParse(it) }
             .filterEachNotNull()
-            .let { combine(it, internetBuffer.startNull()) { a, b -> a + internetBuffer.replayCache } }
-            .map { it.sortedByDescending { it.received }.let { it.subList(0, min(count, it.size)) } }
     }
 
     override fun findById(id: Long): Flow<CapturedPacket?> {
@@ -79,7 +72,11 @@ internal class AndroidAprs(
 
     private fun tryParse(packet: PacketEntity): CapturedPacket? {
         try {
-            return CapturedPacket(packet.id!!, packet.timestamp, parser.fromAx25(packet.data))
+            val parsed = when (packet.packetSource) {
+                PacketSource.Ax25 -> parser.fromAx25(packet.data)
+                PacketSource.AprsIs -> parser.fromString(packet.data.toString(Charsets.UTF_8))
+            }
+            return CapturedPacket(packet.id!!, packet.timestamp, parsed)
         } catch (error: Throwable) {
             logger.warn("Failed to parse packet: ${packet.id}")
             logger.debug { "Packet Data: ${packet.data.contentToString()} " }
