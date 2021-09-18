@@ -1,11 +1,15 @@
 package com.inkapplications.aprs.data
 
+import androidx.room.AutoMigration
 import androidx.room.Database
 import androidx.room.RoomDatabase
 
 @Database(
     entities = [ PacketEntity::class ],
-    version = 1
+    version = 2,
+    autoMigrations = [
+        AutoMigration(from = 1, to = 2),
+    ],
 )
 internal abstract class PacketDatabase: RoomDatabase() {
     abstract fun pinsDao(): PacketDao

@@ -32,7 +32,7 @@ internal class AndroidAprs(
         logger.debug("Starting Audio Packet Capture")
 
         return audioProcessor.data
-            .map { PacketEntity(Instant.now().toEpochMilli(), it) }
+            .map { PacketEntity(null, Instant.now().toEpochMilli(), it, PacketSource.Ax25) }
             .onEach { packetDao.addPacket(it) }
             .mapNotNull { tryParse(it) }
             .onEach { mutableIncoming.emit(it) }
