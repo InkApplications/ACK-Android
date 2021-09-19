@@ -2,7 +2,9 @@ package com.inkapplications.aprs.android.capture
 
 import android.content.Context
 import android.view.View
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.*
@@ -54,26 +56,29 @@ fun CaptureScreen(
             onInternetServiceDisableClick = onInternetServiceDisableClick,
             onInternetServiceEnableClick = onInternetServiceEnableClick,
         )
-
-        NavHost(
-            navController = navController,
-            startDestination = "map",
+        Box(
             modifier = Modifier.weight(1f),
         ) {
-            composable("map") {
-                MapScreen(
-                    state = mapState.value,
-                    mapFactory = mapFactory,
-                    onLogItemClick = onLogClick,
-                    onEnableLocation = onLocationEnableClick,
-                    onDisableLocation = onLocationDisableClick,
-                )
-            }
-            composable("log") {
-                AprsScreen {
-                    LazyColumn {
-                        items(logs.value) { log ->
-                            AprsLogItem(log, onLogClick)
+            NavHost(
+                navController = navController,
+                startDestination = "map",
+                modifier = Modifier.fillMaxSize(),
+            ) {
+                composable("map") {
+                    MapScreen(
+                        state = mapState.value,
+                        mapFactory = mapFactory,
+                        onLogItemClick = onLogClick,
+                        onEnableLocation = onLocationEnableClick,
+                        onDisableLocation = onLocationDisableClick,
+                    )
+                }
+                composable("log") {
+                    AprsScreen {
+                        LazyColumn {
+                            items(logs.value) { log ->
+                                AprsLogItem(log, onLogClick)
+                            }
                         }
                     }
                 }
