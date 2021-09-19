@@ -1,6 +1,8 @@
 package com.inkapplications.aprs.android.capture.map
 
+import com.inkapplications.aprs.android.connection.ConnectionSettings
 import com.inkapplications.aprs.android.map.Map
+import com.inkapplications.aprs.android.settings.SettingsReadAccess
 import dagger.Reusable
 import javax.inject.Inject
 
@@ -9,7 +11,7 @@ import javax.inject.Inject
  */
 @Reusable
 class MapEventsFactory @Inject constructor(
-    private val mapData: MapDataRepository
+    private val mapData: MapDataRepository,
 ) {
     /**
      * Factory to create Map's events access class at runtime.

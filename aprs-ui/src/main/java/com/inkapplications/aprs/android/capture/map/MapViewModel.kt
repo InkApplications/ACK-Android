@@ -14,7 +14,5 @@ data class MapViewModel(
     val selectedItem: LogItemState? = null,
     val trackPosition: Boolean = false,
 ) {
-    val positionEnabledVisible = trackPosition
-    val positionDisabledVisible = !positionEnabledVisible
     val selectedItemVisible = selectedItem != null
 }

@@ -1,8 +1,9 @@
 package com.inkapplications.aprs.android.capture.map
 
+import com.inkapplications.aprs.android.connection.ConnectionSettings
 import com.inkapplications.aprs.android.map.Map
-import com.inkapplications.coroutines.combinePair
-import com.inkapplications.coroutines.combineTriple
+import com.inkapplications.aprs.android.settings.SettingsReadAccess
+import com.inkapplications.aprs.android.settings.observeString
 import kotlinx.coroutines.flow.*
 
 /**
@@ -10,17 +11,19 @@ import kotlinx.coroutines.flow.*
  */
 class MapEvents(
     private val mapData: MapDataRepository,
-    private val map: Map
+    private val map: Map,
 ) {
     private val selectedItem = map.selectedId.flatMapLatest {
         it?.let { mapData.findLogItem(it) } ?: flowOf(null)
     }
 
     val viewState: Flow<MapViewModel> = mapData.findMarkers()
-        .combinePair(selectedItem)
-        .combineTriple(map.trackingState)
-        .map { (markers, selected, tracking) ->
-            MapViewModel(markers, selected, tracking)
+        .map { MapViewModel(markers = it) }
+        .combine(selectedItem) { viewModel, selectedItem ->
+            viewModel.copy(selectedItem = selectedItem)
+        }
+        .combine(map.trackingState) { viewModel, tracking ->
+            viewModel.copy(trackPosition = tracking)
         }
         .distinctUntilChanged()
 }

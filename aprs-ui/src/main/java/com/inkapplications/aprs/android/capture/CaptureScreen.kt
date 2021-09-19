@@ -28,7 +28,7 @@ import kimchi.Kimchi
 
 @Composable
 fun CaptureScreen(
-    captureScreenState: State<CaptureScreenState>,
+    captureScreenState: State<CaptureScreenViewModel>,
     mapState: State<MapViewModel>,
     logs: State<List<LogItemState>>,
     mapFactory: (Context) -> View,
@@ -49,6 +49,7 @@ fun CaptureScreen(
             onRecordingEnableClick = onRecordingEnableClick,
             onRecordingDisableClick = onRecordingDisableClick,
             onSettingsClick = onSettingsClick,
+            internetServiceVisible = captureScreenState.value.internetServiceVisible,
             internetServiceEnabled = captureScreenState.value.internetServiceEnabled,
             onInternetServiceDisableClick = onInternetServiceDisableClick,
             onInternetServiceEnableClick = onInternetServiceEnableClick,
@@ -112,6 +113,7 @@ fun CaptureAppBar(
     recordingEnabled: Boolean,
     onRecordingEnableClick: () -> Unit,
     onRecordingDisableClick: () -> Unit,
+    internetServiceVisible: Boolean,
     internetServiceEnabled: Boolean,
     onInternetServiceDisableClick: () -> Unit,
     onInternetServiceEnableClick: () -> Unit,
@@ -144,24 +146,27 @@ fun CaptureAppBar(
                     )
                 }
             }
-            if (internetServiceEnabled) {
-                IconButton(
-                    onClick = onInternetServiceDisableClick,
-                ) {
-                    Icon(
-                        Icons.Default.Cloud,
-                        contentDescription = "Disable APRS-IS",
-                        tint = AprsTheme.Colors.brand,
-                    )
+            when {
+                internetServiceVisible && internetServiceEnabled -> {
+                    IconButton(
+                        onClick = onInternetServiceDisableClick,
+                    ) {
+                        Icon(
+                            Icons.Default.Cloud,
+                            contentDescription = "Disable APRS-IS",
+                            tint = AprsTheme.Colors.brand,
+                        )
+                    }
                 }
-            } else {
-                IconButton(
-                    onClick = onInternetServiceEnableClick,
-                ) {
-                    Icon(
-                        Icons.Default.CloudOff,
-                        contentDescription = "Disable APRS-IS"
-                    )
+                internetServiceVisible && !internetServiceEnabled -> {
+                    IconButton(
+                        onClick = onInternetServiceEnableClick,
+                    ) {
+                        Icon(
+                            Icons.Default.CloudOff,
+                            contentDescription = "Enable APRS-IS"
+                        )
+                    }
                 }
             }
             IconButton(

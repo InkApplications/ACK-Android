@@ -32,7 +32,6 @@ import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.MutableStateFlow
 
 class CaptureActivity: ExtendedActivity() {
-    private val captureScreenState = MutableStateFlow(CaptureScreenState())
     private lateinit var mapEventsFactory: MapEventsFactory
     private var mapView: MapView? = null
     private var map: Map? = null
@@ -74,7 +73,7 @@ class CaptureActivity: ExtendedActivity() {
         val logData = component.logData()
 
         setContent {
-            val captureState = captureScreenState.collectAsState()
+            val captureState = captureEvents.screenState.collectAsState(CaptureScreenViewModel())
             val mapState = mapViewModel.collectAsState()
             val logState = logData.logViewModels.collectAsState(emptyList())
 
@@ -145,17 +144,11 @@ class CaptureActivity: ExtendedActivity() {
 
     private fun onRecordingPermissionsGranted() {
         Kimchi.info("Start Recording")
-        captureScreenState.value = captureScreenState.value.copy(
-            recordingEnabled = true,
-        )
         recording = foregroundScope.launch { captureEvents.listenForPackets() }
     }
 
     private fun onRecordingDisableClick() {
         Kimchi.trackEvent("record_disable")
-        captureScreenState.value = captureScreenState.value.copy(
-            recordingEnabled = false,
-        )
         recording?.cancel()
         recording = null
     }
@@ -170,17 +163,11 @@ class CaptureActivity: ExtendedActivity() {
 
     private fun onInternetLocationPermissionGranted() {
         Kimchi.info("Enable Internet Service")
-        captureScreenState.value = captureScreenState.value.copy(
-            internetServiceEnabled = true,
-        )
         isConnection = foregroundScope.launch { captureEvents.listenForInternetPackets() }
     }
 
     private fun onInternetServiceDisableClick() {
         Kimchi.trackEvent("internet_disable")
-        captureScreenState.value = captureScreenState.value.copy(
-            internetServiceEnabled = false,
-        )
         isConnection?.cancel()
         isConnection = null
     }
