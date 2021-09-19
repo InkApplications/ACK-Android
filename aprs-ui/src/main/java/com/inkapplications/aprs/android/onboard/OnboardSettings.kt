@@ -23,23 +23,9 @@ class OnboardSettings @Inject constructor(
         defaultValue = false,
         advanced = true,
     )
-    val callsign = StringSetting(
-        key = "onboarding.callsign",
-        name = "Callsign",
-        categoryName = "Onboarding",
-        defaultValue = "",
-    )
-    val passcode = IntSetting(
-        key = "onboarding.passcode",
-        name = "APRS-IS Passcode",
-        categoryName = "Onboarding",
-        defaultValue = -1,
-    )
 
     override val settings: List<Setting> = listOf(
         agreementRevision,
         completedLicensePrompt,
-        callsign,
-        passcode,
     )
 }

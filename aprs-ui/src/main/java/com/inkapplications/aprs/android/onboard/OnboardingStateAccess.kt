@@ -1,5 +1,6 @@
 package com.inkapplications.aprs.android.onboard
 
+import com.inkapplications.aprs.android.connection.ConnectionSettings
 import com.inkapplications.aprs.android.settings.SettingsReadAccess
 import com.inkapplications.aprs.android.settings.SettingsWriteAccess
 import com.inkapplications.aprs.android.settings.observeBoolean
@@ -14,6 +15,7 @@ class OnboardingStateAccess @Inject constructor(
     readSettings: SettingsReadAccess,
     private val writeSettings: SettingsWriteAccess,
     private val onboardingSettings: OnboardSettings,
+    private val connectionSettings: ConnectionSettings,
 ) {
     private val callsignError = MutableStateFlow<String?>(null)
     private val passcodeError = MutableStateFlow<String?>(null)
@@ -48,8 +50,8 @@ class OnboardingStateAccess @Inject constructor(
 
         if (!validCallsign || !validPasscode) return
 
-        writeSettings.setString(onboardingSettings.callsign, cleanCallsign)
-        writeSettings.setInt(onboardingSettings.passcode, cleanPasscode ?: -1)
+        writeSettings.setString(connectionSettings.callsign, cleanCallsign)
+        writeSettings.setInt(connectionSettings.passcode, cleanPasscode ?: -1)
         writeSettings.setBoolean(onboardingSettings.completedLicensePrompt, true)
     }
 }

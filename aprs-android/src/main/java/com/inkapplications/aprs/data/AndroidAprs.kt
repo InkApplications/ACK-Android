@@ -34,7 +34,7 @@ internal class AndroidAprs(
             .onEach { logger.debug("APRS Packet Parsed: $it") }
     }
 
-    override fun listenForInternetPackets(settings: ConnectionSettings): Flow<CapturedPacket> {
+    override fun listenForInternetPackets(settings: ConnectionConfiguration): Flow<CapturedPacket> {
         logger.debug("Opening APRS-IS Client to ${settings.host}:${settings.port}")
 
         return locationProvider.location

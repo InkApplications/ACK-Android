@@ -17,6 +17,7 @@ import com.inkapplications.aprs.android.startup.StartupModule
 import com.inkapplications.aprs.android.station.StationEvents
 import com.inkapplications.aprs.android.station.StationModule
 import com.inkapplications.aprs.android.symbol.SymbolModule
+import com.inkapplications.aprs.android.connection.ConnectionModule
 import com.inkapplications.aprs.data.AndroidAprsModule
 import dagger.Component
 import javax.inject.Singleton
@@ -36,6 +37,7 @@ import javax.inject.Singleton
         StartupModule::class,
         StationModule::class,
         SymbolModule::class,
+        ConnectionModule::class,
     ]
 )
 interface ApplicationComponent {
