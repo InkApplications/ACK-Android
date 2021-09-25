@@ -31,7 +31,7 @@ import kimchi.analytics.intProperty
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.MutableStateFlow
 
-class CaptureActivity: ExtendedActivity() {
+class CaptureActivity: ExtendedActivity(), CaptureNavController {
     private lateinit var mapEventsFactory: MapEventsFactory
     private var mapView: MapView? = null
     private var map: Map? = null
@@ -82,14 +82,7 @@ class CaptureActivity: ExtendedActivity() {
                 mapState = mapState,
                 logs = logState,
                 mapFactory = ::createMapView,
-                onRecordingEnableClick = ::onRecordingEnableClick,
-                onRecordingDisableClick = ::onRecordingDisableClick,
-                onSettingsClick = ::onSettingsClick,
-                onLogClick = ::onLogClick,
-                onLocationEnableClick = ::onLocationEnableClick,
-                onLocationDisableClick = ::onLocationDisableClick,
-                onInternetServiceDisableClick = ::onInternetServiceDisableClick,
-                onInternetServiceEnableClick = ::onInternetServiceEnableClick,
+                controller = this,
             )
         }
         captureEvents = component.captureEvents()
@@ -120,21 +113,21 @@ class CaptureActivity: ExtendedActivity() {
     }
 
 
-    private fun onLogClick(state: LogItemState) {
-        startStationActivity(state.id)
+    override fun onLogItemClick(log: LogItemState) {
+        startStationActivity(log.id)
     }
 
-    private fun onLocationEnableClick() {
+    override fun onLocationEnableClick() {
         when(ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)) {
             PackageManager.PERMISSION_GRANTED -> map?.enablePositionTracking()
             else -> mapLocationPermissionRequest.launch(Manifest.permission.ACCESS_FINE_LOCATION)
         }
     }
 
-    private fun onLocationDisableClick() {
+    override fun onLocationDisableClick() {
         map?.disablePositionTracking()
     }
-    private fun onRecordingEnableClick() {
+    override fun onRecordingEnableClick() {
         Kimchi.trackEvent("record_enable")
         when(ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO)) {
             PackageManager.PERMISSION_GRANTED -> onRecordingPermissionsGranted()
@@ -147,13 +140,13 @@ class CaptureActivity: ExtendedActivity() {
         recording = foregroundScope.launch { captureEvents.listenForPackets() }
     }
 
-    private fun onRecordingDisableClick() {
+    override fun onRecordingDisableClick() {
         Kimchi.trackEvent("record_disable")
         recording?.cancel()
         recording = null
     }
 
-    private fun onInternetServiceEnableClick() {
+    override fun onInternetServiceEnableClick() {
         Kimchi.trackEvent("internet_enable")
         when (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)) {
             PackageManager.PERMISSION_GRANTED -> onInternetLocationPermissionGranted()
@@ -166,13 +159,13 @@ class CaptureActivity: ExtendedActivity() {
         isConnection = foregroundScope.launch { captureEvents.listenForInternetPackets() }
     }
 
-    private fun onInternetServiceDisableClick() {
+    override fun onInternetServiceDisableClick() {
         Kimchi.trackEvent("internet_disable")
         isConnection?.cancel()
         isConnection = null
     }
 
-    private fun onSettingsClick() {
+    override fun onSettingsClick() {
         Kimchi.trackNavigation("settings")
         startActivity(SettingsActivity::class)
     }

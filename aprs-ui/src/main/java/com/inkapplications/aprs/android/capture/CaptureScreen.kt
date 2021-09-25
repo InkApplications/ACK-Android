@@ -34,27 +34,16 @@ fun CaptureScreen(
     mapState: State<MapViewModel>,
     logs: State<List<LogItemState>>,
     mapFactory: (Context) -> View,
-    onRecordingEnableClick: () -> Unit,
-    onRecordingDisableClick: () -> Unit,
-    onSettingsClick: () -> Unit,
-    onLogClick: (LogItemState) -> Unit,
-    onLocationEnableClick: () -> Unit,
-    onLocationDisableClick: () -> Unit,
-    onInternetServiceDisableClick: () -> Unit,
-    onInternetServiceEnableClick: () -> Unit,
+    controller: CaptureNavController,
 ) = AprsScreen {
     val navController = rememberNavController()
 
     Column {
         CaptureAppBar(
             recordingEnabled = captureScreenState.value.recordingEnabled,
-            onRecordingEnableClick = onRecordingEnableClick,
-            onRecordingDisableClick = onRecordingDisableClick,
-            onSettingsClick = onSettingsClick,
             internetServiceVisible = captureScreenState.value.internetServiceVisible,
             internetServiceEnabled = captureScreenState.value.internetServiceEnabled,
-            onInternetServiceDisableClick = onInternetServiceDisableClick,
-            onInternetServiceEnableClick = onInternetServiceEnableClick,
+            controller = controller,
         )
         Box(
             modifier = Modifier.weight(1f),
@@ -68,16 +57,16 @@ fun CaptureScreen(
                     MapScreen(
                         state = mapState.value,
                         mapFactory = mapFactory,
-                        onLogItemClick = onLogClick,
-                        onEnableLocation = onLocationEnableClick,
-                        onDisableLocation = onLocationDisableClick,
+                        onLogItemClick = controller::onLogItemClick,
+                        onEnableLocation = controller::onLocationEnableClick,
+                        onDisableLocation = controller::onLocationDisableClick,
                     )
                 }
                 composable("log") {
                     AprsScreen {
                         LazyColumn {
                             items(logs.value) { log ->
-                                AprsLogItem(log, onLogClick)
+                                AprsLogItem(log, controller::onLogItemClick)
                             }
                         }
                     }
@@ -116,13 +105,9 @@ fun CaptureScreen(
 @Composable
 fun CaptureAppBar(
     recordingEnabled: Boolean,
-    onRecordingEnableClick: () -> Unit,
-    onRecordingDisableClick: () -> Unit,
     internetServiceVisible: Boolean,
     internetServiceEnabled: Boolean,
-    onInternetServiceDisableClick: () -> Unit,
-    onInternetServiceEnableClick: () -> Unit,
-    onSettingsClick: () -> Unit,
+    controller: CaptureNavController,
 ) {
     TopAppBar(
         title = {
@@ -133,7 +118,7 @@ fun CaptureAppBar(
         actions = {
             if (recordingEnabled) {
                 IconButton(
-                    onClick = onRecordingDisableClick,
+                    onClick = controller::onRecordingDisableClick,
                 ) {
                     Icon(
                         Icons.Default.Mic,
@@ -143,7 +128,7 @@ fun CaptureAppBar(
                 }
             } else {
                 IconButton(
-                    onClick = onRecordingEnableClick
+                    onClick = controller::onRecordingEnableClick
                 ) {
                     Icon(
                         Icons.Default.MicOff,
@@ -154,7 +139,7 @@ fun CaptureAppBar(
             when {
                 internetServiceVisible && internetServiceEnabled -> {
                     IconButton(
-                        onClick = onInternetServiceDisableClick,
+                        onClick = controller::onInternetServiceDisableClick,
                     ) {
                         Icon(
                             Icons.Default.Cloud,
@@ -165,7 +150,7 @@ fun CaptureAppBar(
                 }
                 internetServiceVisible && !internetServiceEnabled -> {
                     IconButton(
-                        onClick = onInternetServiceEnableClick,
+                        onClick = controller::onInternetServiceEnableClick,
                     ) {
                         Icon(
                             Icons.Default.CloudOff,
@@ -175,7 +160,7 @@ fun CaptureAppBar(
                 }
             }
             IconButton(
-                onClick = onSettingsClick
+                onClick = controller::onSettingsClick
             ) {
                 Icon(
                     Icons.Default.Settings,
