@@ -1,6 +1,7 @@
 package com.inkapplications.aprs.android.settings
 
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 
 /**
@@ -22,4 +23,16 @@ fun SettingsReadAccess.observeInt(setting: IntSetting): Flow<Int> {
 
 fun SettingsReadAccess.observeBoolean(setting: BooleanSetting): Flow<Boolean> {
     return observeBooleanState(setting).map { it ?: setting.defaultValue }
+}
+
+suspend fun SettingsReadAccess.getString(setting: StringSetting): String {
+    return observeString(setting).first()
+}
+
+suspend fun SettingsReadAccess.getInt(setting: IntSetting): Int {
+    return observeInt(setting).first()
+}
+
+suspend fun SettingsReadAccess.getBoolean(setting: BooleanSetting): Boolean {
+    return observeBoolean(setting).first()
 }

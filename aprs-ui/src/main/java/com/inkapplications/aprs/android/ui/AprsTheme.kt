@@ -21,10 +21,15 @@ object AprsTheme {
         val brand = Color(0xFFFFa72B)
         val brandLight = Color(0xFFFCB652)
         val brandDark = Color(0xFFB16D0D)
+
         val darkStroke = Color(0xFF212121)
         val darkStroke70 = Color(0x70212121)
+        val darkStrokeSoftened = Color(0xFF292929)
+
         val lightStroke = Color(0xFFFFFFFF)
         val lightStroke70 = Color(0x70FFFFFF)
+        val lightStrokeSoftened = Color(0xFFF2F2F2)
+
         val error = Color(0xFFFF432B)
     }
     object Spacing {
@@ -70,7 +75,8 @@ object AprsTheme {
 fun AprsScreen(content: @Composable () -> Unit) {
     AprsTheme {
         Surface(
-            modifier = Modifier.fillMaxWidth().fillMaxHeight()
+            color = MaterialTheme.colors.background,
+            modifier = Modifier.fillMaxWidth().fillMaxHeight(),
         ) {
             content()
         }
@@ -86,7 +92,7 @@ private fun AprsTheme(content: @Composable () -> Unit) {
             secondary = AprsTheme.Colors.brand,
             secondaryVariant = AprsTheme.Colors.brand,
             background = AprsTheme.Colors.darkStroke,
-            surface = AprsTheme.Colors.darkStroke,
+            surface = AprsTheme.Colors.darkStrokeSoftened,
             error = AprsTheme.Colors.error,
             onPrimary = AprsTheme.Colors.darkStroke,
             onSecondary = AprsTheme.Colors.darkStroke,
@@ -98,7 +104,7 @@ private fun AprsTheme(content: @Composable () -> Unit) {
             primaryVariant = AprsTheme.Colors.brand,
             secondary = AprsTheme.Colors.brand,
             secondaryVariant = AprsTheme.Colors.brand,
-            background = AprsTheme.Colors.lightStroke,
+            background = AprsTheme.Colors.lightStrokeSoftened,
             surface = AprsTheme.Colors.lightStroke,
             error = AprsTheme.Colors.error,
             onPrimary = AprsTheme.Colors.darkStroke,

@@ -18,6 +18,7 @@ import com.inkapplications.aprs.android.station.StationEvents
 import com.inkapplications.aprs.android.station.StationModule
 import com.inkapplications.aprs.android.symbol.SymbolModule
 import com.inkapplications.aprs.android.connection.ConnectionModule
+import com.inkapplications.aprs.android.settings.license.LicensePromptValidator
 import com.inkapplications.aprs.data.AndroidAprsModule
 import dagger.Component
 import javax.inject.Singleton
@@ -43,9 +44,10 @@ import javax.inject.Singleton
 interface ApplicationComponent {
     fun captureEvents(): CaptureEvents
     fun mapManager(): MapEventsFactory
-    fun settingsRepository(): SettingsAccess
+    fun settingsAccess(): SettingsAccess
     fun logData(): LogEvents
     fun initializer(): ApplicationInitializer
     fun stationEvents(): StationEvents
     fun onboardingStateAccess(): OnboardingStateAccess
+    fun licenseValidator(): LicensePromptValidator
 }

@@ -1,5 +1,8 @@
 package com.inkapplications.aprs.android.settings
 
+import com.inkapplications.android.extensions.StringResources
+import com.inkapplications.android.extensions.StubStringResources
+import com.inkapplications.aprs.android.connection.ConnectionSettings
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runBlockingTest
 import org.junit.Test
@@ -12,7 +15,8 @@ class SettingsAccessTest {
         val access = SettingsAccess(
             SettingsProviderStub,
             SettingsReadAccessStub,
-            SettingsWriteAccessStub
+            SettingsWriteAccessStub,
+            ConnectionSettings(StubStringResources),
         )
 
         val result = access.settingsStateGrouped.first().map { it.settings }.flatten()
@@ -43,7 +47,8 @@ class SettingsAccessTest {
         val access = SettingsAccess(
             settingsProvider,
             SettingsReadAccessStub,
-            SettingsWriteAccessStub
+            SettingsWriteAccessStub,
+            ConnectionSettings(StubStringResources),
         )
 
         val result = access.settingsStateGrouped.first().map { it.settings }.flatten()
@@ -64,7 +69,8 @@ class SettingsAccessTest {
         val access = SettingsAccess(
             settingsProvider,
             SettingsReadAccessStub,
-            SettingsWriteAccessStub
+            SettingsWriteAccessStub,
+            ConnectionSettings(StubStringResources),
         )
 
         access.showAdvancedSettings()
@@ -90,6 +96,7 @@ class SettingsAccessTest {
             settingsProvider,
             SettingsReadAccessStub,
             SettingsWriteAccessStub,
+            ConnectionSettings(StubStringResources),
         )
 
         access.showAdvancedSettings()
@@ -127,6 +134,7 @@ class SettingsAccessTest {
             settingsProvider,
             SettingsReadAccessStub,
             SettingsWriteAccessStub,
+            ConnectionSettings(StubStringResources),
         )
 
         access.showAdvancedSettings()

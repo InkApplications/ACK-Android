@@ -18,12 +18,14 @@ class ConnectionSettings @Inject constructor(
         name = "Callsign",
         categoryName = "Connection",
         defaultValue = "",
+        advanced = true,
     )
     val passcode = IntSetting(
         key = "connection.passcode",
         name = "APRS-IS Passcode",
         categoryName = "Connection",
         defaultValue = -1,
+        advanced = true,
     )
 
     val server = StringSetting(

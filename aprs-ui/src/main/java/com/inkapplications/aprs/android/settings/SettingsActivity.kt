@@ -3,40 +3,43 @@ package com.inkapplications.aprs.android.settings
 import androidx.activity.compose.setContent
 import androidx.compose.runtime.collectAsState
 import com.inkapplications.android.extensions.ExtendedActivity
+import com.inkapplications.android.extensions.startActivity
 import com.inkapplications.aprs.android.*
 import com.inkapplications.aprs.android.prompt.intPrompt
 import com.inkapplications.aprs.android.prompt.stringPrompt
+import com.inkapplications.aprs.android.settings.license.LicenseEditActivity
 import kimchi.Kimchi
 import kimchi.analytics.intProperty
 import kimchi.analytics.stringProperty
 
-class SettingsActivity: ExtendedActivity() {
+class SettingsActivity: ExtendedActivity(), SettingsController {
     private lateinit var settingsAccess: SettingsAccess
 
     override fun onCreate() {
         super.onCreate()
-        settingsAccess = component.settingsRepository()
+        settingsAccess = component.settingsAccess()
 
         setContent {
-            val state = settingsAccess.settingsStateGrouped.collectAsState(emptyList())
+            val state = settingsAccess.settingsViewModel.collectAsState(null)
 
             SettingsScreen(
                 state = state,
-                onIntClicked = ::onIntClicked,
-                onStringClicked = ::onStringClicked,
-                onSwitchChanged = ::onSwitchChanged,
-                onVersionLongPress = ::onVersionLongPress,
-                onBackPressed = ::onBackPressed,
+                controller = this,
             )
         }
     }
 
-    private fun onVersionLongPress() {
+    override fun onVersionLongPress() {
         Kimchi.trackEvent("settings_show_advanced")
         settingsAccess.showAdvancedSettings()
     }
 
-    private fun onIntClicked(state: SettingState.IntState) {
+    override fun onCallsignEditClick() {
+        Kimchi.trackEvent("settings_license_edit")
+        startActivity(LicenseEditActivity::class)
+    }
+
+    override fun onIntSettingClicked(state: SettingState.IntState) {
         intPrompt(state.name, state.value) { result ->
             Kimchi.trackEvent("settings_change", listOf(
                 stringProperty("setting", state.key),
@@ -46,7 +49,7 @@ class SettingsActivity: ExtendedActivity() {
         }
     }
 
-    private fun onStringClicked(state: SettingState.StringState) {
+    override fun onStringSettingClicked(state: SettingState.StringState) {
         stringPrompt(state.name, state.value) { result ->
             Kimchi.trackEvent("settings_change", listOf(
                 stringProperty("setting", state.key),
@@ -56,11 +59,11 @@ class SettingsActivity: ExtendedActivity() {
         }
     }
 
-    private fun onSwitchChanged(state: SettingState.BooleanState, checked: Boolean) {
+    override fun onSwitchSettingChanged(state: SettingState.BooleanState, newState: Boolean) {
         Kimchi.trackEvent("settings_change", listOf(
             stringProperty("setting", state.key),
-            stringProperty("value", checked.toString())
+            stringProperty("value", newState.toString())
         ))
-        settingsAccess.updateBoolean(state.key, checked)
+        settingsAccess.updateBoolean(state.key, newState)
     }
 }

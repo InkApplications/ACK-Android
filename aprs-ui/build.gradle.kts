@@ -110,6 +110,7 @@ dependencies {
     // Force latest local spondee snapshot for development.
     // TODO: Remove before release.
     api("com.inkapplications.spondee:measures:1.0-SNAPSHOT")
+    implementation(libraries.karps.client)
 
     implementation(libraries.watermelon)
 

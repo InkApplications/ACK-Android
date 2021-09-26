@@ -1,18 +1,19 @@
 package com.inkapplications.aprs.android.settings
 
+import com.inkapplications.aprs.android.connection.ConnectionSettings
+import com.inkapplications.aprs.android.onboard.LicensePromptFieldValues
 import com.inkapplications.coroutines.mapEach
-import dagger.Reusable
 import kotlinx.coroutines.flow.*
 import javax.inject.Inject
 
 /**
  * Provide the settings screen with application-wide settings info.
  */
-@Reusable
 class SettingsAccess @Inject constructor(
     private val settingsProvider: SettingsProvider,
     private val settingValues: SettingsReadAccess,
-    private val settingsStorage: SettingsWriteAccess
+    private val settingsStorage: SettingsWriteAccess,
+    private val connectionSettings: ConnectionSettings,
 ) {
     private val showingAdvanced = MutableStateFlow(false)
 
@@ -45,8 +46,23 @@ class SettingsAccess @Inject constructor(
         }
         .map { it.sortedBy { it.name } }
 
-    fun clearState() {
-        showingAdvanced.value = false
+    val settingsViewModel = settingsStateGrouped
+        .map { SettingsViewModel(settingsList = it) }
+        .combine(settingValues.observeString(connectionSettings.callsign)) { viewModel, callsign ->
+            viewModel.copy(callsignText = callsign.takeIf { it.isNotBlank() })
+        }
+        .combine(settingValues.observeInt(connectionSettings.passcode)) { viewModel, passcode ->
+            viewModel.copy(verified = passcode != -1)
+        }
+
+    val licensePromptFieldValues: Flow<LicensePromptFieldValues> = settingValues.observeString(connectionSettings.callsign)
+        .combine(settingValues.observeInt(connectionSettings.passcode)) { callsign, passcode ->
+            LicensePromptFieldValues(callsign, passcode.takeIf { it != -1 }?.toString().orEmpty())
+        }
+
+    fun setLicense(values: LicensePromptFieldValues) {
+        settingsStorage.setString(connectionSettings.callsign, values.callsign.trim())
+        settingsStorage.setInt(connectionSettings.passcode, values.passcode.trim().toIntOrNull() ?: -1)
     }
 
     fun showAdvancedSettings() {

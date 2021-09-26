@@ -14,8 +14,7 @@ const val AGREEMENT_REVISION = 1
 
 @Composable
 fun UsageAgreement(
-    onDeclineClick: () -> Unit,
-    onAgreeClick: () -> Unit,
+    controller: UserAgreementController,
 ) {
     Column(
         modifier = Modifier.padding(AprsTheme.Spacing.gutter).verticalScroll(rememberScrollState()),
@@ -60,7 +59,7 @@ fun UsageAgreement(
         )
         Spacer(Modifier.weight(1f))
         Button(
-            onClick = onDeclineClick,
+            onClick = controller::onTermsDeclineClick,
             colors = ButtonDefaults.outlinedButtonColors(),
             modifier = Modifier.fillMaxWidth().padding(top = AprsTheme.Spacing.content),
         ) {
@@ -68,7 +67,7 @@ fun UsageAgreement(
         }
         Spacer(Modifier.height(AprsTheme.Spacing.item))
         Button(
-            onClick = onAgreeClick,
+            onClick = controller::onTermsAgreeClick,
             modifier = Modifier.fillMaxWidth(),
         ) {
             Text("I Understand and Agree")

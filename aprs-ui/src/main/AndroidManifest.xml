@@ -20,5 +20,6 @@
         <activity android:name=".station.StationActivity" />
         <activity android:name=".settings.SettingsActivity" />
         <activity android:name=".onboard.OnboardActivity" android:windowSoftInputMode="adjustResize" />
+        <activity android:name=".settings.license.LicenseEditActivity" android:windowSoftInputMode="adjustResize" />
     </application>
 </manifest>
