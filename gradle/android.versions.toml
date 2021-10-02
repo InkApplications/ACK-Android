@@ -40,15 +40,15 @@ version.ref = "room"
 module = "androidx.room:room-ktx"
 
 [libraries.androidx-compose-ui]
-version = "1.0.0-rc02"
+version = "1.0.1"
 module = "androidx.compose.ui:ui"
 
 [libraries.androidx-compose-foundation]
-version = "1.0.0-rc02"
+version = "1.0.1"
 module = "androidx.compose.foundation:foundation"
 
 [libraries.androidx-compose-material-core]
-version = "1.0.0-rc02"
+version = "1.0.1"
 module = "androidx.compose.material:material"
 
 [libraries.androidx-activity-compose]

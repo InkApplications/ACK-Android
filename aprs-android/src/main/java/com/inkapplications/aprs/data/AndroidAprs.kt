@@ -76,7 +76,7 @@ internal class AndroidAprs(
                 PacketSource.Ax25 -> parser.fromAx25(packet.data)
                 PacketSource.AprsIs -> parser.fromString(packet.data.toString(Charsets.UTF_8))
             }
-            return CapturedPacket(packet.id!!, packet.timestamp, parsed)
+            return CapturedPacket(packet.id!!, packet.timestamp, parsed, packet.packetSource)
         } catch (error: Throwable) {
             logger.warn("Failed to parse packet: ${packet.id}")
             logger.debug { "Packet Data: ${packet.data.contentToString()} " }

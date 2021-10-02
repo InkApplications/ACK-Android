@@ -3,6 +3,7 @@ package com.inkapplications.aprs.android.station
 import com.inkapplications.aprs.android.ParrotStringResources
 import com.inkapplications.aprs.android.symbol.SymbolFactoryStub
 import com.inkapplications.aprs.data.CapturedPacket
+import com.inkapplications.aprs.data.PacketSource
 import com.inkapplications.karps.structures.*
 import com.inkapplications.karps.structures.unit.*
 import inkapplications.spondee.measure.Fahrenheit
@@ -32,7 +33,8 @@ class StationViewModelFactoryTest {
                 digipeaters = emptyList(),
                 body = "test",
                 raw = "",
-            )
+            ),
+            source = PacketSource.AprsIs,
         )
         val result = factory.create(packet, false, false)
 
@@ -40,7 +42,7 @@ class StationViewModelFactoryTest {
         assertFalse(result.temperatureVisible, "Temperature is hidden for non weather packet")
         assertFalse(result.windVisible, "Wind is hidden for non weather packet")
         assertEquals("KE0YOG-1", result.name)
-        assertFalse(result.debugDataVisible)
+        assertTrue(result.debugDataVisible, "Debug Data visible for unknown packets")
     }
 
     @Test
@@ -66,7 +68,8 @@ class StationViewModelFactoryTest {
                 symbol = null,
                 pressure = null,
                 raw = "",
-            )
+            ),
+            source = PacketSource.AprsIs,
         )
         val result = factory.create(packet, false, false)
 
@@ -102,7 +105,8 @@ class StationViewModelFactoryTest {
                 symbol = null,
                 pressure = null,
                 raw = "",
-            )
+            ),
+            source = PacketSource.AprsIs,
         )
         val result = factory.create(packet, false, false)
 
@@ -140,7 +144,8 @@ class StationViewModelFactoryTest {
                 symbol = null,
                 pressure = null,
                 raw = "",
-            )
+            ),
+            source = PacketSource.AprsIs,
         )
         val result = factory.create(packet, false, false)
 
@@ -177,7 +182,8 @@ class StationViewModelFactoryTest {
                 signalInfo = null,
                 directionReportExtra = null,
                 raw = "",
-            )
+            ),
+            source = PacketSource.AprsIs,
         )
         val result = factory.create(packet, false, false)
 

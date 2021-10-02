@@ -18,6 +18,23 @@ import androidx.compose.ui.unit.dp
 fun NavigationRow(
     title: String,
     onBackPressed: (() -> Unit)? = null,
+) = NavigationRow(
+    title = {
+        Text(
+            text = title,
+            style = AprsTheme.Typography.h1,
+            modifier = Modifier.padding(
+                start = AprsTheme.Spacing.item,
+            )
+        )
+    },
+    onBackPressed = onBackPressed,
+)
+
+@Composable
+fun NavigationRow(
+    title: @Composable () -> Unit,
+    onBackPressed: (() -> Unit)? = null,
 ) = Row (
     verticalAlignment = Alignment.CenterVertically,
     modifier = Modifier.padding(
@@ -37,11 +54,5 @@ fun NavigationRow(
     } else {
         Spacer(Modifier.width(AprsTheme.Spacing.item))
     }
-    Text(
-        text = title,
-        style = AprsTheme.Typography.h1,
-        modifier = Modifier.padding(
-            start = AprsTheme.Spacing.item,
-        )
-    )
+    title()
 }

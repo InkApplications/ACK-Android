@@ -1,5 +1,6 @@
 package com.inkapplications.aprs.android.station
 
+import androidx.compose.ui.graphics.vector.ImageVector
 import com.inkapplications.aprs.android.map.MarkerViewModel
 import com.inkapplications.aprs.android.map.ZoomLevels
 import com.inkapplications.karps.structures.AprsPacket
@@ -19,11 +20,12 @@ data class StationViewModel(
     val debugDataVisible: Boolean = false,
     val telemetryValues: TelemetryValues? = null,
     val telemetrySequence: String? = null,
+    val receiveIcon: ImageVector? = null,
+    val receiveIconDescription: String? = null,
 ) {
     val mapVisible = markers.isNotEmpty()
     val temperatureVisible = temperature.isNotEmpty()
     val windVisible = wind.isNotEmpty()
     val altitudeVisible = altitude.isNotEmpty()
-    val telemetryCardVisible = telemetryValues != null
     val commentVisible = comment.isNotBlank()
 }

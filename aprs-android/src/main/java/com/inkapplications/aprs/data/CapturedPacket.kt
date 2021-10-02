@@ -5,5 +5,6 @@ import com.inkapplications.karps.structures.AprsPacket
 data class CapturedPacket(
     val id: Long,
     val received: Long,
-    val data: AprsPacket
+    val data: AprsPacket,
+    val source: PacketSource,
 )

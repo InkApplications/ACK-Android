@@ -1,5 +1,8 @@
 package com.inkapplications.aprs.android.station
 
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Cloud
+import androidx.compose.material.icons.filled.SettingsInputAntenna
 import com.inkapplications.android.extensions.StringResources
 import com.inkapplications.aprs.android.R
 import com.inkapplications.aprs.android.locale.format
@@ -7,6 +10,7 @@ import com.inkapplications.aprs.android.map.MarkerViewModel
 import com.inkapplications.aprs.android.map.ZoomLevels
 import com.inkapplications.aprs.android.symbol.SymbolFactory
 import com.inkapplications.aprs.data.CapturedPacket
+import com.inkapplications.aprs.data.PacketSource
 import com.inkapplications.karps.structures.AprsPacket
 import com.inkapplications.karps.structures.symbolOf
 import dagger.Reusable
@@ -30,85 +34,77 @@ class StationViewModelFactory @Inject constructor(
         packet: CapturedPacket?,
         metric: Boolean,
         showDebug: Boolean,
-    ) = when (val data = packet?.data) {
-        is AprsPacket.Position -> StationViewModel(
-            markers = listOf(MarkerViewModel(packet.id, data.coordinates, symbolFactory.createSymbol(data.symbol))),
-            center = data.coordinates,
-            zoom = ZoomLevels.ROADS,
-            name = data.source.toString(),
-            comment = data.comment,
-            altitude = data.altitude.distanceString(metric),
+    ): StationViewModel {
+        val data = packet?.data
+
+        val packetTypeData = when (data) {
+            is AprsPacket.Position -> StationViewModel(
+                markers = listOf(MarkerViewModel(packet.id, data.coordinates, symbolFactory.createSymbol(data.symbol))),
+                center = data.coordinates,
+                zoom = ZoomLevels.ROADS,
+                comment = data.comment,
+                altitude = data.altitude.distanceString(metric),
+            )
+            is AprsPacket.Weather -> StationViewModel(
+                markers = data.coordinates?.let {
+                    listOf(MarkerViewModel(
+                        id = packet.id,
+                        coordinates = it,
+                        symbol = symbolFactory.createSymbol(data.symbol ?: defaultWeatherSymbol)
+                    ))
+                } ?: emptyList(),
+                temperature = data.temperature?.format(metric).orEmpty(),
+                wind = data.windString(metric),
+                center = data.coordinates ?: GeoCoordinates(0.latitude, 0.longitude),
+                zoom = ZoomLevels.ROADS,
+            )
+            is AprsPacket.ObjectReport -> StationViewModel(
+                markers = listOf(MarkerViewModel(packet.id, data.coordinates, symbolFactory.createSymbol(data.symbol))),
+                center = data.coordinates,
+                zoom = ZoomLevels.ROADS,
+                comment = data.comment,
+                altitude = data.altitude.distanceString(metric),
+            )
+            is AprsPacket.ItemReport -> StationViewModel(
+                markers = listOf(MarkerViewModel(packet.id, data.coordinates, symbolFactory.createSymbol(data.symbol))),
+                center = data.coordinates,
+                zoom = ZoomLevels.ROADS,
+                comment = data.comment,
+                altitude = data.altitude.distanceString(metric),
+            )
+            is AprsPacket.Message -> StationViewModel(
+                comment = data.message,
+            )
+            is AprsPacket.TelemetryReport -> StationViewModel(
+                comment = data.comment,
+                telemetryValues = data.data,
+                telemetrySequence = data.sequenceId,
+            )
+            is AprsPacket.StatusReport -> StationViewModel(
+                comment = data.status,
+            )
+            is AprsPacket.CapabilityReport -> StationViewModel(
+            )
+            is AprsPacket.Unknown -> StationViewModel(
+                comment = "",
+            )
+            null -> StationViewModel()
+        }
+        return packetTypeData.copy(
+            name = data?.source?.toString().orEmpty(),
             rawPacket = data,
-            debugDataVisible = showDebug,
+            debugDataVisible = showDebug || data is AprsPacket.Unknown,
+            receiveIcon = when (packet?.source) {
+                PacketSource.Ax25 -> Icons.Default.SettingsInputAntenna
+                PacketSource.AprsIs -> Icons.Default.Cloud
+                null -> null
+            },
+            receiveIconDescription = when (packet?.source) {
+                PacketSource.Ax25 -> "Radio Packet"
+                PacketSource.AprsIs -> "Internet Packet"
+                null -> null
+            },
         )
-        is AprsPacket.Weather -> StationViewModel(
-            markers = data.coordinates?.let {
-                listOf(MarkerViewModel(
-                    id = packet.id,
-                    coordinates = it,
-                    symbol = symbolFactory.createSymbol(data.symbol ?: defaultWeatherSymbol)
-                ))
-            } ?: emptyList(),
-            temperature = data.temperature?.format(metric).orEmpty(),
-            wind = data.windString(metric),
-            center = data.coordinates ?: GeoCoordinates(0.latitude, 0.longitude),
-            zoom = ZoomLevels.ROADS,
-            name = data.source.toString(),
-            rawPacket = data,
-            debugDataVisible = showDebug,
-        )
-        is AprsPacket.ObjectReport -> StationViewModel(
-            markers = listOf(MarkerViewModel(packet.id, data.coordinates, symbolFactory.createSymbol(data.symbol))),
-            center = data.coordinates,
-            zoom = ZoomLevels.ROADS,
-            name = data.source.toString(),
-            comment = data.comment,
-            altitude = data.altitude.distanceString(metric),
-            rawPacket = data,
-            debugDataVisible = showDebug,
-        )
-        is AprsPacket.ItemReport -> StationViewModel(
-            markers = listOf(MarkerViewModel(packet.id, data.coordinates, symbolFactory.createSymbol(data.symbol))),
-            center = data.coordinates,
-            zoom = ZoomLevels.ROADS,
-            name = data.source.toString(),
-            comment = data.comment,
-            altitude = data.altitude.distanceString(metric),
-            rawPacket = data,
-            debugDataVisible = showDebug,
-        )
-        is AprsPacket.Message -> StationViewModel(
-            name = data.source.toString(),
-            comment = data.message,
-            rawPacket = data,
-            debugDataVisible = showDebug,
-        )
-        is AprsPacket.TelemetryReport -> StationViewModel(
-            name = data.source.toString(),
-            comment = data.comment,
-            rawPacket = data,
-            debugDataVisible = showDebug,
-            telemetryValues = data.data,
-            telemetrySequence = data.sequenceId,
-        )
-        is AprsPacket.StatusReport -> StationViewModel(
-            name = data.source.toString(),
-            comment = data.status,
-            rawPacket = data,
-            debugDataVisible = showDebug,
-        )
-        is AprsPacket.CapabilityReport -> StationViewModel(
-            name = data.source.toString(),
-            rawPacket = data,
-            debugDataVisible = showDebug,
-        )
-        is AprsPacket.Unknown -> StationViewModel(
-            name = data.source.toString(),
-            comment = "",
-            rawPacket = data,
-            debugDataVisible = true,
-        )
-        null -> StationViewModel()
     }
 
     private fun Length?.distanceString(metric: Boolean) = this?.format(metric).orEmpty()
