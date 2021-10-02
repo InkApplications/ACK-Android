@@ -94,6 +94,8 @@ class StationViewModelFactory @Inject constructor(
             comment = data.comment,
             rawPacket = data,
             debugDataVisible = showDebug,
+            telemetryValues = data.data,
+            telemetrySequence = data.sequenceId,
         )
         is AprsPacket.StatusReport -> StationViewModel(
             name = data.source.toString(),

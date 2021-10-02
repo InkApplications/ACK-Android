@@ -9,11 +9,13 @@ import androidx.compose.material.IconButton
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Comment
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.viewinterop.AndroidView
@@ -72,15 +74,32 @@ fun StationScreen(
             ),
         ) {
             if (viewState.value.temperatureVisible) {
-                InfoRow(painterResource(R.drawable.ic_weather), viewState.value.temperature)
+                IconRow(painterResource(R.drawable.ic_weather), viewState.value.temperature)
             }
             if (viewState.value.windVisible) {
-                InfoRow(painterResource(R.drawable.ic_wind), viewState.value.wind)
+                IconRow(painterResource(R.drawable.ic_wind), viewState.value.wind)
             }
             if (viewState.value.altitudeVisible) {
-                InfoRow(painterResource(R.drawable.ic_altitude), viewState.value.altitude)
+                IconRow(painterResource(R.drawable.ic_altitude), viewState.value.altitude)
             }
-            Text(viewState.value.comment)
+            if (viewState.value.commentVisible) {
+                IconRow(Icons.Default.Comment, viewState.value.comment)
+            }
+
+            if (viewState.value.telemetryCardVisible) {
+                Card(modifier = Modifier.fillMaxWidth().padding(vertical = AprsTheme.Spacing.content)) {
+                    Column(modifier = Modifier.padding(AprsTheme.Spacing.content)) {
+                        Text("Telemetry Data", style = AprsTheme.Typography.h2)
+                        TelemetryValueRow("a1", viewState.value.telemetryValues?.analog1.toString())
+                        TelemetryValueRow("a2", viewState.value.telemetryValues?.analog2.toString())
+                        TelemetryValueRow("a3", viewState.value.telemetryValues?.analog3.toString())
+                        TelemetryValueRow("a4", viewState.value.telemetryValues?.analog4.toString())
+                        TelemetryValueRow("a5", viewState.value.telemetryValues?.analog5.toString())
+                        TelemetryValueRow("d1", viewState.value.telemetryValues?.digital.toString())
+                        TelemetryValueRow("sq", viewState.value.telemetrySequence.toString())
+                    }
+                }
+            }
 
             if (viewState.value.debugDataVisible) {
                 Card(modifier = Modifier.padding(vertical = AprsTheme.Spacing.content)) {
@@ -101,10 +120,34 @@ fun StationScreen(
 }
 
 @Composable
-fun InfoRow(
+fun TelemetryValueRow(
+    label: String,
+    value: String,
+) = KeyValueRow(label, value, Modifier.padding(vertical = AprsTheme.Spacing.singleItem))
+
+@Composable
+fun KeyValueRow(
+    label: String,
+    value: String,
+    modifier: Modifier = Modifier,
+) = Row(verticalAlignment = Alignment.CenterVertically, modifier = modifier) {
+    Text(label, style = AprsTheme.Typography.caption, color = AprsTheme.Colors.brand, modifier = Modifier.padding(end = AprsTheme.Spacing.icon))
+    Text(value, style = AprsTheme.Typography.body)
+}
+
+@Composable
+fun IconRow(
     icon: Painter,
     text: String,
 ) = Row(verticalAlignment = Alignment.CenterVertically) {
-    Icon(icon, null, modifier = Modifier.padding(AprsTheme.Spacing.icon))
+    Icon(icon, null, tint = AprsTheme.Colors.brand, modifier = Modifier.padding(AprsTheme.Spacing.icon))
+    Text(text)
+}
+@Composable
+fun IconRow(
+    icon: ImageVector,
+    text: String,
+) = Row(verticalAlignment = Alignment.CenterVertically) {
+    Icon(icon, null, tint = AprsTheme.Colors.brand, modifier = Modifier.padding(AprsTheme.Spacing.icon))
     Text(text)
 }

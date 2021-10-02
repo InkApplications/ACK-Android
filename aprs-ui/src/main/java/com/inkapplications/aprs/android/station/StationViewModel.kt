@@ -3,6 +3,7 @@ package com.inkapplications.aprs.android.station
 import com.inkapplications.aprs.android.map.MarkerViewModel
 import com.inkapplications.aprs.android.map.ZoomLevels
 import com.inkapplications.karps.structures.AprsPacket
+import com.inkapplications.karps.structures.TelemetryValues
 import inkapplications.spondee.spatial.*
 
 data class StationViewModel(
@@ -16,9 +17,13 @@ data class StationViewModel(
     val altitude: String = "",
     val rawPacket: AprsPacket? = null,
     val debugDataVisible: Boolean = false,
+    val telemetryValues: TelemetryValues? = null,
+    val telemetrySequence: String? = null,
 ) {
     val mapVisible = markers.isNotEmpty()
     val temperatureVisible = temperature.isNotEmpty()
     val windVisible = wind.isNotEmpty()
     val altitudeVisible = altitude.isNotEmpty()
+    val telemetryCardVisible = telemetryValues != null
+    val commentVisible = comment.isNotBlank()
 }
