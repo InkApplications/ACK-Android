@@ -83,12 +83,6 @@ class StationViewModelFactory @Inject constructor(
             rawPacket = data,
             debugDataVisible = showDebug,
         )
-        is AprsPacket.Unknown -> StationViewModel(
-            name = data.source.toString(),
-            comment = "",
-            rawPacket = data,
-            debugDataVisible = showDebug,
-        )
         is AprsPacket.TelemetryReport -> StationViewModel(
             name = data.source.toString(),
             comment = data.comment,
@@ -107,6 +101,12 @@ class StationViewModelFactory @Inject constructor(
             name = data.source.toString(),
             rawPacket = data,
             debugDataVisible = showDebug,
+        )
+        is AprsPacket.Unknown -> StationViewModel(
+            name = data.source.toString(),
+            comment = "",
+            rawPacket = data,
+            debugDataVisible = true,
         )
         null -> StationViewModel()
     }
