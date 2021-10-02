@@ -1,6 +1,6 @@
 package com.inkapplications.aprs.android.capture.map
 
-import com.inkapplications.aprs.android.capture.log.LogItemState
+import com.inkapplications.aprs.android.capture.log.LogItemViewModel
 import com.inkapplications.aprs.android.map.MarkerViewModel
 
 /**
@@ -11,7 +11,7 @@ import com.inkapplications.aprs.android.map.MarkerViewModel
  */
 data class MapViewModel(
     val markers: Collection<MarkerViewModel> = emptyList(),
-    val selectedItem: LogItemState? = null,
+    val selectedItem: LogItemViewModel? = null,
     val trackPosition: Boolean = false,
 ) {
     val selectedItemVisible = selectedItem != null

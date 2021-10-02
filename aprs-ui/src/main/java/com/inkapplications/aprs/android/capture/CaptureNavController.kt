@@ -1,6 +1,6 @@
 package com.inkapplications.aprs.android.capture
 
-import com.inkapplications.aprs.android.capture.log.LogItemState
+import com.inkapplications.aprs.android.capture.log.LogItemViewModel
 
 interface CaptureNavController {
     fun onRecordingEnableClick()
@@ -9,6 +9,6 @@ interface CaptureNavController {
     fun onLocationDisableClick()
     fun onInternetServiceEnableClick()
     fun onInternetServiceDisableClick()
-    fun onLogItemClick(log: LogItemState)
+    fun onLogItemClick(log: LogItemViewModel)
     fun onSettingsClick()
 }

@@ -15,7 +15,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.core.content.ContextCompat
 import com.inkapplications.android.extensions.ExtendedActivity
 import com.inkapplications.android.extensions.startActivity
-import com.inkapplications.aprs.android.capture.log.LogItemState
+import com.inkapplications.aprs.android.capture.log.LogItemViewModel
 import com.inkapplications.aprs.android.capture.map.*
 import com.inkapplications.aprs.android.component
 import com.inkapplications.aprs.android.map.Map
@@ -113,7 +113,7 @@ class CaptureActivity: ExtendedActivity(), CaptureNavController {
     }
 
 
-    override fun onLogItemClick(log: LogItemState) {
+    override fun onLogItemClick(log: LogItemViewModel) {
         startStationActivity(log.id)
     }
 

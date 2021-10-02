@@ -14,8 +14,8 @@ import com.inkapplications.aprs.android.ui.AprsTheme
 
 @Composable
 fun AprsLogItem(
-    log: LogItemState,
-    onClick: (LogItemState) -> Unit,
+    log: LogItemViewModel,
+    onClick: (LogItemViewModel) -> Unit,
 ) {
     Card(
         modifier = Modifier

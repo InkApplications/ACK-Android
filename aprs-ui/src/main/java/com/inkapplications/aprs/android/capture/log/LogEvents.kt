@@ -11,12 +11,11 @@ import dagger.Reusable
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
-import kotlin.math.log
 
 @Reusable
 class LogEvents @Inject constructor(
     aprs: AprsAccess,
-    stateFactory: LogStateFactory,
+    stateFactory: LogItemViewModelFactory,
     settings: SettingsReadAccess,
     localeSettings: LocaleSettings,
     logSettings: LogSettings,

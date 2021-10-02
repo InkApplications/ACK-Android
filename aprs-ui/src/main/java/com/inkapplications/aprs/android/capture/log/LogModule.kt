@@ -10,4 +10,7 @@ abstract class LogModule {
     @Binds
     @IntoSet
     abstract fun settings(settings: LogSettings): SettingsProvider
+
+    @Binds
+    abstract fun logFactory(factory: CombinedLogItemViewModelFactory): LogItemViewModelFactory
 }

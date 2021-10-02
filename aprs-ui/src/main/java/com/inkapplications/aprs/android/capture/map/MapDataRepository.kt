@@ -1,7 +1,7 @@
 package com.inkapplications.aprs.android.capture.map
 
-import com.inkapplications.aprs.android.capture.log.LogItemState
-import com.inkapplications.aprs.android.capture.log.LogStateFactory
+import com.inkapplications.aprs.android.capture.log.LogItemViewModel
+import com.inkapplications.aprs.android.capture.log.CombinedLogItemViewModelFactory
 import com.inkapplications.aprs.android.locale.LocaleSettings
 import com.inkapplications.aprs.android.map.MarkerViewModel
 import com.inkapplications.aprs.android.settings.SettingsReadAccess
@@ -28,7 +28,7 @@ class MapDataRepository @Inject constructor(
     private val logger: KimchiLogger,
     private val aprs: AprsAccess,
     private val symbolFactory: SymbolFactory,
-    private val logStateFactory: LogStateFactory,
+    private val logStateFactory: CombinedLogItemViewModelFactory,
     private val settings: SettingsReadAccess,
     private val mapSettings: MapSettings,
     private val localeSettings: LocaleSettings,
@@ -49,7 +49,7 @@ class MapDataRepository @Inject constructor(
             }
     }
 
-    fun findLogItem(id: Long): Flow<LogItemState?> {
+    fun findLogItem(id: Long): Flow<LogItemViewModel?> {
         return settings.observeBoolean(localeSettings.preferMetric).flatMapLatest { metric ->
             aprs.findById(id).map { it?.let { logStateFactory.create(it.id, it.data, metric) } }
         }

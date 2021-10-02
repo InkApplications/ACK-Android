@@ -20,7 +20,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.inkapplications.aprs.android.R
 import com.inkapplications.aprs.android.capture.log.AprsLogItem
-import com.inkapplications.aprs.android.capture.log.LogItemState
+import com.inkapplications.aprs.android.capture.log.LogItemViewModel
 import com.inkapplications.aprs.android.capture.map.MapScreen
 import com.inkapplications.aprs.android.capture.map.MapViewModel
 import com.inkapplications.aprs.android.trackNavigation
@@ -32,7 +32,7 @@ import kimchi.Kimchi
 fun CaptureScreen(
     captureScreenState: State<CaptureScreenViewModel>,
     mapState: State<MapViewModel>,
-    logs: State<List<LogItemState>>,
+    logs: State<List<LogItemViewModel>>,
     mapFactory: (Context) -> View,
     controller: CaptureNavController,
 ) = AprsScreen {

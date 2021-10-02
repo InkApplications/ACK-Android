@@ -2,7 +2,7 @@ package com.inkapplications.aprs.android.capture.log
 
 import android.graphics.Bitmap
 
-data class LogItemState(
+data class LogItemViewModel(
     val id: Long,
     val origin: String,
     val comment: String,

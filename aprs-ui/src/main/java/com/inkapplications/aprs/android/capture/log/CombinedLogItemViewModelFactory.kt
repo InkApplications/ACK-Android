@@ -7,15 +7,15 @@ import dagger.Reusable
 import javax.inject.Inject
 
 @Reusable
-class LogStateFactory @Inject constructor(
+class CombinedLogItemViewModelFactory @Inject constructor(
     private val symbolFactory: SymbolFactory
-) {
-    fun create(
+): LogItemViewModelFactory {
+    override fun create(
         id: Long,
         packet: AprsPacket,
         metric: Boolean,
-    ): LogItemState {
-        return LogItemState(
+    ): LogItemViewModel {
+        return LogItemViewModel(
             id = id,
             origin = packet.source.toString(),
             comment = when (packet) {

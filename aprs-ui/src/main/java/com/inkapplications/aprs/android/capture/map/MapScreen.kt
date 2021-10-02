@@ -15,7 +15,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.viewinterop.AndroidView
 import com.inkapplications.aprs.android.capture.log.AprsLogItem
-import com.inkapplications.aprs.android.capture.log.LogItemState
+import com.inkapplications.aprs.android.capture.log.LogItemViewModel
 import com.inkapplications.aprs.android.ui.AprsScreen
 import com.inkapplications.aprs.android.ui.AprsTheme
 
@@ -23,7 +23,7 @@ import com.inkapplications.aprs.android.ui.AprsTheme
 fun MapScreen(
     state: MapViewModel,
     mapFactory: (Context) -> View,
-    onLogItemClick: (LogItemState) -> Unit,
+    onLogItemClick: (LogItemViewModel) -> Unit,
     onEnableLocation: () -> Unit,
     onDisableLocation: () -> Unit,
 ) = AprsScreen {
