@@ -12,17 +12,12 @@ import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Comment
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.painter.Painter
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.viewinterop.AndroidView
 import com.inkapplications.aprs.android.R
-import com.inkapplications.aprs.android.ui.AprsScreen
-import com.inkapplications.aprs.android.ui.AprsTheme
-import com.inkapplications.aprs.android.ui.NavigationRow
+import com.inkapplications.aprs.android.ui.*
 
 @Composable
 fun StationScreen(
@@ -124,30 +119,3 @@ fun TelemetryValueRow(
     label: String,
     value: String,
 ) = KeyValueRow(label, value, Modifier.padding(vertical = AprsTheme.Spacing.singleItem))
-
-@Composable
-fun KeyValueRow(
-    label: String,
-    value: String,
-    modifier: Modifier = Modifier,
-) = Row(verticalAlignment = Alignment.CenterVertically, modifier = modifier) {
-    Text(label, style = AprsTheme.Typography.caption, color = AprsTheme.Colors.brand, modifier = Modifier.padding(end = AprsTheme.Spacing.icon))
-    Text(value, style = AprsTheme.Typography.body)
-}
-
-@Composable
-fun IconRow(
-    icon: Painter,
-    text: String,
-) = Row(verticalAlignment = Alignment.CenterVertically) {
-    Icon(icon, null, tint = AprsTheme.Colors.brand, modifier = Modifier.padding(AprsTheme.Spacing.icon))
-    Text(text)
-}
-@Composable
-fun IconRow(
-    icon: ImageVector,
-    text: String,
-) = Row(verticalAlignment = Alignment.CenterVertically) {
-    Icon(icon, null, tint = AprsTheme.Colors.brand, modifier = Modifier.padding(AprsTheme.Spacing.icon))
-    Text(text)
-}
