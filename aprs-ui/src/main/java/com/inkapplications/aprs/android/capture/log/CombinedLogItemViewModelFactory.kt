@@ -19,23 +19,30 @@ class CombinedLogItemViewModelFactory @Inject constructor(
             id = id,
             origin = packet.source.toString(),
             comment = when (packet) {
-                is AprsPacket.Position -> "🌎 ${packet.comment.takeIfNotEmpty() ?: "Location Data" }"
-                is AprsPacket.Weather -> "🌡 ${packet.temperature?.format(metric).takeIfNotEmpty() ?: "Weather Data" }"
-                is AprsPacket.ObjectReport -> "📍 ${packet.comment.takeIfNotEmpty() ?: "Object Report" }"
-                is AprsPacket.ItemReport -> "📦 ${packet.comment.takeIfNotEmpty() ?: "Item Report" }"
-                is AprsPacket.Message -> "✉️ ${packet.addressee} ${packet.message} ${packet.messageNumber?.let { "($it)" }.orEmpty()}"
-                is AprsPacket.TelemetryReport -> "\uD83D\uDCE1 ${packet.comment.takeIfNotEmpty() ?: "Telemetry Report"}"
-                is AprsPacket.StatusReport -> "✅ ${packet.status.takeIfNotEmpty() ?: "Status Report"}"
-                is AprsPacket.CapabilityReport -> "\uD83D\uDCD1 ${packet.capabilityData}"
-                is AprsPacket.Unknown -> "⚠️ Unknown data"
+                is AprsPacket.Position -> "Position${packet.comment.append()}"
+                is AprsPacket.Weather -> "Weather${packet.temperature?.format(metric).append()}"
+                is AprsPacket.ObjectReport -> "Object: ${packet.name}${packet.comment.append(" - ")}"
+                is AprsPacket.ItemReport -> "Item: ${packet.name}${packet.comment.append(" - ")}"
+                is AprsPacket.Message -> "[${packet.addressee}] ${packet.message}${packet.messageNumber?.let { " ($it)" }.orEmpty()}"
+                is AprsPacket.TelemetryReport -> "Telemetry${packet.comment.append()}"
+                is AprsPacket.StatusReport -> "Status${packet.status.append()}"
+                is AprsPacket.CapabilityReport -> "Capability Report"
+                is AprsPacket.Unknown -> "Unknown data"
             },
             symbol = when (packet) {
                 is AprsPacket.Position -> packet.symbol.let(symbolFactory::createSymbol)
                 is AprsPacket.Weather -> packet.symbol?.let(symbolFactory::createSymbol)
-                else -> symbolFactory.defaultSymbol
+                is AprsPacket.ObjectReport -> packet.symbol.let(symbolFactory::createSymbol)
+                is AprsPacket.ItemReport -> packet.symbol.let(symbolFactory::createSymbol)
+                is AprsPacket.Message,
+                is AprsPacket.TelemetryReport,
+                is AprsPacket.StatusReport,
+                is AprsPacket.CapabilityReport,
+                is AprsPacket.Unknown -> symbolFactory.defaultSymbol
             }
         )
     }
 
-    private fun String?.takeIfNotEmpty() = this?.takeIf { it.isNotEmpty() }
+    private fun String?.append(separator: String = ": ") = this.takeIfNotEmpty()?.let { "${separator}$it" }.orEmpty()
+    private fun String?.takeIfNotEmpty() = this?.takeIf { it.isNotBlank() }
 }
