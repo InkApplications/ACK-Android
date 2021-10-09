@@ -4,9 +4,6 @@ import android.app.Activity
 import android.content.Context
 import android.os.Bundle
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.layout.Box
-import androidx.compose.material.MaterialTheme
-import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.collectAsState
 import com.inkapplications.android.extensions.ExtendedActivity
 import com.inkapplications.android.extensions.startActivity
@@ -15,7 +12,7 @@ import com.inkapplications.aprs.android.map.getMap
 import com.inkapplications.aprs.android.map.lifecycleObserver
 import com.inkapplications.aprs.android.map.Map
 import com.inkapplications.aprs.android.trackNavigation
-import com.inkapplications.aprs.android.ui.AprsScreen
+import com.inkapplications.aprs.android.ui.theme.AprsScreen
 import com.inkapplications.coroutines.collectOn
 import com.mapbox.mapboxsdk.maps.MapView
 import kimchi.Kimchi

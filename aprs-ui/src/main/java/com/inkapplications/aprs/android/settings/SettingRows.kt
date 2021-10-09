@@ -8,7 +8,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
-import com.inkapplications.aprs.android.ui.AprsTheme
+import com.inkapplications.aprs.android.ui.theme.AprsTheme
 
 @Composable
 fun IntStateRow(
@@ -18,11 +18,11 @@ fun IntStateRow(
     verticalAlignment = Alignment.CenterVertically,
     modifier = Modifier
         .clickable(onClick = onClick)
-        .padding(vertical = AprsTheme.Spacing.clickSafety, horizontal = AprsTheme.Spacing.gutter)
+        .padding(vertical = AprsTheme.spacing.clickSafety, horizontal = AprsTheme.spacing.gutter)
 ) {
     Text(state.name, fontWeight = FontWeight.Bold)
     Spacer(Modifier.weight(1f))
-    Text(state.value.toString(), style = AprsTheme.Typography.caption)
+    Text(state.value.toString(), style = AprsTheme.typography.caption)
 }
 
 @Composable
@@ -33,10 +33,10 @@ fun StringStateRow(
     modifier = Modifier
         .clickable(onClick = onClick)
         .fillMaxWidth()
-        .padding(vertical = AprsTheme.Spacing.clickSafety, horizontal = AprsTheme.Spacing.gutter)
+        .padding(vertical = AprsTheme.spacing.clickSafety, horizontal = AprsTheme.spacing.gutter)
 ) {
     Text(state.name, fontWeight = FontWeight.Bold)
-    Text(state.value, style = AprsTheme.Typography.caption)
+    Text(state.value, style = AprsTheme.typography.caption)
 }
 
 @Composable
@@ -47,7 +47,7 @@ fun BooleanStateRow(
     verticalAlignment = Alignment.CenterVertically,
     modifier = Modifier
         .clickable { onChange(!state.value) }
-        .padding(vertical = AprsTheme.Spacing.clickSafety, horizontal = AprsTheme.Spacing.gutter)
+        .padding(vertical = AprsTheme.spacing.clickSafety, horizontal = AprsTheme.spacing.gutter)
 ) {
     Text(state.name, fontWeight = FontWeight.Bold)
     Spacer(Modifier.weight(1f))

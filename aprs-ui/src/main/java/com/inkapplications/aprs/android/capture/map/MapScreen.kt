@@ -16,8 +16,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.viewinterop.AndroidView
 import com.inkapplications.aprs.android.capture.log.AprsLogItem
 import com.inkapplications.aprs.android.capture.log.LogItemViewModel
-import com.inkapplications.aprs.android.ui.AprsScreen
-import com.inkapplications.aprs.android.ui.AprsTheme
+import com.inkapplications.aprs.android.ui.theme.AprsScreen
+import com.inkapplications.aprs.android.ui.theme.AprsTheme
 
 @Composable
 fun MapScreen(
@@ -56,18 +56,18 @@ fun LocationStateButton(
     if (isTracking) {
         FloatingActionButton(
             onClick = onDisableTrackingClick,
-            backgroundColor = MaterialTheme.colors.surface,
-            contentColor = MaterialTheme.colors.primary,
-            modifier = Modifier.padding(AprsTheme.Spacing.gutter)
+            backgroundColor = AprsTheme.colors.surface,
+            contentColor = AprsTheme.colors.brand,
+            modifier = Modifier.padding(AprsTheme.spacing.gutter)
         ) {
             Icon(Icons.Default.MyLocation, "")
         }
     } else {
         FloatingActionButton(
             onClick = onEnableTrackingClick,
-            backgroundColor = MaterialTheme.colors.surface,
-            contentColor = contentColorFor(MaterialTheme.colors.surface),
-            modifier = Modifier.padding(AprsTheme.Spacing.gutter)
+            backgroundColor = AprsTheme.colors.surface,
+            contentColor = contentColorFor(AprsTheme.colors.surface),
+            modifier = Modifier.padding(AprsTheme.spacing.gutter)
         ) {
             Icon(Icons.Default.LocationDisabled, "")
         }

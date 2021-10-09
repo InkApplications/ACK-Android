@@ -24,8 +24,8 @@ import com.inkapplications.aprs.android.capture.log.LogItemViewModel
 import com.inkapplications.aprs.android.capture.map.MapScreen
 import com.inkapplications.aprs.android.capture.map.MapViewModel
 import com.inkapplications.aprs.android.trackNavigation
-import com.inkapplications.aprs.android.ui.AprsScreen
-import com.inkapplications.aprs.android.ui.AprsTheme
+import com.inkapplications.aprs.android.ui.theme.AprsScreen
+import com.inkapplications.aprs.android.ui.theme.AprsTheme
 import kimchi.Kimchi
 
 @Composable
@@ -75,8 +75,8 @@ fun CaptureScreen(
         }
 
         BottomNavigation(
-            backgroundColor = MaterialTheme.colors.surface,
-            contentColor = contentColorFor(MaterialTheme.colors.surface),
+            backgroundColor = AprsTheme.colors.surface,
+            contentColor = contentColorFor(AprsTheme.colors.surface),
         ) {
             BottomNavigationItem(
                 icon = { Icon(Icons.Default.Map, contentDescription = null) },
@@ -113,8 +113,8 @@ fun CaptureAppBar(
         title = {
             Text(stringResource(R.string.app_name))
         },
-        backgroundColor = MaterialTheme.colors.surface,
-        contentColor = contentColorFor(MaterialTheme.colors.surface),
+        backgroundColor = AprsTheme.colors.surface,
+        contentColor = contentColorFor(AprsTheme.colors.surface),
         actions = {
             if (recordingEnabled) {
                 IconButton(
@@ -123,7 +123,7 @@ fun CaptureAppBar(
                     Icon(
                         Icons.Default.Mic,
                         contentDescription = stringResource(R.string.capture_record_disable),
-                        tint = AprsTheme.Colors.brand,
+                        tint = AprsTheme.colors.brand,
                     )
                 }
             } else {
@@ -144,7 +144,7 @@ fun CaptureAppBar(
                         Icon(
                             Icons.Default.Cloud,
                             contentDescription = "Disable APRS-IS",
-                            tint = AprsTheme.Colors.brand,
+                            tint = AprsTheme.colors.brand,
                         )
                     }
                 }

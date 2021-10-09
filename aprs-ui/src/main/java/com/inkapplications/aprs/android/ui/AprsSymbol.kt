@@ -10,7 +10,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.unit.dp
-import com.inkapplications.aprs.android.ui.AprsTheme
+import com.inkapplications.aprs.android.ui.theme.AprsTheme
 
 @Composable
 fun AprsSymbol(symbol: Bitmap?) {
@@ -19,13 +19,13 @@ fun AprsSymbol(symbol: Bitmap?) {
             bitmap = symbol.asImageBitmap(),
             contentDescription = null,
             modifier = Modifier
-                .width(24.dp + AprsTheme.Spacing.icon)
-                .height(24.dp + AprsTheme.Spacing.icon)
-                .padding(AprsTheme.Spacing.icon)
+                .width(24.dp + AprsTheme.spacing.icon)
+                .height(24.dp + AprsTheme.spacing.icon)
+                .padding(AprsTheme.spacing.icon)
         )
     } else {
         Box(
-            modifier = Modifier.width(24.dp).height(24.dp).padding(AprsTheme.Spacing.icon)
+            modifier = Modifier.width(24.dp).height(24.dp).padding(AprsTheme.spacing.icon)
         ) {}
     }
 }

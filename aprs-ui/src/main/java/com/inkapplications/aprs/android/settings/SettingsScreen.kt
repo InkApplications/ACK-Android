@@ -16,8 +16,8 @@ import androidx.compose.ui.unit.dp
 import com.inkapplications.android.extensions.compose.ui.longClickable
 import com.inkapplications.aprs.android.BuildConfig
 import com.inkapplications.aprs.android.R
-import com.inkapplications.aprs.android.ui.AprsScreen
-import com.inkapplications.aprs.android.ui.AprsTheme
+import com.inkapplications.aprs.android.ui.theme.AprsScreen
+import com.inkapplications.aprs.android.ui.theme.AprsTheme
 import com.inkapplications.aprs.android.ui.NavigationRow
 
 @OptIn(ExperimentalMaterialApi::class)
@@ -40,7 +40,7 @@ fun SettingsScreen(
                 horizontalArrangement = Arrangement.Center,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = AprsTheme.Spacing.gutter, vertical = AprsTheme.Spacing.content),
+                    .padding(horizontal = AprsTheme.spacing.gutter, vertical = AprsTheme.spacing.content),
             ) {
                 val callsign = viewModel.callsignText
                 if (callsign != null) {
@@ -51,10 +51,10 @@ fun SettingsScreen(
                     ) {
                         Row(
                             verticalAlignment = Alignment.CenterVertically,
-                            modifier = Modifier.padding(AprsTheme.Spacing.item),
+                            modifier = Modifier.padding(AprsTheme.spacing.item),
                         ) {
-                            if (viewModel.verified) Icon(Icons.Default.Verified, "Authenticated", modifier = Modifier.padding(end = AprsTheme.Spacing.icon))
-                            Text(callsign, style = AprsTheme.Typography.h2)
+                            if (viewModel.verified) Icon(Icons.Default.Verified, "Authenticated", modifier = Modifier.padding(end = AprsTheme.spacing.icon))
+                            Text(callsign, style = AprsTheme.typography.h2)
                         }
                     }
                 } else {
@@ -64,7 +64,7 @@ fun SettingsScreen(
                 }
             }
             viewModel.settingsList.forEach { group ->
-                Card(modifier = Modifier.padding(vertical = AprsTheme.Spacing.item)) {
+                Card(modifier = Modifier.padding(vertical = AprsTheme.spacing.item)) {
                     Column {
                         SettingsCategoryRow(group.name)
                         group.settings.forEach { item ->
@@ -88,7 +88,7 @@ fun SettingsScreen(
                 text = stringResource(R.string.application_version, BuildConfig.VERSION_NAME, BuildConfig.VERSION_CODE.toString()),
                 modifier = Modifier
                     .longClickable(controller::onVersionLongPress)
-                    .padding(AprsTheme.Spacing.clickSafety)
+                    .padding(AprsTheme.spacing.clickSafety)
                     .align(Alignment.CenterHorizontally)
             )
         }
@@ -97,7 +97,7 @@ fun SettingsScreen(
 
 @Composable
 fun SettingsCategoryRow(name: String) = Row(
-    Modifier.padding(horizontal = AprsTheme.Spacing.gutter, vertical = AprsTheme.Spacing.item)
+    Modifier.padding(horizontal = AprsTheme.spacing.gutter, vertical = AprsTheme.spacing.item)
 ) {
-    Text(name, style = AprsTheme.Typography.h2)
+    Text(name, style = AprsTheme.typography.h2)
 }

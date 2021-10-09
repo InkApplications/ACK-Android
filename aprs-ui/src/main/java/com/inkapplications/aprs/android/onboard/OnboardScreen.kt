@@ -4,7 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
 import com.inkapplications.aprs.android.settings.license.LicensePromptScreen
 import com.inkapplications.aprs.android.settings.license.LicensePromptValidator
-import com.inkapplications.aprs.android.ui.AprsScreen
+import com.inkapplications.aprs.android.ui.theme.AprsScreen
 
 @Composable
 fun OnboardScreen(
