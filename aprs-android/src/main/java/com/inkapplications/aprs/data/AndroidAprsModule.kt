@@ -2,6 +2,7 @@ package com.inkapplications.aprs.data
 
 import android.content.Context
 import androidx.room.Room
+import com.inkapplications.aprs.data.upgrade.V3Upgrade
 import com.inkapplications.karps.client.AprsClientModule
 import com.inkapplications.karps.parser.ParserModule
 import dagger.Module
@@ -20,11 +21,12 @@ object AndroidAprsModule {
     ): AprsAccess {
         val audioCapture = AudioDataCapture(logger)
         val audioProcessor = AudioDataProcessor(audioCapture)
+        val parser = ParserModule().defaultParser(logger)
 
         val database = Room.databaseBuilder(context, PacketDatabase::class.java, "aprs_packets")
-            .fallbackToDestructiveMigration()
+            .addMigrations(V3Upgrade(parser, logger))
             .build()
 
-        return AndroidAprs(audioProcessor, database.pinsDao(), AprsClientModule.createDataClient(), androidLocationProvider, ParserModule().defaultParser(logger), logger)
+        return AndroidAprs(audioProcessor, database.pinsDao(), AprsClientModule.createDataClient(), androidLocationProvider, parser, logger)
     }
 }

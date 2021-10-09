@@ -2,8 +2,8 @@ package com.inkapplications.aprs.data
 
 import com.inkapplications.karps.client.AprsDataClient
 import com.inkapplications.karps.parser.AprsParser
+import com.inkapplications.karps.structures.AprsPacket
 import com.inkapplications.kotlin.filterEachNotNull
-import com.inkapplications.kotlin.mapEach
 import inkapplications.spondee.measure.Meters
 import inkapplications.spondee.structure.Kilo
 import inkapplications.spondee.structure.value
@@ -27,9 +27,7 @@ internal class AndroidAprs(
         logger.debug("Starting Audio Packet Capture")
 
         return audioProcessor.data
-            .map { PacketEntity(null, Instant.now().toEpochMilli(), it, PacketSource.Ax25) }
-            .onEach { packetDao.addPacket(it) }
-            .mapNotNull { tryParse(it) }
+            .mapNotNull { captureAx25Packet(it) }
             .onEach { mutableIncoming.emit(it) }
             .onEach { logger.debug("APRS Packet Parsed: $it") }
     }
@@ -52,9 +50,7 @@ internal class AndroidAprs(
             }
             .onEach { if (it.startsWith('#')) { logger.info("APRS-IS: $it") } }
             .filter { !it.startsWith('#') }
-            .map { PacketEntity(null, Instant.now().toEpochMilli(), it.toByteArray(Charsets.UTF_8), PacketSource.AprsIs) }
-            .onEach { packetDao.addPacket(it) }
-            .mapNotNull { tryParse(it) }
+            .mapNotNull { captureStringPacket(it) }
             .onEach { mutableIncoming.emit(it) }
             .onEach { logger.debug("IS Packet Parsed: $it") }
 
@@ -62,24 +58,66 @@ internal class AndroidAprs(
 
     override fun findRecent(count: Int): Flow<List<CapturedPacket>> {
         return packetDao.findRecent(count)
-            .mapEach { tryParse(it) }
+            .map { entities ->
+                entities.mapNotNull { createCapturedPacket(it, parser.fromEntityOrNull(it)) }
+            }
             .filterEachNotNull()
     }
 
     override fun findById(id: Long): Flow<CapturedPacket?> {
-        return packetDao.findById(id).map { it?.let { tryParse(it) } }
+        return packetDao.findById(id).map { it?.let { createCapturedPacket(it, parser.fromEntityOrNull(it)) } }
     }
 
-    private fun tryParse(packet: PacketEntity): CapturedPacket? {
+    private suspend fun captureAx25Packet(data: ByteArray): CapturedPacket? {
+        val parsed = parser.fromAx25OrNull(data) ?: return null
+        val entity = PacketEntity(null, Instant.now().toEpochMilli(), data, PacketSource.Ax25, parsed.source.callsign)
+        val id = packetDao.addPacket(entity)
+
+        return createCapturedPacket(entity, parsed, id)
+    }
+
+    private suspend fun captureStringPacket(data: String): CapturedPacket? {
+        val parsed = parser.fromStringOrNull(data) ?: return null
+        val entity = PacketEntity(null, Instant.now().toEpochMilli(), data.toByteArray(Charsets.UTF_8), PacketSource.AprsIs, parsed.source.callsign)
+        val id = packetDao.addPacket(entity)
+
+        return createCapturedPacket(entity, parsed, id)
+    }
+
+    private fun createCapturedPacket(entity: PacketEntity, parsed: AprsPacket?, id: Long = entity.id!!): CapturedPacket? {
+        parsed ?: return null
+
+        return CapturedPacket(
+            id = id,
+            received = entity.timestamp,
+            data = parsed,
+            source = entity.packetSource,
+        )
+    }
+
+    private fun AprsParser.fromEntityOrNull(data: PacketEntity): AprsPacket? {
+        return when (data.packetSource) {
+            PacketSource.Ax25 -> fromAx25OrNull(data.data)
+            PacketSource.AprsIs -> fromStringOrNull(data.data.toString(Charsets.UTF_8))
+        }
+    }
+
+    private fun AprsParser.fromAx25OrNull(data: ByteArray): AprsPacket? {
         try {
-            val parsed = when (packet.packetSource) {
-                PacketSource.Ax25 -> parser.fromAx25(packet.data)
-                PacketSource.AprsIs -> parser.fromString(packet.data.toString(Charsets.UTF_8))
-            }
-            return CapturedPacket(packet.id!!, packet.timestamp, parsed, packet.packetSource)
+            return fromAx25(data)
         } catch (error: Throwable) {
-            logger.warn("Failed to parse packet: ${packet.id}")
-            logger.debug { "Packet Data: ${packet.data.contentToString()} " }
+            logger.warn("Failed to parse packet")
+            logger.debug { "Packet Data: ${data.contentToString()} " }
+            return null
+        }
+    }
+
+    private fun AprsParser.fromStringOrNull(data: String): AprsPacket? {
+        try {
+            return fromString(data)
+        } catch (error: Throwable) {
+            logger.warn("Failed to parse packet")
+            logger.debug { "Packet Data: $data " }
             return null
         }
     }

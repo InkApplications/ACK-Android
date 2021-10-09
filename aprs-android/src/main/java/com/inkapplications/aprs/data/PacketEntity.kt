@@ -12,4 +12,5 @@ internal class PacketEntity(
     val data: ByteArray,
     @ColumnInfo(defaultValue = "Ax25")
     val packetSource: PacketSource,
+    val sourceCallsign: String,
 )

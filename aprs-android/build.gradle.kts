@@ -5,17 +5,23 @@ plugins {
 }
 
 android {
-    compileSdkVersion(29)
+    compileSdkVersion(31)
     ndkVersion = "21.3.6528147"
 
     defaultConfig {
-        minSdkVersion(8)
+        minSdkVersion(14)
         kapt {
             arguments {
                 arg("room.schemaLocation", "$projectDir/src/main/schema")
             }
         }
+        setTestInstrumentationRunner("androidx.test.runner.AndroidJUnitRunner")
     }
+    sourceSets {
+        // Adds exported schema location as test app assets.
+        getByName("androidTest").assets.srcDirs("$projectDir/src/main/schema")
+    }
+
 
     lintOptions {
         tasks.lint {
@@ -28,11 +34,17 @@ android {
             path = File("${projectDir}/src/main/cpp/CMakeLists.txt")
         }
     }
+    packagingOptions {
+        exclude("META-INF/kotlinx-coroutines-core.kotlin_module")
+    }
 }
 
 dependencies {
     implementation(projects.kotlinExtensions)
     api(libraries.coroutines.core)
+
+    androidTestImplementation(libraries.androidx.test.runner)
+    androidTestImplementation(libraries.androidx.test.core)
 
     implementation(libraries.karps.parser)
     implementation(libraries.karps.client)
@@ -47,5 +59,6 @@ dependencies {
 
     implementation(libraries.androidx.room.runtime)
     implementation(libraries.androidx.room.ktx)
+    androidTestImplementation(libraries.androidx.room.testing)
     kapt(libraries.androidx.room.compiler)
 }

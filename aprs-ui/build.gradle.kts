@@ -8,11 +8,11 @@ plugins {
 }
 
 android {
-    compileSdkVersion(30)
+    compileSdkVersion(31)
     ndkVersion = "21.3.6528147"
     defaultConfig {
         minSdkVersion(21)
-        targetSdkVersion(30)
+        targetSdkVersion(31)
         multiDexEnabled = true
         buildConfigField("String", "MAPBOX_ACCESS_TOKEN", "\"${stringProperty("mapbox.public", "")}\"")
         versionCode = intProperty("versionCode", 1)

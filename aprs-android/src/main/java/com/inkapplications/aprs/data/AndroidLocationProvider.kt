@@ -37,19 +37,18 @@ class AndroidLocationProvider @Inject constructor(
     private val MIN_DISTANCE = Meters.of(Kilo, 1000).value(Meters).toFloat()
 
     @RequiresPermission(Manifest.permission.ACCESS_FINE_LOCATION)
-    private val androidLocationFlow = callbackFlow {
+    private val androidLocationFlow: Flow<Location> = callbackFlow {
         withContext(Dispatchers.Main) {
             locationManager.getLastKnownLocation(LocationManager.PASSIVE_PROVIDER)
-                .run { send(this) }
+                ?.run { send(this) }
 
             locationManager.requestLocationUpdates(
                 LocationManager.GPS_PROVIDER,
                 MIN_TIME,
                 MIN_DISTANCE,
                 object : LocationListener {
-                    override fun onLocationChanged(location: Location?) {
+                    override fun onLocationChanged(location: Location) {
                         logger.debug("Location Changed: $location")
-                        if (location == null) return
                         trySendBlocking(location)
                     }
 
@@ -57,11 +56,11 @@ class AndroidLocationProvider @Inject constructor(
                         logger.debug("Location Status Changed: $p0 $p1")
                     }
 
-                    override fun onProviderEnabled(p0: String?) {
+                    override fun onProviderEnabled(p0: String) {
                         logger.debug("Location Provider Enabled: $p0")
                     }
 
-                    override fun onProviderDisabled(p0: String?) {
+                    override fun onProviderDisabled(p0: String) {
                         logger.debug("Location Provider Disabled: $p0")
                     }
                 }

@@ -14,5 +14,5 @@ internal interface PacketDao {
     fun findById(id: Long): Flow<PacketEntity?>
 
     @Insert
-    suspend fun addPacket(packet: PacketEntity)
+    suspend fun addPacket(packet: PacketEntity): Long
 }
