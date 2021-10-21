@@ -3,6 +3,7 @@ package com.inkapplications.aprs.android.capture.log
 import com.inkapplications.aprs.android.locale.format
 import com.inkapplications.aprs.android.symbol.SymbolFactory
 import com.inkapplications.karps.structures.AprsPacket
+import com.inkapplications.karps.structures.capabilities.Mapable
 import dagger.Reusable
 import javax.inject.Inject
 
@@ -30,15 +31,8 @@ class CombinedLogItemViewModelFactory @Inject constructor(
                 is AprsPacket.Unknown -> "Unknown data"
             },
             symbol = when (packet) {
-                is AprsPacket.Position -> packet.symbol.let(symbolFactory::createSymbol)
-                is AprsPacket.Weather -> packet.symbol?.let(symbolFactory::createSymbol)
-                is AprsPacket.ObjectReport -> packet.symbol.let(symbolFactory::createSymbol)
-                is AprsPacket.ItemReport -> packet.symbol.let(symbolFactory::createSymbol)
-                is AprsPacket.Message,
-                is AprsPacket.TelemetryReport,
-                is AprsPacket.StatusReport,
-                is AprsPacket.CapabilityReport,
-                is AprsPacket.Unknown -> symbolFactory.defaultSymbol
+                is Mapable -> packet.symbol?.let(symbolFactory::createSymbol)
+                else -> symbolFactory.defaultSymbol
             }
         )
     }

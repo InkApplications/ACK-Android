@@ -10,7 +10,7 @@ import kotlinx.datetime.Instant
 
 object TestPackets {
     val unknown = AprsPacket.Unknown(
-        raw = "unknown packet data",
+        raw = "unknown packet data".toByteArray(Charsets.UTF_8),
         received = Instant.DISTANT_PAST,
         dataTypeIdentifier = '?',
         source = Address("KE0YOG"),
@@ -19,7 +19,7 @@ object TestPackets {
         body = "Unknown Packet Data"
     )
     val weather = AprsPacket.Weather(
-        raw = "test weather packet",
+        raw = "test weather packet".toByteArray(Charsets.UTF_8),
         received = Instant.DISTANT_PAST,
         dataTypeIdentifier = '!',
         source = Address("KE0YOG"),
@@ -36,7 +36,7 @@ object TestPackets {
         irradiance = null,
     )
     val position = AprsPacket.Position(
-        raw = "test position packet",
+        raw = "test position packet".toByteArray(Charsets.UTF_8),
         received = Instant.DISTANT_PAST,
         dataTypeIdentifier = '!',
         source = Address("KE0YOG"),
@@ -54,7 +54,7 @@ object TestPackets {
         directionReportExtra = null,
     )
     val objectReport = AprsPacket.ObjectReport(
-        raw = "test object packet",
+        raw = "test object packet".toByteArray(Charsets.UTF_8),
         received = Instant.DISTANT_PAST,
         dataTypeIdentifier = '!',
         source = Address("KE0YOG"),
@@ -74,7 +74,7 @@ object TestPackets {
         state = ReportState.Live,
     )
     val itemReport = AprsPacket.ItemReport(
-        raw = "test position packet",
+        raw = "test position packet".toByteArray(Charsets.UTF_8),
         received = Instant.DISTANT_PAST,
         dataTypeIdentifier = '!',
         source = Address("KE0YOG"),
@@ -93,7 +93,7 @@ object TestPackets {
         state = ReportState.Live,
     )
     val message = AprsPacket.Message(
-        raw = "test position packet",
+        raw = "test position packet".toByteArray(Charsets.UTF_8),
         received = Instant.DISTANT_PAST,
         dataTypeIdentifier = '!',
         source = Address("KE0YOG"),
@@ -104,7 +104,7 @@ object TestPackets {
         messageNumber = null,
     )
     val telemetryReport = AprsPacket.TelemetryReport(
-        raw = "test position packet",
+        raw = "test position packet".toByteArray(Charsets.UTF_8),
         received = Instant.DISTANT_PAST,
         dataTypeIdentifier = '!',
         source = Address("KE0YOG"),
@@ -115,17 +115,17 @@ object TestPackets {
         data = TelemetryValues(1f, 2f, 3f, 4f, 5f, 123.toUByte()),
     )
     val statusReport = AprsPacket.StatusReport(
-        raw = "test position packet",
+        raw = "test position packet".toByteArray(Charsets.UTF_8),
         received = Instant.DISTANT_PAST,
         dataTypeIdentifier = '!',
         source = Address("KE0YOG"),
         destination = Address("KE0YOG", "1"),
         digipeaters = listOf(),
-        time = null,
+        timestamp = null,
         status = "Testing",
     )
     val capabilityReport = AprsPacket.CapabilityReport(
-        raw = "test position packet",
+        raw = "test position packet".toByteArray(Charsets.UTF_8),
         received = Instant.DISTANT_PAST,
         dataTypeIdentifier = '!',
         source = Address("KE0YOG"),

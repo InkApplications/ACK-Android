@@ -32,7 +32,7 @@ class StationViewModelFactoryTest {
                 destination = Address("KE0YOG", "2"),
                 digipeaters = emptyList(),
                 body = "test",
-                raw = "",
+                raw = byteArrayOf(),
             ),
             source = PacketSource.AprsIs,
         )
@@ -67,7 +67,7 @@ class StationViewModelFactoryTest {
                 timestamp = null,
                 symbol = null,
                 pressure = null,
-                raw = "",
+                raw = byteArrayOf(),
             ),
             source = PacketSource.AprsIs,
         )
@@ -104,7 +104,7 @@ class StationViewModelFactoryTest {
                 timestamp = null,
                 symbol = null,
                 pressure = null,
-                raw = "",
+                raw = byteArrayOf(),
             ),
             source = PacketSource.AprsIs,
         )
@@ -143,7 +143,7 @@ class StationViewModelFactoryTest {
                 timestamp = null,
                 symbol = null,
                 pressure = null,
-                raw = "",
+                raw = byteArrayOf(),
             ),
             source = PacketSource.AprsIs,
         )
@@ -181,7 +181,7 @@ class StationViewModelFactoryTest {
                 transmitterInfo = null,
                 signalInfo = null,
                 directionReportExtra = null,
-                raw = "",
+                raw = byteArrayOf(),
             ),
             source = PacketSource.AprsIs,
         )
