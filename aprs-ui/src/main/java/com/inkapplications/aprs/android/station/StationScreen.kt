@@ -117,7 +117,7 @@ fun StationScreen(
             }
 
             if (viewState.debugDataVisible) {
-                Card(modifier = Modifier.padding(vertical = AprsTheme.spacing.content)) {
+                Card(modifier = Modifier.fillMaxWidth().padding(vertical = AprsTheme.spacing.content)) {
                     Column(modifier = Modifier.padding(AprsTheme.spacing.content)) {
                         Text("Debug Info", style = AprsTheme.typography.h2)
                         Text("Raw Data", style = AprsTheme.typography.h3)
