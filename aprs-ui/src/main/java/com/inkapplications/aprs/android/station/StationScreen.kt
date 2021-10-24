@@ -102,18 +102,7 @@ fun StationScreen(
             }
 
             if (viewState.telemetryValues != null) {
-                Card(modifier = Modifier.fillMaxWidth().padding(vertical = AprsTheme.spacing.content)) {
-                    Column(modifier = Modifier.padding(AprsTheme.spacing.content)) {
-                        Text("Telemetry Data", style = AprsTheme.typography.h2)
-                        TelemetryValueRow("a1", viewState.telemetryValues.analog1.toString())
-                        TelemetryValueRow("a2", viewState.telemetryValues.analog2.toString())
-                        TelemetryValueRow("a3", viewState.telemetryValues.analog3.toString())
-                        TelemetryValueRow("a4", viewState.telemetryValues.analog4.toString())
-                        TelemetryValueRow("a5", viewState.telemetryValues.analog5.toString())
-                        TelemetryValueRow("d1", viewState.telemetryValues.digital.toString())
-                        TelemetryValueRow("sq", viewState.telemetrySequence.toString())
-                    }
-                }
+                TelemetryTable(viewState.telemetryValues, viewState.telemetrySequence)
             }
 
             if (viewState.debugDataVisible) {
@@ -133,9 +122,3 @@ fun StationScreen(
         }
     }
 }
-
-@Composable
-fun TelemetryValueRow(
-    label: String,
-    value: String,
-) = KeyValueRow(label, value, Modifier.padding(vertical = AprsTheme.spacing.singleItem))
