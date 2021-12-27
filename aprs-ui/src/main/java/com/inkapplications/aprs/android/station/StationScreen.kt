@@ -110,12 +110,8 @@ fun StationScreen(
                     Column(modifier = Modifier.padding(AprsTheme.spacing.content)) {
                         Text("Debug Info", style = AprsTheme.typography.h2)
                         Text("Raw Data", style = AprsTheme.typography.h3)
-                        Text(viewState.rawPacket?.raw.toString(), style = AprsTheme.typography.caption)
+                        Text(viewState.rawSource, style = AprsTheme.typography.caption)
                         Spacer(Modifier.height(AprsTheme.spacing.content))
-                        Text("Parsing Info", style = AprsTheme.typography.h3)
-                        Text("Data Type Identifier: ${viewState.rawPacket?.dataTypeIdentifier}", style = AprsTheme.typography.caption)
-                        Text("Receive timestamp: ${viewState.rawPacket?.received}", style = AprsTheme.typography.caption)
-                        Text("Digipeater list: ${viewState.rawPacket?.digipeaters}", style = AprsTheme.typography.caption)
                     }
                 }
             }

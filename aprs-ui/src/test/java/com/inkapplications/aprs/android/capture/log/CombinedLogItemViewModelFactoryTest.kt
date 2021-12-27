@@ -1,8 +1,12 @@
 package com.inkapplications.aprs.android.capture.log
 
-import com.inkapplications.aprs.android.TestPackets
 import com.inkapplications.aprs.android.symbol.SymbolFactoryStub
+import com.inkapplications.aprs.android.toTestPacket
+import com.inkapplications.karps.structures.*
 import inkapplications.spondee.measure.Fahrenheit
+import inkapplications.spondee.spatial.GeoCoordinates
+import inkapplications.spondee.spatial.latitude
+import inkapplications.spondee.spatial.longitude
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
@@ -13,7 +17,9 @@ class CombinedLogItemViewModelFactoryTest {
     fun unknownPacket() {
         val result = factory.create(
             id = 123L,
-            packet = TestPackets.unknown,
+            packet = PacketData.Unknown(
+                body = "",
+            ).toTestPacket(),
             metric = false,
         )
 
@@ -26,7 +32,11 @@ class CombinedLogItemViewModelFactoryTest {
     fun position() {
         val result = factory.create(
             id = 123L,
-            packet = TestPackets.position,
+            packet = PacketData.Position(
+                coordinates = GeoCoordinates(12f.latitude, 34f.longitude),
+                symbol = symbolOf('/', '-'),
+                comment = "Test Position",
+            ).toTestPacket(),
             metric = false,
         )
 
@@ -37,7 +47,11 @@ class CombinedLogItemViewModelFactoryTest {
     fun positionGeneric() {
         val result = factory.create(
             id = 123L,
-            packet = TestPackets.position.copy(comment = ""),
+            packet = PacketData.Position(
+                comment = "",
+                coordinates = GeoCoordinates(12f.latitude, 34f.longitude),
+                symbol = symbolOf('/', '-'),
+            ).toTestPacket(),
             metric = false,
         )
 
@@ -48,9 +62,9 @@ class CombinedLogItemViewModelFactoryTest {
     fun weather() {
         val result = factory.create(
             id = 123L,
-            packet = TestPackets.weather.copy(
+            packet = PacketData.Weather(
                 temperature = Fahrenheit.of(72),
-            ),
+            ).toTestPacket(),
             metric = false,
         )
 
@@ -61,7 +75,7 @@ class CombinedLogItemViewModelFactoryTest {
     fun weatherGeneric() {
         val result = factory.create(
             id = 123L,
-            packet = TestPackets.weather,
+            packet = PacketData.Weather().toTestPacket(),
             metric = false,
         )
 
@@ -72,7 +86,13 @@ class CombinedLogItemViewModelFactoryTest {
     fun objectReport() {
         val result = factory.create(
             id = 123L,
-            packet = TestPackets.objectReport,
+            packet = PacketData.ObjectReport(
+                coordinates = GeoCoordinates(12f.latitude, 34f.longitude),
+                symbol = symbolOf('/', '-'),
+                comment = "Hello World",
+                name = "Test Object",
+                state = ReportState.Live,
+            ).toTestPacket(),
             metric = false,
         )
 
@@ -83,9 +103,13 @@ class CombinedLogItemViewModelFactoryTest {
     fun objectReportNoComment() {
         val result = factory.create(
             id = 123L,
-            packet = TestPackets.objectReport.copy(
+            packet = PacketData.ObjectReport(
+                coordinates = GeoCoordinates(12f.latitude, 34f.longitude),
+                symbol = symbolOf('/', '-'),
+                name = "Test Object",
                 comment = " ",
-            ),
+                state = ReportState.Live,
+            ).toTestPacket(),
             metric = false,
         )
 
@@ -96,7 +120,13 @@ class CombinedLogItemViewModelFactoryTest {
     fun itemReport() {
         val result = factory.create(
             id = 123L,
-            packet = TestPackets.itemReport,
+            packet = PacketData.ItemReport(
+                coordinates = GeoCoordinates(12f.latitude, 34f.longitude),
+                symbol = symbolOf('/', '-'),
+                name = "Test Item",
+                comment = "Hello World",
+                state = ReportState.Live,
+            ).toTestPacket(),
             metric = false,
         )
 
@@ -107,9 +137,13 @@ class CombinedLogItemViewModelFactoryTest {
     fun itemReportNoComment() {
         val result = factory.create(
             id = 123L,
-            packet = TestPackets.itemReport.copy(
+            packet = PacketData.ItemReport(
+                coordinates = GeoCoordinates(12f.latitude, 34f.longitude),
+                symbol = symbolOf('/', '-'),
+                name = "Test Item",
                 comment = " ",
-            ),
+                state = ReportState.Live,
+            ).toTestPacket(),
             metric = false,
         )
 
@@ -120,7 +154,10 @@ class CombinedLogItemViewModelFactoryTest {
     fun message() {
         val result = factory.create(
             id = 123L,
-            packet = TestPackets.message,
+            packet = PacketData.Message(
+                addressee = Address("KE0YOG-2"),
+                message = "Hello KE0YOG",
+            ).toTestPacket(),
             metric = false,
         )
 
@@ -131,9 +168,11 @@ class CombinedLogItemViewModelFactoryTest {
     fun messageWithCount() {
         val result = factory.create(
             id = 123L,
-            packet = TestPackets.message.copy(
+            packet = PacketData.Message(
+                addressee = Address("KE0YOG-2"),
+                message = "Hello KE0YOG",
                 messageNumber = 69,
-            ),
+            ).toTestPacket(),
             metric = false,
         )
 
@@ -144,7 +183,11 @@ class CombinedLogItemViewModelFactoryTest {
     fun telemetryReport() {
         val result = factory.create(
             id = 123L,
-            packet = TestPackets.telemetryReport,
+            packet = PacketData.TelemetryReport(
+                sequenceId = "",
+                data = TelemetryValues(1f, 2f, 3f, 4f, 5f, 0u),
+                comment = "Hello World",
+            ).toTestPacket(),
             metric = false,
         )
 
@@ -155,9 +198,11 @@ class CombinedLogItemViewModelFactoryTest {
     fun telemetryReportGeneric() {
         val result = factory.create(
             id = 123L,
-            packet = TestPackets.telemetryReport.copy(
-                comment = "",
-            ),
+            packet = PacketData.TelemetryReport(
+                sequenceId = "",
+                data = TelemetryValues(1f, 2f, 3f, 4f, 5f, 0u),
+                comment = " ",
+            ).toTestPacket(),
             metric = false,
         )
 
@@ -168,7 +213,9 @@ class CombinedLogItemViewModelFactoryTest {
     fun statusReport() {
         val result = factory.create(
             id = 123L,
-            packet = TestPackets.statusReport,
+            packet = PacketData.StatusReport(
+                status = "Testing",
+            ).toTestPacket(),
             metric = false,
         )
 
@@ -179,7 +226,9 @@ class CombinedLogItemViewModelFactoryTest {
     fun capabilityReport() {
         val result = factory.create(
             id = 123L,
-            packet = TestPackets.capabilityReport,
+            packet = PacketData.CapabilityReport(
+                capabilityData = setOf(),
+            ).toTestPacket(),
             metric = false,
         )
 

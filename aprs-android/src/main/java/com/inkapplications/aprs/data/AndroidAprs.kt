@@ -70,7 +70,7 @@ internal class AndroidAprs(
 
     private suspend fun captureAx25Packet(data: ByteArray): CapturedPacket? {
         val parsed = parser.fromAx25OrNull(data) ?: return null
-        val entity = PacketEntity(null, Instant.now().toEpochMilli(), data, PacketSource.Ax25, parsed.source.callsign)
+        val entity = PacketEntity(null, Instant.now().toEpochMilli(), data, PacketSource.Ax25, parsed.route.source.callsign)
         val id = packetDao.addPacket(entity)
 
         return createCapturedPacket(entity, parsed, id)
@@ -78,7 +78,7 @@ internal class AndroidAprs(
 
     private suspend fun captureStringPacket(data: String): CapturedPacket? {
         val parsed = parser.fromStringOrNull(data) ?: return null
-        val entity = PacketEntity(null, Instant.now().toEpochMilli(), data.toByteArray(Charsets.UTF_8), PacketSource.AprsIs, parsed.source.callsign)
+        val entity = PacketEntity(null, Instant.now().toEpochMilli(), data.toByteArray(Charsets.UTF_8), PacketSource.AprsIs, parsed.route.source.callsign)
         val id = packetDao.addPacket(entity)
 
         return createCapturedPacket(entity, parsed, id)
@@ -90,8 +90,9 @@ internal class AndroidAprs(
         return CapturedPacket(
             id = id,
             received = entity.timestamp,
-            data = parsed,
+            parsed = parsed,
             source = entity.packetSource,
+            raw = entity.data,
         )
     }
 

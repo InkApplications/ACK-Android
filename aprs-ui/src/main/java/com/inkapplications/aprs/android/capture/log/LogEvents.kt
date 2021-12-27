@@ -6,7 +6,7 @@ import com.inkapplications.aprs.android.settings.observeBoolean
 import com.inkapplications.aprs.data.AprsAccess
 import com.inkapplications.coroutines.combinePair
 import com.inkapplications.coroutines.mapEach
-import com.inkapplications.karps.structures.AprsPacket
+import com.inkapplications.karps.structures.PacketData
 import dagger.Reusable
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
@@ -25,8 +25,8 @@ class LogEvents @Inject constructor(
         .flatMapLatest { (metric, filterUnknown) ->
             aprs.findRecent(500)
                 .map {
-                    if (filterUnknown) it.filter { it.data !is AprsPacket.Unknown } else it
+                    if (filterUnknown) it.filter { it.parsed.data !is PacketData.Unknown } else it
                 }
-                .mapEach { stateFactory.create(it.id, it.data, metric) }
+                .mapEach { stateFactory.create(it.id, it.parsed, metric) }
         }
 }

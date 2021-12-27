@@ -21,7 +21,7 @@ object AndroidAprsModule {
     ): AprsAccess {
         val audioCapture = AudioDataCapture(logger)
         val audioProcessor = AudioDataProcessor(audioCapture)
-        val parser = ParserModule().defaultParser(logger)
+        val parser = ParserModule(logger).defaultParser()
 
         val database = Room.databaseBuilder(context, PacketDatabase::class.java, "aprs_packets")
             .addMigrations(V3Upgrade(parser, logger))

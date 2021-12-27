@@ -1,16 +1,13 @@
 package com.inkapplications.aprs.android.capture.log
 
-import com.inkapplications.aprs.android.AprsAccessStub
-import com.inkapplications.aprs.android.ParrotStringResources
-import com.inkapplications.aprs.android.StubSettings
-import com.inkapplications.aprs.android.TestPackets
-import com.inkapplications.aprs.android.TestPackets.toTestCapturedPacket
+import com.inkapplications.aprs.android.*
 import com.inkapplications.aprs.android.locale.LocaleSettings
 import com.inkapplications.aprs.android.settings.BooleanSetting
 import com.inkapplications.aprs.android.settings.SettingsReadAccess
 import com.inkapplications.aprs.data.AprsAccess
 import com.inkapplications.aprs.data.CapturedPacket
 import com.inkapplications.karps.structures.AprsPacket
+import com.inkapplications.karps.structures.PacketData
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
@@ -24,8 +21,8 @@ class LogEventsTest {
         val aprsAccess = object: AprsAccess by AprsAccessStub {
             override fun findRecent(count: Int): Flow<List<CapturedPacket>> = flow {
                 emit(listOf(
-                    TestPackets.unknown.toTestCapturedPacket(),
-                    TestPackets.weather.toTestCapturedPacket(),
+                    PacketData.Unknown(body = "").toTestPacket().toTestCapturedPacket(),
+                    PacketData.Weather().toTestPacket().toTestCapturedPacket(),
                 ))
             }
         }

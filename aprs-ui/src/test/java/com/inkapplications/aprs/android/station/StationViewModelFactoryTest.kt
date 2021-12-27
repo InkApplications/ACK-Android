@@ -1,6 +1,6 @@
 package com.inkapplications.aprs.android.station
 
-import com.inkapplications.aprs.android.ParrotStringResources
+import com.inkapplications.aprs.android.*
 import com.inkapplications.aprs.android.symbol.SymbolFactoryStub
 import com.inkapplications.aprs.data.CapturedPacket
 import com.inkapplications.aprs.data.PacketSource
@@ -25,16 +25,16 @@ class StationViewModelFactoryTest {
         val packet = CapturedPacket(
             id = 1,
             received = 2,
-            data = AprsPacket.Unknown(
-                received = Instant.fromEpochMilliseconds(0),
-                dataTypeIdentifier = '!',
-                source = Address("KE0YOG", "1"),
-                destination = Address("KE0YOG", "2"),
-                digipeaters = emptyList(),
-                body = "test",
-                raw = byteArrayOf(),
+            parsed = AprsPacket(
+                route = testRoute.copy(
+                    source = Address("KE0YOG", "1"),
+                ),
+                data = PacketData.Unknown(
+                    body = "test",
+                ),
             ),
             source = PacketSource.AprsIs,
+            raw = byteArrayOf(),
         )
         val result = factory.create(packet, false, false)
 
@@ -49,28 +49,14 @@ class StationViewModelFactoryTest {
     fun positionlessWeatherPacket() {
         val factory = StationViewModelFactory(SymbolFactoryStub, ParrotStringResources)
 
-        val packet = CapturedPacket(
-            id = 1,
-            received = 2,
-            data = AprsPacket.Weather(
-                received = Instant.fromEpochMilliseconds(0),
-                dataTypeIdentifier = '!',
-                source = Address("KE0YOG", "1"),
-                destination = Address("KE0YOG", "2"),
-                digipeaters = emptyList(),
-                temperature = Fahrenheit.of(72),
-                precipitation = Precipitation(),
-                windData = WindData(Degrees.of(12), MilesPerHour.of(34), MilesPerHour.of(56)),
-                coordinates = null,
-                humidity = null,
-                irradiance = null,
-                timestamp = null,
-                symbol = null,
-                pressure = null,
-                raw = byteArrayOf(),
-            ),
-            source = PacketSource.AprsIs,
-        )
+        val packet = PacketData.Weather(
+            temperature = Fahrenheit.of(72),
+            windData = WindData(
+                direction = Degrees.of(12),
+                speed = MilesPerHour.of(34),
+                gust = MilesPerHour.of(56),
+            )
+        ).toTestPacket().toTestCapturedPacket()
         val result = factory.create(packet, false, false)
 
         assertFalse(result.mapVisible, "Map is hidden for positionless weather")
@@ -78,7 +64,7 @@ class StationViewModelFactoryTest {
         assertTrue(result.windVisible, "Wind is visible when value is specified")
         assertEquals("72ºF", result.temperature)
         assertEquals("12º|34.0mph|56.0mph", result.wind)
-        assertEquals("KE0YOG-1", result.name)
+        assertEquals("KE0YOG", result.name)
         assertFalse(result.debugDataVisible)
     }
 
@@ -86,28 +72,11 @@ class StationViewModelFactoryTest {
     fun weatherPacket() {
         val factory = StationViewModelFactory(SymbolFactoryStub, ParrotStringResources)
 
-        val packet = CapturedPacket(
-            id = 1,
-            received = 2,
-            data = AprsPacket.Weather(
-                received = Instant.fromEpochMilliseconds(0L),
-                dataTypeIdentifier = '!',
-                source = Address("KE0YOG", "1"),
-                destination = Address("KE0YOG", "2"),
-                digipeaters = emptyList(),
-                coordinates = GeoCoordinates(1.0.latitude, 2.0.longitude),
-                temperature = Fahrenheit.of(72),
-                precipitation = Precipitation(),
-                windData = WindData(Degrees.of(12), MilesPerHour.of(34), MilesPerHour.of(56)),
-                humidity = null,
-                irradiance = null,
-                timestamp = null,
-                symbol = null,
-                pressure = null,
-                raw = byteArrayOf(),
-            ),
-            source = PacketSource.AprsIs,
-        )
+        val packet = PacketData.Weather(
+            coordinates = GeoCoordinates(1.0.latitude, 2.0.longitude),
+            temperature = Fahrenheit.of(72),
+            windData = WindData(Degrees.of(12), MilesPerHour.of(34), MilesPerHour.of(56)),
+        ).toTestPacket().toTestCapturedPacket()
         val result = factory.create(packet, false, false)
 
         assertTrue(result.mapVisible, "Map is visible for positioned weather packet")
@@ -117,7 +86,7 @@ class StationViewModelFactoryTest {
         assertFalse(result.altitudeVisible, "Altitude visible when value is unspecified")
         assertEquals("72ºF", result.temperature)
         assertEquals("12º|34.0mph|56.0mph", result.wind)
-        assertEquals("KE0YOG-1", result.name)
+        assertEquals("KE0YOG", result.name)
         assertFalse(result.debugDataVisible)
     }
 
@@ -125,28 +94,9 @@ class StationViewModelFactoryTest {
     fun emptyWeatherPacket() {
         val factory = StationViewModelFactory(SymbolFactoryStub, ParrotStringResources)
 
-        val packet = CapturedPacket(
-            id = 1,
-            received = 2,
-            data = AprsPacket.Weather(
-                received = Instant.fromEpochMilliseconds(0),
-                dataTypeIdentifier = '!',
-                source = Address("KE0YOG", "1"),
-                destination = Address("KE0YOG", "2"),
-                digipeaters = emptyList(),
-                coordinates = GeoCoordinates(1.latitude, 2.longitude),
-                precipitation = Precipitation(),
-                windData = WindData(null, null, null),
-                temperature = null,
-                humidity = null,
-                irradiance = null,
-                timestamp = null,
-                symbol = null,
-                pressure = null,
-                raw = byteArrayOf(),
-            ),
-            source = PacketSource.AprsIs,
-        )
+        val packet = PacketData.Weather(
+            coordinates = GeoCoordinates(1.latitude, 2.longitude),
+        ).toTestPacket().toTestCapturedPacket()
         val result = factory.create(packet, false, false)
 
         assertTrue(result.mapVisible, "Map is shown for positioned weather packet")
@@ -154,7 +104,7 @@ class StationViewModelFactoryTest {
         assertFalse(result.temperatureVisible, "Temperature is hidden when value is null")
         assertFalse(result.windVisible, "Wind is hidden when value is null")
         assertFalse(result.altitudeVisible, "Altitude is hidden when value is null")
-        assertEquals("KE0YOG-1", result.name)
+        assertEquals("KE0YOG", result.name)
         assertFalse(result.debugDataVisible)
     }
 
@@ -162,36 +112,18 @@ class StationViewModelFactoryTest {
     fun positionPacket() {
         val factory = StationViewModelFactory(SymbolFactoryStub, ParrotStringResources)
 
-        val packet = CapturedPacket(
-            id = 1,
-            received = 2,
-            data = AprsPacket.Position(
-                received = Instant.fromEpochMilliseconds(0),
-                dataTypeIdentifier = '!',
-                source = Address("KE0YOG", "1"),
-                destination = Address("KE0YOG", "2"),
-                digipeaters = emptyList(),
-                coordinates = GeoCoordinates(1.latitude, 2.longitude),
-                symbol = symbolOf('/', 'a'),
-                comment = "test",
-                altitude = null,
-                timestamp = null,
-                trajectory = null,
-                range = null,
-                transmitterInfo = null,
-                signalInfo = null,
-                directionReportExtra = null,
-                raw = byteArrayOf(),
-            ),
-            source = PacketSource.AprsIs,
-        )
+        val packet = PacketData.Position(
+            coordinates = GeoCoordinates(1.latitude, 2.longitude),
+            symbol = symbolOf('/', 'a'),
+            comment = "test",
+        ).toTestPacket().toTestCapturedPacket()
         val result = factory.create(packet, false, false)
 
         assertTrue(result.mapVisible, "Map is visible for position packet")
         assertFalse(result.temperatureVisible, "Temperature is hidden for non weather packet")
         assertFalse(result.windVisible, "Wind is hidden for non weather packet")
         assertEquals(1, result.markers.size)
-        assertEquals("KE0YOG-1", result.name)
+        assertEquals("KE0YOG", result.name)
         assertEquals("test", result.comment)
         assertFalse(result.debugDataVisible)
     }

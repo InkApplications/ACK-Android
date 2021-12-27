@@ -36,7 +36,7 @@ internal class V3Upgrade(
                         "packets",
                         SQLiteDatabase.CONFLICT_FAIL,
                         ContentValues().apply {
-                            put("sourceCallsign", parsed.source.callsign)
+                            put("sourceCallsign", parsed.route.source.callsign)
                         },
                         "id = ?",
                         arrayOf(id),

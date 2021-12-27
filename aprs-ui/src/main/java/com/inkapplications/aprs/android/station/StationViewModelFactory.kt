@@ -12,6 +12,7 @@ import com.inkapplications.aprs.android.symbol.SymbolFactory
 import com.inkapplications.aprs.data.CapturedPacket
 import com.inkapplications.aprs.data.PacketSource
 import com.inkapplications.karps.structures.AprsPacket
+import com.inkapplications.karps.structures.PacketData
 import com.inkapplications.karps.structures.symbolOf
 import dagger.Reusable
 import inkapplications.spondee.measure.Length
@@ -35,17 +36,17 @@ class StationViewModelFactory @Inject constructor(
         metric: Boolean,
         showDebug: Boolean,
     ): StationViewModel {
-        val data = packet?.data
+        val data = packet?.parsed?.data
 
         val packetTypeData = when (data) {
-            is AprsPacket.Position -> StationViewModel(
+            is PacketData.Position -> StationViewModel(
                 markers = listOf(MarkerViewModel(packet.id, data.coordinates, symbolFactory.createSymbol(data.symbol))),
                 center = data.coordinates,
                 zoom = ZoomLevels.ROADS,
                 comment = data.comment,
                 altitude = data.altitude.distanceString(metric),
             )
-            is AprsPacket.Weather -> StationViewModel(
+            is PacketData.Weather -> StationViewModel(
                 markers = data.coordinates?.let {
                     listOf(MarkerViewModel(
                         id = packet.id,
@@ -58,42 +59,42 @@ class StationViewModelFactory @Inject constructor(
                 center = data.coordinates ?: GeoCoordinates(0.latitude, 0.longitude),
                 zoom = ZoomLevels.ROADS,
             )
-            is AprsPacket.ObjectReport -> StationViewModel(
+            is PacketData.ObjectReport -> StationViewModel(
                 markers = listOf(MarkerViewModel(packet.id, data.coordinates, symbolFactory.createSymbol(data.symbol))),
                 center = data.coordinates,
                 zoom = ZoomLevels.ROADS,
                 comment = data.comment,
                 altitude = data.altitude.distanceString(metric),
             )
-            is AprsPacket.ItemReport -> StationViewModel(
+            is PacketData.ItemReport -> StationViewModel(
                 markers = listOf(MarkerViewModel(packet.id, data.coordinates, symbolFactory.createSymbol(data.symbol))),
                 center = data.coordinates,
                 zoom = ZoomLevels.ROADS,
                 comment = data.comment,
                 altitude = data.altitude.distanceString(metric),
             )
-            is AprsPacket.Message -> StationViewModel(
+            is PacketData.Message -> StationViewModel(
                 comment = data.message,
             )
-            is AprsPacket.TelemetryReport -> StationViewModel(
+            is PacketData.TelemetryReport -> StationViewModel(
                 comment = data.comment,
                 telemetryValues = data.data,
                 telemetrySequence = data.sequenceId,
             )
-            is AprsPacket.StatusReport -> StationViewModel(
+            is PacketData.StatusReport -> StationViewModel(
                 comment = data.status,
             )
-            is AprsPacket.CapabilityReport -> StationViewModel(
+            is PacketData.CapabilityReport -> StationViewModel(
             )
-            is AprsPacket.Unknown -> StationViewModel(
-                comment = "",
+            is PacketData.Unknown -> StationViewModel(
+                comment = data.body,
             )
             null -> StationViewModel()
         }
         return packetTypeData.copy(
-            name = data?.source?.toString().orEmpty(),
-            rawPacket = data,
-            debugDataVisible = showDebug || data is AprsPacket.Unknown,
+            name = packet?.parsed?.route?.source?.toString().orEmpty(),
+            rawSource = packet?.raw.toString(),
+            debugDataVisible = showDebug || data is PacketData.Unknown,
             receiveIcon = when (packet?.source) {
                 PacketSource.Ax25 -> Icons.Default.SettingsInputAntenna
                 PacketSource.AprsIs -> Icons.Default.Cloud
@@ -109,7 +110,7 @@ class StationViewModelFactory @Inject constructor(
 
     private fun Length?.distanceString(metric: Boolean) = this?.format(metric).orEmpty()
 
-    private fun AprsPacket.Weather.windString(metricUnits: Boolean): String {
+    private fun PacketData.Weather.windString(metricUnits: Boolean): String {
         val direction = windData.direction?.value(Degrees)?.roundToInt()?.let { "${it}º" }
         val speed = windData.speed?.format(metricUnits)
         val gust = windData.gust?.format(metricUnits)

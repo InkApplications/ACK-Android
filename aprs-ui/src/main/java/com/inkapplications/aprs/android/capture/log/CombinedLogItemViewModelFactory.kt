@@ -3,6 +3,7 @@ package com.inkapplications.aprs.android.capture.log
 import com.inkapplications.aprs.android.locale.format
 import com.inkapplications.aprs.android.symbol.SymbolFactory
 import com.inkapplications.karps.structures.AprsPacket
+import com.inkapplications.karps.structures.PacketData
 import com.inkapplications.karps.structures.capabilities.Mapable
 import dagger.Reusable
 import javax.inject.Inject
@@ -18,20 +19,20 @@ class CombinedLogItemViewModelFactory @Inject constructor(
     ): LogItemViewModel {
         return LogItemViewModel(
             id = id,
-            origin = packet.source.toString(),
-            comment = when (packet) {
-                is AprsPacket.Position -> "Position${packet.comment.append()}"
-                is AprsPacket.Weather -> "Weather${packet.temperature?.format(metric).append()}"
-                is AprsPacket.ObjectReport -> "Object: ${packet.name}${packet.comment.append(" - ")}"
-                is AprsPacket.ItemReport -> "Item: ${packet.name}${packet.comment.append(" - ")}"
-                is AprsPacket.Message -> "[${packet.addressee}] ${packet.message}${packet.messageNumber?.let { " ($it)" }.orEmpty()}"
-                is AprsPacket.TelemetryReport -> "Telemetry${packet.comment.append()}"
-                is AprsPacket.StatusReport -> "Status${packet.status.append()}"
-                is AprsPacket.CapabilityReport -> "Capability Report"
-                is AprsPacket.Unknown -> "Unknown data"
+            origin = packet.route.source.toString(),
+            comment = when (val data = packet.data) {
+                is PacketData.Position -> "Position${data.comment.append()}"
+                is PacketData.Weather -> "Weather${data.temperature?.format(metric).append()}"
+                is PacketData.ObjectReport -> "Object: ${data.name}${data.comment.append(" - ")}"
+                is PacketData.ItemReport -> "Item: ${data.name}${data.comment.append(" - ")}"
+                is PacketData.Message -> "[${data.addressee}] ${data.message}${data.messageNumber?.let { " ($it)" }.orEmpty()}"
+                is PacketData.TelemetryReport -> "Telemetry${data.comment.append()}"
+                is PacketData.StatusReport -> "Status${data.status.append()}"
+                is PacketData.CapabilityReport -> "Capability Report"
+                is PacketData.Unknown -> "Unknown data"
             },
-            symbol = when (packet) {
-                is Mapable -> packet.symbol?.let(symbolFactory::createSymbol)
+            symbol = when (val data = packet.data) {
+                is Mapable -> data.symbol?.let(symbolFactory::createSymbol)
                 else -> symbolFactory.defaultSymbol
             }
         )

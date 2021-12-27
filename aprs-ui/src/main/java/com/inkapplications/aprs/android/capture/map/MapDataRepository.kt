@@ -9,7 +9,7 @@ import com.inkapplications.aprs.android.settings.observeBoolean
 import com.inkapplications.aprs.android.settings.observeInt
 import com.inkapplications.aprs.android.symbol.SymbolFactory
 import com.inkapplications.aprs.data.AprsAccess
-import com.inkapplications.karps.structures.AprsPacket
+import com.inkapplications.karps.structures.PacketData
 import com.inkapplications.kotlin.filterEachNotNull
 import com.inkapplications.kotlin.mapEach
 import dagger.Reusable
@@ -37,10 +37,10 @@ class MapDataRepository @Inject constructor(
         return settings.observeInt(mapSettings.pinCount)
             .flatMapLatest { pinCount ->
                 aprs.findRecent(pinCount)
-                    .map { it.distinctBy { it.data.source } }
+                    .map { it.distinctBy { it.parsed.route.source } }
                     .mapEach { packet ->
-                        when (val data = packet.data) {
-                            is AprsPacket.Position -> MarkerViewModel(packet.id, data.coordinates, symbolFactory.createSymbol(data.symbol))
+                        when (val data = packet.parsed.data) {
+                            is PacketData.Position -> MarkerViewModel(packet.id, data.coordinates, symbolFactory.createSymbol(data.symbol))
                             else -> null
                         }
                     }
@@ -51,7 +51,7 @@ class MapDataRepository @Inject constructor(
 
     fun findLogItem(id: Long): Flow<LogItemViewModel?> {
         return settings.observeBoolean(localeSettings.preferMetric).flatMapLatest { metric ->
-            aprs.findById(id).map { it?.let { logStateFactory.create(it.id, it.data, metric) } }
+            aprs.findById(id).map { it?.let { logStateFactory.create(it.id, it.parsed, metric) } }
         }
     }
 }

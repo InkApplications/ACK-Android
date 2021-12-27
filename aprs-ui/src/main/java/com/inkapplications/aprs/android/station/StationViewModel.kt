@@ -16,7 +16,7 @@ data class StationViewModel(
     val temperature: String = "",
     val wind: String = "",
     val altitude: String = "",
-    val rawPacket: AprsPacket? = null,
+    val rawSource: String = "",
     val debugDataVisible: Boolean = false,
     val telemetryValues: TelemetryValues? = null,
     val telemetrySequence: String? = null,
