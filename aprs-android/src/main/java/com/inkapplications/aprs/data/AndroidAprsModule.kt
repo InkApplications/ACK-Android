@@ -27,6 +27,14 @@ object AndroidAprsModule {
             .addMigrations(V3Upgrade(parser, logger))
             .build()
 
-        return AndroidAprs(audioProcessor, database.pinsDao(), AprsClientModule.createDataClient(), androidLocationProvider, parser, logger)
+        return AndroidAprs(
+            audioProcessor = audioProcessor,
+            packetDao = database.pinsDao(),
+            client = AprsClientModule.createDataClient(),
+            locationProvider = androidLocationProvider,
+            parser = parser,
+            modulator = AndroidAfskModulator(),
+            logger = logger,
+        )
     }
 }

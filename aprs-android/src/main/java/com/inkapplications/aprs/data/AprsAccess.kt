@@ -1,5 +1,7 @@
 package com.inkapplications.aprs.data
 
+import com.inkapplications.karps.structures.AprsPacket
+import com.inkapplications.karps.structures.EncodingConfig
 import kotlinx.coroutines.flow.Flow
 
 interface AprsAccess {
@@ -9,5 +11,5 @@ interface AprsAccess {
     fun listenForInternetPackets(settings: ConnectionConfiguration): Flow<CapturedPacket>
     fun findRecent(count: Int): Flow<List<CapturedPacket>>
     fun findById(id: Long): Flow<CapturedPacket?>
+    fun transmitAudioPacket(packet: AprsPacket, config: EncodingConfig)
 }
-

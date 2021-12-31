@@ -3,6 +3,7 @@ package com.inkapplications.aprs.data
 import com.inkapplications.karps.client.AprsDataClient
 import com.inkapplications.karps.parser.AprsParser
 import com.inkapplications.karps.structures.AprsPacket
+import com.inkapplications.karps.structures.EncodingConfig
 import com.inkapplications.kotlin.filterEachNotNull
 import inkapplications.spondee.measure.Meters
 import inkapplications.spondee.structure.Kilo
@@ -18,6 +19,7 @@ internal class AndroidAprs(
     private val client: AprsDataClient,
     private val locationProvider: AndroidLocationProvider,
     private val parser: AprsParser,
+    private val modulator: AndroidAfskModulator,
     private val logger: KimchiLogger
 ): AprsAccess {
     private val mutableIncoming = MutableSharedFlow<CapturedPacket>()
@@ -66,6 +68,11 @@ internal class AndroidAprs(
 
     override fun findById(id: Long): Flow<CapturedPacket?> {
         return packetDao.findById(id).map { it?.let { createCapturedPacket(it, parser.fromEntityOrNull(it)) } }
+    }
+
+    override fun transmitAudioPacket(packet: AprsPacket, config: EncodingConfig) {
+        val data = parser.toAx25(packet, config)
+        modulator.modulate(data, 40)
     }
 
     private suspend fun captureAx25Packet(data: ByteArray): CapturedPacket? {
