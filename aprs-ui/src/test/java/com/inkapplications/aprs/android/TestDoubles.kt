@@ -8,6 +8,8 @@ import com.inkapplications.aprs.android.settings.StringSetting
 import com.inkapplications.aprs.data.AprsAccess
 import com.inkapplications.aprs.data.CapturedPacket
 import com.inkapplications.aprs.data.ConnectionConfiguration
+import com.inkapplications.karps.structures.AprsPacket
+import com.inkapplications.karps.structures.EncodingConfig
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
@@ -31,5 +33,5 @@ object AprsAccessStub: AprsAccess {
     override fun listenForInternetPackets(settings: ConnectionConfiguration): Flow<CapturedPacket> = flow {}
     override fun findRecent(count: Int): Flow<List<CapturedPacket>> = flow {}
     override fun findById(id: Long): Flow<CapturedPacket?> = flow {}
+    override fun transmitAudioPacket(packet: AprsPacket, config: EncodingConfig) {}
 }
-

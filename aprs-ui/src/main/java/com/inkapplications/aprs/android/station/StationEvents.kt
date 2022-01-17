@@ -9,6 +9,7 @@ import kimchi.logger.EmptyLogger
 import kimchi.logger.KimchiLogger
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.onEach
 import javax.inject.Inject
 
@@ -21,6 +22,8 @@ class StationEvents @Inject constructor(
     private val stationSettings: StationSettings,
     private val logger: KimchiLogger = EmptyLogger,
 )  {
+    suspend fun packet(id: Long) = aprs.findById(id).first()
+
     fun stateEvents(id: Long): Flow<StationViewModel> {
         logger.trace("Observing packet: $id")
         return aprs.findById(id)

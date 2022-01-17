@@ -40,6 +40,8 @@ dependencies {
     api(libraries.androidx.compose.foundation)
     implementation(libraries.androidx.preference)
 
+    api(libraries.karps.structures)
+
     api(libraries.dagger.core)
     kapt(libraries.dagger.compiler)
 }

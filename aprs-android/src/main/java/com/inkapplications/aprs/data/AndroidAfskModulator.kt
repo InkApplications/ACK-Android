@@ -12,7 +12,6 @@ import android.media.AudioTrack
 import android.os.Process
 import inkapplications.spondee.scalar.DecimalPercentage
 import inkapplications.spondee.scalar.Percentage
-import inkapplications.spondee.scalar.WholePercentage
 import inkapplications.spondee.structure.value
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.SupervisorJob
@@ -22,6 +21,8 @@ import kotlin.experimental.or
 import kotlin.math.PI
 import kotlin.math.cos
 import kotlin.math.roundToInt
+import kotlin.time.Duration
+import kotlin.time.ExperimentalTime
 
 private const val FREQ_LOW = 1200
 private const val FREQ_HIGH = 2200
@@ -32,9 +33,10 @@ private const val PCM_BITS = 16
 internal class AndroidAfskModulator {
     private val trackScope = CoroutineScope(SupervisorJob() + newSingleThreadContext("AudioTrack"))
 
-    fun modulate(data: ByteArray, length: Int, volume: Percentage = WholePercentage.of(50)) {
+    @OptIn(ExperimentalTime::class)
+    fun modulate(data: ByteArray, length: Duration, volume: Percentage) {
         val crc = crc16(data)
-        val (frame, frameLength) = frame(data + crc.first + crc.second, length)
+        val (frame, frameLength) = frame(data + crc.first + crc.second, (length.inWholeMilliseconds * BPS/8/1000).toInt())
         val pcmData = ShortArray(frameLength.times(SAMPLE_RATE).div(BPS))
         trackScope.launch {
             Process.setThreadPriority(Process.THREAD_PRIORITY_URGENT_AUDIO)
@@ -60,7 +62,7 @@ internal class AndroidAfskModulator {
 
     private fun send(pcmData: ShortArray, volume: Percentage) {
         val track = AudioTrack(
-            AudioManager.STREAM_VOICE_CALL,
+            AudioManager.STREAM_MUSIC,
             SAMPLE_RATE,
             AudioFormat.CHANNEL_OUT_MONO,
             AudioFormat.ENCODING_PCM_16BIT,

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="transmit_settings_category">Transmit Settings</string>
+    <string name="transmit_settings_rate_min">Repeat Rate (minutes)</string>
+    <string name="transmit_settings_rate_max">Update Rate (minutes)</string>
+    <string name="transmit_settings_distance">Distance Threshold (miles)</string>
+    <string name="transmit_settings_preamble">AFSK Preamble (milliseconds)</string>
+    <string name="transmit_settings_digipath">Digipeater Path (Comma Separated)</string>
+    <string name="transmit_settings_symbol">Symbol</string>
+    <string name="transmit_settings_destination">Destination</string>
+    <string name="transmit_settings_comment">Comment</string>
+    <string name="transmit_settings_volume">Volume (%)</string>
+</resources>

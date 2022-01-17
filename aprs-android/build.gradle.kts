@@ -46,8 +46,8 @@ dependencies {
     androidTestImplementation(libraries.androidx.test.runner)
     androidTestImplementation(libraries.androidx.test.core)
 
-    implementation(libraries.karps.parser)
-    implementation(libraries.karps.client)
+    api(libraries.karps.parser)
+    api(libraries.karps.client)
     api(libraries.karps.structures)
 
     api(libraries.kimchi.logger)

@@ -6,12 +6,14 @@ import com.inkapplications.karps.structures.AprsPacket
 import com.inkapplications.karps.structures.EncodingConfig
 import com.inkapplications.kotlin.filterEachNotNull
 import inkapplications.spondee.measure.Meters
+import inkapplications.spondee.scalar.WholePercentage
 import inkapplications.spondee.structure.Kilo
 import inkapplications.spondee.structure.value
 import kimchi.logger.KimchiLogger
 import kotlinx.coroutines.channels.consumeEach
 import kotlinx.coroutines.flow.*
 import org.threeten.bp.Instant
+import kotlin.time.ExperimentalTime
 
 internal class AndroidAprs(
     private val audioProcessor: AudioDataProcessor,
@@ -70,9 +72,10 @@ internal class AndroidAprs(
         return packetDao.findById(id).map { it?.let { createCapturedPacket(it, parser.fromEntityOrNull(it)) } }
     }
 
-    override fun transmitAudioPacket(packet: AprsPacket, config: EncodingConfig) {
-        val data = parser.toAx25(packet, config)
-        modulator.modulate(data, 40)
+    @OptIn(ExperimentalTime::class)
+    override fun transmitAudioPacket(packet: AprsPacket, encodingConfig: EncodingConfig, transmitConfig: AfskModulationConfiguration) {
+        val data = parser.toAx25(packet, encodingConfig)
+        modulator.modulate(data, transmitConfig.preamble, transmitConfig.volume)
     }
 
     private suspend fun captureAx25Packet(data: ByteArray): CapturedPacket? {

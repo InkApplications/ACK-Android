@@ -6,6 +6,8 @@ import android.content.SharedPreferences
 import android.content.res.Resources
 import android.location.LocationManager
 import androidx.preference.PreferenceManager
+import com.inkapplications.android.extensions.location.AndroidLocationAccess
+import com.inkapplications.android.extensions.location.LocationAccess
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
@@ -23,6 +25,11 @@ class ApplicationModule(private val application: Application) {
 
     @Provides
     fun locationManager() = application.getSystemService(Context.LOCATION_SERVICE) as LocationManager
+
+    @Provides
+    fun locationAccess(
+        locationManager: LocationManager,
+    ): LocationAccess = AndroidLocationAccess(locationManager)
 }
 
 @Module

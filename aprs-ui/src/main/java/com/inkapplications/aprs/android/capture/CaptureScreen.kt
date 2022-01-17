@@ -43,6 +43,7 @@ fun CaptureScreen(
             recordingEnabled = captureScreenState.value.recordingEnabled,
             internetServiceVisible = captureScreenState.value.internetServiceVisible,
             internetServiceEnabled = captureScreenState.value.internetServiceEnabled,
+            transmitEnabled = captureScreenState.value.transmitState,
             controller = controller,
         )
         Box(
@@ -107,6 +108,7 @@ fun CaptureAppBar(
     recordingEnabled: Boolean,
     internetServiceVisible: Boolean,
     internetServiceEnabled: Boolean,
+    transmitEnabled: Boolean,
     controller: CaptureNavController,
 ) {
     TopAppBar(
@@ -116,6 +118,26 @@ fun CaptureAppBar(
         backgroundColor = AprsTheme.colors.surface,
         contentColor = contentColorFor(AprsTheme.colors.surface),
         actions = {
+            if (transmitEnabled) {
+                IconButton(
+                    onClick = controller::onTransmitDisableClick,
+                ) {
+                    Icon(
+                        Icons.Default.WifiTethering,
+                        contentDescription = "Disable Transmission",
+                        tint = AprsTheme.colors.brand,
+                    )
+                }
+            } else {
+                IconButton(
+                    onClick = controller::onTransmitEnableClick,
+                ) {
+                    Icon(
+                        Icons.Default.WifiTetheringOff,
+                        contentDescription = "Enable Transmission",
+                    )
+                }
+            }
             if (recordingEnabled) {
                 IconButton(
                     onClick = controller::onRecordingDisableClick,

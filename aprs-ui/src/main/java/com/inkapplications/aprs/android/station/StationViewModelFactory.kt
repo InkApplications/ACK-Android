@@ -93,7 +93,7 @@ class StationViewModelFactory @Inject constructor(
         }
         return packetTypeData.copy(
             name = packet?.parsed?.route?.source?.toString().orEmpty(),
-            rawSource = packet?.raw.toString(),
+            rawSource = packet?.raw?.decodeToString().orEmpty(),
             debugDataVisible = showDebug || data is PacketData.Unknown,
             receiveIcon = when (packet?.source) {
                 PacketSource.Ax25 -> Icons.Default.SettingsInputAntenna

@@ -39,6 +39,7 @@ class CaptureActivity: ExtendedActivity(), CaptureNavController {
     private val mapViewModel = MutableStateFlow(MapViewModel())
     private var recording: Job? = null
     private var isConnection: Job? = null
+    private var transmitJob: Job? = null
     private lateinit var captureEvents: CaptureEvents
     private val mapLocationPermissionRequest: ActivityResultLauncher<String> = registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted: Boolean ->
         if (isGranted) {
@@ -53,6 +54,15 @@ class CaptureActivity: ExtendedActivity(), CaptureNavController {
         if (isGranted) {
             Kimchi.trackEvent("location_permission_grant")
             onInternetLocationPermissionGranted()
+        } else {
+            Kimchi.trackEvent("location_permission_deny")
+        }
+    }
+
+    private val transmitPremissionRequest: ActivityResultLauncher<String> = registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted: Boolean ->
+        if (isGranted) {
+            Kimchi.trackEvent("location_permission_grant")
+            onTransmitPermissionsGranted()
         } else {
             Kimchi.trackEvent("location_permission_deny")
         }
@@ -163,6 +173,27 @@ class CaptureActivity: ExtendedActivity(), CaptureNavController {
         Kimchi.trackEvent("internet_disable")
         isConnection?.cancel()
         isConnection = null
+    }
+
+    override fun onTransmitEnableClick() {
+        Kimchi.trackEvent("transmit_enable")
+        when (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)) {
+            PackageManager.PERMISSION_GRANTED -> onTransmitPermissionsGranted()
+            else -> transmitPremissionRequest.launch(Manifest.permission.ACCESS_FINE_LOCATION)
+        }
+    }
+
+    override fun onTransmitDisableClick() {
+        Kimchi.trackEvent("transmit_disable")
+        transmitJob?.cancel()
+        transmitJob = null
+    }
+
+    private fun onTransmitPermissionsGranted() {
+        transmitJob?.cancel()
+        transmitJob = foregroundScope.launch {
+            captureEvents.transmitLoop()
+        }
     }
 
     override fun onSettingsClick() {
