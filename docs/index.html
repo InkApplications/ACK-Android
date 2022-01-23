@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8" />
+    <meta name="robots" content="index,follow" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Android APRS</title>
+    <link rel="stylesheet" href="https://assets.inkapplications.com/css/main-v1.css" type="text/css" media="all" />
+    <style>
+        :root { --color-accent: #FFA72B; }
+    </style>
+</head>
+<body class="content-break">
+<header>
+    <h1>ACK: Android APRS Client</h1>
+    <p>
+        An implementation of ham radio's APRS utilities for Android.
+    </p>
+    <p>
+        <strong>Note:</strong> This application is still in beta and may be
+        missing important features.
+    </p>
+</header>
+<section>
+    <h1>Q&A</h1>
+    <article>
+        <h2>What is an APRS-IS Passcode and where do I get one?</h2>
+        <p>
+            Internet Services for APRS (APRS-IS) requires a passcode in order
+            to publish data to the service.
+            This is only required if you intend to broadcast your location
+            to the Internet APRS services, and is intended to control spam and
+            limit the sevice to licensed radio operators.
+        </p>
+        <p>
+            We <strong>do not assign these passcodes</strong> and they are
+            generated from your license. There are different ways you can
+            obtain these, it is up to you to obtain one properly for your
+            license.
+        </p>
+        <p>
+            For the advanced user, the command line tool
+            <a href="https://github.com/InkApplications/Karps">Karps</a>
+            can also generate these for you.
+        </p>
+    </article>
+    <article>
+        <h2>Will the application work offline?</h2>
+        <p>Yes.</p>
+        <p>This application was designed specifically with offline in mind.</p>
+        <p>Internet specific features, such as APRS-IS will obviously not be available offline.</p>
+    </article>
+    <article>
+        <h2>Does the application require Play Services?</h2>
+        <p>No.</p>
+        <p>
+            I have gone out of my way to make sure that this application does
+            not require Google's Play services and will function on nearly any
+            Android device.
+        </p>
+    </article>
+</section>
+<section>
+    <h1>Sources & Contributing</h1>
+    <p>
+        App Sources can be found on <a href="https://github.com/InkApplications/ack">GitHub</a>
+    </p>
+    <p>
+        Much of the packet handling is built off of the Kotlin library
+        <a href="https://github.com/InkApplications/Karps">Karps</a>,
+        an open source multi-platform APRS Packet parser.
+    </p>
+    <p>
+        This application is licensed under the <a href="LICENSE">GPL v2.0</a>.
+    </p>
+    <article>
+        <h2>Bugs & Issues</h2>
+        <p>
+            Issues can be reported
+            <a href="https://github.com/InkApplications/ack/issues/new">here</a>
+        </p>
+    </article>
+    <article>
+        <h2>Feature Requests</h2>
+        <p>
+            Requests for new functionality can be added
+            <a href="https://github.com/InkApplications/ack/issues/new">here</a>
+        </p>
+    </article>
+</section>
+</body>
+</html>
