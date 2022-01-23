@@ -1,7 +1,7 @@
 enableFeaturePreview("VERSION_CATALOGS")
 enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 
-rootProject.name = "aprs"
+rootProject.name = "ack"
 
 dependencyResolutionManagement {
     versionCatalogs {
@@ -19,5 +19,5 @@ dependencyResolutionManagement {
 
 include("android-extensions")
 include("aprs-android")
-include("aprs-ui")
+include("android-application")
 include("kotlin-extensions")

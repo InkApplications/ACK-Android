@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="com.inkapplications.ack.android">
+    <uses-permission android:name="android.permission.RECORD_AUDIO"/>
+    <uses-permission android:name="android.permission.ACCESS_COURSE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <application
+        android:icon="@mipmap/ic_launcher"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:label="@string/app_name"
+        android:theme="@style/AprsTheme.Compat.DayNight"
+        android:name="com.inkapplications.ack.android.AprsApplication">
+        <activity
+            android:name="com.inkapplications.ack.android.startup.StartupActivity"
+            android:label="@string/app_name"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+        </activity>
+        <activity android:name="com.inkapplications.ack.android.capture.CaptureActivity" />
+        <activity android:name="com.inkapplications.ack.android.station.StationActivity" />
+        <activity android:name="com.inkapplications.ack.android.settings.SettingsActivity" />
+        <activity android:name="com.inkapplications.ack.android.onboard.OnboardActivity" android:windowSoftInputMode="adjustResize" />
+        <activity android:name="com.inkapplications.ack.android.settings.license.LicenseEditActivity" android:windowSoftInputMode="adjustResize" />
+    </application>
+</manifest>
