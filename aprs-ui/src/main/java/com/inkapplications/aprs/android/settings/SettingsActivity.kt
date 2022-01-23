@@ -5,8 +5,6 @@ import androidx.compose.runtime.collectAsState
 import com.inkapplications.android.extensions.ExtendedActivity
 import com.inkapplications.android.extensions.startActivity
 import com.inkapplications.aprs.android.*
-import com.inkapplications.aprs.android.prompt.intPrompt
-import com.inkapplications.aprs.android.prompt.stringPrompt
 import com.inkapplications.aprs.android.settings.license.LicenseEditActivity
 import kimchi.Kimchi
 import kimchi.analytics.intProperty
@@ -39,31 +37,27 @@ class SettingsActivity: ExtendedActivity(), SettingsController {
         startActivity(LicenseEditActivity::class)
     }
 
-    override fun onIntSettingClicked(state: SettingState.IntState) {
-        intPrompt(state.name, state.value) { result ->
-            Kimchi.trackEvent("settings_change", listOf(
-                stringProperty("setting", state.key),
-                intProperty("value", result)
-            ))
-            settingsAccess.updateInt(state.key, result)
-        }
+    override fun onIntSettingChanged(state: SettingState.IntState, newValue: Int) {
+        Kimchi.trackEvent("settings_change", listOf(
+            stringProperty("setting", state.setting.key),
+            intProperty("value", newValue)
+        ))
+        settingsAccess.updateInt(state.setting.key, newValue)
     }
 
-    override fun onStringSettingClicked(state: SettingState.StringState) {
-        stringPrompt(state.name, state.value) { result ->
-            Kimchi.trackEvent("settings_change", listOf(
-                stringProperty("setting", state.key),
-                stringProperty("value", result)
-            ))
-            settingsAccess.updateString(state.key, result)
-        }
+    override fun onStringSettingChanged(state: SettingState.StringState, newValue: String) {
+        Kimchi.trackEvent("settings_change", listOf(
+            stringProperty("setting", state.setting.key),
+            stringProperty("value", newValue)
+        ))
+        settingsAccess.updateString(state.setting.key, newValue)
     }
 
     override fun onSwitchSettingChanged(state: SettingState.BooleanState, newState: Boolean) {
         Kimchi.trackEvent("settings_change", listOf(
-            stringProperty("setting", state.key),
+            stringProperty("setting", state.setting.key),
             stringProperty("value", newState.toString())
         ))
-        settingsAccess.updateBoolean(state.key, newState)
+        settingsAccess.updateBoolean(state.setting.key, newState)
     }
 }

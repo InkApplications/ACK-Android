@@ -5,6 +5,7 @@ import com.inkapplications.aprs.android.connection.ConnectionSettings
 import com.inkapplications.aprs.android.settings.SettingsReadAccess
 import com.inkapplications.aprs.android.settings.observeInt
 import com.inkapplications.aprs.android.settings.observeString
+import com.inkapplications.aprs.android.settings.observeData
 import com.inkapplications.aprs.android.transmit.TransmitSettings
 import com.inkapplications.aprs.data.AfskModulationConfiguration
 import com.inkapplications.aprs.data.AprsAccess
@@ -109,9 +110,9 @@ class CaptureEvents @Inject constructor(
                         afskConfiguration = prototype.afskConfiguration.copy(preamble = Duration.Companion.milliseconds(preamble)),
                     )
                 }
-                .combine(settings.observeInt(transmitSettings.volume)) { prototype, volume ->
+                .combine(settings.observeData(transmitSettings.volume)) { prototype, volume ->
                     prototype.copy(
-                        afskConfiguration = prototype.afskConfiguration.copy(volume = WholePercentage.of(volume)),
+                        afskConfiguration = prototype.afskConfiguration.copy(volume = volume),
                     )
                 }
                 .flatMapLatest { prototype ->

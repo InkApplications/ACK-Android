@@ -26,11 +26,11 @@ class SettingsAccess @Inject constructor(
                 settings.map { setting ->
                         when (setting) {
                             is StringSetting -> settingValues.observeString(setting)
-                                .map { SettingState.StringState(setting.key, setting.name, it) }
+                                .map { SettingState.StringState(setting, it) }
                             is IntSetting -> settingValues.observeInt(setting)
-                                .map { SettingState.IntState(setting.key, setting.name, it) }
+                                .map { SettingState.IntState(setting, it) }
                             is BooleanSetting -> settingValues.observeBoolean(setting)
-                                .map { SettingState.BooleanState(setting.key, setting.name, it) }
+                                .map { SettingState.BooleanState(setting, it) }
                         }
                     }
                     .let { combine(*it.toTypedArray()) { it.toList() } }
@@ -42,7 +42,7 @@ class SettingsAccess @Inject constructor(
             combine(*it.toTypedArray()) { it.toList() }
         }
         .mapEach {
-            it.copy(settings = it.settings.sortedBy { it.name })
+            it.copy(settings = it.settings.sortedBy { it.setting.name })
         }
         .map { it.sortedBy { it.name } }
 

@@ -2,10 +2,14 @@ package com.inkapplications.aprs.android.transmit
 
 import com.inkapplications.android.extensions.StringResources
 import com.inkapplications.aprs.android.R
+import com.inkapplications.aprs.android.input.ValidationResult
+import com.inkapplications.aprs.android.input.Validator
 import com.inkapplications.aprs.android.settings.*
-import inkapplications.spondee.measure.Miles
+import inkapplications.spondee.scalar.Percentage
+import inkapplications.spondee.scalar.WholePercentage
 import inkapplications.spondee.structure.value
 import javax.inject.Inject
+import kotlin.math.roundToInt
 import kotlin.time.Duration
 import kotlin.time.ExperimentalTime
 
@@ -73,11 +77,24 @@ class TransmitSettings @Inject constructor(
         categoryName = resources.getString(R.string.transmit_settings_category),
     )
 
-    val volume = IntSetting(
+    val volume = IntBackedSetting(
         key = "transmit.volume",
         name = resources.getString(R.string.transmit_settings_volume),
-        defaultValue = 50,
+        defaultValue = WholePercentage.of(50),
         categoryName = resources.getString(R.string.transmit_settings_category),
+        transformer = object: Transformer<Percentage, Int> {
+            override fun toStorage(data: Percentage): Int = data.value(WholePercentage).toInt()
+            override fun toData(storage: Int): Percentage = WholePercentage.of(storage)
+        },
+        dataValidator = object: Validator<Percentage> {
+            override fun validate(input: Percentage): ValidationResult {
+                return if (input.value(WholePercentage).roundToInt() in (0..100)) {
+                    ValidationResult.Valid
+                } else {
+                    ValidationResult.Error("Must be between 0 and 100")
+                }
+            }
+        }
     )
 
     override val settings: List<Setting> = listOf(

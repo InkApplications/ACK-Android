@@ -20,7 +20,7 @@ fun IntStateRow(
         .clickable(onClick = onClick)
         .padding(vertical = AprsTheme.spacing.clickSafety, horizontal = AprsTheme.spacing.gutter)
 ) {
-    Text(state.name, fontWeight = FontWeight.Bold)
+    Text(state.setting.name, fontWeight = FontWeight.Bold)
     Spacer(Modifier.weight(1f))
     Text(state.value.toString(), style = AprsTheme.typography.caption)
 }
@@ -35,7 +35,7 @@ fun StringStateRow(
         .fillMaxWidth()
         .padding(vertical = AprsTheme.spacing.clickSafety, horizontal = AprsTheme.spacing.gutter)
 ) {
-    Text(state.name, fontWeight = FontWeight.Bold)
+    Text(state.setting.name, fontWeight = FontWeight.Bold)
     Text(state.value, style = AprsTheme.typography.caption)
 }
 
@@ -49,7 +49,7 @@ fun BooleanStateRow(
         .clickable { onChange(!state.value) }
         .padding(vertical = AprsTheme.spacing.clickSafety, horizontal = AprsTheme.spacing.gutter)
 ) {
-    Text(state.name, fontWeight = FontWeight.Bold)
+    Text(state.setting.name, fontWeight = FontWeight.Bold)
     Spacer(Modifier.weight(1f))
     Switch(
         checked = state.value,

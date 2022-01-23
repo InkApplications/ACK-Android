@@ -7,8 +7,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Verified
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.State
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -16,6 +15,8 @@ import androidx.compose.ui.unit.dp
 import com.inkapplications.android.extensions.compose.ui.longClickable
 import com.inkapplications.aprs.android.BuildConfig
 import com.inkapplications.aprs.android.R
+import com.inkapplications.aprs.android.input.IntPrompt
+import com.inkapplications.aprs.android.input.StringPrompt
 import com.inkapplications.aprs.android.ui.theme.AprsScreen
 import com.inkapplications.aprs.android.ui.theme.AprsTheme
 import com.inkapplications.aprs.android.ui.NavigationRow
@@ -63,6 +64,30 @@ fun SettingsScreen(
                     }
                 }
             }
+            val promptSetting = remember { mutableStateOf<SettingState?>(null) }
+            when (val settingState = promptSetting.value) {
+                is SettingState.IntState -> IntPrompt(
+                    title = settingState.setting.name,
+                    value = settingState.value,
+                    validator = settingState.setting.validator,
+                    onDismiss = { promptSetting.value = null },
+                    onSubmit = {
+                        controller.onIntSettingChanged(settingState, it)
+                        promptSetting.value = null
+                    }
+                )
+                is SettingState.StringState -> StringPrompt(
+                    title = settingState.setting.name,
+                    value = settingState.value,
+                    validator = settingState.setting.validator,
+                    onDismiss = { promptSetting.value = null },
+                    onSubmit = {
+                        controller.onStringSettingChanged(settingState, it)
+                        promptSetting.value = null
+                    }
+                )
+                else -> {}
+            }
             viewModel.settingsList.forEach { group ->
                 Card(modifier = Modifier.padding(vertical = AprsTheme.spacing.item)) {
                     Column {
@@ -73,10 +98,10 @@ fun SettingsScreen(
                                     controller.onSwitchSettingChanged(item, it)
                                 }
                                 is SettingState.IntState -> IntStateRow(item) {
-                                    controller.onIntSettingClicked(item)
+                                    promptSetting.value = item
                                 }
                                 is SettingState.StringState -> StringStateRow(item) {
-                                    controller.onStringSettingClicked(item)
+                                    promptSetting.value = item
                                 }
                             }
                         }
@@ -95,9 +120,10 @@ fun SettingsScreen(
     }
 }
 
+
 @Composable
 fun SettingsCategoryRow(name: String) = Row(
     Modifier.padding(horizontal = AprsTheme.spacing.gutter, vertical = AprsTheme.spacing.item)
 ) {
-    Text(name, style = AprsTheme.typography.h2)
+    Text(name, style = AprsTheme.typography.h2, modifier = Modifier.padding(vertical = AprsTheme.spacing.item))
 }
