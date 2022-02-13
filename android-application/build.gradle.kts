@@ -14,7 +14,7 @@ android {
         minSdkVersion(21)
         targetSdkVersion(31)
         multiDexEnabled = true
-        buildConfigField("String", "MAPBOX_ACCESS_TOKEN", "\"${stringProperty("mapbox.public", "")}\"")
+        buildConfigField("String", "MAPBOX_ACCESS_TOKEN", "\"${stringProperty("mapboxPublic", "")}\"")
         versionCode = intProperty("versionCode", 1)
         versionName = stringProperty("versionName", "SNAPSHOT")
     }

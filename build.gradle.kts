@@ -10,7 +10,7 @@ subprojects {
                 create<BasicAuthentication>("basic")
             }
             credentials.username = "mapbox"
-            credentials.password = stringProperty("mapbox.private", "")
+            credentials.password = stringProperty("mapboxPrivate", "")
         }
         mavenLocal()
     }
