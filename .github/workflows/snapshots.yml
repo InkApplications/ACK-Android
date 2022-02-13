@@ -18,28 +18,26 @@ jobs:
                     ORG_GRADLE_PROJECT_signingKeyPassword: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
                     ORG_GRADLE_PROJECT_signingStorePassword: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
                     ORG_GRADLE_PROJECT_signingAlias: ${{ secrets.ANDROID_KEYSTORE_ALIAS }}
-                    ORG_GRADLE_PROJECT_versionName: ${GITHUB_SHA:0:8}
-                    ORG_GRADLE_PROJECT_versionCode: 1
                 name: Build
-                run: ./gradlew build jvmTest bundleRelease
+                run: ./gradlew build jvmTest bundleRelease -PversionName=${GITHUB_SHA:0:8} -PversionCode=1
             -
                 name: Prepare Uploads
                 run: |
                     mkdir build
                     mkdir build/output
-                    cp android-application/build/outputs/apk/release/android-application-release.apk build/output/Ack-${{env.ORG_GRADLE_PROJECT_versionName}}.apk
-                    cp android-application/build/outputs/bundle/release/android-application-release.aab build/output/Ack-${{env.ORG_GRADLE_PROJECT_versionName}}.aab
+                    cp android-application/build/outputs/apk/release/android-application-release.apk build/output/Ack-${GITHUB_SHA:0:8}.apk
+                    cp android-application/build/outputs/bundle/release/android-application-release.aab build/output/Ack-${GITHUB_SHA:0:8}.aab
             -
                 name: Archive APK
                 uses: actions/upload-artifact@v2
                 with:
                     name: Android APK
-                    path: build/output/Ack-${{env.ORG_GRADLE_PROJECT_versionName}}.apk
+                    path: build/output/Ack-${GITHUB_SHA:0:8}.apk
                     retention-days: 15
             -
                 name: Archive Bundle
                 uses: actions/upload-artifact@v2
                 with:
                     name: Android AAB
-                    path: build/output/Ack-${{env.ORG_GRADLE_PROJECT_versionName}}.aab
+                    path: build/output/Ack-${GITHUB_SHA:0:8}.aab
                     retention-days: 15
