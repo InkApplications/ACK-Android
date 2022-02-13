@@ -43,10 +43,3 @@ jobs:
                     name: Android AAB
                     path: build/output/Ack-${{env.ORG_GRADLE_PROJECT_versionName}}.aab
                     retention-days: 15
-
-- name: Upload AAB
-  id: uploadArtifact
-  uses: actions/upload-artifact@v1
-  with:
-      name: app
-      path: app/build/outputs/bundle/release/app-release.aab
