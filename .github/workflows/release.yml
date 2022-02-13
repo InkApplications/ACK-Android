@@ -1,0 +1,52 @@
+on:
+  push:
+    tags: ['*']
+name: Release
+jobs:
+    build:
+        runs-on: ubuntu-latest
+        steps:
+            -
+                name: Checkout
+                uses: actions/checkout@v2.3.1
+            -
+                name: Keystore Setup
+                run: echo "${{secrets.KEYSTORE}}" | base64 --decode > ack_upload.keystore
+            -
+                env:
+                    ORG_GRADLE_PROJECT_signingFile: ack_upload.keystore
+                    ORG_GRADLE_PROJECT_signingKeyPassword: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+                    ORG_GRADLE_PROJECT_signingStorePassword: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+                    ORG_GRADLE_PROJECT_signingAlias: ${{ secrets.ANDROID_KEYSTORE_ALIAS }}
+                name: Build
+                run: ./gradlew build jvmTest bundleRelease -PversionName=${GITHUB_TAG/refs\/tags\//} -PversionCode=$((($GITHUB_RUN_NUMBER * 100) + $GITHUB_RUN_ATTEMPT))
+            -
+                name: Prepare Uploads
+                run: |
+                    mkdir build
+                    mkdir build/output
+                    cp android-application/build/outputs/apk/release/android-application-release.apk build/output/Ack-${GITHUB_TAG/refs\/tags\//}.apk
+                    cp android-application/build/outputs/bundle/release/android-application-release.aab build/output/Ack-${GITHUB_TAG/refs\/tags\//}.aab
+            -
+                name: Archive APK
+                uses: actions/upload-artifact@v2
+                with:
+                    name: Android APK
+                    path: build/output/Ack-${GITHUB_TAG/refs\/tags\//}.apk
+            -
+                name: Archive Bundle
+                uses: actions/upload-artifact@v2
+                with:
+                    name: Android AAB
+                    path: build/output/Ack-${GITHUB_TAG/refs\/tags\//}.aab
+            -
+                name: Service Account Setup
+                run: echo ${{secrets.PLAY_CONSOLE_SERVICE_JSON}} > service_account.json
+            -
+                name: Deploy to Play Store
+                uses: r0adkll/upload-google-play@8c2ebfd
+                with:
+                    serviceAccountJson: service_account.json
+                    packageName: com.inkapplications.ack.android
+                    releaseFile: build/output/Ack-${GITHUB_TAG/refs\/tags\//}.aab
+                    track: alpha
