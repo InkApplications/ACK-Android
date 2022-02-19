@@ -2,7 +2,7 @@ package com.inkapplications.ack.android.capture.log
 
 import com.inkapplications.ack.android.symbol.SymbolFactoryStub
 import com.inkapplications.ack.android.toTestPacket
-import com.inkapplications.karps.structures.*
+import com.inkapplications.ack.structures.*
 import inkapplications.spondee.measure.Fahrenheit
 import inkapplications.spondee.spatial.GeoCoordinates
 import inkapplications.spondee.spatial.latitude

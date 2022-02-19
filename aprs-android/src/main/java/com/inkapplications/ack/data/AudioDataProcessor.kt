@@ -18,7 +18,7 @@ internal class AudioDataProcessor(
     private var fbuf_cnt = 0
 
     val data = callbackFlow {
-        multimon.onReceive = { offer(it) }
+        multimon.onReceive = { trySend(it) }
 
         audioIn.capture()
 

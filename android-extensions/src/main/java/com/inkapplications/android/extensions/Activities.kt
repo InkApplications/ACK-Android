@@ -2,18 +2,7 @@ package com.inkapplications.android.extensions
 
 import android.app.Activity
 import android.app.Application
-import android.content.Intent
 import android.os.Bundle
-import kotlin.reflect.KClass
-
-/**
- * Start an activity by class reference.
- */
-fun <T: Activity> Activity.startActivity(target: KClass<T>, intentBuilder: Intent.() -> Unit = {}) {
-    Intent(this, target.java)
-        .apply { intentBuilder(this) }
-        .run(this::startActivity)
-}
 
 /**
  * Sends lifecycle event logs to a logger.

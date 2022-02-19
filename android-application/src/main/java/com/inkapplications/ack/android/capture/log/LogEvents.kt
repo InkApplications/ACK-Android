@@ -6,7 +6,7 @@ import com.inkapplications.ack.android.settings.observeBoolean
 import com.inkapplications.ack.data.AprsAccess
 import com.inkapplications.coroutines.combinePair
 import com.inkapplications.coroutines.mapEach
-import com.inkapplications.karps.structures.PacketData
+import com.inkapplications.ack.structures.PacketData
 import dagger.Reusable
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map

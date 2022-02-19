@@ -1,9 +1,9 @@
 package com.inkapplications.ack.android.capture
 
 import com.inkapplications.ack.data.AfskModulationConfiguration
-import com.inkapplications.karps.structures.Address
-import com.inkapplications.karps.structures.Digipeater
-import com.inkapplications.karps.structures.Symbol
+import com.inkapplications.ack.structures.Address
+import com.inkapplications.ack.structures.Digipeater
+import com.inkapplications.ack.structures.Symbol
 import inkapplications.spondee.measure.Length
 import kotlin.time.Duration
 import kotlin.time.ExperimentalTime

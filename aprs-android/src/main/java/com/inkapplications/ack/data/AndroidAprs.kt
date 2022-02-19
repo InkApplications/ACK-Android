@@ -1,10 +1,10 @@
 package com.inkapplications.ack.data
 
-import com.inkapplications.karps.client.AprsDataClient
-import com.inkapplications.karps.parser.AprsParser
-import com.inkapplications.karps.structures.AprsPacket
-import com.inkapplications.karps.structures.EncodingConfig
-import com.inkapplications.kotlin.filterEachNotNull
+import com.inkapplications.coroutines.filterEachNotNull
+import com.inkapplications.ack.client.AprsDataClient
+import com.inkapplications.ack.parser.AprsParser
+import com.inkapplications.ack.structures.AprsPacket
+import com.inkapplications.ack.structures.EncodingConfig
 import inkapplications.spondee.measure.Meters
 import inkapplications.spondee.structure.Kilo
 import inkapplications.spondee.structure.value

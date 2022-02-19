@@ -6,8 +6,8 @@ import com.inkapplications.ack.android.settings.BooleanSetting
 import com.inkapplications.ack.android.settings.SettingsReadAccess
 import com.inkapplications.ack.data.AprsAccess
 import com.inkapplications.ack.data.CapturedPacket
-import com.inkapplications.karps.structures.AprsPacket
-import com.inkapplications.karps.structures.PacketData
+import com.inkapplications.ack.structures.AprsPacket
+import com.inkapplications.ack.structures.PacketData
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow

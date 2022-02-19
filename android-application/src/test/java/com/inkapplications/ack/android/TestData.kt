@@ -2,7 +2,7 @@ package com.inkapplications.ack.android
 
 import com.inkapplications.ack.data.CapturedPacket
 import com.inkapplications.ack.data.PacketSource
-import com.inkapplications.karps.structures.*
+import com.inkapplications.ack.structures.*
 
 val testRoute = PacketRoute(
     source = Address("KE0YOG"),

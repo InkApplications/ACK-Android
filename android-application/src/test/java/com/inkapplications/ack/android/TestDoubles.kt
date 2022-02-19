@@ -9,8 +9,8 @@ import com.inkapplications.ack.data.AfskModulationConfiguration
 import com.inkapplications.ack.data.AprsAccess
 import com.inkapplications.ack.data.CapturedPacket
 import com.inkapplications.ack.data.ConnectionConfiguration
-import com.inkapplications.karps.structures.AprsPacket
-import com.inkapplications.karps.structures.EncodingConfig
+import com.inkapplications.ack.structures.AprsPacket
+import com.inkapplications.ack.structures.EncodingConfig
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 

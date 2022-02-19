@@ -1,7 +1,7 @@
 package com.inkapplications.ack.android.symbol
 
 import android.graphics.Bitmap
-import com.inkapplications.karps.structures.Symbol
+import com.inkapplications.ack.structures.Symbol
 
 /**
  * Create bitmaps for APRS Symbols.

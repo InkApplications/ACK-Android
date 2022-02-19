@@ -2,10 +2,10 @@ package com.inkapplications.ack.android.settings
 
 import androidx.activity.compose.setContent
 import androidx.compose.runtime.collectAsState
-import com.inkapplications.android.extensions.ExtendedActivity
-import com.inkapplications.android.extensions.startActivity
-import com.inkapplications.ack.android.*
+import com.inkapplications.ack.android.component
 import com.inkapplications.ack.android.settings.license.LicenseEditActivity
+import com.inkapplications.android.extensions.ExtendedActivity
+import com.inkapplications.android.startActivity
 import kimchi.Kimchi
 import kimchi.analytics.intProperty
 import kimchi.analytics.stringProperty

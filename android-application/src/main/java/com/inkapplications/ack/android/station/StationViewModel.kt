@@ -3,7 +3,7 @@ package com.inkapplications.ack.android.station
 import androidx.compose.ui.graphics.vector.ImageVector
 import com.inkapplications.ack.android.map.MarkerViewModel
 import com.inkapplications.ack.android.map.ZoomLevels
-import com.inkapplications.karps.structures.TelemetryValues
+import com.inkapplications.ack.structures.TelemetryValues
 import inkapplications.spondee.spatial.*
 
 data class StationViewModel(

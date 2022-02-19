@@ -5,8 +5,8 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Canvas
 import android.graphics.Matrix
-import com.inkapplications.karps.structures.Symbol
-import com.inkapplications.karps.structures.symbolOf
+import com.inkapplications.ack.structures.Symbol
+import com.inkapplications.ack.structures.symbolOf
 import dagger.Reusable
 import javax.inject.Inject
 

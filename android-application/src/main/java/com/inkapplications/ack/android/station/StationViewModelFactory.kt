@@ -11,8 +11,8 @@ import com.inkapplications.ack.android.map.ZoomLevels
 import com.inkapplications.ack.android.symbol.SymbolFactory
 import com.inkapplications.ack.data.CapturedPacket
 import com.inkapplications.ack.data.PacketSource
-import com.inkapplications.karps.structures.PacketData
-import com.inkapplications.karps.structures.symbolOf
+import com.inkapplications.ack.structures.PacketData
+import com.inkapplications.ack.structures.symbolOf
 import dagger.Reusable
 import inkapplications.spondee.measure.Length
 import inkapplications.spondee.spatial.Degrees

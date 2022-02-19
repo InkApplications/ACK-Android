@@ -13,8 +13,6 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.collectAsState
 import androidx.core.content.ContextCompat
-import com.inkapplications.android.extensions.ExtendedActivity
-import com.inkapplications.android.extensions.startActivity
 import com.inkapplications.ack.android.capture.log.LogItemViewModel
 import com.inkapplications.ack.android.capture.map.*
 import com.inkapplications.ack.android.component
@@ -24,6 +22,8 @@ import com.inkapplications.ack.android.map.lifecycleObserver
 import com.inkapplications.ack.android.settings.SettingsActivity
 import com.inkapplications.ack.android.station.startStationActivity
 import com.inkapplications.ack.android.trackNavigation
+import com.inkapplications.android.extensions.ExtendedActivity
+import com.inkapplications.android.startActivity
 import com.inkapplications.coroutines.collectOn
 import com.mapbox.mapboxsdk.maps.MapView
 import kimchi.Kimchi

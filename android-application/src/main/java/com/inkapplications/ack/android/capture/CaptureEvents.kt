@@ -10,7 +10,7 @@ import com.inkapplications.ack.android.transmit.TransmitSettings
 import com.inkapplications.ack.data.AfskModulationConfiguration
 import com.inkapplications.ack.data.AprsAccess
 import com.inkapplications.ack.data.ConnectionConfiguration
-import com.inkapplications.karps.structures.*
+import com.inkapplications.ack.structures.*
 import inkapplications.spondee.measure.Meters
 import inkapplications.spondee.measure.Miles
 import inkapplications.spondee.scalar.WholePercentage

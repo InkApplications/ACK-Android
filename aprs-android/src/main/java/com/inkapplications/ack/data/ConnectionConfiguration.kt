@@ -1,7 +1,7 @@
 package com.inkapplications.ack.data
 
-import com.inkapplications.karps.client.Credentials
-import com.inkapplications.karps.structures.Address
+import com.inkapplications.ack.client.Credentials
+import com.inkapplications.ack.structures.Address
 import inkapplications.spondee.measure.Length
 import inkapplications.spondee.measure.Meters
 import inkapplications.spondee.structure.Kilo

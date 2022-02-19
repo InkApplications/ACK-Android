@@ -9,9 +9,9 @@ import com.inkapplications.ack.android.settings.observeBoolean
 import com.inkapplications.ack.android.settings.observeInt
 import com.inkapplications.ack.android.symbol.SymbolFactory
 import com.inkapplications.ack.data.AprsAccess
-import com.inkapplications.karps.structures.PacketData
-import com.inkapplications.kotlin.filterEachNotNull
-import com.inkapplications.kotlin.mapEach
+import com.inkapplications.coroutines.filterEachNotNull
+import com.inkapplications.coroutines.mapEach
+import com.inkapplications.ack.structures.PacketData
 import dagger.Reusable
 import kimchi.logger.KimchiLogger
 import kotlinx.coroutines.flow.Flow

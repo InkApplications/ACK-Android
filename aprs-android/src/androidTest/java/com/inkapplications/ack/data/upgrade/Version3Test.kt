@@ -7,9 +7,9 @@ import androidx.sqlite.db.framework.FrameworkSQLiteOpenHelperFactory
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.runner.AndroidJUnit4
 import com.inkapplications.ack.data.PacketDatabase
-import com.inkapplications.karps.parser.AprsParser
-import com.inkapplications.karps.structures.Address
-import com.inkapplications.karps.structures.AprsPacket
+import com.inkapplications.ack.parser.AprsParser
+import com.inkapplications.ack.structures.Address
+import com.inkapplications.ack.structures.AprsPacket
 import junit.framework.TestCase.assertEquals
 import kotlinx.datetime.Instant
 import org.junit.Rule

@@ -1,6 +1,6 @@
 package com.inkapplications.ack.android.capture.log
 
-import com.inkapplications.karps.structures.AprsPacket
+import com.inkapplications.ack.structures.AprsPacket
 
 interface LogItemViewModelFactory {
     fun create(

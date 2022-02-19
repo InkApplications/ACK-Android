@@ -1,6 +1,6 @@
 package com.inkapplications.ack.android.symbol
 
-import com.inkapplications.karps.structures.symbolOf
+import com.inkapplications.ack.structures.symbolOf
 import kimchi.logger.EmptyLogger
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNull

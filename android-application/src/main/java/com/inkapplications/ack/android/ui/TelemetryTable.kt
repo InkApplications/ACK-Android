@@ -8,7 +8,7 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import com.inkapplications.ack.android.ui.theme.AprsTheme
-import com.inkapplications.karps.structures.TelemetryValues
+import com.inkapplications.ack.structures.TelemetryValues
 
 @Composable
 fun TelemetryTable(values: TelemetryValues, sequence: String?) {

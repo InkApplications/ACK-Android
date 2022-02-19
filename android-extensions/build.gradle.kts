@@ -23,12 +23,11 @@ android {
 
     kotlinOptions {
         jvmTarget = "1.8"
-        useIR = true
     }
 
     composeOptions {
-        kotlinCompilerVersion = "1.5.10"
-        kotlinCompilerExtensionVersion = "1.0.0-rc02"
+        kotlinCompilerVersion = libraries.versions.kotlin.get()
+        kotlinCompilerExtensionVersion = libraries.versions.compose.compiler.get()
     }
 }
 
@@ -40,7 +39,7 @@ dependencies {
     api(libraries.androidx.compose.foundation)
     implementation(libraries.androidx.preference)
 
-    api(libraries.karps.structures)
+    api(libraries.ack.structures)
 
     api(libraries.dagger.core)
     kapt(libraries.dagger.compiler)

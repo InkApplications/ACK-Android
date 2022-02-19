@@ -5,14 +5,14 @@ import android.content.Context
 import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.compose.runtime.collectAsState
-import com.inkapplications.android.extensions.ExtendedActivity
-import com.inkapplications.android.extensions.startActivity
 import com.inkapplications.ack.android.component
+import com.inkapplications.ack.android.map.Map
 import com.inkapplications.ack.android.map.getMap
 import com.inkapplications.ack.android.map.lifecycleObserver
-import com.inkapplications.ack.android.map.Map
 import com.inkapplications.ack.android.trackNavigation
 import com.inkapplications.ack.android.ui.theme.AprsScreen
+import com.inkapplications.android.extensions.ExtendedActivity
+import com.inkapplications.android.startActivity
 import com.inkapplications.coroutines.collectOn
 import com.mapbox.mapboxsdk.maps.MapView
 import kimchi.Kimchi

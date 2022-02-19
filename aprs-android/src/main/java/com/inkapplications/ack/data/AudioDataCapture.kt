@@ -59,7 +59,7 @@ internal class AudioDataCapture(
                 val buffer = buffers[bufferIndex]
                 recorder.read(buffer, 0, buffer.size)
                 bufferIndex = if (bufferIndex == buffers.size - 1) 0 else bufferIndex + 1
-                audioChannel.offer(buffer)
+                audioChannel.trySend(buffer)
             }
         }
     }

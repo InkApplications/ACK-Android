@@ -20,4 +20,3 @@ dependencyResolutionManagement {
 include("android-extensions")
 include("aprs-android")
 include("android-application")
-include("kotlin-extensions")

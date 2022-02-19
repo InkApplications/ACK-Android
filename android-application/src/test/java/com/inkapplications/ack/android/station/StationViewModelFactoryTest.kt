@@ -4,7 +4,7 @@ import com.inkapplications.ack.android.*
 import com.inkapplications.ack.android.symbol.SymbolFactoryStub
 import com.inkapplications.ack.data.CapturedPacket
 import com.inkapplications.ack.data.PacketSource
-import com.inkapplications.karps.structures.*
+import com.inkapplications.ack.structures.*
 import inkapplications.spondee.measure.Fahrenheit
 import inkapplications.spondee.measure.MilesPerHour
 import inkapplications.spondee.spatial.Degrees

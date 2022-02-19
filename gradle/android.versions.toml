@@ -1,7 +1,7 @@
 [versions]
-room = "2.4.0-alpha04"
-material-icons = "1.0.0-rc02"
-activity = "1.3.0-rc02"
+room = "2.4.1"
+activity = "1.4.0"
+compose-compiler = "1.1.0"
 
 [libraries.android-gradle]
 version = "4.2.0"
@@ -52,15 +52,15 @@ version.ref = "room"
 module = "androidx.room:room-testing"
 
 [libraries.androidx-compose-ui]
-version = "1.0.1"
+version.ref = "compose-compiler"
 module = "androidx.compose.ui:ui"
 
 [libraries.androidx-compose-foundation]
-version = "1.0.1"
+version.ref = "compose-compiler"
 module = "androidx.compose.foundation:foundation"
 
 [libraries.androidx-compose-material-core]
-version = "1.0.1"
+version.ref = "compose-compiler"
 module = "androidx.compose.material:material"
 
 [libraries.androidx-activity-compose]
@@ -72,15 +72,15 @@ version.ref = "activity"
 module = "androidx.activity:activity-ktx"
 
 [libraries.androidx-compose-navigation]
-version = "2.4.0-alpha04"
+version = "2.4.1"
 module = "androidx.navigation:navigation-compose"
 
 [libraries.androidx-compose-material-icons-core]
-version.ref = "material-icons"
+version.ref = "compose-compiler"
 module = "androidx.compose.material:material-icons-core"
 
 [libraries.androidx-compose-material-icons-extended]
-version.ref = "material-icons"
+version.ref = "compose-compiler"
 module = "androidx.compose.material:material-icons-extended"
 
 [bundles]

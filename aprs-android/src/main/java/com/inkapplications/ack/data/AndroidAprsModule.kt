@@ -3,8 +3,8 @@ package com.inkapplications.ack.data
 import android.content.Context
 import androidx.room.Room
 import com.inkapplications.ack.data.upgrade.V3Upgrade
-import com.inkapplications.karps.client.AprsClientModule
-import com.inkapplications.karps.parser.ParserModule
+import com.inkapplications.ack.client.AprsClientModule
+import com.inkapplications.ack.parser.ParserModule
 import dagger.Module
 import dagger.Provides
 import kimchi.logger.KimchiLogger

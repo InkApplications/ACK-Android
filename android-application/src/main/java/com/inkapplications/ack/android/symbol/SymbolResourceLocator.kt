@@ -1,6 +1,6 @@
 package com.inkapplications.ack.android.symbol
 
-import com.inkapplications.karps.structures.Symbol
+import com.inkapplications.ack.structures.Symbol
 import dagger.Reusable
 import kimchi.logger.KimchiLogger
 import javax.inject.Inject

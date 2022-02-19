@@ -8,8 +8,8 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import androidx.annotation.RequiresPermission
 import com.google.gson.JsonObject
-import com.inkapplications.android.extensions.continuePropagation
 import com.inkapplications.ack.android.R
+import com.inkapplications.android.continuePropagation
 import com.mapbox.mapboxsdk.camera.CameraUpdateFactory
 import com.mapbox.mapboxsdk.geometry.LatLng
 import com.mapbox.mapboxsdk.location.LocationComponentActivationOptions

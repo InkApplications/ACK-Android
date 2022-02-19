@@ -1,7 +1,7 @@
 package com.inkapplications.ack.data
 
-import com.inkapplications.karps.structures.AprsPacket
-import com.inkapplications.karps.structures.EncodingConfig
+import com.inkapplications.ack.structures.AprsPacket
+import com.inkapplications.ack.structures.EncodingConfig
 import kotlinx.coroutines.flow.Flow
 
 interface AprsAccess {

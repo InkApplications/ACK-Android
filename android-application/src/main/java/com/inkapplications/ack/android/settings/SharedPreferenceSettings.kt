@@ -3,6 +3,7 @@ package com.inkapplications.ack.android.settings
 import android.content.SharedPreferences
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.channels.sendBlocking
+import kotlinx.coroutines.channels.trySendBlocking
 import kotlinx.coroutines.flow.*
 import javax.inject.Inject
 
@@ -14,7 +15,7 @@ class SharedPreferenceSettings @Inject constructor(
 ): SettingsReadAccess, SettingsWriteAccess {
     private val updates = callbackFlow<String> {
         val listener = SharedPreferences.OnSharedPreferenceChangeListener { _, key ->
-            sendBlocking(key)
+            trySendBlocking(key)
         }
 
         preferences.registerOnSharedPreferenceChangeListener(listener)

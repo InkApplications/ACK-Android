@@ -1,6 +1,5 @@
 package com.inkapplications.ack.android.locale
 
-import inkapplications.spondee.format.SimpleNumberFormats
 import inkapplications.spondee.format.formatDecimal
 import inkapplications.spondee.measure.*
 import inkapplications.spondee.structure.*
@@ -26,7 +25,7 @@ fun Temperature.format(metric: Boolean) = when {
     else -> Fahrenheit.format(this, decimals = 0)
 }
 
-@OptIn(ExperimentalTime::class, SimpleNumberFormats::class)
+@OptIn(ExperimentalTime::class)
 private object KilometersPerHour: DoubleUnit<Speed>, Symbolized, UnitFormatter<Speed> {
     override val symbol: String = "km/h"
     override fun convertValue(value: Speed): Double {

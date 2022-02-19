@@ -40,17 +40,19 @@ android {
 }
 
 dependencies {
-    implementation(projects.kotlinExtensions)
     api(libraries.coroutines.core)
 
     androidTestImplementation(libraries.androidx.test.runner)
     androidTestImplementation(libraries.androidx.test.core)
 
-    api(libraries.karps.parser)
-    api(libraries.karps.client)
-    api(libraries.karps.structures)
+    api(libraries.ack.parser)
+    api(libraries.ack.client)
+    api(libraries.ack.structures)
 
     api(libraries.kimchi.logger)
+
+    implementation(libraries.watermelon.coroutines)
+    implementation(libraries.spondee.measures)
 
     implementation(libraries.dagger.core)
     kapt(libraries.dagger.compiler)

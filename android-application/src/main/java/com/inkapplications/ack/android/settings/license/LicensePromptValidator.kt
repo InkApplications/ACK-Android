@@ -1,6 +1,6 @@
 package com.inkapplications.ack.android.settings.license
 
-import com.inkapplications.karps.client.generatePasscode
+import com.inkapplications.ack.client.generatePasscode
 import dagger.Reusable
 import javax.inject.Inject
 

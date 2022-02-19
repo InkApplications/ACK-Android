@@ -4,7 +4,7 @@ import android.content.ContentValues
 import android.database.sqlite.SQLiteDatabase
 import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
-import com.inkapplications.karps.parser.AprsParser
+import com.inkapplications.ack.parser.AprsParser
 import kimchi.logger.EmptyLogger
 import kimchi.logger.KimchiLogger
 import java.lang.IllegalStateException

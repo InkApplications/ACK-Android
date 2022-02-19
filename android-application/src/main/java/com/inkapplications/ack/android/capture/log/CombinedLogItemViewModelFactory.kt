@@ -2,9 +2,9 @@ package com.inkapplications.ack.android.capture.log
 
 import com.inkapplications.ack.android.locale.format
 import com.inkapplications.ack.android.symbol.SymbolFactory
-import com.inkapplications.karps.structures.AprsPacket
-import com.inkapplications.karps.structures.PacketData
-import com.inkapplications.karps.structures.capabilities.Mapable
+import com.inkapplications.ack.structures.AprsPacket
+import com.inkapplications.ack.structures.PacketData
+import com.inkapplications.ack.structures.capabilities.Mapable
 import dagger.Reusable
 import javax.inject.Inject
 

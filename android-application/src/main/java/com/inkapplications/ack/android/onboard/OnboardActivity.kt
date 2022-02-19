@@ -3,15 +3,14 @@ package com.inkapplications.ack.android.onboard
 import androidx.activity.compose.setContent
 import androidx.compose.runtime.collectAsState
 import androidx.lifecycle.lifecycleScope
-import com.inkapplications.android.extensions.ExtendedActivity
-import com.inkapplications.android.extensions.startActivity
 import com.inkapplications.ack.android.capture.CaptureActivity
 import com.inkapplications.ack.android.component
 import com.inkapplications.ack.android.settings.SettingsAccess
 import com.inkapplications.ack.android.settings.license.LicensePromptValidator
+import com.inkapplications.android.extensions.ExtendedActivity
+import com.inkapplications.android.startActivity
 import kimchi.Kimchi
 import kimchi.analytics.Property
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.filter
 
 class OnboardActivity: ExtendedActivity(), UserAgreementController {

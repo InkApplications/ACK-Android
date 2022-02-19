@@ -2,14 +2,14 @@ package com.inkapplications.ack.android.startup
 
 import android.os.Bundle
 import androidx.activity.compose.setContent
-import com.inkapplications.android.extensions.ExtendedActivity
-import com.inkapplications.android.extensions.startActivity
 import com.inkapplications.ack.android.capture.CaptureActivity
 import com.inkapplications.ack.android.component
 import com.inkapplications.ack.android.onboard.OnboardActivity
 import com.inkapplications.ack.android.onboard.OnboardingStateAccess
-import kotlinx.coroutines.*
+import com.inkapplications.android.extensions.ExtendedActivity
+import com.inkapplications.android.startActivity
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.launch
 
 /**
  * A screen for initializing application settings.

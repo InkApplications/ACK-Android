@@ -1,7 +1,7 @@
 package com.inkapplications.ack.android.settings
 
-import com.inkapplications.kotlin.flattenFirst
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.combine
 
 /**
  * Provides read access to a collection of settings provider by taking the first one with a
@@ -18,5 +18,12 @@ class PrioritySettingValues(private vararg val delegates: SettingsReadAccess): S
 
     override fun observeBooleanState(setting: BooleanSetting): Flow<Boolean?> {
         return delegates.map { it.observeBooleanState(setting) }.flattenFirst { it != null }
+    }
+
+    /**
+     * Merge a list of flows taking the first flow's latest result that matches a [predicate]
+     */
+    private inline fun <reified T> List<Flow<T>>.flattenFirst(crossinline predicate: (T) -> Boolean): Flow<T?> = combine(*this.toTypedArray()) {
+        it.firstOrNull { predicate(it) }
     }
 }

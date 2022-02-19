@@ -1,7 +1,6 @@
 plugins {
     id("com.android.application")
     kotlin("android")
-    id("kotlin-android-extensions")
     kotlin("kapt")
     id("com.google.gms.google-services")
     id("com.google.firebase.crashlytics")
@@ -56,19 +55,16 @@ android {
 
     kotlinOptions {
         jvmTarget = "1.8"
-        useIR = true
     }
 
     composeOptions {
-        kotlinCompilerVersion = "1.5.10"
-        kotlinCompilerExtensionVersion = "1.0.0-rc02"
+        kotlinCompilerVersion = libraries.versions.kotlin.get()
+        kotlinCompilerExtensionVersion = libraries.versions.compose.compiler.get()
     }
 
-    androidExtensions {
-        isExperimental = true
-    }
     packagingOptions {
         exclude("META-INF/core.kotlin_module")
+        exclude("META-INF/kotlinx-coroutines-core.kotlin_module")
     }
 
     testOptions {
@@ -79,7 +75,6 @@ android {
 }
 
 dependencies {
-    implementation(projects.kotlinExtensions)
     implementation(projects.androidExtensions)
     implementation(projects.aprsAndroid)
 
@@ -107,12 +102,12 @@ dependencies {
     implementation(libraries.kimchi.firebase.analytics)
     implementation(libraries.kimchi.firebase.crashlytics)
 
-    // Force latest local spondee snapshot for development.
-    // TODO: Remove before release.
-    api("com.inkapplications.spondee:measures:1.0-SNAPSHOT")
-    implementation(libraries.karps.client)
+    api(libraries.spondee.measures)
+    implementation(libraries.ack.client)
 
-    implementation(libraries.watermelon)
+    implementation(libraries.watermelon.coroutines)
+    implementation(libraries.watermelon.standard)
+    implementation(libraries.watermelon.android)
 
     implementation("com.google.firebase:firebase-config-ktx:19.2.0")
     implementation("com.google.firebase:firebase-analytics-ktx:17.5.0")
