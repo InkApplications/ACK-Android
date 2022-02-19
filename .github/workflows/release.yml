@@ -14,7 +14,7 @@ jobs:
                 run: echo "${{secrets.KEYSTORE}}" | base64 --decode > ack_upload.keystore
             -
                 name: Google Services Setup
-                run: echo "${{secrets.GOOGLE_SERVICES_JSON}}" > android-application/google-services.json
+                run: echo '${{secrets.GOOGLE_SERVICES_JSON}}' > android-application/google-services.json
             -
                 env:
                     ORG_GRADLE_PROJECT_signingFile: ack_upload.keystore
