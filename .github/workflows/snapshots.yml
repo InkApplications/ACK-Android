@@ -10,39 +10,32 @@ jobs:
                 name: Checkout
                 uses: actions/checkout@v2.3.1
             -
-                name: Keystore Setup
-                run: echo "${{secrets.ANDROID_KEYSTORE_64}}" | base64 --decode > ack_upload.keystore
-            -
                 name: Google Services Setup
                 run: echo '${{secrets.GOOGLE_SERVICES_JSON}}' > android-application/google-services.json
             -
                 env:
-                    ORG_GRADLE_PROJECT_signingFile: ack_upload.keystore
-                    ORG_GRADLE_PROJECT_signingKeyPassword: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
-                    ORG_GRADLE_PROJECT_signingStorePassword: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
-                    ORG_GRADLE_PROJECT_signingAlias: ${{ secrets.ANDROID_KEYSTORE_ALIAS }}
                     ORG_GRADLE_PROJECT_mapboxPrivate: ${{ secrets.MAPBOX_KEY_PRIVATE }}
                     ORG_GRADLE_PROJECT_mapboxPublic: ${{ secrets.MAPBOX_KEY_PUBLIC }}
                 name: Build
-                run: ./gradlew build test testDebugUnitTest bundleRelease -PversionName=${GITHUB_SHA:0:8} -PversionCode=1
+                run: ./gradlew build test testDebugUnitTest bundleRelease -PversionName=${{ github.sha }} -PversionCode=1
             -
                 name: Prepare Uploads
                 run: |
                     mkdir -p build
                     mkdir -p build/output
-                    cp android-application/build/outputs/apk/release/android-application-release.apk build/output/Ack-${GITHUB_SHA:0:8}.apk
-                    cp android-application/build/outputs/bundle/release/android-application-release.aab build/output/Ack-${GITHUB_SHA:0:8}.aab
+                    cp android-application/build/outputs/apk/release/android-application-release.apk build/output/Ack-${{ github.sha }}.apk
+                    cp android-application/build/outputs/bundle/release/android-application-release.aab build/output/Ack-${{ github.sha }}.aab
             -
                 name: Archive APK
                 uses: actions/upload-artifact@v2
                 with:
                     name: Android APK
-                    path: build/output/Ack-${GITHUB_SHA:0:8}.apk
+                    path: build/output/Ack-${{ github.sha }}.apk
                     retention-days: 15
             -
                 name: Archive Bundle
                 uses: actions/upload-artifact@v2
                 with:
                     name: Android AAB
-                    path: build/output/Ack-${GITHUB_SHA:0:8}.aab
+                    path: build/output/Ack-${{ github.sha }}.aab
                     retention-days: 15

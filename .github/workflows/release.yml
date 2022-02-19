@@ -24,26 +24,26 @@ jobs:
                     ORG_GRADLE_PROJECT_mapboxPrivate: ${{ secrets.MAPBOX_KEY_PRIVATE }}
                     ORG_GRADLE_PROJECT_mapboxPublic: ${{ secrets.MAPBOX_KEY_PUBLIC }}
                 name: Build
-                run: ./gradlew build test testDebugUnitTest bundleRelease -PversionName=${GITHUB_TAG/refs\/tags\//} -PversionCode=$((($GITHUB_RUN_NUMBER * 10) + $GITHUB_RUN_ATTEMPT))
+                run: ./gradlew build test testDebugUnitTest bundleRelease -PversionName=${{ github.ref_name }} -PversionCode=$((($GITHUB_RUN_NUMBER * 10) + $GITHUB_RUN_ATTEMPT))
             -
                 name: Prepare Uploads
                 run: |
                     mkdir -p build
                     mkdir -p build/output
-                    cp android-application/build/outputs/apk/release/android-application-release.apk build/output/Ack-${GITHUB_TAG/refs\/tags\//}.apk
-                    cp android-application/build/outputs/bundle/release/android-application-release.aab build/output/Ack-${GITHUB_TAG/refs\/tags\//}.aab
+                    cp android-application/build/outputs/apk/release/android-application-release.apk build/output/Ack-${{ github.ref_name }}}.apk
+                    cp android-application/build/outputs/bundle/release/android-application-release.aab build/output/Ack-${{ github.ref_name }}.aab
             -
                 name: Archive APK
                 uses: actions/upload-artifact@v2
                 with:
                     name: Android APK
-                    path: build/output/Ack-${GITHUB_TAG/refs\/tags\//}.apk
+                    path: build/output/Ack-${{ github.ref_name }}.apk
             -
                 name: Archive Bundle
                 uses: actions/upload-artifact@v2
                 with:
                     name: Android AAB
-                    path: build/output/Ack-${GITHUB_TAG/refs\/tags\//}.aab
+                    path: build/output/Ack-${{ github.ref_name }}.aab
             -
                 name: Service Account Setup
                 run: echo '${{secrets.PLAY_CONSOLE_SERVICE_JSON}}' > service_account.json
@@ -55,7 +55,7 @@ jobs:
                     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
                 with:
                     tag_name: ${{ github.ref }}
-                    release_name: ${{ github.ref }} Release
+                    release_name: ${{ github.ref_name }} Release
                     draft: true
                     prerelease: false
             -
@@ -64,7 +64,7 @@ jobs:
                 with:
                     serviceAccountJson: service_account.json
                     packageName: com.inkapplications.ack.android
-                    releaseFile: build/output/Ack-${GITHUB_TAG/refs\/tags\//}.aab
+                    releaseFile: build/output/Ack-${{ github.ref_name }}.aab
                     track: internal
             -
                 name: Upload AAB Release Asset
@@ -73,8 +73,8 @@ jobs:
                     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
                 with:
                     upload_url: ${{ steps.create_release.outputs.upload_url }}
-                    asset_path: build/output/Ack-${GITHUB_TAG/refs\/tags\//}.aab
-                    asset_name: Ack-${GITHUB_TAG/refs\/tags\//}.aab
+                    asset_path: build/output/Ack-${{ github.ref_name }}.aab
+                    asset_name: Ack-${{ github.ref_name }}.aab
                     asset_content_type: application/octet-stream
             -
                 name: Upload APK Release Asset
@@ -83,6 +83,6 @@ jobs:
                     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
                 with:
                     upload_url: ${{ steps.create_release.outputs.upload_url }}
-                    asset_path: build/output/Ack-${GITHUB_TAG/refs\/tags\//}.apk
-                    asset_name: Ack-${GITHUB_TAG/refs\/tags\//}.apk
+                    asset_path: build/output/Ack-${{ github.ref_name }}.apk
+                    asset_name: Ack-${{ github.ref_name }}.apk
                     asset_content_type: application/octet-stream
