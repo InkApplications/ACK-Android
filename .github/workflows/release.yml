@@ -54,4 +54,4 @@ jobs:
                     serviceAccountJson: service_account.json
                     packageName: com.inkapplications.ack.android
                     releaseFile: build/output/Ack-${GITHUB_TAG/refs\/tags\//}.aab
-                    track: alpha
+                    track: internal
