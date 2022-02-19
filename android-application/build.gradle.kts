@@ -2,8 +2,14 @@ plugins {
     id("com.android.application")
     kotlin("android")
     kotlin("kapt")
-    id("com.google.gms.google-services")
+    id("com.google.gms.google-services") apply false
     id("com.google.firebase.crashlytics")
+}
+
+val useGoogleServices = project.file("google-services.json").exists()
+
+if (useGoogleServices) {
+    apply(plugin = "com.google.gms.google-services")
 }
 
 android {
@@ -14,6 +20,7 @@ android {
         targetSdkVersion(31)
         multiDexEnabled = true
         buildConfigField("String", "MAPBOX_ACCESS_TOKEN", "\"${stringProperty("mapboxPublic", "")}\"")
+        buildConfigField("boolean", "USE_GOOGLE_SERVICES", useGoogleServices.toString())
         versionCode = intProperty("versionCode", 1)
         versionName = stringProperty("versionName", "SNAPSHOT")
     }
@@ -33,6 +40,12 @@ android {
     }
 
     buildTypes {
+        all {
+            applicationIdSuffix = if (project.booleanProperty("snapshot", false)) ".snapshot" else null
+        }
+        getByName("debug") {
+            applicationIdSuffix = ".debug"
+        }
         getByName("release") {
             signingConfig = if (project.hasProperty("signingFile")) {
                 signingConfigs.getByName("parameterSigning")

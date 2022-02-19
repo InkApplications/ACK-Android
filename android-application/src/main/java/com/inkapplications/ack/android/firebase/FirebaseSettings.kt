@@ -22,7 +22,6 @@ class FirebaseSettings @Inject constructor(): SettingsReadAccess {
     }
 
     override fun observeBooleanState(setting: BooleanSetting): Flow<Boolean?> {
-        Firebase.remoteConfig.all
         return flowOf(Firebase.remoteConfig.getBoolean(setting.key))
     }
 }

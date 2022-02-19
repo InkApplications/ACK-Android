@@ -1,5 +1,6 @@
 package com.inkapplications.ack.android.settings
 
+import com.inkapplications.ack.android.BuildConfig
 import com.inkapplications.ack.android.firebase.FirebaseSettings
 import dagger.Binds
 import dagger.Module
@@ -14,10 +15,15 @@ class SettingsModule {
     fun settingsProvider(
         sharedPreferences: SharedPreferenceSettings,
         firebaseSettings: FirebaseSettings
-    ): SettingsReadAccess = PrioritySettingValues(
-        sharedPreferences,
-        firebaseSettings
-    )
+    ): SettingsReadAccess {
+        val readProviders = if (BuildConfig.USE_GOOGLE_SERVICES) {
+            arrayOf(sharedPreferences, firebaseSettings)
+        } else {
+            arrayOf(sharedPreferences)
+        }
+
+        return PrioritySettingValues(*readProviders)
+    }
 }
 
 @Module

@@ -1,18 +1,20 @@
 package com.inkapplications.ack.android.firebase
 
-import com.inkapplications.ack.android.settings.SettingsReadAccess
+import com.inkapplications.ack.android.BuildConfig
 import com.inkapplications.ack.android.startup.ApplicationInitializer
-import dagger.Binds
+import com.inkapplications.ack.android.startup.NoOpInitializer
 import dagger.Module
+import dagger.Provides
 import dagger.multibindings.IntoSet
 
 @Module
-abstract class FirebaseModule {
-    @Binds
+class FirebaseModule {
+    @Provides
     @IntoSet
-    abstract fun initializer(firebaseInitializer: FirebaseInitializer): ApplicationInitializer
-
-    @Binds
-    @IntoSet
-    abstract fun settings(settings: FirebaseSettings): SettingsReadAccess
+    fun initializer(firebaseInitializer: FirebaseInitializer): ApplicationInitializer {
+        if (BuildConfig.USE_GOOGLE_SERVICES) {
+            return firebaseInitializer
+        }
+        return NoOpInitializer
+    }
 }

@@ -26,10 +26,12 @@ class AprsApplication: Application() {
         super.onCreate()
 
         Kimchi.addLog(defaultWriter)
-        Kimchi.addLog(FirebaseCrashlyticsLogMessageAdapter().withThreshold(LogLevel.INFO))
-        Kimchi.addLog(FirebaseCrashlyticsExceptionAdapter())
+        if (BuildConfig.USE_GOOGLE_SERVICES) {
+            Kimchi.addLog(FirebaseCrashlyticsLogMessageAdapter().withThreshold(LogLevel.INFO))
+            Kimchi.addLog(FirebaseCrashlyticsExceptionAdapter())
+            Kimchi.addAnalytics(FirebaseAnalyticsAdapter())
+        }
         Kimchi.addAnalytics(KimchiLoggerAnalytics)
-        Kimchi.addAnalytics(FirebaseAnalyticsAdapter())
 
         registerActivityLifecycleCallbacks(LifecycleLogger {
             Kimchi.trace(it)

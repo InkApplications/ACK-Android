@@ -17,7 +17,7 @@ jobs:
                     ORG_GRADLE_PROJECT_mapboxPrivate: ${{ secrets.MAPBOX_KEY_PRIVATE }}
                     ORG_GRADLE_PROJECT_mapboxPublic: ${{ secrets.MAPBOX_KEY_PUBLIC }}
                 name: Build
-                run: ./gradlew build test testDebugUnitTest bundleRelease -PversionName=${{ github.sha }} -PversionCode=1
+                run: ./gradlew build test testDebugUnitTest bundleRelease -Psnapshot=true -PversionName=${{ github.sha }} -PversionCode=1
             -
                 name: Prepare Uploads
                 run: |

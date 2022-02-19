@@ -7,3 +7,7 @@ fun Project.stringProperty(key: String, default: String): String {
 fun Project.intProperty(key: String, default: Int): Int {
     return if (hasProperty(key)) property(key).toString().toInt() else default
 }
+
+fun Project.booleanProperty(key: String, default: Boolean): Boolean {
+    return if (hasProperty(key)) property(key).toString().toBoolean() else default
+}
