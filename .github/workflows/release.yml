@@ -30,7 +30,7 @@ jobs:
                 run: |
                     mkdir -p build
                     mkdir -p build/output
-                    cp android-application/build/outputs/apk/release/android-application-release.apk build/output/Ack-${{ github.ref_name }}}.apk
+                    cp android-application/build/outputs/apk/release/android-application-release.apk build/output/Ack-${{ github.ref_name }}.apk
                     cp android-application/build/outputs/bundle/release/android-application-release.aab build/output/Ack-${{ github.ref_name }}.aab
             -
                 name: Archive APK
