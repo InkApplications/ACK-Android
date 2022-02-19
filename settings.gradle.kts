@@ -6,13 +6,9 @@ rootProject.name = "ack-android"
 dependencyResolutionManagement {
     versionCatalogs {
         create("libraries") {
-            from(files(
-                "gradle/android.versions.toml",
-                "gradle/google.versions.toml",
-                "gradle/ink.versions.toml",
-                "gradle/kotlin.versions.toml",
-                "gradle/libraries.versions.toml"
-            ))
+            from(fileTree("gradle/versions").matching {
+                include("*.toml")
+            })
         }
     }
 }
