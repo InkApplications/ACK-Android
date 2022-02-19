@@ -46,7 +46,7 @@ jobs:
                     path: build/output/Ack-${GITHUB_TAG/refs\/tags\//}.aab
             -
                 name: Service Account Setup
-                run: echo ${{secrets.PLAY_CONSOLE_SERVICE_JSON}} > service_account.json
+                run: echo '${{secrets.PLAY_CONSOLE_SERVICE_JSON}}' > service_account.json
             -
                 name: Deploy to Play Store
                 uses: r0adkll/upload-google-play@8c2ebfdb6e1b439d3a31d35772b3f0f489d688c9
