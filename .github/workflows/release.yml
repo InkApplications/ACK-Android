@@ -24,7 +24,7 @@ jobs:
                     ORG_GRADLE_PROJECT_mapboxPrivate: ${{ secrets.MAPBOX_KEY_PRIVATE }}
                     ORG_GRADLE_PROJECT_mapboxPublic: ${{ secrets.MAPBOX_KEY_PUBLIC }}
                 name: Build
-                run: ./gradlew build jvmTest bundleRelease -PversionName=${GITHUB_TAG/refs\/tags\//} -PversionCode=$((($GITHUB_RUN_NUMBER * 100) + $GITHUB_RUN_ATTEMPT))
+                run: ./gradlew build test testDebugUnitTest bundleRelease -PversionName=${GITHUB_TAG/refs\/tags\//} -PversionCode=$((($GITHUB_RUN_NUMBER * 100) + $GITHUB_RUN_ATTEMPT))
             -
                 name: Prepare Uploads
                 run: |
