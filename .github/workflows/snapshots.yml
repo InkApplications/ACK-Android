@@ -8,7 +8,7 @@ jobs:
         steps:
             -
                 name: Checkout
-                uses: actions/checkout@v2.3.1
+                uses: actions/checkout@v2.4.0
             -
                 name: Google Services Setup
                 run: echo '${{secrets.GOOGLE_SERVICES_JSON}}' > android-application/google-services.json
@@ -27,14 +27,14 @@ jobs:
                     cp android-application/build/outputs/bundle/release/android-application-release.aab build/output/Ack-${{ github.sha }}.aab
             -
                 name: Archive APK
-                uses: actions/upload-artifact@v2
+                uses: actions/upload-artifact@v2.3.1
                 with:
                     name: Android APK
                     path: build/output/Ack-${{ github.sha }}.apk
                     retention-days: 15
             -
                 name: Archive Bundle
-                uses: actions/upload-artifact@v2
+                uses: actions/upload-artifact@v2.3.1
                 with:
                     name: Android AAB
                     path: build/output/Ack-${{ github.sha }}.aab
