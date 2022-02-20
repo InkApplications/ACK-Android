@@ -26,6 +26,9 @@ import com.inkapplications.ack.android.capture.map.MapViewModel
 import com.inkapplications.ack.android.trackNavigation
 import com.inkapplications.ack.android.ui.theme.AprsScreen
 import com.inkapplications.ack.android.ui.theme.AprsTheme
+import com.inkapplications.android.extensions.control.ControlState
+import com.inkapplications.android.extensions.control.whenDisabled
+import com.inkapplications.android.extensions.control.whenEnabled
 import kimchi.Kimchi
 
 @Composable
@@ -40,10 +43,9 @@ fun CaptureScreen(
 
     Column {
         CaptureAppBar(
-            recordingEnabled = captureScreenState.value.recordingEnabled,
-            internetServiceVisible = captureScreenState.value.internetServiceVisible,
-            internetServiceEnabled = captureScreenState.value.internetServiceEnabled,
-            transmitEnabled = captureScreenState.value.transmitState,
+            recordingState = captureScreenState.value.recordingState,
+            internetState = captureScreenState.value.internetServiceState,
+            transmitState = captureScreenState.value.transmitState,
             controller = controller,
         )
         Box(
@@ -105,10 +107,9 @@ fun CaptureScreen(
 
 @Composable
 fun CaptureAppBar(
-    recordingEnabled: Boolean,
-    internetServiceVisible: Boolean,
-    internetServiceEnabled: Boolean,
-    transmitEnabled: Boolean,
+    recordingState: ControlState,
+    internetState: ControlState,
+    transmitState: ControlState,
     controller: CaptureNavController,
 ) {
     TopAppBar(
@@ -118,7 +119,7 @@ fun CaptureAppBar(
         backgroundColor = AprsTheme.colors.surface,
         contentColor = contentColorFor(AprsTheme.colors.surface),
         actions = {
-            if (transmitEnabled) {
+            transmitState.whenEnabled {
                 IconButton(
                     onClick = controller::onTransmitDisableClick,
                 ) {
@@ -128,7 +129,8 @@ fun CaptureAppBar(
                         tint = AprsTheme.colors.brand,
                     )
                 }
-            } else {
+            }
+            transmitState.whenDisabled {
                 IconButton(
                     onClick = controller::onTransmitEnableClick,
                 ) {
@@ -138,7 +140,7 @@ fun CaptureAppBar(
                     )
                 }
             }
-            if (recordingEnabled) {
+            recordingState.whenEnabled {
                 IconButton(
                     onClick = controller::onRecordingDisableClick,
                 ) {
@@ -148,7 +150,8 @@ fun CaptureAppBar(
                         tint = AprsTheme.colors.brand,
                     )
                 }
-            } else {
+            }
+            recordingState.whenDisabled {
                 IconButton(
                     onClick = controller::onRecordingEnableClick
                 ) {
@@ -158,27 +161,25 @@ fun CaptureAppBar(
                     )
                 }
             }
-            when {
-                internetServiceVisible && internetServiceEnabled -> {
-                    IconButton(
-                        onClick = controller::onInternetServiceDisableClick,
-                    ) {
-                        Icon(
-                            Icons.Default.Cloud,
-                            contentDescription = "Disable APRS-IS",
-                            tint = AprsTheme.colors.brand,
-                        )
-                    }
+            internetState.whenEnabled {
+                IconButton(
+                    onClick = controller::onInternetServiceDisableClick,
+                ) {
+                    Icon(
+                        Icons.Default.Cloud,
+                        contentDescription = "Disable APRS-IS",
+                        tint = AprsTheme.colors.brand,
+                    )
                 }
-                internetServiceVisible && !internetServiceEnabled -> {
-                    IconButton(
-                        onClick = controller::onInternetServiceEnableClick,
-                    ) {
-                        Icon(
-                            Icons.Default.CloudOff,
-                            contentDescription = "Enable APRS-IS"
-                        )
-                    }
+            }
+            internetState.whenDisabled {
+                IconButton(
+                    onClick = controller::onInternetServiceEnableClick,
+                ) {
+                    Icon(
+                        Icons.Default.CloudOff,
+                        contentDescription = "Enable APRS-IS"
+                    )
                 }
             }
             IconButton(

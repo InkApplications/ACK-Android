@@ -11,6 +11,7 @@ import com.inkapplications.ack.data.AfskModulationConfiguration
 import com.inkapplications.ack.data.AprsAccess
 import com.inkapplications.ack.data.ConnectionConfiguration
 import com.inkapplications.ack.structures.*
+import com.inkapplications.android.extensions.control.ControlState
 import inkapplications.spondee.measure.Meters
 import inkapplications.spondee.measure.Miles
 import inkapplications.spondee.scalar.WholePercentage
@@ -38,16 +39,37 @@ class CaptureEvents @Inject constructor(
     private val internetListenState = MutableStateFlow(false)
     private val transmitState = MutableStateFlow(false)
 
-    val screenState = audioListenState
-        .map { CaptureScreenViewModel(recordingEnabled = it) }
-        .combine(internetListenState) { viewModel, state ->
-            viewModel.copy(internetServiceEnabled = state)
+    private val recordingControlState = audioListenState.map { listening ->
+        if (listening) ControlState.Enabled else ControlState.Disabled
+    }
+
+    private val internetServiceControlState = settings.observeString(connectionSettings.callsign)
+        .combine(internetListenState) { callsign, state ->
+            when {
+                callsign.isBlank() -> ControlState.Hidden
+                state -> ControlState.Enabled
+                else -> ControlState.Disabled
+            }
         }
-        .combine(settings.observeString(connectionSettings.callsign)) { viewModel, callsign ->
-            viewModel.copy(internetServiceVisible = callsign.isNotBlank())
+
+    private val transmitControlState = settings.observeString(connectionSettings.callsign)
+        .combine(transmitState) { callsign, state ->
+            when {
+                callsign.isBlank() -> ControlState.Hidden
+                state -> ControlState.Enabled
+                else -> ControlState.Disabled
+            }
         }
-        .combine(transmitState) { viewModel, state ->
-            viewModel.copy(transmitState = state)
+
+    val screenState = recordingControlState
+        .combine(internetServiceControlState) { recording, internet ->
+            CaptureScreenViewModel(
+                recordingState = recording,
+                internetServiceState = internet,
+            )
+        }
+        .combine(transmitControlState) { viewModel, transmit ->
+            viewModel.copy(transmitState = transmit)
         }
 
     suspend fun listenForPackets() {
@@ -135,7 +157,7 @@ class CaptureEvents @Inject constructor(
                             )
                         )
 
-                        aprs.transmitAudioPacket(packet, EncodingConfig(compression = EncodingPreference.Barred), prototype.afskConfiguration)
+                        aprs.transmitAudioPacket(packet, EncodingConfig(compression = EncodingPreference.Disfavored), prototype.afskConfiguration)
                         delay(prototype.minRate)
                     }
                 }

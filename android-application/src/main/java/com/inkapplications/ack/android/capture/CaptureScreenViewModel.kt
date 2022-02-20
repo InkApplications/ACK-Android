@@ -1,8 +1,9 @@
 package com.inkapplications.ack.android.capture
 
+import com.inkapplications.android.extensions.control.ControlState
+
 data class CaptureScreenViewModel(
-    val recordingEnabled: Boolean = false,
-    val internetServiceEnabled: Boolean = false,
-    val internetServiceVisible: Boolean = false,
-    val transmitState: Boolean = false,
+    val recordingState: ControlState = ControlState.Hidden,
+    val internetServiceState: ControlState = ControlState.Hidden,
+    val transmitState: ControlState = ControlState.Hidden,
 )
