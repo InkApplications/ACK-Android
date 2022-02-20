@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Ack APRS</string>
+    <string name="app_name_short">Ack</string>
     <string name="application_version">Ack %s (%s)</string>
 
     <string name="navigate_up">Navigate Up</string>

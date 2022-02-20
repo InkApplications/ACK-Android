@@ -40,13 +40,13 @@ android {
     }
 
     buildTypes {
-        all {
-            applicationIdSuffix = if (project.booleanProperty("snapshot", false)) ".snapshot" else null
-        }
         getByName("debug") {
             applicationIdSuffix = ".debug"
+            resValue("string", "app_name", "Ack: APRS*")
         }
         getByName("release") {
+            resValue("string", "app_name", "Ack: APRS")
+            applicationIdSuffix = if (project.booleanProperty("snapshot", false)) ".snapshot" else null
             signingConfig = if (project.hasProperty("signingFile")) {
                 signingConfigs.getByName("parameterSigning")
             } else {

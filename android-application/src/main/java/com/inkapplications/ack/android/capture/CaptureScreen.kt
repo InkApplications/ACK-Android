@@ -114,7 +114,7 @@ fun CaptureAppBar(
 ) {
     TopAppBar(
         title = {
-            Text(stringResource(R.string.app_name))
+            Text(stringResource(R.string.app_name_short))
         },
         backgroundColor = AprsTheme.colors.surface,
         contentColor = contentColorFor(AprsTheme.colors.surface),
