@@ -1,0 +1,9 @@
+[versions]
+
+[libraries.mapbox-android-sdk]
+version = "9.3.0"
+module = "com.mapbox.mapboxsdk:mapbox-android-sdk"
+
+[libraries.mapbox-android-plugin-annotation]
+version = "0.9.0"
+module = "com.mapbox.mapboxsdk:mapbox-android-plugin-annotation-v9"

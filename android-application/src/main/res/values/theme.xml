@@ -4,37 +4,12 @@
     <style name="AprsTheme" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <item name="colorAccent">@color/brand</item>
 
-        <item name="colorError">@color/error</item>
-        <item name="colorOnError">@color/light_stroke</item>
-
         <item name="colorPrimaryDark">@color/dark_stroke</item>
         <item name="colorPrimary">@color/dark_stroke</item>
         <item name="colorOnPrimary">@color/light_stroke</item>
 
         <item name="colorSecondary">@color/brand</item>
         <item name="colorOnSecondary">@color/dark_stroke</item>
-
-        <item name="bottomNavigationStyle">@style/AprsTheme.BottomNavigation</item>
-        <item name="materialAlertDialogTheme">@style/AprsTheme.Alert</item>
-
-        <item name="textAppearanceBody1">@style/AprsTheme.Text</item>
-        <item name="textAppearanceBody2">?attr/textAppearanceBody1</item>
-        <item name="textAppearanceCaption">@style/AprsTheme.Text.Caption</item>
-        <item name="textAppearanceHeadline1">?attr/textAppearanceHeadline4</item>
-        <item name="textAppearanceHeadline2">?attr/textAppearanceHeadline5</item>
-        <item name="textAppearanceHeadline3">?attr/textAppearanceHeadline6</item>
-        <item name="textAppearanceHeadline4">@style/AprsTheme.Text.Headline1</item>
-        <item name="textAppearanceHeadline5">@style/AprsTheme.Text.Headline2</item>
-        <item name="textAppearanceHeadline6">@style/AprsTheme.Text.Headline3</item>
-
-        <item name="textAppearanceSubtitle1">?attr/textAppearanceHeadline2</item>
-        <item name="textAppearanceSubtitle2">?attr/textAppearanceHeadline3</item>
-
-        <item name="textAppearanceButton">@style/AprsTheme.Text.Button</item>
-        <item name="materialButtonStyle">@style/AprsTheme.Button</item>
-        <item name="android:itemTextAppearance">@style/AprsTheme.Text</item>
-    </style>
-    <style name="AprsTheme.Compat">
     </style>
     <style name="AprsTheme.Compat.DayNight">
         <item name="colorSurface">@color/dark_stroke</item>
@@ -43,18 +18,6 @@
 
         <item name="android:colorBackground">@color/dark_stroke</item>
         <item name="colorOnBackground">@color/light_stroke</item>
-    </style>
-    <style name="AprsTheme.BottomNavigation" parent="Widget.MaterialComponents.BottomNavigationView">
-        <item name="itemIconTint">@color/navigation_foreground_color</item>
-        <item name="itemTextColor">@color/navigation_foreground_color</item>
-    </style>
-
-    <style name="AprsTheme.Alert" parent="ThemeOverlay.MaterialComponents.MaterialAlertDialog">
-        <item name="buttonBarPositiveButtonStyle">@style/AprsTheme.Alert.Button</item>
-        <item name="buttonBarNegativeButtonStyle">@style/AprsTheme.Alert.Button</item>
-    </style>
-    <style name="AprsTheme.Alert.Button" parent="Widget.MaterialComponents.Button.TextButton.Dialog">
-        <item name="android:textColor">?attr/colorOnSurface</item>
     </style>
 </resources>
 

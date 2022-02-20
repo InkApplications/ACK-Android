@@ -8,8 +8,7 @@ import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.Comment
+import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -89,13 +88,13 @@ fun StationScreen(
             ),
         ) {
             if (viewState.temperatureVisible) {
-                IconRow(painterResource(R.drawable.ic_weather), viewState.temperature)
+                IconRow(Icons.Default.WbSunny, viewState.temperature)
             }
             if (viewState.windVisible) {
-                IconRow(painterResource(R.drawable.ic_wind), viewState.wind)
+                IconRow(Icons.Default.Air, viewState.wind)
             }
             if (viewState.altitudeVisible) {
-                IconRow(painterResource(R.drawable.ic_altitude), viewState.altitude)
+                IconRow(Icons.Default.Terrain, viewState.altitude)
             }
             if (viewState.commentVisible) {
                 IconRow(Icons.Default.Comment, viewState.comment)

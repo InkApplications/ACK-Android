@@ -102,8 +102,8 @@ dependencies {
 
     implementation(libraries.material.core)
 
-    implementation("com.mapbox.mapboxsdk:mapbox-android-sdk:9.3.0")
-    implementation("com.mapbox.mapboxsdk:mapbox-android-plugin-annotation-v9:0.9.0")
+    implementation(libraries.mapbox.android.sdk)
+    implementation(libraries.mapbox.android.plugin.annotation)
 
     implementation(libraries.groupie.core)
     implementation(libraries.groupie.extensions)
@@ -122,8 +122,8 @@ dependencies {
     implementation(libraries.watermelon.standard)
     implementation(libraries.watermelon.android)
 
-    implementation("com.google.firebase:firebase-config-ktx:19.2.0")
-    implementation("com.google.firebase:firebase-analytics-ktx:17.5.0")
+    implementation(libraries.firebase.config)
+    implementation(libraries.firebase.analytics)
 
     testImplementation(libraries.junit)
     testImplementation(libraries.coroutines.test)

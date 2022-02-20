@@ -12,3 +12,7 @@ module = "com.google.dagger:dagger"
 [libraries.dagger-compiler]
 version.ref = "dagger"
 module = "com.google.dagger:dagger-compiler"
+
+[libraries.google-services]
+version = "4.3.3"
+module = "com.google.gms:google-services"
