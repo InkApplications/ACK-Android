@@ -5,6 +5,8 @@ import androidx.compose.material.icons.filled.Cloud
 import androidx.compose.material.icons.filled.SettingsInputAntenna
 import com.inkapplications.android.extensions.StringResources
 import com.inkapplications.ack.android.R
+import com.inkapplications.ack.android.map.MapCameraPosition
+import com.inkapplications.ack.android.map.CameraPositionDefaults
 import com.inkapplications.ack.android.locale.format
 import com.inkapplications.ack.android.map.MarkerViewModel
 import com.inkapplications.ack.android.map.ZoomLevels
@@ -16,9 +18,6 @@ import com.inkapplications.ack.structures.symbolOf
 import dagger.Reusable
 import inkapplications.spondee.measure.Length
 import inkapplications.spondee.spatial.Degrees
-import inkapplications.spondee.spatial.GeoCoordinates
-import inkapplications.spondee.spatial.latitude
-import inkapplications.spondee.spatial.longitude
 import inkapplications.spondee.structure.value
 import javax.inject.Inject
 import kotlin.math.roundToInt
@@ -40,8 +39,7 @@ class StationViewModelFactory @Inject constructor(
         val packetTypeData = when (data) {
             is PacketData.Position -> StationViewModel(
                 markers = listOf(MarkerViewModel(packet.id, data.coordinates, symbolFactory.createSymbol(data.symbol))),
-                center = data.coordinates,
-                zoom = ZoomLevels.ROADS,
+                mapCameraPosition = MapCameraPosition(data.coordinates, ZoomLevels.ROADS),
                 comment = data.comment,
                 altitude = data.altitude.distanceString(metric),
             )
@@ -55,20 +53,17 @@ class StationViewModelFactory @Inject constructor(
                 } ?: emptyList(),
                 temperature = data.temperature?.format(metric).orEmpty(),
                 wind = data.windString(metric),
-                center = data.coordinates ?: GeoCoordinates(0.latitude, 0.longitude),
-                zoom = ZoomLevels.ROADS,
+                mapCameraPosition = data.coordinates?.let { MapCameraPosition(it, ZoomLevels.ROADS) } ?: CameraPositionDefaults.unknownLocation
             )
             is PacketData.ObjectReport -> StationViewModel(
                 markers = listOf(MarkerViewModel(packet.id, data.coordinates, symbolFactory.createSymbol(data.symbol))),
-                center = data.coordinates,
-                zoom = ZoomLevels.ROADS,
+                mapCameraPosition = MapCameraPosition(data.coordinates, ZoomLevels.ROADS),
                 comment = data.comment,
                 altitude = data.altitude.distanceString(metric),
             )
             is PacketData.ItemReport -> StationViewModel(
                 markers = listOf(MarkerViewModel(packet.id, data.coordinates, symbolFactory.createSymbol(data.symbol))),
-                center = data.coordinates,
-                zoom = ZoomLevels.ROADS,
+                mapCameraPosition = MapCameraPosition(data.coordinates, ZoomLevels.ROADS),
                 comment = data.comment,
                 altitude = data.altitude.distanceString(metric),
             )

@@ -1,17 +1,16 @@
 package com.inkapplications.ack.android.station
 
 import androidx.compose.ui.graphics.vector.ImageVector
+import com.inkapplications.ack.android.map.MapCameraPosition
+import com.inkapplications.ack.android.map.CameraPositionDefaults
 import com.inkapplications.ack.android.map.MarkerViewModel
-import com.inkapplications.ack.android.map.ZoomLevels
 import com.inkapplications.ack.structures.TelemetryValues
-import inkapplications.spondee.spatial.*
 
 data class StationViewModel(
     val name: String = "",
     val comment: String = "",
     val markers: List<MarkerViewModel> = emptyList(),
-    val center: GeoCoordinates = GeoCoordinates(0.latitude, 0.longitude),
-    val zoom: Double = ZoomLevels.MIN,
+    val mapCameraPosition: MapCameraPosition = CameraPositionDefaults.unknownLocation,
     val temperature: String = "",
     val wind: String = "",
     val altitude: String = "",

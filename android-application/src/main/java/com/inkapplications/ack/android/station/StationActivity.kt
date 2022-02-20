@@ -50,7 +50,7 @@ class StationActivity: ExtendedActivity() {
 
     private fun onMapLoaded(map: Map) {
         stationEvents.stateEvents(id).collectOn(foregroundScope) { viewModel ->
-            map.zoomTo(viewModel.center, viewModel.zoom)
+            map.zoomTo(viewModel.mapCameraPosition)
             map.showMarkers(viewModel.markers)
         }
     }

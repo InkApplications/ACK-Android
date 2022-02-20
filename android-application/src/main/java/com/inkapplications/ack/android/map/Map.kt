@@ -21,7 +21,6 @@ import com.mapbox.mapboxsdk.maps.MapboxMap
 import com.mapbox.mapboxsdk.maps.Style
 import com.mapbox.mapboxsdk.plugins.annotation.SymbolManager
 import com.mapbox.mapboxsdk.plugins.annotation.SymbolOptions
-import inkapplications.spondee.spatial.GeoCoordinates
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import java.util.*
@@ -84,11 +83,18 @@ class Map(
             .run { symbolManager.create(this) }
     }
 
-    fun zoomTo(coordinates: GeoCoordinates, zoom: Double) {
+    fun zoomTo(cameraPosition: MapCameraPosition) {
         map.animateCamera(CameraUpdateFactory.newLatLngZoom(
-            LatLng(coordinates.latitude.asDecimal, coordinates.longitude.asDecimal),
-            zoom
+            LatLng(cameraPosition.coordinates.latitude.asDecimal, cameraPosition.coordinates.longitude.asDecimal),
+            cameraPosition.zoom
         ))
+    }
+
+    fun setCamera(cameraPosition: MapCameraPosition) {
+        map.cameraPosition = com.mapbox.mapboxsdk.camera.CameraPosition.Builder()
+            .zoom(cameraPosition.zoom)
+            .target(LatLng(cameraPosition.coordinates.latitude.asDecimal, cameraPosition.coordinates.longitude.asDecimal))
+            .build()
     }
 
     @RequiresPermission(anyOf = [permission.ACCESS_FINE_LOCATION, permission.ACCESS_COARSE_LOCATION])

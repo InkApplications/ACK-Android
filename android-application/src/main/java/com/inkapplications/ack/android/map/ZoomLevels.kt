@@ -5,7 +5,7 @@ package com.inkapplications.ack.android.map
  */
 object ZoomLevels {
     val MIN = 0.0
-    val CONTINENT = 3.0
+    val CONTINENT = 2.0
     val ISLANDS = 4.0
     val RIVERS = 6.0
     val ROADS = 10.0

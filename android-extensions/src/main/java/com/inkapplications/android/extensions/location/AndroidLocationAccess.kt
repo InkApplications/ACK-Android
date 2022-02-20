@@ -14,19 +14,29 @@ import kotlinx.coroutines.channels.trySendBlocking
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import kotlin.time.Duration
+import kotlin.time.Duration.Companion.minutes
 import kotlin.time.ExperimentalTime
 
 @OptIn(ExperimentalTime::class)
 class AndroidLocationAccess(
     private val locationManager: LocationManager,
 ): LocationAccess {
+    override val lastKnownLocation: LocationUpdate?
+        get() {
+            val lastGps = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER)
+            val lastNetwork = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER)
+            val recent = when {
+                System.currentTimeMillis() - (lastGps?.time ?: 0) < 30.minutes.inWholeMilliseconds -> lastGps
+                System.currentTimeMillis() - (lastNetwork?.time ?: 0) < 30.minutes.inWholeMilliseconds -> lastNetwork
+                else -> lastGps ?: lastNetwork
+            }
+
+            return recent?.toUpdate()
+        }
     override fun observeLocationChanges(minTime: Duration, minDistance: Length): Flow<LocationUpdate> = callbackFlow {
         val callback = object: LocationListener {
             override fun onLocationChanged(location: Location) {
-                trySendBlocking(LocationUpdate(
-                    location = GeoCoordinates(location.latitude.latitude, location.longitude.longitude),
-                    altitude = Meters.of(location.altitude),
-                ))
+                trySendBlocking(location.toUpdate())
             }
         }
         locationManager.requestLocationUpdates(
@@ -40,4 +50,9 @@ class AndroidLocationAccess(
             locationManager.removeUpdates(callback)
         }
     }
+
+    private fun Location.toUpdate() = LocationUpdate(
+        location = GeoCoordinates(latitude.latitude, longitude.longitude),
+        altitude = Meters.of(altitude),
+    )
 }

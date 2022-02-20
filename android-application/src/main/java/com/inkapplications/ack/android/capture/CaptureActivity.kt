@@ -16,6 +16,7 @@ import androidx.core.content.ContextCompat
 import com.inkapplications.ack.android.capture.log.LogItemViewModel
 import com.inkapplications.ack.android.capture.map.*
 import com.inkapplications.ack.android.component
+import com.inkapplications.ack.android.map.CameraPositionDefaults
 import com.inkapplications.ack.android.map.Map
 import com.inkapplications.ack.android.map.getMap
 import com.inkapplications.ack.android.map.lifecycleObserver
@@ -114,6 +115,12 @@ class CaptureActivity: ExtendedActivity(), CaptureNavController {
         mapScope.cancel()
         mapScope = MainScope()
         val manager = mapEventsFactory.createEventsAccess(map)
+
+        map.setCamera(CameraPositionDefaults.unknownLocation)
+
+        when(ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)) {
+            PackageManager.PERMISSION_GRANTED -> map.zoomTo(manager.initialState)
+        }
 
         manager.viewState.collectOn(mapScope) { state ->
             Kimchi.trackEvent("map_markers", listOf(intProperty("quantity", state.markers.size)))
