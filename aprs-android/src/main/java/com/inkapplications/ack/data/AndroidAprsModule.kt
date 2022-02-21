@@ -4,7 +4,7 @@ import android.content.Context
 import androidx.room.Room
 import com.inkapplications.ack.data.upgrade.V3Upgrade
 import com.inkapplications.ack.client.AprsClientModule
-import com.inkapplications.ack.parser.ParserModule
+import com.inkapplications.ack.codec.Ack
 import dagger.Module
 import dagger.Provides
 import kimchi.logger.KimchiLogger
@@ -21,7 +21,7 @@ object AndroidAprsModule {
     ): AprsAccess {
         val audioCapture = AudioDataCapture(logger)
         val audioProcessor = AudioDataProcessor(audioCapture)
-        val parser = ParserModule(logger).defaultParser()
+        val parser = Ack(logger).defaultParser()
 
         val database = Room.databaseBuilder(context, PacketDatabase::class.java, "aprs_packets")
             .addMigrations(V3Upgrade(parser, logger))

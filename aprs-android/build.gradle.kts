@@ -45,7 +45,7 @@ dependencies {
     androidTestImplementation(libraries.androidx.test.runner)
     androidTestImplementation(libraries.androidx.test.core)
 
-    api(libraries.ack.parser)
+    api(libraries.ack.codec)
     api(libraries.ack.client)
     api(libraries.ack.structures)
 

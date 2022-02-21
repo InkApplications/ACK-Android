@@ -1,5 +1,5 @@
 [versions]
-ack = "0.1.0"
+ack = "0.3.0"
 kimchi-core = "1.1.0"
 kimchi-firebase = "1.2.0"
 watermelon = "0.1.0"
@@ -24,9 +24,9 @@ module = "com.github.inkapplications.kimchi-firebase-bridge:crashlytics"
 version.ref = "kimchi-firebase"
 module = "com.github.inkapplications.kimchi-firebase-bridge:analytics"
 
-[libraries.ack-parser]
+[libraries.ack-codec]
 version.ref = "ack"
-module = "com.inkapplications.ack:parser"
+module = "com.inkapplications.ack:codec"
 
 [libraries.ack-client]
 version.ref = "ack"

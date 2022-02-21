@@ -2,7 +2,7 @@ package com.inkapplications.ack.data
 
 import com.inkapplications.coroutines.filterEachNotNull
 import com.inkapplications.ack.client.AprsDataClient
-import com.inkapplications.ack.parser.AprsParser
+import com.inkapplications.ack.codec.AprsCodec
 import com.inkapplications.ack.structures.AprsPacket
 import com.inkapplications.ack.structures.EncodingConfig
 import inkapplications.spondee.measure.Meters
@@ -19,7 +19,7 @@ internal class AndroidAprs(
     private val packetDao: PacketDao,
     private val client: AprsDataClient,
     private val locationProvider: AndroidLocationProvider,
-    private val parser: AprsParser,
+    private val parser: AprsCodec,
     private val modulator: AndroidAfskModulator,
     private val logger: KimchiLogger
 ): AprsAccess {
@@ -105,14 +105,14 @@ internal class AndroidAprs(
         )
     }
 
-    private fun AprsParser.fromEntityOrNull(data: PacketEntity): AprsPacket? {
+    private fun AprsCodec.fromEntityOrNull(data: PacketEntity): AprsPacket? {
         return when (data.packetSource) {
             PacketSource.Ax25 -> fromAx25OrNull(data.data)
             PacketSource.AprsIs -> fromStringOrNull(data.data.toString(Charsets.UTF_8))
         }
     }
 
-    private fun AprsParser.fromAx25OrNull(data: ByteArray): AprsPacket? {
+    private fun AprsCodec.fromAx25OrNull(data: ByteArray): AprsPacket? {
         try {
             return fromAx25(data)
         } catch (error: Throwable) {
@@ -122,7 +122,7 @@ internal class AndroidAprs(
         }
     }
 
-    private fun AprsParser.fromStringOrNull(data: String): AprsPacket? {
+    private fun AprsCodec.fromStringOrNull(data: String): AprsPacket? {
         try {
             return fromString(data)
         } catch (error: Throwable) {

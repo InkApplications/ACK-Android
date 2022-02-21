@@ -4,13 +4,13 @@ import android.content.ContentValues
 import android.database.sqlite.SQLiteDatabase
 import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
-import com.inkapplications.ack.parser.AprsParser
+import com.inkapplications.ack.codec.AprsCodec
 import kimchi.logger.EmptyLogger
 import kimchi.logger.KimchiLogger
 import java.lang.IllegalStateException
 
 internal class V3Upgrade(
-    private val aprsParser: AprsParser,
+    private val aprsCodec: AprsCodec,
     private val logger: KimchiLogger = EmptyLogger,
 ): Migration(2, 3) {
     override fun migrate(database: SupportSQLiteDatabase) {
@@ -27,8 +27,8 @@ internal class V3Upgrade(
 
                 try {
                     val parsed = when (source) {
-                        "Ax25" -> aprsParser.fromAx25(data)
-                        "AprsIs" -> aprsParser.fromString(data.toString(Charsets.UTF_8))
+                        "Ax25" -> aprsCodec.fromAx25(data)
+                        "AprsIs" -> aprsCodec.fromString(data.toString(Charsets.UTF_8))
                         else -> throw IllegalStateException("Unknown source type: $source")
                     }
 
