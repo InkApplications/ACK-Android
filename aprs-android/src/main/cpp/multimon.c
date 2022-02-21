@@ -31,7 +31,7 @@ JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM *jvm, void *reserved)
 }
 
 
-void Java_com_inkapplications_aprs_data_Multimon_init(JNIEnv *env, jobject object) {
+void Java_com_inkapplications_ack_data_Multimon_init(JNIEnv *env, jobject object) {
     static int sample_rate = -1;
     unsigned int i;
     unsigned int overlap = 0;
@@ -55,7 +55,7 @@ void Java_com_inkapplications_aprs_data_Multimon_init(JNIEnv *env, jobject objec
 JNIEnv *env_global;
 jobject *abp_global;
 
-void Java_com_inkapplications_aprs_data_Multimon_process(JNIEnv *env, jobject object, jfloatArray fbuf, jint length) {
+void Java_com_inkapplications_ack_data_Multimon_process(JNIEnv *env, jobject object, jfloatArray fbuf, jint length) {
     env_global = env;
     abp_global = object;
     jfloat *jfbuf = (*env)->GetFloatArrayElements(env, fbuf, 0);
