@@ -1,8 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="content_padding">24dp</dimen>
-    <dimen name="item_spacing">8dp</dimen>
-    <dimen name="touch_padding">16dp</dimen>
-    <dimen name="item_spacing_half">4dp</dimen>
-    <dimen name="corners">8dp</dimen>
+    <dimen name="mapbox_logo_padding_bottom">60dp</dimen>
 </resources>

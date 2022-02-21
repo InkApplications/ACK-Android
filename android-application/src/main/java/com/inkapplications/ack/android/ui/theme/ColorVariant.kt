@@ -13,6 +13,8 @@ data class ColorVariant(
     val onError: Color,
     val light: Boolean,
 ) {
+    val foregroundInactive = foreground.copy(alpha = .6f)
+
     val materialColors = Colors(
         primary = brand,
         primaryVariant = brand,

@@ -13,6 +13,8 @@ import androidx.compose.material.icons.filled.MyLocation
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import com.inkapplications.ack.android.capture.log.AprsLogItem
 import com.inkapplications.ack.android.capture.log.LogItemViewModel
@@ -26,6 +28,7 @@ fun MapScreen(
     onLogItemClick: (LogItemViewModel) -> Unit,
     onEnableLocation: () -> Unit,
     onDisableLocation: () -> Unit,
+    bottomContentProtection: Dp,
 ) = AprsScreen {
     AndroidView(
         factory = mapFactory,
@@ -41,7 +44,7 @@ fun MapScreen(
         }
     }
     Box(
-        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier.fillMaxSize().padding(bottom = bottomContentProtection),
         contentAlignment = Alignment.BottomEnd,
     ) {
         LocationStateButton(state.trackPosition, onEnableLocation, onDisableLocation)

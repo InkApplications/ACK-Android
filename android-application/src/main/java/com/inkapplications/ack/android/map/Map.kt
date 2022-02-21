@@ -68,6 +68,13 @@ class Map(
         style.addImage(defaultMarkerId, BitmapFactory.decodeResource(resources, R.drawable.symbol_14))
     }
 
+    fun initDefaults() {
+        map.uiSettings.run {
+            setLogoMargins(logoMarginLeft, logoMarginTop, logoMarginRight, context.resources.getDimensionPixelSize(R.dimen.mapbox_logo_padding_bottom))
+        }
+        setCamera(CameraPositionDefaults.unknownLocation)
+    }
+
     fun showMarkers(markers: Collection<MarkerViewModel>) {
         markers
             .map { marker ->

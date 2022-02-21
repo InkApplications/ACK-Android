@@ -39,7 +39,7 @@ object AprsTheme {
             gutter = 16.dp,
             content = 8.dp,
             item = 8.dp,
-            icon = 4.dp,
+            icon = 8.dp,
             clickSafety = 16.dp,
         )
 
