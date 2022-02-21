@@ -21,7 +21,7 @@ class MapEvents(
 
     val initialState get() =
         location.lastKnownLocation
-            ?.let { MapCameraPosition(it.location, ZoomLevels.ROADS) }
+            ?.let { MapCameraPosition(it.location, ZoomLevels.RIVERS) }
             ?: CameraPositionDefaults.unknownLocation
 
     val viewState: Flow<MapViewModel> = mapData.findMarkers()
