@@ -297,7 +297,7 @@ private fun LogScreen(
     logs: State<List<LogItemViewModel>>,
     controller: CaptureNavController,
 ) = AprsScreen {
-    LazyColumn {
+    LazyColumn(contentPadding = PaddingValues(bottom = 88.dp)) {
         items(logs.value) { log ->
             AprsLogItem(log, controller::onLogItemClick)
         }
