@@ -88,25 +88,30 @@ private fun CaptureBottomBar(
             backgroundColor = AprsTheme.colors.surface,
             contentColor = contentColorFor(AprsTheme.colors.surface),
         ) {
+            val currentRoute = navController.currentBackStackEntryAsState().value?.destination?.route
             BottomNavigationItem(
                 icon = { Icon(Icons.Default.Map, contentDescription = null) },
                 label = { Text(stringResource(R.string.menu_capture_map)) },
-                selected = navController.currentBackStackEntryAsState().value?.destination?.route == "map",
+                selected = currentRoute == "map",
                 onClick = {
                     Kimchi.info("Navigate to map")
                     Kimchi.trackNavigation("map")
-                    navController.navigate("map")
+                    if (currentRoute != "map") {
+                        navController.navigate("map")
+                    }
                 }
             )
             Spacer(Modifier.weight(1f, true))
             BottomNavigationItem(
                 icon = { Icon(Icons.Default.List, contentDescription = null) },
                 label = { Text(stringResource(R.string.menu_capture_log)) },
-                selected = navController.currentBackStackEntryAsState().value?.destination?.route == "log",
+                selected = currentRoute == "log",
                 onClick = {
                     Kimchi.info("Navigate to log")
                     Kimchi.trackNavigation("log")
-                    navController.navigate("log")
+                    if (currentRoute != "log") {
+                        navController.navigate("log")
+                    }
                 }
             )
         }
