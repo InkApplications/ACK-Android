@@ -10,14 +10,13 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
-import androidx.compose.material.icons.outlined.CloudOff
-import androidx.compose.material.icons.outlined.Mic
-import androidx.compose.material.icons.outlined.WifiTethering
+import androidx.compose.material.icons.outlined.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
@@ -36,7 +35,8 @@ import com.inkapplications.ack.android.trackNavigation
 import com.inkapplications.ack.android.ui.theme.AprsScreen
 import com.inkapplications.ack.android.ui.theme.AprsTheme
 import com.inkapplications.android.extensions.control.whenDisabled
-import com.inkapplications.android.extensions.control.whenEnabled
+import com.inkapplications.android.extensions.control.whenOff
+import com.inkapplications.android.extensions.control.whenOn
 import kimchi.Kimchi
 import kotlinx.coroutines.launch
 
@@ -177,54 +177,87 @@ private fun CaptureSettingsSheet(
             Icon(Icons.Default.ExpandMore, "Close Sheet", modifier = Modifier.padding(AprsTheme.spacing.clickSafety))
         }
     }
-    captureScreenState.transmitState.whenDisabled {
+    captureScreenState.audioCaptureState.whenOff {
         CaptureSettingRow(
-            icon = Icons.Outlined.WifiTethering,
-            iconColor = AprsTheme.colors.foregroundInactive,
-            name = "Enable Transmit",
-            onClick = captureController::onTransmitEnableClick
-        )
-    }
-    captureScreenState.transmitState.whenEnabled {
-        CaptureSettingRow(
-            icon = Icons.Filled.WifiTethering,
-            iconColor = AprsTheme.colors.brand,
-            name = "Disable Transmit",
-            onClick = captureController::onTransmitDisableClick
-        )
-    }
-
-    captureScreenState.recordingState.whenDisabled {
-        CaptureSettingRow(
-            icon = Icons.Outlined.Mic,
+            icon = Icons.Outlined.MicOff,
             iconColor = AprsTheme.colors.foregroundInactive,
             name = "Enable Audio Capture",
-            onClick = captureController::onRecordingEnableClick
+            onClick = captureController::onAudioCaptureEnableClick
         )
     }
-    captureScreenState.recordingState.whenEnabled {
+    captureScreenState.audioCaptureState.whenOn {
         CaptureSettingRow(
             icon = Icons.Filled.Mic,
             iconColor = AprsTheme.colors.brand,
             name = "Disable Audio Capture",
-            onClick = captureController::onRecordingDisableClick
+            onClick = captureController::onAudioCaptureDisableClick
         )
     }
 
-    captureScreenState.internetServiceState.whenDisabled {
+    captureScreenState.audioTransmitState.whenDisabled {
         CaptureSettingRow(
-            icon = Icons.Outlined.CloudOff,
+            icon = Icons.Outlined.VolumeOff,
             iconColor = AprsTheme.colors.foregroundInactive,
-            name = "Enable Internet Capture",
-            onClick = captureController::onInternetServiceEnableClick
+            name = "Enable Audio Transmit",
+            modifier = Modifier.alpha(.6f),
         )
     }
-    captureScreenState.internetServiceState.whenEnabled {
+    captureScreenState.audioTransmitState.whenOff {
         CaptureSettingRow(
-            icon = Icons.Filled.Cloud,
+            icon = Icons.Outlined.VolumeOff,
+            iconColor = AprsTheme.colors.foregroundInactive,
+            name = "Enable Audio Transmit",
+            onClick = captureController::onAudioTransmitEnableClick
+        )
+    }
+    captureScreenState.audioTransmitState.whenOn {
+        CaptureSettingRow(
+            icon = Icons.Filled.VolumeUp,
+            iconColor = AprsTheme.colors.brand,
+            name = "Disable Audio Transmit",
+            onClick = captureController::onAudioTransmitDisableClick
+        )
+    }
+
+    captureScreenState.internetCaptureState.whenOff {
+        CaptureSettingRow(
+            icon = Icons.Outlined.CloudDownload,
+            iconColor = AprsTheme.colors.foregroundInactive,
+            name = "Enable Internet Capture",
+            onClick = captureController::onInternetCaptureEnableClick
+        )
+    }
+    captureScreenState.internetCaptureState.whenOn {
+        CaptureSettingRow(
+            icon = Icons.Filled.CloudDownload,
             iconColor = AprsTheme.colors.brand,
             name = "Disable Internet Capture",
-            onClick = captureController::onInternetServiceDisableClick
+            onClick = captureController::onInternetCaptureDisableClick
+        )
+    }
+
+    captureScreenState.internetTransmitState.whenDisabled {
+        CaptureSettingRow(
+            icon = Icons.Outlined.CloudUpload,
+            iconColor = AprsTheme.colors.foregroundInactive,
+            name = "Enable Internet Transmit",
+            modifier = Modifier.alpha(.6f),
+        )
+    }
+    captureScreenState.internetTransmitState.whenOff {
+        CaptureSettingRow(
+            icon = Icons.Outlined.CloudUpload,
+            iconColor = AprsTheme.colors.foregroundInactive,
+            name = "Enable Internet Transmit",
+            onClick = captureController::onInternetTransmitEnableClick
+        )
+    }
+    captureScreenState.internetTransmitState.whenOn {
+        CaptureSettingRow(
+            icon = Icons.Filled.CloudUpload,
+            iconColor = AprsTheme.colors.brand,
+            name = "Disable Internet Transmit",
+            onClick = captureController::onInternetTransmitDisableClick
         )
     }
 
@@ -246,12 +279,13 @@ private fun CaptureSettingRow(
     icon: ImageVector,
     iconColor: Color,
     name: String,
-    onClick: () -> Unit,
-) {
+    modifier: Modifier = Modifier,
+    onClick: (() -> Unit)? = null,
+) = Box(modifier) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier
-            .clickable { onClick() }
+            .let { if (onClick != null) it.clickable { onClick() } else it }
             .padding(vertical = AprsTheme.spacing.clickSafety, horizontal = AprsTheme.spacing.gutter)
             .fillMaxWidth(),
     ) {

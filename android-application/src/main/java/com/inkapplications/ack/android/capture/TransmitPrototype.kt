@@ -1,6 +1,5 @@
 package com.inkapplications.ack.android.capture
 
-import com.inkapplications.ack.data.AfskModulationConfiguration
 import com.inkapplications.ack.structures.Address
 import com.inkapplications.ack.structures.Digipeater
 import com.inkapplications.ack.structures.Symbol
@@ -18,5 +17,4 @@ data class TransmitPrototype(
     val minRate: Duration,
     val maxRate: Duration,
     val distance: Length,
-    val afskConfiguration: AfskModulationConfiguration = AfskModulationConfiguration(),
 )

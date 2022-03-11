@@ -3,7 +3,7 @@ package com.inkapplications.ack.android.capture.log
 import com.inkapplications.ack.android.locale.LocaleSettings
 import com.inkapplications.ack.android.settings.SettingsReadAccess
 import com.inkapplications.ack.android.settings.observeBoolean
-import com.inkapplications.ack.data.AprsAccess
+import com.inkapplications.ack.data.PacketStorage
 import com.inkapplications.coroutines.combinePair
 import com.inkapplications.coroutines.mapEach
 import com.inkapplications.ack.structures.PacketData
@@ -14,7 +14,7 @@ import javax.inject.Inject
 
 @Reusable
 class LogEvents @Inject constructor(
-    aprs: AprsAccess,
+    packetStorage: PacketStorage,
     stateFactory: LogItemViewModelFactory,
     settings: SettingsReadAccess,
     localeSettings: LocaleSettings,
@@ -23,7 +23,7 @@ class LogEvents @Inject constructor(
     val logViewModels = settings.observeBoolean(localeSettings.preferMetric)
         .combinePair(settings.observeBoolean(logSettings.filterUnknown))
         .flatMapLatest { (metric, filterUnknown) ->
-            aprs.findRecent(500)
+            packetStorage.findRecent(500)
                 .map {
                     if (filterUnknown) it.filter { it.parsed.data !is PacketData.Unknown } else it
                 }

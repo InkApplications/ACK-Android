@@ -4,21 +4,21 @@ import com.inkapplications.ack.android.*
 import com.inkapplications.ack.android.locale.LocaleSettings
 import com.inkapplications.ack.android.settings.BooleanSetting
 import com.inkapplications.ack.android.settings.SettingsReadAccess
-import com.inkapplications.ack.data.AprsAccess
 import com.inkapplications.ack.data.CapturedPacket
+import com.inkapplications.ack.data.PacketStorage
 import com.inkapplications.ack.structures.AprsPacket
 import com.inkapplications.ack.structures.PacketData
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.test.runBlockingTest
+import kotlinx.coroutines.test.runTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
 class LogEventsTest {
     @Test
-    fun unknownFilter() = runBlockingTest {
-        val aprsAccess = object: AprsAccess by AprsAccessStub {
+    fun unknownFilter() = runTest {
+        val packetStorage = object: PacketStorage by PacketStorageStub {
             override fun findRecent(count: Int): Flow<List<CapturedPacket>> = flow {
                 emit(listOf(
                     PacketData.Unknown(body = "").toTestPacket().toTestCapturedPacket(),
@@ -39,7 +39,7 @@ class LogEventsTest {
             }
         }
         val events = LogEvents(
-            aprs = aprsAccess,
+            packetStorage = packetStorage,
             stateFactory = stateFactory,
             settings = settings,
             localeSettings = localeSettings,

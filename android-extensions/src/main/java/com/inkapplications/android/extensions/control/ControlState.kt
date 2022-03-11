@@ -3,14 +3,20 @@ package com.inkapplications.android.extensions.control
 import androidx.compose.runtime.Composable
 
 enum class ControlState {
-    Enabled,
+    On,
+    Off,
     Disabled,
     Hidden,
 }
 
 @Composable
-inline fun ControlState.whenEnabled(action: @Composable () -> Unit) {
-    if (this == ControlState.Enabled) action()
+inline fun ControlState.whenOn(action: @Composable () -> Unit) {
+    if (this == ControlState.On) action()
+}
+
+@Composable
+inline fun ControlState.whenOff(action: @Composable () -> Unit) {
+    if (this == ControlState.Off) action()
 }
 
 @Composable

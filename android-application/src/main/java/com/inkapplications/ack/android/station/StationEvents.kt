@@ -3,7 +3,7 @@ package com.inkapplications.ack.android.station
 import com.inkapplications.ack.android.locale.LocaleSettings
 import com.inkapplications.ack.android.settings.SettingsReadAccess
 import com.inkapplications.ack.android.settings.observeBoolean
-import com.inkapplications.ack.data.AprsAccess
+import com.inkapplications.ack.data.PacketStorage
 import dagger.Reusable
 import kimchi.logger.EmptyLogger
 import kimchi.logger.KimchiLogger
@@ -15,7 +15,7 @@ import javax.inject.Inject
 
 @Reusable
 class StationEvents @Inject constructor(
-    private val aprs: AprsAccess,
+    private val aprs: PacketStorage,
     private val stationViewModelFactory: StationViewModelFactory,
     private val settings: SettingsReadAccess,
     private val localeSettings: LocaleSettings,

@@ -1,22 +1,19 @@
 package com.inkapplications.ack.android.capture
 
+import android.Manifest
 import com.inkapplications.android.extensions.location.LocationAccess
 import com.inkapplications.ack.android.connection.ConnectionSettings
 import com.inkapplications.ack.android.settings.SettingsReadAccess
 import com.inkapplications.ack.android.settings.observeInt
 import com.inkapplications.ack.android.settings.observeString
-import com.inkapplications.ack.android.settings.observeData
 import com.inkapplications.ack.android.transmit.TransmitSettings
-import com.inkapplications.ack.data.AfskModulationConfiguration
-import com.inkapplications.ack.data.AprsAccess
-import com.inkapplications.ack.data.ConnectionConfiguration
+import com.inkapplications.ack.data.drivers.PacketDriver
+import com.inkapplications.ack.data.drivers.PacketDrivers
 import com.inkapplications.ack.structures.*
 import com.inkapplications.android.extensions.control.ControlState
-import inkapplications.spondee.measure.Meters
+import com.inkapplications.coroutines.combinePair
+import com.inkapplications.coroutines.combineTriple
 import inkapplications.spondee.measure.Miles
-import inkapplications.spondee.scalar.WholePercentage
-import inkapplications.spondee.structure.Kilo
-import inkapplications.spondee.structure.of
 import kimchi.logger.KimchiLogger
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
@@ -28,7 +25,7 @@ import kotlin.time.ExperimentalTime
 
 @Singleton
 class CaptureEvents @Inject constructor(
-    private val aprs: AprsAccess,
+    private val drivers: PacketDrivers,
     private val settings: SettingsReadAccess,
     private val connectionSettings: ConnectionSettings,
     private val transmitSettings: TransmitSettings,
@@ -37,39 +34,64 @@ class CaptureEvents @Inject constructor(
 ) {
     private val audioListenState = MutableStateFlow(false)
     private val internetListenState = MutableStateFlow(false)
-    private val transmitState = MutableStateFlow(false)
+    private val audioTransmitState = MutableStateFlow(false)
+    private val internetTransmitState = MutableStateFlow(false)
 
-    private val recordingControlState = audioListenState.map { listening ->
-        if (listening) ControlState.Enabled else ControlState.Disabled
+    private val audioCaptureControlState = audioListenState.map { listening ->
+        if (listening) ControlState.On else ControlState.Off
     }
 
-    private val internetServiceControlState = settings.observeString(connectionSettings.callsign)
+    private val combinedTransmitState = internetTransmitState.combinePair(audioTransmitState)
+
+    private val internetCaptureControlState = settings.observeString(connectionSettings.callsign)
         .combine(internetListenState) { callsign, state ->
             when {
                 callsign.isBlank() -> ControlState.Hidden
-                state -> ControlState.Enabled
-                else -> ControlState.Disabled
+                state -> ControlState.On
+                else -> ControlState.Off
             }
         }
 
-    private val transmitControlState = settings.observeString(connectionSettings.callsign)
-        .combine(transmitState) { callsign, state ->
+    private val audioTransmitControlState = settings.observeString(connectionSettings.callsign)
+        .combinePair(audioListenState)
+        .combine(audioTransmitState) { (callsign, capturing), transmitting ->
             when {
                 callsign.isBlank() -> ControlState.Hidden
-                state -> ControlState.Enabled
-                else -> ControlState.Disabled
+                !capturing -> ControlState.Disabled
+                transmitting -> ControlState.On
+                else -> ControlState.Off
             }
         }
 
-    val screenState = recordingControlState
-        .combine(internetServiceControlState) { recording, internet ->
+    private val internetTransmitControlState = settings.observeString(connectionSettings.callsign)
+        .combinePair(settings.observeInt(connectionSettings.passcode))
+        .combineTriple(internetListenState)
+        .combine(internetTransmitState) { (callsign, passcode, capturing), transmitting ->
+            when {
+                callsign.isBlank() || passcode == -1 -> ControlState.Hidden
+                !capturing -> ControlState.Disabled
+                transmitting -> ControlState.On
+                else -> ControlState.Off
+            }
+        }
+
+    val audioCapturePermissions = drivers.afskDriver.receivePermissions
+    val audioTransmitPermissions = drivers.afskDriver.transmitPermissions + Manifest.permission.ACCESS_FINE_LOCATION
+    val internetCapturePermissions = drivers.afskDriver.receivePermissions
+    val internetTransmitPermissions = drivers.afskDriver.transmitPermissions + Manifest.permission.ACCESS_FINE_LOCATION
+
+    val screenState = audioCaptureControlState
+        .combine(internetCaptureControlState) { recording, internet ->
             CaptureScreenViewModel(
-                recordingState = recording,
-                internetServiceState = internet,
+                audioCaptureState = recording,
+                internetCaptureState = internet,
             )
         }
-        .combine(transmitControlState) { viewModel, transmit ->
-            viewModel.copy(transmitState = transmit)
+        .combine(audioTransmitControlState) { viewModel, transmit ->
+            viewModel.copy(audioTransmitState = transmit)
+        }
+        .combine(internetTransmitControlState) { viewModel, transmit ->
+            viewModel.copy(internetTransmitState = transmit)
         }
 
     suspend fun listenForPackets() {
@@ -79,91 +101,90 @@ class CaptureEvents @Inject constructor(
         }
         try {
             audioListenState.value = true
-            aprs.listenForAudioPackets().collect {
-                logger.debug("APRS Packet Recorded: $it")
-            }
+            drivers.afskDriver.connect()
         } finally {
             logger.trace("Audio service cancelling")
             audioListenState.value = false
         }
     }
 
-    @OptIn(ExperimentalTime::class)
-    suspend fun transmitLoop() {
+    suspend fun transmitAudio() {
         try {
-            transmitState.value = true
-            settings.observeString(connectionSettings.callsign)
-                .combine(settings.observeString(transmitSettings.digipath)) { callsign, path ->
-                    TransmitPrototype(
-                        path = path.split(',').map { Digipeater(it.toAddress()) },
-                        destination = transmitSettings.destination.defaultValue.toAddress(),
-                        callsign = callsign.toAddress(),
-                        symbol = transmitSettings.symbol.defaultValue.let { symbolOf(it[0], it[1]) },
-                        comment = transmitSettings.comment.defaultValue,
-                        minRate = transmitSettings.minRate.defaultValue.let { Duration.minutes(it) },
-                        maxRate = transmitSettings.maxRate.defaultValue.let { Duration.minutes(it) },
-                        distance = transmitSettings.distance.defaultValue.let { Miles.of(it) },
-                        afskConfiguration = AfskModulationConfiguration(
-                            preamble = transmitSettings.preamble.defaultValue.let { Duration.milliseconds(it) },
-                            volume = transmitSettings.volume.defaultValue.let { WholePercentage.of(it) },
-                        ),
-                    )
-                }
-                .combine(settings.observeString(transmitSettings.symbol)) { prototype, symbol ->
-                    prototype.copy(symbol = symbolOf(symbol[0], symbol[1]))
-                }
-                .combine(settings.observeString(transmitSettings.comment)) { prototype, comment ->
-                    prototype.copy(comment = comment)
-                }
-                .combine(settings.observeString(transmitSettings.destination)) { prototype, destination ->
-                    prototype.copy(destination = destination.toAddress())
-                }
-                .combine(settings.observeInt(transmitSettings.minRate)) { prototype, rate ->
-                    prototype.copy(minRate = Duration.minutes(rate))
-                }
-                .combine(settings.observeInt(transmitSettings.maxRate)) { prototype, rate ->
-                    prototype.copy(maxRate = Duration.minutes(rate))
-                }
-                .combine(settings.observeInt(transmitSettings.distance)) { prototype, distance ->
-                    prototype.copy(distance = Miles.of(distance))
-                }
-                .combine(settings.observeInt(transmitSettings.preamble)) { prototype, preamble ->
-                    prototype.copy(
-                        afskConfiguration = prototype.afskConfiguration.copy(preamble = Duration.Companion.milliseconds(preamble)),
-                    )
-                }
-                .combine(settings.observeData(transmitSettings.volume)) { prototype, volume ->
-                    prototype.copy(
-                        afskConfiguration = prototype.afskConfiguration.copy(volume = volume),
-                    )
-                }
-                .flatMapLatest { prototype ->
-                    locationAccess.observeLocationChanges(prototype.maxRate, prototype.distance)
-                        .map { prototype to it }
-                }
-                .collectLatest { (prototype, update) ->
-                    while (coroutineContext.isActive) {
-                        val packet = AprsPacket(
-                            route = PacketRoute(
-                                source = prototype.callsign,
-                                digipeaters = prototype.path,
-                                destination = prototype.destination,
-                            ),
-                            data = PacketData.Position(
-                                coordinates = update.location,
-                                symbol = prototype.symbol,
-                                altitude = update.altitude,
-                                comment = prototype.comment,
-                            )
-                        )
-
-                        aprs.transmitAudioPacket(packet, EncodingConfig(compression = EncodingPreference.Disfavored), prototype.afskConfiguration)
-                        delay(prototype.minRate)
-                    }
-                }
+            audioTransmitState.value = true
+            transmitLoop(drivers.afskDriver)
         } finally {
-            transmitState.value = false
+            audioTransmitState.value = false
         }
+    }
+
+    suspend fun transmitInternet() {
+        try {
+            internetTransmitState.value = true
+            transmitLoop(drivers.internetDriver)
+        } finally {
+            internetTransmitState.value = false
+        }
+    }
+
+    @OptIn(ExperimentalTime::class)
+    suspend fun transmitLoop(driver: PacketDriver) {
+        settings.observeString(connectionSettings.callsign)
+            .combine(settings.observeString(transmitSettings.digipath)) { callsign, path ->
+                TransmitPrototype(
+                    path = path.split(',').map { Digipeater(it.toAddress()) },
+                    destination = transmitSettings.destination.defaultValue.toAddress(),
+                    callsign = callsign.toAddress(),
+                    symbol = transmitSettings.symbol.defaultValue.let { symbolOf(it[0], it[1]) },
+                    comment = transmitSettings.comment.defaultValue,
+                    minRate = transmitSettings.minRate.defaultValue.let { Duration.minutes(it) },
+                    maxRate = transmitSettings.maxRate.defaultValue.let { Duration.minutes(it) },
+                    distance = transmitSettings.distance.defaultValue.let { Miles.of(it) },
+                )
+            }
+            .combine(settings.observeString(transmitSettings.symbol)) { prototype, symbol ->
+                prototype.copy(symbol = symbolOf(symbol[0], symbol[1]))
+            }
+            .combine(settings.observeString(transmitSettings.comment)) { prototype, comment ->
+                prototype.copy(comment = comment)
+            }
+            .combine(settings.observeString(transmitSettings.destination)) { prototype, destination ->
+                prototype.copy(destination = destination.toAddress())
+            }
+            .combine(settings.observeInt(transmitSettings.minRate)) { prototype, rate ->
+                prototype.copy(minRate = Duration.minutes(rate))
+            }
+            .combine(settings.observeInt(transmitSettings.maxRate)) { prototype, rate ->
+                prototype.copy(maxRate = Duration.minutes(rate))
+            }
+            .combine(settings.observeInt(transmitSettings.distance)) { prototype, distance ->
+                prototype.copy(distance = Miles.of(distance))
+            }
+            .flatMapLatest { prototype ->
+                locationAccess.observeLocationChanges(prototype.maxRate, prototype.distance)
+                    .map { prototype to it }
+            }
+            .combineTriple(combinedTransmitState)
+            .collectLatest { (prototype, update) ->
+                while (coroutineContext.isActive) {
+                    val packet = AprsPacket(
+                        route = PacketRoute(
+                            source = prototype.callsign,
+                            digipeaters = prototype.path,
+                            destination = prototype.destination,
+                        ),
+                        data = PacketData.Position(
+                            coordinates = update.location,
+                            symbol = prototype.symbol,
+                            altitude = update.altitude,
+                            comment = prototype.comment,
+                        )
+                    )
+                    val encodingConfig = EncodingConfig(compression = EncodingPreference.Disfavored)
+
+                    driver.transmitPacket(packet, encodingConfig)
+                    delay(prototype.minRate)
+                }
+            }
     }
 
     suspend fun listenForInternetPackets() {
@@ -172,29 +193,10 @@ class CaptureEvents @Inject constructor(
             return
         }
         try {
-            internetListenState.value =  true
-            settings.observeString(connectionSettings.callsign)
-                .map { ConnectionConfiguration(it.toAddress()) }
-                .combine(settings.observeInt(connectionSettings.passcode)) { settings, passcode ->
-                    settings.copy(passcode = passcode)
-                }
-                .combine(settings.observeString(connectionSettings.server)) { settings, server ->
-                    settings.copy(host = server)
-                }
-                .combine(settings.observeInt(connectionSettings.port)) { settings, port ->
-                    settings.copy(port = port)
-                }
-                .combine(settings.observeInt(connectionSettings.radius)) { settings, radius ->
-                    settings.copy(searchRadius = Meters.of(Kilo, radius))
-                }
-                .onEach { logger.debug("New Connection Settings Received: $it") }
-                .collectLatest { settings ->
-                    withContext(Dispatchers.IO) {
-                        aprs.listenForInternetPackets(settings).collect {
-                            logger.debug("APRS-IS Packet Collected: $it")
-                        }
-                    }
-                }
+            internetListenState.value = true
+            drivers.internetDriver.connect()
+        } catch (e: Throwable) {
+            logger.error("Internet listen terminated", e)
         } finally {
             logger.trace("Internet service cancelling")
             internetListenState.value = false

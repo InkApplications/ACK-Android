@@ -8,7 +8,7 @@ import com.inkapplications.ack.android.settings.SettingsReadAccess
 import com.inkapplications.ack.android.settings.observeBoolean
 import com.inkapplications.ack.android.settings.observeInt
 import com.inkapplications.ack.android.symbol.SymbolFactory
-import com.inkapplications.ack.data.AprsAccess
+import com.inkapplications.ack.data.PacketStorage
 import com.inkapplications.coroutines.filterEachNotNull
 import com.inkapplications.coroutines.mapEach
 import com.inkapplications.ack.structures.PacketData
@@ -26,7 +26,7 @@ import javax.inject.Inject
 @Reusable
 class MapDataRepository @Inject constructor(
     private val logger: KimchiLogger,
-    private val aprs: AprsAccess,
+    private val aprs: PacketStorage,
     private val symbolFactory: SymbolFactory,
     private val logStateFactory: CombinedLogItemViewModelFactory,
     private val settings: SettingsReadAccess,

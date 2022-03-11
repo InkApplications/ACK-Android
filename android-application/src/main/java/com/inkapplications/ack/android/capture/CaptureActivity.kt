@@ -1,16 +1,13 @@
 package com.inkapplications.ack.android.capture
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.os.PersistableBundle
 import android.view.View
 import androidx.activity.compose.setContent
-import androidx.activity.result.ActivityResultLauncher
-import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.material.*
-import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.collectAsState
 import androidx.core.content.ContextCompat
 import com.inkapplications.ack.android.capture.log.LogItemViewModel
@@ -22,6 +19,7 @@ import com.inkapplications.ack.android.map.lifecycleObserver
 import com.inkapplications.ack.android.settings.SettingsActivity
 import com.inkapplications.ack.android.station.startStationActivity
 import com.inkapplications.ack.android.trackNavigation
+import com.inkapplications.android.PermissionGate
 import com.inkapplications.android.extensions.ExtendedActivity
 import com.inkapplications.android.startActivity
 import com.inkapplications.coroutines.collectOn
@@ -37,45 +35,12 @@ class CaptureActivity: ExtendedActivity(), CaptureNavController {
     private var map: Map? = null
     private var mapScope: CoroutineScope = MainScope()
     private val mapViewModel = MutableStateFlow(MapViewModel())
-    private var recording: Job? = null
-    private var isConnection: Job? = null
-    private var transmitJob: Job? = null
+    private var audioCaptureJob: Job? = null
+    private var internetCaptureJob: Job? = null
+    private var audioTransmitJob: Job? = null
+    private var internetTransmitJob: Job? = null
     private lateinit var captureEvents: CaptureEvents
-    private val mapLocationPermissionRequest: ActivityResultLauncher<String> = registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted: Boolean ->
-        if (isGranted) {
-            Kimchi.trackEvent("location_permission_grant")
-            onLocationEnableClick()
-        } else {
-            Kimchi.trackEvent("location_permission_deny")
-        }
-    }
-
-    private val internetLocationPermissionRequest: ActivityResultLauncher<String> = registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted: Boolean ->
-        if (isGranted) {
-            Kimchi.trackEvent("location_permission_grant")
-            onInternetLocationPermissionGranted()
-        } else {
-            Kimchi.trackEvent("location_permission_deny")
-        }
-    }
-
-    private val transmitPremissionRequest: ActivityResultLauncher<String> = registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted: Boolean ->
-        if (isGranted) {
-            Kimchi.trackEvent("location_permission_grant")
-            onTransmitPermissionsGranted()
-        } else {
-            Kimchi.trackEvent("location_permission_deny")
-        }
-    }
-
-    private val micPermissionRequest: ActivityResultLauncher<String> = registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted: Boolean ->
-        if (isGranted) {
-            Kimchi.trackEvent("record_permission_grant")
-            onRecordingPermissionsGranted()
-        } else {
-            Kimchi.trackEvent("record_permission_deny")
-        }
-    }
+    private val permissionGate = PermissionGate(this)
 
     override fun onCreate() {
         super.onCreate()
@@ -134,72 +99,84 @@ class CaptureActivity: ExtendedActivity(), CaptureNavController {
     }
 
     override fun onLocationEnableClick() {
-        when(ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)) {
-            PackageManager.PERMISSION_GRANTED -> map?.enablePositionTracking()
-            else -> mapLocationPermissionRequest.launch(Manifest.permission.ACCESS_FINE_LOCATION)
+        Kimchi.trackEvent("location_track_enable")
+        foregroundScope.launch {
+            permissionGate.withPermissions(Manifest.permission.ACCESS_FINE_LOCATION) {
+                map?.enablePositionTracking()
+            }
         }
     }
 
     override fun onLocationDisableClick() {
+        Kimchi.trackEvent("location_track_disable")
         map?.disablePositionTracking()
     }
-    override fun onRecordingEnableClick() {
-        Kimchi.trackEvent("record_enable")
-        when(ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO)) {
-            PackageManager.PERMISSION_GRANTED -> onRecordingPermissionsGranted()
-            else -> micPermissionRequest.launch(Manifest.permission.RECORD_AUDIO)
+
+    override fun onAudioCaptureEnableClick() {
+        Kimchi.trackEvent("audio_capture_enable")
+        foregroundScope.launch {
+            permissionGate.withPermissions(*captureEvents.audioCapturePermissions.toTypedArray()) {
+                Kimchi.info("Start Recording")
+                audioCaptureJob = foregroundScope.launch { captureEvents.listenForPackets() }
+            }
         }
     }
 
-    private fun onRecordingPermissionsGranted() {
-        Kimchi.info("Start Recording")
-        recording = foregroundScope.launch { captureEvents.listenForPackets() }
+    override fun onAudioCaptureDisableClick() {
+        Kimchi.trackEvent("audio_capture_disable")
+        audioCaptureJob?.cancel()
+        audioCaptureJob = null
     }
 
-    override fun onRecordingDisableClick() {
-        Kimchi.trackEvent("record_disable")
-        recording?.cancel()
-        recording = null
-    }
-
-    override fun onInternetServiceEnableClick() {
-        Kimchi.trackEvent("internet_enable")
-        when (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)) {
-            PackageManager.PERMISSION_GRANTED -> onInternetLocationPermissionGranted()
-            else -> internetLocationPermissionRequest.launch(Manifest.permission.ACCESS_FINE_LOCATION)
+    override fun onAudioTransmitEnableClick() {
+        Kimchi.trackEvent("audio_transmit_enable")
+        foregroundScope.launch {
+            permissionGate.withPermissions(*captureEvents.audioTransmitPermissions.toTypedArray()) {
+                audioTransmitJob?.cancel()
+                audioTransmitJob = foregroundScope.launch {
+                    captureEvents.transmitAudio()
+                }
+            }
         }
     }
 
-    private fun onInternetLocationPermissionGranted() {
-        Kimchi.info("Enable Internet Service")
-        isConnection = foregroundScope.launch { captureEvents.listenForInternetPackets() }
+    override fun onAudioTransmitDisableClick() {
+        Kimchi.trackEvent("audio_transmit_disable")
+        audioTransmitJob?.cancel()
+        audioTransmitJob = null
     }
 
-    override fun onInternetServiceDisableClick() {
-        Kimchi.trackEvent("internet_disable")
-        isConnection?.cancel()
-        isConnection = null
-    }
-
-    override fun onTransmitEnableClick() {
-        Kimchi.trackEvent("transmit_enable")
-        when (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)) {
-            PackageManager.PERMISSION_GRANTED -> onTransmitPermissionsGranted()
-            else -> transmitPremissionRequest.launch(Manifest.permission.ACCESS_FINE_LOCATION)
+    override fun onInternetCaptureEnableClick() {
+        Kimchi.trackEvent("internet_capture_enable")
+        foregroundScope.launch {
+            permissionGate.withPermissions(*captureEvents.internetCapturePermissions.toTypedArray()) {
+                Kimchi.info("Enable Internet Service")
+                internetCaptureJob = foregroundScope.launch { captureEvents.listenForInternetPackets() }
+            }
         }
     }
 
-    override fun onTransmitDisableClick() {
-        Kimchi.trackEvent("transmit_disable")
-        transmitJob?.cancel()
-        transmitJob = null
+    override fun onInternetCaptureDisableClick() {
+        Kimchi.trackEvent("internet_capture_disable")
+        internetCaptureJob?.cancel()
+        internetCaptureJob = null
     }
 
-    private fun onTransmitPermissionsGranted() {
-        transmitJob?.cancel()
-        transmitJob = foregroundScope.launch {
-            captureEvents.transmitLoop()
+    override fun onInternetTransmitEnableClick() {
+        Kimchi.trackEvent("internet_transmit_enable")
+        foregroundScope.launch {
+            permissionGate.withPermissions(*captureEvents.internetTransmitPermissions.toTypedArray()) {
+                Kimchi.info("Start Internet Transmit")
+                internetTransmitJob?.cancel()
+                internetTransmitJob = foregroundScope.launch { captureEvents.transmitInternet() }
+            }
         }
+    }
+
+    override fun onInternetTransmitDisableClick() {
+        Kimchi.trackEvent("internet_transmit_disable")
+        internetTransmitJob?.cancel()
+        internetTransmitJob = null
     }
 
     override fun onSettingsClick() {
