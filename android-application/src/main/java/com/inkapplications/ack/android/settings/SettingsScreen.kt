@@ -18,7 +18,7 @@ import com.inkapplications.ack.android.R
 import com.inkapplications.ack.android.input.IntPrompt
 import com.inkapplications.ack.android.input.StringPrompt
 import com.inkapplications.ack.android.ui.theme.AckScreen
-import com.inkapplications.ack.android.ui.theme.AprsTheme
+import com.inkapplications.ack.android.ui.theme.AckTheme
 import com.inkapplications.ack.android.ui.NavigationRow
 
 @OptIn(ExperimentalMaterialApi::class)
@@ -41,7 +41,7 @@ fun SettingsScreen(
                 horizontalArrangement = Arrangement.Center,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = AprsTheme.spacing.gutter, vertical = AprsTheme.spacing.content),
+                    .padding(horizontal = AckTheme.spacing.gutter, vertical = AckTheme.spacing.content),
             ) {
                 val callsign = viewModel.callsignText
                 if (callsign != null) {
@@ -52,10 +52,10 @@ fun SettingsScreen(
                     ) {
                         Row(
                             verticalAlignment = Alignment.CenterVertically,
-                            modifier = Modifier.padding(AprsTheme.spacing.item),
+                            modifier = Modifier.padding(AckTheme.spacing.item),
                         ) {
-                            if (viewModel.verified) Icon(Icons.Default.Verified, "Authenticated", modifier = Modifier.padding(end = AprsTheme.spacing.icon))
-                            Text(callsign, style = AprsTheme.typography.h2)
+                            if (viewModel.verified) Icon(Icons.Default.Verified, "Authenticated", modifier = Modifier.padding(end = AckTheme.spacing.icon))
+                            Text(callsign, style = AckTheme.typography.h2)
                         }
                     }
                 } else {
@@ -89,7 +89,7 @@ fun SettingsScreen(
                 else -> {}
             }
             viewModel.settingsList.forEach { group ->
-                Card(modifier = Modifier.padding(vertical = AprsTheme.spacing.item)) {
+                Card(modifier = Modifier.padding(vertical = AckTheme.spacing.item)) {
                     Column {
                         SettingsCategoryRow(group.name)
                         group.settings.forEach { item ->
@@ -113,7 +113,7 @@ fun SettingsScreen(
                 text = stringResource(R.string.application_version, BuildConfig.VERSION_NAME, BuildConfig.VERSION_CODE.toString()),
                 modifier = Modifier
                     .longClickable(controller::onVersionLongPress)
-                    .padding(AprsTheme.spacing.clickSafety)
+                    .padding(AckTheme.spacing.clickSafety)
                     .align(Alignment.CenterHorizontally)
             )
         }
@@ -123,7 +123,7 @@ fun SettingsScreen(
 
 @Composable
 fun SettingsCategoryRow(name: String) = Row(
-    Modifier.padding(horizontal = AprsTheme.spacing.gutter, vertical = AprsTheme.spacing.item)
+    Modifier.padding(horizontal = AckTheme.spacing.gutter, vertical = AckTheme.spacing.item)
 ) {
-    Text(name, style = AprsTheme.typography.h2, modifier = Modifier.padding(vertical = AprsTheme.spacing.item))
+    Text(name, style = AckTheme.typography.h2, modifier = Modifier.padding(vertical = AckTheme.spacing.item))
 }

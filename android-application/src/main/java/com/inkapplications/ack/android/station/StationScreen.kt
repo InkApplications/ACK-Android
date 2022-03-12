@@ -16,7 +16,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.viewinterop.AndroidView
 import com.inkapplications.ack.android.R
 import com.inkapplications.ack.android.ui.*
-import com.inkapplications.ack.android.ui.theme.AprsTheme
+import com.inkapplications.ack.android.ui.theme.AckTheme
 
 @Composable
 fun StationScreen(
@@ -38,13 +38,13 @@ fun StationScreen(
                         Icon(Icons.Default.ArrowBack, stringResource(R.string.navigate_up))
                     }
                 }
-                Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.padding(top = AprsTheme.spacing.gutter)) {
+                Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.padding(top = AckTheme.spacing.gutter)) {
                     Text(
                         viewState.name,
-                        style = AprsTheme.typography.h1,
+                        style = AckTheme.typography.h1,
                         modifier = Modifier.padding(
-                            start = AprsTheme.spacing.gutter,
-                            end = AprsTheme.spacing.gutter,
+                            start = AckTheme.spacing.gutter,
+                            end = AckTheme.spacing.gutter,
                         ),
                     )
                     if (viewState.receiveIcon != null) {
@@ -55,19 +55,19 @@ fun StationScreen(
         } else {
             Box(
                 Modifier.padding(
-                    start = AprsTheme.spacing.gutter,
-                    top = AprsTheme.spacing.gutter,
-                    end = AprsTheme.spacing.gutter,
+                    start = AckTheme.spacing.gutter,
+                    top = AckTheme.spacing.gutter,
+                    end = AckTheme.spacing.gutter,
                 )
             ) {
                 NavigationRow(
                     title = {
                         Text(
                             viewState.name,
-                            style = AprsTheme.typography.h1,
+                            style = AckTheme.typography.h1,
                             modifier = Modifier.padding(
-                                start = AprsTheme.spacing.gutter,
-                                end = AprsTheme.spacing.gutter,
+                                start = AckTheme.spacing.gutter,
+                                end = AckTheme.spacing.gutter,
                             ),
                         )
                         if (viewState.receiveIcon != null) {
@@ -80,10 +80,10 @@ fun StationScreen(
         }
         Column(
             modifier = Modifier.padding(
-                top = AprsTheme.spacing.content,
-                start = AprsTheme.spacing.gutter,
-                end = AprsTheme.spacing.gutter,
-                bottom = AprsTheme.spacing.gutter,
+                top = AckTheme.spacing.content,
+                start = AckTheme.spacing.gutter,
+                end = AckTheme.spacing.gutter,
+                bottom = AckTheme.spacing.gutter,
             ),
         ) {
             if (viewState.temperatureVisible) {
@@ -104,12 +104,12 @@ fun StationScreen(
             }
 
             if (viewState.debugDataVisible) {
-                Card(modifier = Modifier.fillMaxWidth().padding(vertical = AprsTheme.spacing.content)) {
-                    Column(modifier = Modifier.padding(AprsTheme.spacing.content)) {
-                        Text("Debug Info", style = AprsTheme.typography.h2)
-                        Text("Raw Data", style = AprsTheme.typography.h3)
-                        Text(viewState.rawSource, style = AprsTheme.typography.caption)
-                        Spacer(Modifier.height(AprsTheme.spacing.content))
+                Card(modifier = Modifier.fillMaxWidth().padding(vertical = AckTheme.spacing.content)) {
+                    Column(modifier = Modifier.padding(AckTheme.spacing.content)) {
+                        Text("Debug Info", style = AckTheme.typography.h2)
+                        Text("Raw Data", style = AckTheme.typography.h3)
+                        Text(viewState.rawSource, style = AckTheme.typography.caption)
+                        Spacer(Modifier.height(AckTheme.spacing.content))
                     }
                 }
             }

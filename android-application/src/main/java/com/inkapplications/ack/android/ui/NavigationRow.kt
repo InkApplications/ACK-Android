@@ -13,7 +13,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.inkapplications.ack.android.ui.theme.AprsTheme
+import com.inkapplications.ack.android.ui.theme.AckTheme
 
 @Composable
 fun NavigationRow(
@@ -23,9 +23,9 @@ fun NavigationRow(
     title = {
         Text(
             text = title,
-            style = AprsTheme.typography.h1,
+            style = AckTheme.typography.h1,
             modifier = Modifier.padding(
-                start = AprsTheme.spacing.item,
+                start = AckTheme.spacing.item,
             )
         )
     },
@@ -40,9 +40,9 @@ fun NavigationRow(
     verticalAlignment = Alignment.CenterVertically,
     modifier = Modifier.padding(
         start = 0.dp,
-        top = AprsTheme.spacing.gutter,
-        end = AprsTheme.spacing.gutter,
-        bottom = AprsTheme.spacing.content,
+        top = AckTheme.spacing.gutter,
+        end = AckTheme.spacing.gutter,
+        bottom = AckTheme.spacing.content,
     )
 ) {
     if (onBackPressed != null) {
@@ -53,7 +53,7 @@ fun NavigationRow(
             Icon(Icons.Default.ArrowBack, "")
         }
     } else {
-        Spacer(Modifier.width(AprsTheme.spacing.item))
+        Spacer(Modifier.width(AckTheme.spacing.item))
     }
     title()
 }

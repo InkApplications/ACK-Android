@@ -10,7 +10,7 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import com.inkapplications.ack.android.ui.theme.AprsTheme
+import com.inkapplications.ack.android.ui.theme.AckTheme
 
 @Composable
 fun AprsLogItem(
@@ -20,28 +20,28 @@ fun AprsLogItem(
     Card(
         modifier = Modifier
             .padding(
-                vertical = AprsTheme.spacing.singleItem,
-                horizontal = AprsTheme.spacing.gutter
+                vertical = AckTheme.spacing.singleItem,
+                horizontal = AckTheme.spacing.gutter
             )
             .fillMaxWidth()
             .clickable { onClick(log) }
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier.padding(AprsTheme.spacing.content)
+            modifier = Modifier.padding(AckTheme.spacing.content)
         ) {
             AprsSymbol(log.symbol)
 
             Column(
-                modifier = Modifier.padding(start = AprsTheme.spacing.content)
+                modifier = Modifier.padding(start = AckTheme.spacing.content)
             ) {
                 Text(
                     text = log.origin,
-                    style = AprsTheme.typography.h3,
+                    style = AckTheme.typography.h3,
                 )
                 Text(
                     text = log.comment,
-                    style = AprsTheme.typography.body,
+                    style = AckTheme.typography.body,
                 )
             }
         }

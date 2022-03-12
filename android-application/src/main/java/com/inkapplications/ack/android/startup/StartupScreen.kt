@@ -16,14 +16,14 @@ import androidx.compose.ui.res.stringResource
 import com.inkapplications.ack.android.R
 import com.inkapplications.ack.android.BuildConfig
 import com.inkapplications.ack.android.ui.theme.AckScreen
-import com.inkapplications.ack.android.ui.theme.AprsTheme
+import com.inkapplications.ack.android.ui.theme.AckTheme
 
 @Composable
 @OptIn(ExperimentalAnimationApi::class)
 fun StartupScreen() = AckScreen {
     Box(
         contentAlignment = Alignment.Center,
-        modifier = Modifier.padding(AprsTheme.spacing.gutter).fillMaxHeight().fillMaxWidth()
+        modifier = Modifier.padding(AckTheme.spacing.gutter).fillMaxHeight().fillMaxWidth()
     ) {
         val visible = remember { MutableTransitionState(false) }
         visible.targetState = true
@@ -36,8 +36,8 @@ fun StartupScreen() = AckScreen {
                 Icon(
                     painterResource(R.drawable.wave),
                     contentDescription = null,
-                    tint = AprsTheme.colors.brand,
-                    modifier = Modifier.padding(bottom = AprsTheme.spacing.content)
+                    tint = AckTheme.colors.brand,
+                    modifier = Modifier.padding(bottom = AckTheme.spacing.content)
                 )
                 Text(stringResource(R.string.application_version, BuildConfig.VERSION_NAME, BuildConfig.VERSION_CODE.toString()))
             }

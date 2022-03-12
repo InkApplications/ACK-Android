@@ -13,7 +13,7 @@ import androidx.compose.runtime.State
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import com.inkapplications.ack.android.ui.theme.AckScreen
-import com.inkapplications.ack.android.ui.theme.AprsTheme
+import com.inkapplications.ack.android.ui.theme.AckTheme
 import com.inkapplications.ack.data.CapturedPacket
 import com.inkapplications.ack.structures.PacketData
 
@@ -37,8 +37,8 @@ private fun EmptyPlaceholder() = Box(
         Icon(
             imageVector = Icons.Default.Inbox,
             contentDescription = null,
-            tint = AprsTheme.colors.foregroundInactive,
-            modifier = Modifier.size(AprsTheme.spacing.placeholderIcon),
+            tint = AckTheme.colors.foregroundInactive,
+            modifier = Modifier.size(AckTheme.spacing.placeholderIcon),
         )
         Text("No messages received")
     }
@@ -47,7 +47,7 @@ private fun EmptyPlaceholder() = Box(
 @Composable
 private fun MessageList(state: MessageScreenState.MessageList) {
     LazyColumn(
-        contentPadding = PaddingValues(bottom = AprsTheme.spacing.navigationProtection)
+        contentPadding = PaddingValues(bottom = AckTheme.spacing.navigationProtection)
     ) {
         items(state.messages) { message ->
             MessageItem(message)
@@ -57,9 +57,9 @@ private fun MessageList(state: MessageScreenState.MessageList) {
 
 @Composable
 private fun MessageItem(packet: CapturedPacket) {
-    Card(modifier = Modifier.padding(horizontal = AprsTheme.spacing.gutter, vertical = AprsTheme.spacing.singleItem)) {
-        Column(modifier = Modifier.padding(AprsTheme.spacing.content).fillMaxWidth()) {
-            Text(packet.parsed.route.source.toString(), style = AprsTheme.typography.h2)
+    Card(modifier = Modifier.padding(horizontal = AckTheme.spacing.gutter, vertical = AckTheme.spacing.singleItem)) {
+        Column(modifier = Modifier.padding(AckTheme.spacing.content).fillMaxWidth()) {
+            Text(packet.parsed.route.source.toString(), style = AckTheme.typography.h2)
             val data = packet.parsed.data as? PacketData.Message ?: run {
                 Text("Unsupported data type: ${packet.parsed.data.javaClass.simpleName}")
                 return@Card

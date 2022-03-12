@@ -11,7 +11,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.window.Dialog
 import com.inkapplications.ack.android.R
-import com.inkapplications.ack.android.ui.theme.AprsTheme
+import com.inkapplications.ack.android.ui.theme.AckTheme
 
 /**
  * Displays a dialog asking the user for a number input.
@@ -36,34 +36,34 @@ fun IntPrompt(
     Dialog(
         onDismissRequest = onDismiss,
     ) {
-        Surface(shape = AprsTheme.shapes.corners) {
+        Surface(shape = AckTheme.shapes.corners) {
             Column(
-                modifier = Modifier.padding(AprsTheme.spacing.gutter),
+                modifier = Modifier.padding(AckTheme.spacing.gutter),
             ) {
-                Text(title, style = AprsTheme.typography.h2)
+                Text(title, style = AckTheme.typography.h2)
                 TextField(
                     value = inputState.value,
                     onValueChange = { inputState.value = it },
                     isError = errorState.value != null,
                     singleLine = true,
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                    modifier = Modifier.padding(top = AprsTheme.spacing.item).fillMaxWidth(),
+                    modifier = Modifier.padding(top = AckTheme.spacing.item).fillMaxWidth(),
                 )
                 Text(
                     text = errorState.value.orEmpty(),
-                    style = AprsTheme.typography.errorCaption,
+                    style = AckTheme.typography.errorCaption,
                 )
 
                 Row(
                     horizontalArrangement = Arrangement.End,
-                    modifier = Modifier.fillMaxWidth().padding(top = AprsTheme.spacing.item),
+                    modifier = Modifier.fillMaxWidth().padding(top = AckTheme.spacing.item),
                 ) {
                     TextButton(
                         onClick = onDismiss,
                         colors = ButtonDefaults.textButtonColors(
-                            contentColor = AprsTheme.colors.foreground,
+                            contentColor = AckTheme.colors.foreground,
                         ),
-                        modifier = Modifier.padding(end = AprsTheme.spacing.item),
+                        modifier = Modifier.padding(end = AckTheme.spacing.item),
                     ) {
                         Text(stringResource(R.string.prompt_cancel))
                     }

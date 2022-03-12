@@ -6,7 +6,7 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import com.inkapplications.ack.android.ui.theme.AprsTheme
+import com.inkapplications.ack.android.ui.theme.AckTheme
 
 @Composable
 fun KeyValueRow(
@@ -14,6 +14,6 @@ fun KeyValueRow(
     value: String,
     modifier: Modifier = Modifier,
 ) = Row(verticalAlignment = Alignment.CenterVertically, modifier = modifier) {
-    Text(label, style = AprsTheme.typography.caption, color = AprsTheme.colors.brand, modifier = Modifier.padding(end = AprsTheme.spacing.icon))
-    Text(value, style = AprsTheme.typography.body)
+    Text(label, style = AckTheme.typography.caption, color = AckTheme.colors.brand, modifier = Modifier.padding(end = AckTheme.spacing.icon))
+    Text(value, style = AckTheme.typography.body)
 }

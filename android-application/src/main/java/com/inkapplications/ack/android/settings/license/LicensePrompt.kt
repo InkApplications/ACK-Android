@@ -10,7 +10,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import com.inkapplications.ack.android.onboard.LicensePromptFieldValues
 import com.inkapplications.ack.android.ui.theme.AckScreen
-import com.inkapplications.ack.android.ui.theme.AprsTheme
+import com.inkapplications.ack.android.ui.theme.AckTheme
 
 @Composable
 fun LicensePromptScreen(
@@ -19,15 +19,15 @@ fun LicensePromptScreen(
     onContinue: (LicensePromptFieldValues) -> Unit,
 ) = AckScreen {
     Column (
-        modifier = Modifier.padding(AprsTheme.spacing.gutter),
+        modifier = Modifier.padding(AckTheme.spacing.gutter),
     ) {
         Text(
             "License Info",
-            style = AprsTheme.typography.h1,
+            style = AckTheme.typography.h1,
         )
-        Spacer(Modifier.height(AprsTheme.spacing.item))
+        Spacer(Modifier.height(AckTheme.spacing.item))
         Text("If you have a radio license, enter the information below to enable transmit and internet services.")
-        Spacer(Modifier.height(AprsTheme.spacing.content))
+        Spacer(Modifier.height(AckTheme.spacing.content))
 
         val callsign = rememberSaveable { mutableStateOf(initialValues.callsign) }
         val passcode = rememberSaveable { mutableStateOf(initialValues.passcode) }
@@ -41,8 +41,8 @@ fun LicensePromptScreen(
             isError = callsignError.value != null,
             modifier = Modifier.fillMaxWidth(),
         )
-        if (callsignError.value != null) Text(callsignError.value.orEmpty(), style = AprsTheme.typography.errorCaption)
-        Spacer(Modifier.height(AprsTheme.spacing.item))
+        if (callsignError.value != null) Text(callsignError.value.orEmpty(), style = AckTheme.typography.errorCaption)
+        Spacer(Modifier.height(AckTheme.spacing.item))
         TextField(
             value = passcode.value,
             label = { Text("APRS-IS Passcode") },
@@ -51,7 +51,7 @@ fun LicensePromptScreen(
             isError = passcodeError.value != null,
             modifier = Modifier.fillMaxWidth(),
         )
-        if (passcodeError.value != null) Text(passcodeError.value.orEmpty(), style = AprsTheme.typography.errorCaption)
+        if (passcodeError.value != null) Text(passcodeError.value.orEmpty(), style = AckTheme.typography.errorCaption)
         Spacer(Modifier.weight(1f))
         Button(
             onClick = {
@@ -61,7 +61,7 @@ fun LicensePromptScreen(
                     onContinue(LicensePromptFieldValues(callsign.value, passcode.value))
                 }
             },
-            modifier = Modifier.fillMaxWidth().padding(top = AprsTheme.spacing.item),
+            modifier = Modifier.fillMaxWidth().padding(top = AckTheme.spacing.item),
         ) {
             if (callsign.value.isBlank() && passcode.value.isBlank()) {
                 Text("Skip")

@@ -8,11 +8,11 @@ import androidx.compose.runtime.CompositionLocalProvider
 @Composable
 fun AckScreen(content: @Composable () -> Unit) {
     MaterialTheme(
-        colors = AprsTheme.colors.materialColors,
-        typography = AprsTheme.typography.material,
+        colors = AckTheme.colors.materialColors,
+        typography = AckTheme.typography.material,
     ) {
         CompositionLocalProvider(
-            LocalContentColor provides AprsTheme.colors.foreground,
+            LocalContentColor provides AckTheme.colors.foreground,
         ) { content() }
     }
 }

@@ -9,7 +9,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.graphics.vector.ImageVector
-import com.inkapplications.ack.android.ui.theme.AprsTheme
+import com.inkapplications.ack.android.ui.theme.AckTheme
 
 @Composable
 fun IconRow(
@@ -17,7 +17,7 @@ fun IconRow(
     text: String,
     modifier: Modifier = Modifier,
 ) = Row(verticalAlignment = Alignment.CenterVertically, modifier = modifier) {
-    Icon(icon, null, tint = AprsTheme.colors.brand, modifier = Modifier.padding(AprsTheme.spacing.icon))
+    Icon(icon, null, tint = AckTheme.colors.brand, modifier = Modifier.padding(AckTheme.spacing.icon))
     Text(text)
 }
 
@@ -27,6 +27,6 @@ fun IconRow(
     text: String,
     modifier: Modifier = Modifier,
 ) = Row(verticalAlignment = Alignment.CenterVertically, modifier = modifier) {
-    Icon(icon, null, tint = AprsTheme.colors.brand, modifier = Modifier.padding(AprsTheme.spacing.icon))
+    Icon(icon, null, tint = AckTheme.colors.brand, modifier = Modifier.padding(AckTheme.spacing.icon))
     Text(text)
 }

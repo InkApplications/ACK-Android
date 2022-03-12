@@ -9,7 +9,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
-object AprsTheme {
+object AckTheme {
     val darkColors = ColorVariant(
         brand = ColorPalette.brand,
         onBrand = ColorPalette.darkStroke,

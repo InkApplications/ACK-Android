@@ -36,7 +36,7 @@ import com.inkapplications.ack.android.capture.messages.MessageScreenController
 import com.inkapplications.ack.android.capture.messages.MessageScreenState
 import com.inkapplications.ack.android.trackNavigation
 import com.inkapplications.ack.android.ui.theme.AckScreen
-import com.inkapplications.ack.android.ui.theme.AprsTheme
+import com.inkapplications.ack.android.ui.theme.AckTheme
 import com.inkapplications.android.extensions.control.whenDisabled
 import com.inkapplications.android.extensions.control.whenOff
 import com.inkapplications.android.extensions.control.whenOn
@@ -87,13 +87,13 @@ private fun CaptureBottomBar(
     navController: NavHostController,
 ) {
     BottomAppBar(
-        backgroundColor = AprsTheme.colors.surface,
-        contentColor = contentColorFor(AprsTheme.colors.surface),
+        backgroundColor = AckTheme.colors.surface,
+        contentColor = contentColorFor(AckTheme.colors.surface),
         cutoutShape = RoundedCornerShape(50),
     ) {
         BottomNavigation(
-            backgroundColor = AprsTheme.colors.surface,
-            contentColor = contentColorFor(AprsTheme.colors.surface),
+            backgroundColor = AckTheme.colors.surface,
+            contentColor = contentColorFor(AckTheme.colors.surface),
         ) {
             val currentRoute = navController.currentBackStackEntryAsState().value?.destination?.route
             BottomNavigationItem(
@@ -155,8 +155,8 @@ private fun CaptureSettingsFab(
             }
         },
         shape = RoundedCornerShape(50),
-        backgroundColor = AprsTheme.colors.brand,
-        contentColor = AprsTheme.colors.onBrand
+        backgroundColor = AckTheme.colors.brand,
+        contentColor = AckTheme.colors.onBrand
     ) {
         Icon(Icons.Default.SettingsInputAntenna,"")
     }
@@ -189,18 +189,18 @@ private fun CaptureSettingsSheet(
     val scope = rememberCoroutineScope()
     Row(
         horizontalArrangement = Arrangement.Center,
-        modifier = Modifier.padding(AprsTheme.spacing.content).fillMaxWidth()
+        modifier = Modifier.padding(AckTheme.spacing.content).fillMaxWidth()
     ) {
         IconButton(
             onClick = { scope.launch { settingsSheetState.bottomSheetState.collapse() } },
         ) {
-            Icon(Icons.Default.ExpandMore, "Close Sheet", modifier = Modifier.padding(AprsTheme.spacing.clickSafety))
+            Icon(Icons.Default.ExpandMore, "Close Sheet", modifier = Modifier.padding(AckTheme.spacing.clickSafety))
         }
     }
     captureScreenState.audioCaptureState.whenOff {
         CaptureSettingRow(
             icon = Icons.Outlined.MicOff,
-            iconColor = AprsTheme.colors.foregroundInactive,
+            iconColor = AckTheme.colors.foregroundInactive,
             name = "Enable Audio Capture",
             onClick = captureController::onAudioCaptureEnableClick
         )
@@ -208,7 +208,7 @@ private fun CaptureSettingsSheet(
     captureScreenState.audioCaptureState.whenOn {
         CaptureSettingRow(
             icon = Icons.Filled.Mic,
-            iconColor = AprsTheme.colors.brand,
+            iconColor = AckTheme.colors.brand,
             name = "Disable Audio Capture",
             onClick = captureController::onAudioCaptureDisableClick
         )
@@ -217,7 +217,7 @@ private fun CaptureSettingsSheet(
     captureScreenState.audioTransmitState.whenDisabled {
         CaptureSettingRow(
             icon = Icons.Outlined.VolumeOff,
-            iconColor = AprsTheme.colors.foregroundInactive,
+            iconColor = AckTheme.colors.foregroundInactive,
             name = "Enable Audio Transmit",
             modifier = Modifier.alpha(.6f),
         )
@@ -225,7 +225,7 @@ private fun CaptureSettingsSheet(
     captureScreenState.audioTransmitState.whenOff {
         CaptureSettingRow(
             icon = Icons.Outlined.VolumeOff,
-            iconColor = AprsTheme.colors.foregroundInactive,
+            iconColor = AckTheme.colors.foregroundInactive,
             name = "Enable Audio Transmit",
             onClick = captureController::onAudioTransmitEnableClick
         )
@@ -233,7 +233,7 @@ private fun CaptureSettingsSheet(
     captureScreenState.audioTransmitState.whenOn {
         CaptureSettingRow(
             icon = Icons.Filled.VolumeUp,
-            iconColor = AprsTheme.colors.brand,
+            iconColor = AckTheme.colors.brand,
             name = "Disable Audio Transmit",
             onClick = captureController::onAudioTransmitDisableClick
         )
@@ -242,7 +242,7 @@ private fun CaptureSettingsSheet(
     captureScreenState.internetCaptureState.whenOff {
         CaptureSettingRow(
             icon = Icons.Outlined.CloudDownload,
-            iconColor = AprsTheme.colors.foregroundInactive,
+            iconColor = AckTheme.colors.foregroundInactive,
             name = "Enable Internet Capture",
             onClick = captureController::onInternetCaptureEnableClick
         )
@@ -250,7 +250,7 @@ private fun CaptureSettingsSheet(
     captureScreenState.internetCaptureState.whenOn {
         CaptureSettingRow(
             icon = Icons.Filled.CloudDownload,
-            iconColor = AprsTheme.colors.brand,
+            iconColor = AckTheme.colors.brand,
             name = "Disable Internet Capture",
             onClick = captureController::onInternetCaptureDisableClick
         )
@@ -259,7 +259,7 @@ private fun CaptureSettingsSheet(
     captureScreenState.internetTransmitState.whenDisabled {
         CaptureSettingRow(
             icon = Icons.Outlined.CloudUpload,
-            iconColor = AprsTheme.colors.foregroundInactive,
+            iconColor = AckTheme.colors.foregroundInactive,
             name = "Enable Internet Transmit",
             modifier = Modifier.alpha(.6f),
         )
@@ -267,7 +267,7 @@ private fun CaptureSettingsSheet(
     captureScreenState.internetTransmitState.whenOff {
         CaptureSettingRow(
             icon = Icons.Outlined.CloudUpload,
-            iconColor = AprsTheme.colors.foregroundInactive,
+            iconColor = AckTheme.colors.foregroundInactive,
             name = "Enable Internet Transmit",
             onClick = captureController::onInternetTransmitEnableClick
         )
@@ -275,7 +275,7 @@ private fun CaptureSettingsSheet(
     captureScreenState.internetTransmitState.whenOn {
         CaptureSettingRow(
             icon = Icons.Filled.CloudUpload,
-            iconColor = AprsTheme.colors.brand,
+            iconColor = AckTheme.colors.brand,
             name = "Disable Internet Transmit",
             onClick = captureController::onInternetTransmitDisableClick
         )
@@ -283,7 +283,7 @@ private fun CaptureSettingsSheet(
 
     CaptureSettingRow(
         icon = Icons.Default.Settings,
-        iconColor = AprsTheme.colors.foreground,
+        iconColor = AckTheme.colors.foreground,
         name = "Settings",
         onClick = {
             scope.launch {
@@ -306,10 +306,10 @@ private fun CaptureSettingRow(
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier
             .let { if (onClick != null) it.clickable { onClick() } else it }
-            .padding(vertical = AprsTheme.spacing.clickSafety, horizontal = AprsTheme.spacing.gutter)
+            .padding(vertical = AckTheme.spacing.clickSafety, horizontal = AckTheme.spacing.gutter)
             .fillMaxWidth(),
     ) {
-        Icon(icon, null, tint = iconColor, modifier = Modifier.padding(end = AprsTheme.spacing.icon))
+        Icon(icon, null, tint = iconColor, modifier = Modifier.padding(end = AckTheme.spacing.icon))
         Text(name)
     }
 }
@@ -359,7 +359,7 @@ private fun LogScreen(
     logs: State<List<LogItemViewModel>>,
     controller: CaptureNavController,
 ) = AckScreen {
-    LazyColumn(contentPadding = PaddingValues(bottom = AprsTheme.spacing.navigationProtection)) {
+    LazyColumn(contentPadding = PaddingValues(bottom = AckTheme.spacing.navigationProtection)) {
         items(logs.value) { log ->
             AprsLogItem(log, controller::onLogItemClick)
         }
