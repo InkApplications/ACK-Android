@@ -41,6 +41,8 @@ object AprsTheme {
             item = 8.dp,
             icon = 8.dp,
             clickSafety = 16.dp,
+            placeholderIcon = 120.dp,
+            navigationProtection = 88.dp,
         )
 
     val shapes

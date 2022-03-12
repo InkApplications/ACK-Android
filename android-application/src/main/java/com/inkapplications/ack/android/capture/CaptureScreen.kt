@@ -31,6 +31,9 @@ import com.inkapplications.ack.android.capture.log.AprsLogItem
 import com.inkapplications.ack.android.capture.log.LogItemViewModel
 import com.inkapplications.ack.android.capture.map.MapScreen
 import com.inkapplications.ack.android.capture.map.MapViewModel
+import com.inkapplications.ack.android.capture.messages.MessageScreen
+import com.inkapplications.ack.android.capture.messages.MessageScreenController
+import com.inkapplications.ack.android.capture.messages.MessageScreenState
 import com.inkapplications.ack.android.trackNavigation
 import com.inkapplications.ack.android.ui.theme.AprsScreen
 import com.inkapplications.ack.android.ui.theme.AprsTheme
@@ -46,6 +49,8 @@ fun CaptureScreen(
     captureScreenState: State<CaptureScreenViewModel>,
     mapState: State<MapViewModel>,
     logs: State<List<LogItemViewModel>>,
+    messageScreenState: State<MessageScreenState>,
+    messageScreenController: MessageScreenController,
     mapFactory: (Context) -> View,
     controller: CaptureNavController,
 ) = AprsScreen {
@@ -67,6 +72,8 @@ fun CaptureScreen(
                     navController = navController,
                     mapState = mapState,
                     logs = logs,
+                    messageScreenState = messageScreenState,
+                    messageScreenController = messageScreenController,
                     mapFactory = mapFactory,
                     captureController = controller,
                 )
@@ -101,7 +108,6 @@ private fun CaptureBottomBar(
                     }
                 }
             )
-            Spacer(Modifier.weight(1f, true))
             BottomNavigationItem(
                 icon = { Icon(Icons.Default.List, contentDescription = null) },
                 label = { Text(stringResource(R.string.menu_capture_log)) },
@@ -114,6 +120,20 @@ private fun CaptureBottomBar(
                     }
                 }
             )
+            Spacer(Modifier.weight(1f, true))
+            BottomNavigationItem(
+                icon = { Icon(Icons.Default.Mail, contentDescription = null) },
+                label = { Text("Messages") },
+                selected = currentRoute == "messages",
+                onClick = {
+                    Kimchi.info("Navigate to messages")
+                    Kimchi.trackNavigation("messages")
+                    if (currentRoute != "messages") {
+                        navController.navigate("messages")
+                    }
+                }
+            )
+            Spacer(Modifier.weight(1f, true))
         }
     }
 }
@@ -299,6 +319,8 @@ private fun CaptureNavHost(
     navController: NavHostController,
     mapState: State<MapViewModel>,
     logs: State<List<LogItemViewModel>>,
+    messageScreenState: State<MessageScreenState>,
+    messageScreenController: MessageScreenController,
     mapFactory: (Context) -> View,
     captureController: CaptureNavController,
 ) {
@@ -323,6 +345,12 @@ private fun CaptureNavHost(
                 controller = captureController,
             )
         }
+        composable("messages") {
+            MessageScreen(
+                screenState = messageScreenState,
+                controller = messageScreenController,
+            )
+        }
     }
 }
 
@@ -331,7 +359,7 @@ private fun LogScreen(
     logs: State<List<LogItemViewModel>>,
     controller: CaptureNavController,
 ) = AprsScreen {
-    LazyColumn(contentPadding = PaddingValues(bottom = 88.dp)) {
+    LazyColumn(contentPadding = PaddingValues(bottom = AprsTheme.spacing.navigationProtection)) {
         items(logs.value) { log ->
             AprsLogItem(log, controller::onLogItemClick)
         }

@@ -7,6 +7,7 @@ import com.inkapplications.ack.android.capture.log.LogEvents
 import com.inkapplications.ack.android.capture.log.LogModule
 import com.inkapplications.ack.android.capture.map.MapEventsFactory
 import com.inkapplications.ack.android.capture.map.MapModule
+import com.inkapplications.ack.android.capture.messages.MessageEvents
 import com.inkapplications.ack.android.locale.LocaleModule
 import com.inkapplications.ack.android.onboard.OnboardingModule
 import com.inkapplications.ack.android.onboard.OnboardingStateAccess
@@ -48,6 +49,7 @@ interface ApplicationComponent {
     fun mapManager(): MapEventsFactory
     fun settingsAccess(): SettingsAccess
     fun logData(): LogEvents
+    fun messageEvents(): MessageEvents
     fun initializer(): ApplicationInitializer
     fun stationEvents(): StationEvents
     fun onboardingStateAccess(): OnboardingStateAccess

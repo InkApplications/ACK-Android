@@ -6,7 +6,10 @@ data class SpacingVariant(
     val gutter: Dp,
     val content: Dp,
     val item: Dp,
-    val singleItem: Dp = item / 2,
     val icon: Dp,
     val clickSafety: Dp,
-)
+    val placeholderIcon: Dp,
+    val navigationProtection: Dp,
+) {
+    val singleItem: Dp = item / 2
+}

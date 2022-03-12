@@ -1,7 +1,6 @@
 package com.inkapplications.ack.android.capture
 
 import android.Manifest
-import android.annotation.SuppressLint
 import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Bundle
@@ -12,6 +11,8 @@ import androidx.compose.runtime.collectAsState
 import androidx.core.content.ContextCompat
 import com.inkapplications.ack.android.capture.log.LogItemViewModel
 import com.inkapplications.ack.android.capture.map.*
+import com.inkapplications.ack.android.capture.messages.MessageScreenController
+import com.inkapplications.ack.android.capture.messages.MessageScreenState
 import com.inkapplications.ack.android.component
 import com.inkapplications.ack.android.map.Map
 import com.inkapplications.ack.android.map.getMap
@@ -51,11 +52,15 @@ class CaptureActivity: ExtendedActivity(), CaptureNavController {
             val captureState = captureEvents.screenState.collectAsState(CaptureScreenViewModel())
             val mapState = mapViewModel.collectAsState()
             val logState = logData.logViewModels.collectAsState(emptyList())
+            val messageScreenState = component.messageEvents().screenState.collectAsState(MessageScreenState.Initial)
+            val messageScreenController = object: MessageScreenController {}
 
             CaptureScreen(
                 captureScreenState = captureState,
                 mapState = mapState,
                 logs = logState,
+                messageScreenState = messageScreenState,
+                messageScreenController = messageScreenController,
                 mapFactory = ::createMapView,
                 controller = this,
             )
