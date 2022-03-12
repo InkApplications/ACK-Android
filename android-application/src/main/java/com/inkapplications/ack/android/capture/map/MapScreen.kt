@@ -17,7 +17,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.viewinterop.AndroidView
 import com.inkapplications.ack.android.capture.log.AprsLogItem
 import com.inkapplications.ack.android.capture.log.LogItemViewModel
-import com.inkapplications.ack.android.ui.theme.AprsScreen
+import com.inkapplications.ack.android.ui.theme.AckScreen
 import com.inkapplications.ack.android.ui.theme.AprsTheme
 
 @Composable
@@ -28,7 +28,7 @@ fun MapScreen(
     onEnableLocation: () -> Unit,
     onDisableLocation: () -> Unit,
     bottomContentProtection: Dp,
-) = AprsScreen {
+) = AckScreen {
     AndroidView(
         factory = mapFactory,
         modifier = Modifier.fillMaxSize()

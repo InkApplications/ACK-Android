@@ -12,7 +12,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import com.inkapplications.ack.android.ui.theme.AprsScreen
+import com.inkapplications.ack.android.ui.theme.AckScreen
 import com.inkapplications.ack.android.ui.theme.AprsTheme
 import com.inkapplications.ack.data.CapturedPacket
 import com.inkapplications.ack.structures.PacketData
@@ -21,7 +21,7 @@ import com.inkapplications.ack.structures.PacketData
 fun MessageScreen(
     screenState: State<MessageScreenState>,
     controller: MessageScreenController,
-) = AprsScreen {
+) = AckScreen {
     when (val state = screenState.value) {
         is MessageScreenState.MessageList -> MessageList(state)
         is MessageScreenState.Empty -> EmptyPlaceholder()

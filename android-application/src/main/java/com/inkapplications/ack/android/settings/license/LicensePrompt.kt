@@ -9,7 +9,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import com.inkapplications.ack.android.onboard.LicensePromptFieldValues
-import com.inkapplications.ack.android.ui.theme.AprsScreen
+import com.inkapplications.ack.android.ui.theme.AckScreen
 import com.inkapplications.ack.android.ui.theme.AprsTheme
 
 @Composable
@@ -17,7 +17,7 @@ fun LicensePromptScreen(
     initialValues: LicensePromptFieldValues,
     validator: LicensePromptValidator,
     onContinue: (LicensePromptFieldValues) -> Unit,
-) = AprsScreen {
+) = AckScreen {
     Column (
         modifier = Modifier.padding(AprsTheme.spacing.gutter),
     ) {

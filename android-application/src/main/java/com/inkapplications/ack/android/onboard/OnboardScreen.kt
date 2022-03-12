@@ -4,7 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
 import com.inkapplications.ack.android.settings.license.LicensePromptScreen
 import com.inkapplications.ack.android.settings.license.LicensePromptValidator
-import com.inkapplications.ack.android.ui.theme.AprsScreen
+import com.inkapplications.ack.android.ui.theme.AckScreen
 
 @Composable
 fun OnboardScreen(
@@ -13,7 +13,7 @@ fun OnboardScreen(
     initialLicensePromptFieldValues: LicensePromptFieldValues,
     licenseValidator: LicensePromptValidator,
     onLicenseContinueClick: (LicensePromptFieldValues) -> Unit,
-) = AprsScreen {
+) = AckScreen {
     when {
         state.value.agreementRequired -> UsageAgreement(userAgreementController)
         state.value.licensePromptRequired -> LicensePromptScreen(

@@ -15,12 +15,12 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import com.inkapplications.ack.android.R
 import com.inkapplications.ack.android.BuildConfig
-import com.inkapplications.ack.android.ui.theme.AprsScreen
+import com.inkapplications.ack.android.ui.theme.AckScreen
 import com.inkapplications.ack.android.ui.theme.AprsTheme
 
 @Composable
 @OptIn(ExperimentalAnimationApi::class)
-fun StartupScreen() = AprsScreen {
+fun StartupScreen() = AckScreen {
     Box(
         contentAlignment = Alignment.Center,
         modifier = Modifier.padding(AprsTheme.spacing.gutter).fillMaxHeight().fillMaxWidth()

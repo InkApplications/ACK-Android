@@ -10,7 +10,7 @@ import com.inkapplications.ack.android.map.Map
 import com.inkapplications.ack.android.map.getMap
 import com.inkapplications.ack.android.map.lifecycleObserver
 import com.inkapplications.ack.android.trackNavigation
-import com.inkapplications.ack.android.ui.theme.AprsScreen
+import com.inkapplications.ack.android.ui.theme.AckScreen
 import com.inkapplications.android.extensions.ExtendedActivity
 import com.inkapplications.android.startActivity
 import com.inkapplications.coroutines.collectOn
@@ -31,7 +31,7 @@ class StationActivity: ExtendedActivity() {
 
         setContent {
             val viewState = stationEvents.stateEvents(id).collectAsState(StationViewModel())
-            AprsScreen {
+            AckScreen {
                 StationScreen(
                     viewState = viewState.value,
                     createMapView = ::createMapView,

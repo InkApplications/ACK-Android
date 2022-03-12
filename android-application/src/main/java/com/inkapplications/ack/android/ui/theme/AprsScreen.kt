@@ -6,7 +6,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 
 @Composable
-fun AprsScreen(content: @Composable () -> Unit) {
+fun AckScreen(content: @Composable () -> Unit) {
     MaterialTheme(
         colors = AprsTheme.colors.materialColors,
         typography = AprsTheme.typography.material,

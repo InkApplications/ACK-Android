@@ -35,7 +35,7 @@ import com.inkapplications.ack.android.capture.messages.MessageScreen
 import com.inkapplications.ack.android.capture.messages.MessageScreenController
 import com.inkapplications.ack.android.capture.messages.MessageScreenState
 import com.inkapplications.ack.android.trackNavigation
-import com.inkapplications.ack.android.ui.theme.AprsScreen
+import com.inkapplications.ack.android.ui.theme.AckScreen
 import com.inkapplications.ack.android.ui.theme.AprsTheme
 import com.inkapplications.android.extensions.control.whenDisabled
 import com.inkapplications.android.extensions.control.whenOff
@@ -53,7 +53,7 @@ fun CaptureScreen(
     messageScreenController: MessageScreenController,
     mapFactory: (Context) -> View,
     controller: CaptureNavController,
-) = AprsScreen {
+) = AckScreen {
     val navController = rememberNavController()
     val settingsSheetState = rememberBottomSheetScaffoldState()
     SettingsSheetWrapper(
@@ -358,7 +358,7 @@ private fun CaptureNavHost(
 private fun LogScreen(
     logs: State<List<LogItemViewModel>>,
     controller: CaptureNavController,
-) = AprsScreen {
+) = AckScreen {
     LazyColumn(contentPadding = PaddingValues(bottom = AprsTheme.spacing.navigationProtection)) {
         items(logs.value) { log ->
             AprsLogItem(log, controller::onLogItemClick)

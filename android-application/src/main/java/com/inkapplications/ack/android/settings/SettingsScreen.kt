@@ -17,7 +17,7 @@ import com.inkapplications.ack.android.BuildConfig
 import com.inkapplications.ack.android.R
 import com.inkapplications.ack.android.input.IntPrompt
 import com.inkapplications.ack.android.input.StringPrompt
-import com.inkapplications.ack.android.ui.theme.AprsScreen
+import com.inkapplications.ack.android.ui.theme.AckScreen
 import com.inkapplications.ack.android.ui.theme.AprsTheme
 import com.inkapplications.ack.android.ui.NavigationRow
 
@@ -26,7 +26,7 @@ import com.inkapplications.ack.android.ui.NavigationRow
 fun SettingsScreen(
     state: State<SettingsViewModel?>,
     controller: SettingsController,
-) = AprsScreen {
+) = AckScreen {
     Column(
         modifier = Modifier.verticalScroll(rememberScrollState()),
     ) {
