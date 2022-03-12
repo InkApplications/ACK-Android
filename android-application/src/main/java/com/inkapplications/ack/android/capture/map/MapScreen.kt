@@ -61,7 +61,7 @@ fun LocationStateButton(
             onClick = onDisableTrackingClick,
             backgroundColor = AckTheme.colors.surface,
             contentColor = AckTheme.colors.brand,
-            modifier = Modifier.padding(AckTheme.spacing.gutter)
+            modifier = Modifier.padding(AckTheme.dimensions.gutter)
         ) {
             Icon(Icons.Default.MyLocation, "")
         }
@@ -70,7 +70,7 @@ fun LocationStateButton(
             onClick = onEnableTrackingClick,
             backgroundColor = AckTheme.colors.surface,
             contentColor = contentColorFor(AckTheme.colors.surface),
-            modifier = Modifier.padding(AckTheme.spacing.gutter)
+            modifier = Modifier.padding(AckTheme.dimensions.gutter)
         ) {
             Icon(Icons.Default.LocationDisabled, "")
         }

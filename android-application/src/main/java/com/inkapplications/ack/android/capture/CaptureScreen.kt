@@ -189,12 +189,12 @@ private fun CaptureSettingsSheet(
     val scope = rememberCoroutineScope()
     Row(
         horizontalArrangement = Arrangement.Center,
-        modifier = Modifier.padding(AckTheme.spacing.content).fillMaxWidth()
+        modifier = Modifier.padding(AckTheme.dimensions.content).fillMaxWidth()
     ) {
         IconButton(
             onClick = { scope.launch { settingsSheetState.bottomSheetState.collapse() } },
         ) {
-            Icon(Icons.Default.ExpandMore, "Close Sheet", modifier = Modifier.padding(AckTheme.spacing.clickSafety))
+            Icon(Icons.Default.ExpandMore, "Close Sheet", modifier = Modifier.padding(AckTheme.dimensions.clickSafety))
         }
     }
     captureScreenState.audioCaptureState.whenOff {
@@ -306,10 +306,10 @@ private fun CaptureSettingRow(
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier
             .let { if (onClick != null) it.clickable { onClick() } else it }
-            .padding(vertical = AckTheme.spacing.clickSafety, horizontal = AckTheme.spacing.gutter)
+            .padding(vertical = AckTheme.dimensions.clickSafety, horizontal = AckTheme.dimensions.gutter)
             .fillMaxWidth(),
     ) {
-        Icon(icon, null, tint = iconColor, modifier = Modifier.padding(end = AckTheme.spacing.icon))
+        Icon(icon, null, tint = iconColor, modifier = Modifier.padding(end = AckTheme.dimensions.icon))
         Text(name)
     }
 }
@@ -359,7 +359,7 @@ private fun LogScreen(
     logs: State<List<LogItemViewModel>>,
     controller: CaptureNavController,
 ) = AckScreen {
-    LazyColumn(contentPadding = PaddingValues(bottom = AckTheme.spacing.navigationProtection)) {
+    LazyColumn(contentPadding = PaddingValues(bottom = AckTheme.dimensions.navigationProtection)) {
         items(logs.value) { log ->
             AprsLogItem(log, controller::onLogItemClick)
         }

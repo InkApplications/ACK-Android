@@ -38,7 +38,7 @@ private fun EmptyPlaceholder() = Box(
             imageVector = Icons.Default.Inbox,
             contentDescription = null,
             tint = AckTheme.colors.foregroundInactive,
-            modifier = Modifier.size(AckTheme.spacing.placeholderIcon),
+            modifier = Modifier.size(AckTheme.dimensions.placeholderIcon),
         )
         Text("No messages received")
     }
@@ -47,7 +47,7 @@ private fun EmptyPlaceholder() = Box(
 @Composable
 private fun MessageList(state: MessageScreenState.MessageList) {
     LazyColumn(
-        contentPadding = PaddingValues(bottom = AckTheme.spacing.navigationProtection)
+        contentPadding = PaddingValues(bottom = AckTheme.dimensions.navigationProtection)
     ) {
         items(state.messages) { message ->
             MessageItem(message)
@@ -57,8 +57,8 @@ private fun MessageList(state: MessageScreenState.MessageList) {
 
 @Composable
 private fun MessageItem(packet: CapturedPacket) {
-    Card(modifier = Modifier.padding(horizontal = AckTheme.spacing.gutter, vertical = AckTheme.spacing.singleItem)) {
-        Column(modifier = Modifier.padding(AckTheme.spacing.content).fillMaxWidth()) {
+    Card(modifier = Modifier.padding(horizontal = AckTheme.dimensions.gutter, vertical = AckTheme.dimensions.singleItem)) {
+        Column(modifier = Modifier.padding(AckTheme.dimensions.content).fillMaxWidth()) {
             Text(packet.parsed.route.source.toString(), style = AckTheme.typography.h2)
             val data = packet.parsed.data as? PacketData.Message ?: run {
                 Text("Unsupported data type: ${packet.parsed.data.javaClass.simpleName}")

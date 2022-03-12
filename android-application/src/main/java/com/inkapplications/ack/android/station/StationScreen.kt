@@ -38,13 +38,13 @@ fun StationScreen(
                         Icon(Icons.Default.ArrowBack, stringResource(R.string.navigate_up))
                     }
                 }
-                Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.padding(top = AckTheme.spacing.gutter)) {
+                Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.padding(top = AckTheme.dimensions.gutter)) {
                     Text(
                         viewState.name,
                         style = AckTheme.typography.h1,
                         modifier = Modifier.padding(
-                            start = AckTheme.spacing.gutter,
-                            end = AckTheme.spacing.gutter,
+                            start = AckTheme.dimensions.gutter,
+                            end = AckTheme.dimensions.gutter,
                         ),
                     )
                     if (viewState.receiveIcon != null) {
@@ -55,9 +55,9 @@ fun StationScreen(
         } else {
             Box(
                 Modifier.padding(
-                    start = AckTheme.spacing.gutter,
-                    top = AckTheme.spacing.gutter,
-                    end = AckTheme.spacing.gutter,
+                    start = AckTheme.dimensions.gutter,
+                    top = AckTheme.dimensions.gutter,
+                    end = AckTheme.dimensions.gutter,
                 )
             ) {
                 NavigationRow(
@@ -66,8 +66,8 @@ fun StationScreen(
                             viewState.name,
                             style = AckTheme.typography.h1,
                             modifier = Modifier.padding(
-                                start = AckTheme.spacing.gutter,
-                                end = AckTheme.spacing.gutter,
+                                start = AckTheme.dimensions.gutter,
+                                end = AckTheme.dimensions.gutter,
                             ),
                         )
                         if (viewState.receiveIcon != null) {
@@ -80,10 +80,10 @@ fun StationScreen(
         }
         Column(
             modifier = Modifier.padding(
-                top = AckTheme.spacing.content,
-                start = AckTheme.spacing.gutter,
-                end = AckTheme.spacing.gutter,
-                bottom = AckTheme.spacing.gutter,
+                top = AckTheme.dimensions.content,
+                start = AckTheme.dimensions.gutter,
+                end = AckTheme.dimensions.gutter,
+                bottom = AckTheme.dimensions.gutter,
             ),
         ) {
             if (viewState.temperatureVisible) {
@@ -104,12 +104,12 @@ fun StationScreen(
             }
 
             if (viewState.debugDataVisible) {
-                Card(modifier = Modifier.fillMaxWidth().padding(vertical = AckTheme.spacing.content)) {
-                    Column(modifier = Modifier.padding(AckTheme.spacing.content)) {
+                Card(modifier = Modifier.fillMaxWidth().padding(vertical = AckTheme.dimensions.content)) {
+                    Column(modifier = Modifier.padding(AckTheme.dimensions.content)) {
                         Text("Debug Info", style = AckTheme.typography.h2)
                         Text("Raw Data", style = AckTheme.typography.h3)
                         Text(viewState.rawSource, style = AckTheme.typography.caption)
-                        Spacer(Modifier.height(AckTheme.spacing.content))
+                        Spacer(Modifier.height(AckTheme.dimensions.content))
                     }
                 }
             }

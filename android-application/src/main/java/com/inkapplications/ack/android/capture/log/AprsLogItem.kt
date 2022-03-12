@@ -20,20 +20,20 @@ fun AprsLogItem(
     Card(
         modifier = Modifier
             .padding(
-                vertical = AckTheme.spacing.singleItem,
-                horizontal = AckTheme.spacing.gutter
+                vertical = AckTheme.dimensions.singleItem,
+                horizontal = AckTheme.dimensions.gutter
             )
             .fillMaxWidth()
             .clickable { onClick(log) }
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier.padding(AckTheme.spacing.content)
+            modifier = Modifier.padding(AckTheme.dimensions.content)
         ) {
             AprsSymbol(log.symbol)
 
             Column(
-                modifier = Modifier.padding(start = AckTheme.spacing.content)
+                modifier = Modifier.padding(start = AckTheme.dimensions.content)
             ) {
                 Text(
                     text = log.origin,

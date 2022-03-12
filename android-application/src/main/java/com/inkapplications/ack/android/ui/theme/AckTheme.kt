@@ -32,7 +32,7 @@ object AckTheme {
         @ReadOnlyComposable
         get() = if (isSystemInDarkTheme()) darkColors else lightColors
 
-    val spacing
+    val dimensions
         @Composable
         @ReadOnlyComposable
         get() = SpacingVariant(

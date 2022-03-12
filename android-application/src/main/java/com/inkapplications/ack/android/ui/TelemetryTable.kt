@@ -12,8 +12,8 @@ import com.inkapplications.ack.structures.TelemetryValues
 
 @Composable
 fun TelemetryTable(values: TelemetryValues, sequence: String?) {
-    Card(modifier = Modifier.fillMaxWidth().padding(vertical = AckTheme.spacing.content)) {
-        Column(modifier = Modifier.padding(AckTheme.spacing.content)) {
+    Card(modifier = Modifier.fillMaxWidth().padding(vertical = AckTheme.dimensions.content)) {
+        Column(modifier = Modifier.padding(AckTheme.dimensions.content)) {
             Text("Telemetry Data", style = AckTheme.typography.h2)
             TelemetryValueRow("a1", values.analog1.toString())
             TelemetryValueRow("a2", values.analog2.toString())
@@ -30,4 +30,4 @@ fun TelemetryTable(values: TelemetryValues, sequence: String?) {
 private fun TelemetryValueRow(
     label: String,
     value: String,
-) = KeyValueRow(label, value, Modifier.padding(vertical = AckTheme.spacing.singleItem))
+) = KeyValueRow(label, value, Modifier.padding(vertical = AckTheme.dimensions.singleItem))

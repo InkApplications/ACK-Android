@@ -25,7 +25,7 @@ fun NavigationRow(
             text = title,
             style = AckTheme.typography.h1,
             modifier = Modifier.padding(
-                start = AckTheme.spacing.item,
+                start = AckTheme.dimensions.item,
             )
         )
     },
@@ -40,9 +40,9 @@ fun NavigationRow(
     verticalAlignment = Alignment.CenterVertically,
     modifier = Modifier.padding(
         start = 0.dp,
-        top = AckTheme.spacing.gutter,
-        end = AckTheme.spacing.gutter,
-        bottom = AckTheme.spacing.content,
+        top = AckTheme.dimensions.gutter,
+        end = AckTheme.dimensions.gutter,
+        bottom = AckTheme.dimensions.content,
     )
 ) {
     if (onBackPressed != null) {
@@ -53,7 +53,7 @@ fun NavigationRow(
             Icon(Icons.Default.ArrowBack, "")
         }
     } else {
-        Spacer(Modifier.width(AckTheme.spacing.item))
+        Spacer(Modifier.width(AckTheme.dimensions.item))
     }
     title()
 }

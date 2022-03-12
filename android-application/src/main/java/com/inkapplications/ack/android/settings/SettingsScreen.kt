@@ -41,7 +41,7 @@ fun SettingsScreen(
                 horizontalArrangement = Arrangement.Center,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = AckTheme.spacing.gutter, vertical = AckTheme.spacing.content),
+                    .padding(horizontal = AckTheme.dimensions.gutter, vertical = AckTheme.dimensions.content),
             ) {
                 val callsign = viewModel.callsignText
                 if (callsign != null) {
@@ -52,9 +52,9 @@ fun SettingsScreen(
                     ) {
                         Row(
                             verticalAlignment = Alignment.CenterVertically,
-                            modifier = Modifier.padding(AckTheme.spacing.item),
+                            modifier = Modifier.padding(AckTheme.dimensions.item),
                         ) {
-                            if (viewModel.verified) Icon(Icons.Default.Verified, "Authenticated", modifier = Modifier.padding(end = AckTheme.spacing.icon))
+                            if (viewModel.verified) Icon(Icons.Default.Verified, "Authenticated", modifier = Modifier.padding(end = AckTheme.dimensions.icon))
                             Text(callsign, style = AckTheme.typography.h2)
                         }
                     }
@@ -89,7 +89,7 @@ fun SettingsScreen(
                 else -> {}
             }
             viewModel.settingsList.forEach { group ->
-                Card(modifier = Modifier.padding(vertical = AckTheme.spacing.item)) {
+                Card(modifier = Modifier.padding(vertical = AckTheme.dimensions.item)) {
                     Column {
                         SettingsCategoryRow(group.name)
                         group.settings.forEach { item ->
@@ -113,7 +113,7 @@ fun SettingsScreen(
                 text = stringResource(R.string.application_version, BuildConfig.VERSION_NAME, BuildConfig.VERSION_CODE.toString()),
                 modifier = Modifier
                     .longClickable(controller::onVersionLongPress)
-                    .padding(AckTheme.spacing.clickSafety)
+                    .padding(AckTheme.dimensions.clickSafety)
                     .align(Alignment.CenterHorizontally)
             )
         }
@@ -123,7 +123,7 @@ fun SettingsScreen(
 
 @Composable
 fun SettingsCategoryRow(name: String) = Row(
-    Modifier.padding(horizontal = AckTheme.spacing.gutter, vertical = AckTheme.spacing.item)
+    Modifier.padding(horizontal = AckTheme.dimensions.gutter, vertical = AckTheme.dimensions.item)
 ) {
-    Text(name, style = AckTheme.typography.h2, modifier = Modifier.padding(vertical = AckTheme.spacing.item))
+    Text(name, style = AckTheme.typography.h2, modifier = Modifier.padding(vertical = AckTheme.dimensions.item))
 }

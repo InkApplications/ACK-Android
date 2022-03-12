@@ -19,15 +19,15 @@ fun LicensePromptScreen(
     onContinue: (LicensePromptFieldValues) -> Unit,
 ) = AckScreen {
     Column (
-        modifier = Modifier.padding(AckTheme.spacing.gutter),
+        modifier = Modifier.padding(AckTheme.dimensions.gutter),
     ) {
         Text(
             "License Info",
             style = AckTheme.typography.h1,
         )
-        Spacer(Modifier.height(AckTheme.spacing.item))
+        Spacer(Modifier.height(AckTheme.dimensions.item))
         Text("If you have a radio license, enter the information below to enable transmit and internet services.")
-        Spacer(Modifier.height(AckTheme.spacing.content))
+        Spacer(Modifier.height(AckTheme.dimensions.content))
 
         val callsign = rememberSaveable { mutableStateOf(initialValues.callsign) }
         val passcode = rememberSaveable { mutableStateOf(initialValues.passcode) }
@@ -42,7 +42,7 @@ fun LicensePromptScreen(
             modifier = Modifier.fillMaxWidth(),
         )
         if (callsignError.value != null) Text(callsignError.value.orEmpty(), style = AckTheme.typography.errorCaption)
-        Spacer(Modifier.height(AckTheme.spacing.item))
+        Spacer(Modifier.height(AckTheme.dimensions.item))
         TextField(
             value = passcode.value,
             label = { Text("APRS-IS Passcode") },
@@ -61,7 +61,7 @@ fun LicensePromptScreen(
                     onContinue(LicensePromptFieldValues(callsign.value, passcode.value))
                 }
             },
-            modifier = Modifier.fillMaxWidth().padding(top = AckTheme.spacing.item),
+            modifier = Modifier.fillMaxWidth().padding(top = AckTheme.dimensions.item),
         ) {
             if (callsign.value.isBlank() && passcode.value.isBlank()) {
                 Text("Skip")
