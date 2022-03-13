@@ -13,4 +13,6 @@ internal class PacketEntity(
     @ColumnInfo(defaultValue = "Ax25")
     val packetSource: PacketSource,
     val sourceCallsign: String,
+    val addresseeCallsign: String?,
+    val dataType: String,
 )

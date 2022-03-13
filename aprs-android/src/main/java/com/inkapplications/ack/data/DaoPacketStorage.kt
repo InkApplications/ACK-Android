@@ -2,6 +2,7 @@ package com.inkapplications.ack.data
 
 import com.inkapplications.ack.codec.AprsCodec
 import com.inkapplications.ack.structures.AprsPacket
+import com.inkapplications.ack.structures.PacketData
 import com.inkapplications.coroutines.filterEachNotNull
 import kimchi.logger.KimchiLogger
 import kotlinx.coroutines.flow.Flow
@@ -32,6 +33,8 @@ internal class DaoPacketStorage(
             data = data,
             packetSource = source,
             sourceCallsign = packet.route.source.callsign,
+            addresseeCallsign = (packet.data as? PacketData.Message)?.addressee?.callsign?.lowercase(),
+            dataType = packet.data.javaClass.simpleName,
         )
         val id = packetDao.addPacket(entity)
 

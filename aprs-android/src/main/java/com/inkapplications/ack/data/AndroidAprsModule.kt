@@ -10,6 +10,7 @@ import com.inkapplications.ack.data.drivers.AfskDriver
 import com.inkapplications.ack.data.drivers.DriverSettingsProvider
 import com.inkapplications.ack.data.drivers.InternetDriver
 import com.inkapplications.ack.data.drivers.PacketDrivers
+import com.inkapplications.ack.data.upgrade.V4Upgrade
 import dagger.Module
 import dagger.Provides
 import dagger.Reusable
@@ -35,6 +36,7 @@ object AndroidAprsModule {
     ): PacketStorage {
         val database = Room.databaseBuilder(context, PacketDatabase::class.java, "aprs_packets")
             .addMigrations(V3Upgrade(codec, logger))
+            .addMigrations(V4Upgrade(codec, logger))
             .build()
         return DaoPacketStorage (database.pinsDao(), codec, logger)
     }

@@ -5,20 +5,23 @@ import android.database.sqlite.SQLiteDatabase
 import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
 import com.inkapplications.ack.codec.AprsCodec
+import com.inkapplications.ack.structures.AprsPacket
 import com.inkapplications.ack.structures.PacketData
-import kimchi.logger.EmptyLogger
 import kimchi.logger.KimchiLogger
 import java.lang.IllegalStateException
 
-internal class V3Upgrade(
+/**
+ * Migrates denormalized packet data by extracting the raw packet and parsing it.
+ */
+abstract class PacketMigration(
+    targetVersion: Int,
     private val aprsCodec: AprsCodec,
-    private val logger: KimchiLogger = EmptyLogger,
-): Migration(2, 3) {
+    private val logger: KimchiLogger,
+): Migration(targetVersion - 1, targetVersion) {
     override fun migrate(database: SupportSQLiteDatabase) {
-        database.execSQL("ALTER TABLE packets ADD COLUMN `sourceCallsign` TEXT NOT NULL DEFAULT ''")
+        migrateTable(database)
 
         val cursor = database.query("SELECT id,data,packetSource FROM packets")
-
         cursor.use { cursor ->
             cursor.moveToFirst()
             do {
@@ -33,16 +36,16 @@ internal class V3Upgrade(
                         else -> throw IllegalStateException("Unknown source type: $source")
                     }
 
+
                     database.update(
                         "packets",
                         SQLiteDatabase.CONFLICT_FAIL,
                         ContentValues().apply {
-                            put("sourceCallsign", parsed.route.source.callsign)
+                            migratePacket(parsed)
                         },
                         "id = ?",
                         arrayOf(id),
                     )
-
                 } catch (e: Throwable) {
                     logger.warn("Unable to migrate: $id")
                     database.delete("packets", "id = ?", arrayOf(id))
@@ -50,4 +53,7 @@ internal class V3Upgrade(
             } while (cursor.moveToNext())
         }
     }
+
+    protected abstract fun ContentValues.migratePacket(parsed: AprsPacket)
+    protected open fun migrateTable(database: SupportSQLiteDatabase) {}
 }
