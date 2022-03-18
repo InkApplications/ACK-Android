@@ -13,6 +13,9 @@ internal interface PacketDao {
     @Query("SELECT * FROM packets WHERE id = :id")
     fun findById(id: Long): Flow<PacketEntity?>
 
+    @Query("SELECT * FROM packets WHERE addresseeCallsign = :addresseeCallsign")
+    fun findByAddresseeCallsign(addresseeCallsign: String): Flow<List<PacketEntity>>
+
     @Insert
     suspend fun addPacket(packet: PacketEntity): Long
 }

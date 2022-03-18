@@ -4,6 +4,7 @@ import com.inkapplications.ack.codec.AprsCodec
 import com.inkapplications.ack.structures.AprsPacket
 import com.inkapplications.ack.structures.PacketData
 import com.inkapplications.coroutines.filterEachNotNull
+import com.inkapplications.coroutines.mapEach
 import kimchi.logger.KimchiLogger
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
@@ -24,6 +25,12 @@ internal class DaoPacketStorage(
 
     override fun findById(id: Long): Flow<CapturedPacket?> {
         return packetDao.findById(id).map { it?.let { createCapturedPacket(it, fromEntityOrNull(it)) } }
+    }
+
+    override fun findByAddressee(callsign: String): Flow<List<CapturedPacket>> {
+        return packetDao.findByAddresseeCallsign(callsign.lowercase())
+            .mapEach { createCapturedPacket(it, fromEntityOrNull(it)) }
+            .filterEachNotNull()
     }
 
     override suspend fun save(data: ByteArray, packet: AprsPacket, source: PacketSource): CapturedPacket {
