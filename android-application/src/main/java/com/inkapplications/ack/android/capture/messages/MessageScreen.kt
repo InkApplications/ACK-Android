@@ -3,15 +3,16 @@ package com.inkapplications.ack.android.capture.messages
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.Card
-import androidx.compose.material.Icon
-import androidx.compose.material.Text
+import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Inbox
+import androidx.compose.material.icons.filled.LocationDisabled
+import androidx.compose.material.icons.filled.Message
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.Dp
 import com.inkapplications.ack.android.ui.theme.AckScreen
 import com.inkapplications.ack.android.ui.theme.AckTheme
 import com.inkapplications.ack.data.CapturedPacket
@@ -21,10 +22,24 @@ import com.inkapplications.ack.structures.PacketData
 fun MessageScreen(
     screenState: State<MessageScreenState>,
     controller: MessageScreenController,
+    bottomContentProtection: Dp,
 ) = AckScreen {
     when (val state = screenState.value) {
         is MessageScreenState.MessageList -> MessageList(state)
         is MessageScreenState.Empty -> EmptyPlaceholder()
+    }
+    Box(
+        modifier = Modifier.fillMaxSize().padding(bottom = bottomContentProtection),
+        contentAlignment = Alignment.BottomEnd,
+    ) {
+        FloatingActionButton(
+            onClick = controller::onCreateMessageClick,
+            backgroundColor = AckTheme.colors.surface,
+            contentColor = contentColorFor(AckTheme.colors.surface),
+            modifier = Modifier.padding(AckTheme.dimensions.gutter)
+        ) {
+            Icon(Icons.Default.Message, "Compose Message")
+        }
     }
 }
 

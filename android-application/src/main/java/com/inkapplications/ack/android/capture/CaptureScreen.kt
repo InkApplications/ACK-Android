@@ -349,6 +349,7 @@ private fun CaptureNavHost(
             MessageScreen(
                 screenState = messageScreenState,
                 controller = messageScreenController,
+                bottomContentProtection = 60.dp,
             )
         }
     }

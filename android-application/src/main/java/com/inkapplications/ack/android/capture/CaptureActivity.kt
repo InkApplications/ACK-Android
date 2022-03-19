@@ -53,7 +53,10 @@ class CaptureActivity: ExtendedActivity(), CaptureNavController {
             val mapState = mapViewModel.collectAsState()
             val logState = logData.logViewModels.collectAsState(emptyList())
             val messageScreenState = component.messageEvents().screenState.collectAsState(MessageScreenState.Initial)
-            val messageScreenController = object: MessageScreenController {}
+            val messageScreenController = object: MessageScreenController {
+                override fun onCreateMessageClick() {
+                }
+            }
 
             CaptureScreen(
                 captureScreenState = captureState,
