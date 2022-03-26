@@ -29,7 +29,7 @@ class MessageEvents @Inject constructor(
         .map { it.groupBy { it.parsed.route.source.callsign } }
         .map {
             it.entries.map { (callsign, messages) ->
-                ConversationViewModel(callsign.canonical, (messages.last().parsed.data as PacketData.Message).message, callsign)
+                ConversationItemViewModel(callsign.canonical, (messages.last().parsed.data as PacketData.Message).message, callsign)
             }
         }
         .map { if (it.isEmpty()) MessageScreenState.Empty else MessageScreenState.ConversationList(it) }

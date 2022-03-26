@@ -69,7 +69,7 @@ private fun ConversationList(state: MessageScreenState.ConversationList, control
 
 @Composable
 @OptIn(ExperimentalMaterialApi::class)
-private fun ConversationItem(viewModel: ConversationViewModel, controller: MessagesScreenController) {
+private fun ConversationItem(viewModel: ConversationItemViewModel, controller: MessagesScreenController) {
     Card(
         onClick = { controller.onConversationClick(viewModel.idCallsign) },
         modifier = Modifier.padding(horizontal = AckTheme.dimensions.gutter, vertical = AckTheme.dimensions.singleItem)
