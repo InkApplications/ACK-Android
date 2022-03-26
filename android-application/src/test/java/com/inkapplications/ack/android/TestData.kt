@@ -4,6 +4,7 @@ import com.inkapplications.ack.data.CapturedPacket
 import com.inkapplications.ack.data.PacketSource
 import com.inkapplications.ack.structures.*
 import com.inkapplications.ack.structures.station.StationAddress
+import kotlinx.datetime.Instant
 
 val testRoute = PacketRoute(
     source = StationAddress("KE0YOG"),
@@ -13,7 +14,7 @@ val testRoute = PacketRoute(
 
 fun AprsPacket.toTestCapturedPacket() = CapturedPacket(
     id = 1,
-    received = 0,
+    received = Instant.fromEpochMilliseconds(0),
     parsed = this,
     source = PacketSource.AprsIs,
     raw = byteArrayOf(),

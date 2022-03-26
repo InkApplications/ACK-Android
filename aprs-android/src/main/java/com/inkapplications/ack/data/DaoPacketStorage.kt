@@ -9,11 +9,13 @@ import com.inkapplications.coroutines.mapEach
 import kimchi.logger.KimchiLogger
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
-import org.threeten.bp.Instant
+import kotlinx.datetime.Clock
+import kotlinx.datetime.Instant
 
 internal class DaoPacketStorage(
     private val packetDao: PacketDao,
     private val codec: AprsCodec,
+    private val clock: Clock,
     private val logger: KimchiLogger,
 ): PacketStorage {
     override fun findRecent(count: Int): Flow<List<CapturedPacket>> {
@@ -37,7 +39,7 @@ internal class DaoPacketStorage(
     override suspend fun save(data: ByteArray, packet: AprsPacket, source: PacketSource): CapturedPacket {
         val entity = PacketEntity(
             id = null,
-            timestamp = Instant.now().toEpochMilli(),
+            timestamp = clock.now().toEpochMilliseconds(),
             data = data,
             packetSource = source,
             sourceCallsign = packet.route.source.callsign.canonical,
@@ -48,7 +50,7 @@ internal class DaoPacketStorage(
 
         return CapturedPacket(
             id = id,
-            received = entity.timestamp,
+            received = Instant.fromEpochMilliseconds(entity.timestamp),
             parsed = packet,
             source = entity.packetSource,
             raw = entity.data,
@@ -72,7 +74,7 @@ internal class DaoPacketStorage(
 
         return CapturedPacket(
             id = id,
-            received = entity.timestamp,
+            received = Instant.fromEpochMilliseconds(entity.timestamp),
             parsed = parsed,
             source = entity.packetSource,
             raw = entity.data,

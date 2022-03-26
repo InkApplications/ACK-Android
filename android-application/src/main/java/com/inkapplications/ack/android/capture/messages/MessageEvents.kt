@@ -18,6 +18,7 @@ class MessageEvents @Inject constructor(
     private val packetStorage: PacketStorage,
     private val settings: SettingsReadAccess,
     private val connectionSettings: ConnectionSettings,
+    private val viewFactory: MessageViewModelFactory,
     private val logger: KimchiLogger,
 ) {
     val messagesScreenState = settings.observeData(connectionSettings.address)
@@ -39,10 +40,7 @@ class MessageEvents @Inject constructor(
             .filterEach { it.parsed.route.source.callsign == address }
             .filterEach { it.parsed.data is PacketData.Message }
             .onEach { logger.debug("Loaded ${it.size} messages from $address") }
-            .mapEach { MessageItemViewModel(
-                message = (it.parsed.data as PacketData.Message).message,
-                timestamp = it.received.toString(),
-            ) }
+            .mapEach(viewFactory::createMessageItem)
             .map { ConverstationViewState.MessageList(address.canonical, it) }
     }
 }

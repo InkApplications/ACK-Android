@@ -15,6 +15,7 @@ import dagger.Module
 import dagger.Provides
 import dagger.Reusable
 import kimchi.logger.KimchiLogger
+import kotlinx.datetime.Clock
 import javax.inject.Singleton
 
 @Module
@@ -32,13 +33,14 @@ object AndroidAprsModule {
     fun packetStorage(
         context: Context,
         codec: AprsCodec,
+        clock: Clock,
         logger: KimchiLogger,
     ): PacketStorage {
         val database = Room.databaseBuilder(context, PacketDatabase::class.java, "aprs_packets")
             .addMigrations(V3Upgrade(codec, logger))
             .addMigrations(V4Upgrade(codec, logger))
             .build()
-        return DaoPacketStorage (database.pinsDao(), codec, logger)
+        return DaoPacketStorage(database.pinsDao(), codec, clock, logger)
     }
 
     @Provides

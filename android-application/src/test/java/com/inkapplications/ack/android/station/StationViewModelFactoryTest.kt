@@ -12,6 +12,7 @@ import inkapplications.spondee.spatial.Degrees
 import inkapplications.spondee.spatial.GeoCoordinates
 import inkapplications.spondee.spatial.latitude
 import inkapplications.spondee.spatial.longitude
+import kotlinx.datetime.Instant
 import org.junit.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
@@ -23,7 +24,7 @@ class StationViewModelFactoryTest {
         val factory = StationViewModelFactory(SymbolFactoryStub, ParrotStringResources)
         val packet = CapturedPacket(
             id = 1,
-            received = 2,
+            received = Instant.fromEpochMilliseconds(2),
             parsed = AprsPacket(
                 route = testRoute.copy(
                     source = StationAddress("KE0YOG", "1"),
