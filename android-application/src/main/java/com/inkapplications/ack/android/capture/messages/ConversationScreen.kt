@@ -4,9 +4,9 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Card
-import androidx.compose.material.Text
-import androidx.compose.material.TopAppBar
+import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -17,9 +17,15 @@ import com.inkapplications.ack.android.ui.theme.AckTheme
 @Composable
 fun ConversationScreen(
     viewState: ConverstationViewState,
+    controller: ConversationController,
 ) = AckScreen {
     Column {
         TopAppBar {
+            IconButton(
+                onClick = controller::onNavigateUpPressed,
+            ) {
+                Icon(Icons.Default.ArrowBack, "Back")
+            }
             Text(viewState.title, style = AckTheme.typography.h1)
         }
         when (viewState) {

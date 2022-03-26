@@ -12,7 +12,7 @@ import kimchi.Kimchi
 
 private const val EXTRA_ADDRESS = "aprs.conversation.extra.address"
 
-class ConversationActivity: ExtendedActivity() {
+class ConversationActivity: ExtendedActivity(), ConversationController {
     private lateinit var messageEvents: MessageEvents
     private val callsign get() = intent.getStringExtra(EXTRA_ADDRESS)!!.let(::Callsign)
 
@@ -23,8 +23,12 @@ class ConversationActivity: ExtendedActivity() {
 
         setContent {
             val state = messageEvents.conversationViewState(callsign).collectAsState(initialState)
-            ConversationScreen(state.value)
+            ConversationScreen(state.value, this)
         }
+    }
+
+    override fun onNavigateUpPressed() {
+        finish()
     }
 }
 
