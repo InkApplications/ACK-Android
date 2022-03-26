@@ -3,9 +3,11 @@ package com.inkapplications.ack.android.capture.messages
 import com.inkapplications.ack.android.connection.ConnectionSettings
 import com.inkapplications.ack.android.settings.SettingsReadAccess
 import com.inkapplications.ack.android.settings.observeData
+import com.inkapplications.ack.data.CapturedPacket
 import com.inkapplications.ack.data.PacketStorage
 import com.inkapplications.ack.structures.PacketData
 import com.inkapplications.ack.structures.station.Callsign
+import com.inkapplications.android.extensions.ViewModelFactory
 import com.inkapplications.coroutines.filterEach
 import com.inkapplications.coroutines.mapEach
 import dagger.Reusable
@@ -18,7 +20,8 @@ class MessageEvents @Inject constructor(
     private val packetStorage: PacketStorage,
     private val settings: SettingsReadAccess,
     private val connectionSettings: ConnectionSettings,
-    private val viewFactory: MessageViewModelFactory,
+    private val messageItemFactory: ViewModelFactory<CapturedPacket, MessageItemViewModel>,
+    private val conversationItemFactory: ViewModelFactory<Pair<Callsign, List<CapturedPacket>>, ConversationItemViewModel>,
     private val logger: KimchiLogger,
 ) {
     val messagesScreenState = settings.observeData(connectionSettings.address)
@@ -28,9 +31,7 @@ class MessageEvents @Inject constructor(
         .filterEach { it.parsed.data is PacketData.Message }
         .map { it.groupBy { it.parsed.route.source.callsign } }
         .map {
-            it.entries.map { (callsign, messages) ->
-                ConversationItemViewModel(callsign.canonical, (messages.last().parsed.data as PacketData.Message).message, callsign)
-            }
+            it.entries.map { it.toPair() }.map(conversationItemFactory::create)
         }
         .map { if (it.isEmpty()) MessageScreenState.Empty else MessageScreenState.ConversationList(it) }
 
@@ -40,7 +41,7 @@ class MessageEvents @Inject constructor(
             .filterEach { it.parsed.route.source.callsign == address }
             .filterEach { it.parsed.data is PacketData.Message }
             .onEach { logger.debug("Loaded ${it.size} messages from $address") }
-            .mapEach(viewFactory::createMessageItem)
+            .mapEach(messageItemFactory::create)
             .map { ConverstationViewState.MessageList(address.canonical, it) }
     }
 }

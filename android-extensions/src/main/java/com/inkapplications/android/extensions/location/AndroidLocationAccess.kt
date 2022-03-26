@@ -3,6 +3,7 @@ package com.inkapplications.android.extensions.location
 import android.location.Location
 import android.location.LocationListener
 import android.location.LocationManager
+import dagger.Reusable
 import inkapplications.spondee.measure.Length
 import inkapplications.spondee.measure.Meters
 import inkapplications.spondee.spatial.GeoCoordinates
@@ -13,12 +14,14 @@ import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.channels.trySendBlocking
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
+import javax.inject.Inject
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.minutes
 import kotlin.time.ExperimentalTime
 
 @OptIn(ExperimentalTime::class)
-class AndroidLocationAccess(
+@Reusable
+class AndroidLocationAccess @Inject constructor(
     private val locationManager: LocationManager,
 ): LocationAccess {
     override val lastKnownLocation: LocationUpdate?

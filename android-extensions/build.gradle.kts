@@ -43,4 +43,8 @@ dependencies {
 
     api(libraries.dagger.core)
     kapt(libraries.dagger.compiler)
+
+    testImplementation(libraries.junit)
+    testImplementation(libraries.coroutines.test)
+    testImplementation(libraries.kotlin.test.core)
 }

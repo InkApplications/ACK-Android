@@ -8,6 +8,7 @@ import com.inkapplications.ack.android.capture.log.LogModule
 import com.inkapplications.ack.android.capture.map.MapEventsFactory
 import com.inkapplications.ack.android.capture.map.MapModule
 import com.inkapplications.ack.android.capture.messages.MessageEvents
+import com.inkapplications.ack.android.capture.messages.MessagesModule
 import com.inkapplications.ack.android.locale.LocaleModule
 import com.inkapplications.ack.android.onboard.OnboardingModule
 import com.inkapplications.ack.android.onboard.OnboardingStateAccess
@@ -35,6 +36,7 @@ import javax.inject.Singleton
         LocaleModule::class,
         LogModule::class,
         MapModule::class,
+        MessagesModule::class,
         OnboardingModule::class,
         SettingsModule::class,
         StartupModule::class,

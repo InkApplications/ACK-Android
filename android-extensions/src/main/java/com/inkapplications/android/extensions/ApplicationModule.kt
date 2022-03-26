@@ -6,6 +6,8 @@ import android.content.SharedPreferences
 import android.content.res.Resources
 import android.location.LocationManager
 import androidx.preference.PreferenceManager
+import com.inkapplications.android.extensions.format.AndroidResourceDateTimeFormatter
+import com.inkapplications.android.extensions.format.DateTimeFormatter
 import com.inkapplications.android.extensions.location.AndroidLocationAccess
 import com.inkapplications.android.extensions.location.LocationAccess
 import dagger.Binds
@@ -25,15 +27,16 @@ class ApplicationModule(private val application: Application) {
 
     @Provides
     fun locationManager() = application.getSystemService(Context.LOCATION_SERVICE) as LocationManager
-
-    @Provides
-    fun locationAccess(
-        locationManager: LocationManager,
-    ): LocationAccess = AndroidLocationAccess(locationManager)
 }
 
 @Module
 internal abstract class StaticApplicationModule {
     @Binds
     abstract fun stringResources(androidStringResources: AndroidStringResources): StringResources
+
+    @Binds
+    abstract fun locationAccess(locationAccess: AndroidLocationAccess): LocationAccess
+
+    @Binds
+    abstract fun timeFormat(formatter: AndroidResourceDateTimeFormatter): DateTimeFormatter
 }
