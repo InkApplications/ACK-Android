@@ -5,6 +5,7 @@ import com.inkapplications.ack.android.symbol.SymbolFactoryStub
 import com.inkapplications.ack.data.CapturedPacket
 import com.inkapplications.ack.data.PacketSource
 import com.inkapplications.ack.structures.*
+import com.inkapplications.ack.structures.station.StationAddress
 import inkapplications.spondee.measure.Fahrenheit
 import inkapplications.spondee.measure.MilesPerHour
 import inkapplications.spondee.spatial.Degrees
@@ -25,7 +26,7 @@ class StationViewModelFactoryTest {
             received = 2,
             parsed = AprsPacket(
                 route = testRoute.copy(
-                    source = Address("KE0YOG", "1"),
+                    source = StationAddress("KE0YOG", "1"),
                 ),
                 data = PacketData.Unknown(
                     body = "test",

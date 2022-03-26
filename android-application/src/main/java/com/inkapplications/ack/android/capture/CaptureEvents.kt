@@ -4,12 +4,14 @@ import android.Manifest
 import com.inkapplications.android.extensions.location.LocationAccess
 import com.inkapplications.ack.android.connection.ConnectionSettings
 import com.inkapplications.ack.android.settings.SettingsReadAccess
+import com.inkapplications.ack.android.settings.observeData
 import com.inkapplications.ack.android.settings.observeInt
 import com.inkapplications.ack.android.settings.observeString
 import com.inkapplications.ack.android.transmit.TransmitSettings
 import com.inkapplications.ack.data.drivers.PacketDriver
 import com.inkapplications.ack.data.drivers.PacketDrivers
 import com.inkapplications.ack.structures.*
+import com.inkapplications.ack.structures.station.toStationAddress
 import com.inkapplications.android.extensions.control.ControlState
 import com.inkapplications.coroutines.combinePair
 import com.inkapplications.coroutines.combineTriple
@@ -43,7 +45,7 @@ class CaptureEvents @Inject constructor(
 
     private val combinedTransmitState = internetTransmitState.combinePair(audioTransmitState)
 
-    private val internetCaptureControlState = settings.observeString(connectionSettings.callsign)
+    private val internetCaptureControlState = settings.observeString(connectionSettings.address)
         .combine(internetListenState) { callsign, state ->
             when {
                 callsign.isBlank() -> ControlState.Hidden
@@ -52,7 +54,7 @@ class CaptureEvents @Inject constructor(
             }
         }
 
-    private val audioTransmitControlState = settings.observeString(connectionSettings.callsign)
+    private val audioTransmitControlState = settings.observeString(connectionSettings.address)
         .combinePair(audioListenState)
         .combine(audioTransmitState) { (callsign, capturing), transmitting ->
             when {
@@ -63,7 +65,7 @@ class CaptureEvents @Inject constructor(
             }
         }
 
-    private val internetTransmitControlState = settings.observeString(connectionSettings.callsign)
+    private val internetTransmitControlState = settings.observeString(connectionSettings.address)
         .combinePair(settings.observeInt(connectionSettings.passcode))
         .combineTriple(internetListenState)
         .combine(internetTransmitState) { (callsign, passcode, capturing), transmitting ->
@@ -128,12 +130,13 @@ class CaptureEvents @Inject constructor(
 
     @OptIn(ExperimentalTime::class)
     suspend fun transmitLoop(driver: PacketDriver) {
-        settings.observeString(connectionSettings.callsign)
+        settings.observeData(connectionSettings.address)
+            .filterNotNull()
             .combine(settings.observeString(transmitSettings.digipath)) { callsign, path ->
                 TransmitPrototype(
-                    path = path.split(',').map { Digipeater(it.toAddress()) },
-                    destination = transmitSettings.destination.defaultValue.toAddress(),
-                    callsign = callsign.toAddress(),
+                    path = path.split(',').map { Digipeater(it.toStationAddress()) },
+                    destination = transmitSettings.destination.defaultValue.toStationAddress(),
+                    callsign = callsign,
                     symbol = transmitSettings.symbol.defaultValue.let { symbolOf(it[0], it[1]) },
                     comment = transmitSettings.comment.defaultValue,
                     minRate = transmitSettings.minRate.defaultValue.let { Duration.minutes(it) },
@@ -148,7 +151,7 @@ class CaptureEvents @Inject constructor(
                 prototype.copy(comment = comment)
             }
             .combine(settings.observeString(transmitSettings.destination)) { prototype, destination ->
-                prototype.copy(destination = destination.toAddress())
+                prototype.copy(destination = destination.toStationAddress())
             }
             .combine(settings.observeInt(transmitSettings.minRate)) { prototype, rate ->
                 prototype.copy(minRate = Duration.minutes(rate))

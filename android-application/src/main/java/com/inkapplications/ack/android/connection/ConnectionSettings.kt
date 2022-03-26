@@ -1,11 +1,10 @@
 package com.inkapplications.ack.android.connection
 
+import com.inkapplications.ack.android.settings.*
 import com.inkapplications.android.extensions.StringResources
-import com.inkapplications.ack.android.settings.IntSetting
-import com.inkapplications.ack.android.settings.Setting
-import com.inkapplications.ack.android.settings.SettingsProvider
-import com.inkapplications.ack.android.settings.StringSetting
 import com.inkapplications.ack.data.*
+import com.inkapplications.ack.structures.station.StationAddress
+import com.inkapplications.ack.structures.station.toStationAddress
 import dagger.Reusable
 import javax.inject.Inject
 
@@ -13,12 +12,16 @@ import javax.inject.Inject
 class ConnectionSettings @Inject constructor(
     resources: StringResources
 ): SettingsProvider {
-    val callsign = StringSetting(
-        key = "connection.callsign",
+    val address = StringBackedSetting(
+        key = "connection.address",
         name = "Callsign",
         categoryName = "Connection",
-        defaultValue = "",
+        defaultValue = null,
         advanced = true,
+        transformer = object: Transformer<StationAddress?, String> {
+            override fun toStorage(data: StationAddress?): String = data.toString()
+            override fun toData(storage: String): StationAddress? = storage.takeIf { it.isNotEmpty() }?.toStationAddress()
+        },
     )
     val passcode = IntSetting(
         key = "connection.passcode",
@@ -48,7 +51,7 @@ class ConnectionSettings @Inject constructor(
     )
 
     override val settings: List<Setting> = listOf(
-        callsign,
+        address,
         passcode,
         server,
         port,

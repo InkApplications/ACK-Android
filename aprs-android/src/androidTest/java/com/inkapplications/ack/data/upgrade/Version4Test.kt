@@ -9,6 +9,7 @@ import androidx.test.runner.AndroidJUnit4
 import com.inkapplications.ack.data.PacketDatabase
 import com.inkapplications.ack.codec.AprsCodec
 import com.inkapplications.ack.structures.*
+import com.inkapplications.ack.structures.station.StationAddress
 import junit.framework.TestCase.assertEquals
 import junit.framework.TestCase.assertNull
 import org.junit.Rule
@@ -43,8 +44,8 @@ class Version4Test {
         val fakeParser = object: AprsCodec {
             override fun fromAx25(packet: ByteArray): AprsPacket = AprsPacket(
                 route = PacketRoute(
-                    source = Address("KE0YOG", "72"),
-                    destination = Address("TEST"),
+                    source = StationAddress("KE0YOG", "72"),
+                    destination = StationAddress("TEST"),
                     digipeaters = emptyList(),
                 ),
                 data = PacketData.StatusReport(
@@ -82,12 +83,12 @@ class Version4Test {
         val fakeParser = object: AprsCodec {
             override fun fromAx25(packet: ByteArray): AprsPacket = AprsPacket(
                 route = PacketRoute(
-                    source = Address("KE0YOG", "72"),
-                    destination = Address("TEST"),
+                    source = StationAddress("KE0YOG", "72"),
+                    destination = StationAddress("TEST"),
                     digipeaters = emptyList(),
                 ),
                 data = PacketData.Message(
-                    addressee = Address("KE0YOF", "5"),
+                    addressee = StationAddress("KE0YOF", "5"),
                     message = "Hello World"
                 )
             )
@@ -100,7 +101,7 @@ class Version4Test {
         val new = helper.runMigrationsAndValidate("v4-upgrade-test", 4, true, migration)
 
         assertEquals(1, new.query("SELECT COUNT(*) FROM `packets`").also { it.moveToFirst() }.getInt(0))
-        assertEquals("ke0yof", new.query("SELECT `addresseeCallsign` FROM `packets` WHERE `id`=1").also { it.moveToFirst() }.getString(0))
+        assertEquals("KE0YOF", new.query("SELECT `addresseeCallsign` FROM `packets` WHERE `id`=1").also { it.moveToFirst() }.getString(0))
     }
 
     @Test

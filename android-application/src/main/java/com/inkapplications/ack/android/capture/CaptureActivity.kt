@@ -11,8 +11,9 @@ import androidx.compose.runtime.collectAsState
 import androidx.core.content.ContextCompat
 import com.inkapplications.ack.android.capture.log.LogItemViewModel
 import com.inkapplications.ack.android.capture.map.*
-import com.inkapplications.ack.android.capture.messages.MessageScreenController
+import com.inkapplications.ack.android.capture.messages.MessagesScreenController
 import com.inkapplications.ack.android.capture.messages.MessageScreenState
+import com.inkapplications.ack.android.capture.messages.startConversationActivity
 import com.inkapplications.ack.android.component
 import com.inkapplications.ack.android.map.Map
 import com.inkapplications.ack.android.map.getMap
@@ -20,6 +21,7 @@ import com.inkapplications.ack.android.map.lifecycleObserver
 import com.inkapplications.ack.android.settings.SettingsActivity
 import com.inkapplications.ack.android.station.startStationActivity
 import com.inkapplications.ack.android.trackNavigation
+import com.inkapplications.ack.structures.station.Callsign
 import com.inkapplications.android.PermissionGate
 import com.inkapplications.android.extensions.ExtendedActivity
 import com.inkapplications.android.startActivity
@@ -52,9 +54,12 @@ class CaptureActivity: ExtendedActivity(), CaptureNavController {
             val captureState = captureEvents.screenState.collectAsState(CaptureScreenViewModel())
             val mapState = mapViewModel.collectAsState()
             val logState = logData.logViewModels.collectAsState(emptyList())
-            val messageScreenState = component.messageEvents().screenState.collectAsState(MessageScreenState.Initial)
-            val messageScreenController = object: MessageScreenController {
+            val messageScreenState = component.messageEvents().messagesScreenState.collectAsState(MessageScreenState.Initial)
+            val messagesScreenController = object: MessagesScreenController {
                 override fun onCreateMessageClick() {
+                }
+                override fun onConversationClick(callsign: Callsign) {
+                    startConversationActivity(callsign)
                 }
             }
 
@@ -63,7 +68,7 @@ class CaptureActivity: ExtendedActivity(), CaptureNavController {
                 mapState = mapState,
                 logs = logState,
                 messageScreenState = messageScreenState,
-                messageScreenController = messageScreenController,
+                messagesScreenController = messagesScreenController,
                 mapFactory = ::createMapView,
                 controller = this,
             )

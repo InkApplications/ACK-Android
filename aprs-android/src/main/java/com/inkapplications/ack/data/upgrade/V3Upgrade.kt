@@ -5,7 +5,6 @@ import android.database.sqlite.SQLiteDatabase
 import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
 import com.inkapplications.ack.codec.AprsCodec
-import com.inkapplications.ack.structures.PacketData
 import kimchi.logger.EmptyLogger
 import kimchi.logger.KimchiLogger
 import java.lang.IllegalStateException
@@ -37,7 +36,7 @@ internal class V3Upgrade(
                         "packets",
                         SQLiteDatabase.CONFLICT_FAIL,
                         ContentValues().apply {
-                            put("sourceCallsign", parsed.route.source.callsign)
+                            put("sourceCallsign", parsed.route.source.callsign.canonical)
                         },
                         "id = ?",
                         arrayOf(id),

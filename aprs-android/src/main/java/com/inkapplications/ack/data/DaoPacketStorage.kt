@@ -3,6 +3,7 @@ package com.inkapplications.ack.data
 import com.inkapplications.ack.codec.AprsCodec
 import com.inkapplications.ack.structures.AprsPacket
 import com.inkapplications.ack.structures.PacketData
+import com.inkapplications.ack.structures.station.Callsign
 import com.inkapplications.coroutines.filterEachNotNull
 import com.inkapplications.coroutines.mapEach
 import kimchi.logger.KimchiLogger
@@ -27,8 +28,8 @@ internal class DaoPacketStorage(
         return packetDao.findById(id).map { it?.let { createCapturedPacket(it, fromEntityOrNull(it)) } }
     }
 
-    override fun findByAddressee(callsign: String): Flow<List<CapturedPacket>> {
-        return packetDao.findByAddresseeCallsign(callsign.lowercase())
+    override fun findByAddressee(callsign: Callsign): Flow<List<CapturedPacket>> {
+        return packetDao.findByAddresseeCallsign(callsign.canonical)
             .mapEach { createCapturedPacket(it, fromEntityOrNull(it)) }
             .filterEachNotNull()
     }
@@ -39,8 +40,8 @@ internal class DaoPacketStorage(
             timestamp = Instant.now().toEpochMilli(),
             data = data,
             packetSource = source,
-            sourceCallsign = packet.route.source.callsign,
-            addresseeCallsign = (packet.data as? PacketData.Message)?.addressee?.callsign?.lowercase(),
+            sourceCallsign = packet.route.source.callsign.canonical,
+            addresseeCallsign = (packet.data as? PacketData.Message)?.addressee?.callsign?.canonical,
             dataType = packet.data.javaClass.simpleName,
         )
         val id = packetDao.addPacket(entity)

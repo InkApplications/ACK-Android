@@ -11,6 +11,7 @@ import com.inkapplications.ack.data.PacketSource
 import com.inkapplications.ack.data.PacketStorage
 import com.inkapplications.ack.structures.AprsPacket
 import com.inkapplications.ack.structures.EncodingConfig
+import com.inkapplications.ack.structures.station.Callsign
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
@@ -36,7 +37,7 @@ object AprsAccessStub: PacketDriver {
 
 object PacketStorageStub: PacketStorage {
     override fun findRecent(count: Int): Flow<List<CapturedPacket>> = flow {}
-    override fun findByAddressee(callsign: String): Flow<List<CapturedPacket>> = flow {}
+    override fun findByAddressee(callsign: Callsign): Flow<List<CapturedPacket>> = flow {}
     override fun findById(id: Long): Flow<CapturedPacket?> = flow {}
     override suspend fun save(data: ByteArray, packet: AprsPacket, source: PacketSource): CapturedPacket = TODO()
 }

@@ -6,7 +6,6 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Inbox
-import androidx.compose.material.icons.filled.LocationDisabled
 import androidx.compose.material.icons.filled.Message
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
@@ -15,17 +14,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.Dp
 import com.inkapplications.ack.android.ui.theme.AckScreen
 import com.inkapplications.ack.android.ui.theme.AckTheme
-import com.inkapplications.ack.data.CapturedPacket
-import com.inkapplications.ack.structures.PacketData
 
 @Composable
-fun MessageScreen(
+fun MessagesScreen(
     screenState: State<MessageScreenState>,
-    controller: MessageScreenController,
+    controller: MessagesScreenController,
     bottomContentProtection: Dp,
 ) = AckScreen {
     when (val state = screenState.value) {
-        is MessageScreenState.MessageList -> MessageList(state)
+        is MessageScreenState.ConversationList -> ConversationList(state, controller)
         is MessageScreenState.Empty -> EmptyPlaceholder()
     }
     Box(
@@ -60,29 +57,26 @@ private fun EmptyPlaceholder() = Box(
 }
 
 @Composable
-private fun MessageList(state: MessageScreenState.MessageList) {
+private fun ConversationList(state: MessageScreenState.ConversationList, controller: MessagesScreenController) {
     LazyColumn(
         contentPadding = PaddingValues(bottom = AckTheme.dimensions.navigationProtection)
     ) {
-        items(state.messages) { message ->
-            MessageItem(message)
+        items(state.conversations) { conversation ->
+            ConversationItem(conversation, controller)
         }
     }
 }
 
 @Composable
-private fun MessageItem(packet: CapturedPacket) {
-    Card(modifier = Modifier.padding(horizontal = AckTheme.dimensions.gutter, vertical = AckTheme.dimensions.singleItem)) {
+@OptIn(ExperimentalMaterialApi::class)
+private fun ConversationItem(viewModel: ConversationViewModel, controller: MessagesScreenController) {
+    Card(
+        onClick = { controller.onConversationClick(viewModel.idCallsign) },
+        modifier = Modifier.padding(horizontal = AckTheme.dimensions.gutter, vertical = AckTheme.dimensions.singleItem)
+    ) {
         Column(modifier = Modifier.padding(AckTheme.dimensions.content).fillMaxWidth()) {
-            Text(packet.parsed.route.source.toString(), style = AckTheme.typography.h2)
-            val data = packet.parsed.data as? PacketData.Message ?: run {
-                Text("Unsupported data type: ${packet.parsed.data.javaClass.simpleName}")
-                return@Card
-            }
-            Text(data.message)
-            if (data.messageNumber != null) {
-                Text("#${data.messageNumber}")
-            }
+            Text(viewModel.name, style = AckTheme.typography.h2)
+            Text(viewModel.messagePreview)
         }
     }
 }

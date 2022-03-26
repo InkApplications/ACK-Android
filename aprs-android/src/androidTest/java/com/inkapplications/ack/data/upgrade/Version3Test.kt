@@ -9,6 +9,7 @@ import androidx.test.runner.AndroidJUnit4
 import com.inkapplications.ack.data.PacketDatabase
 import com.inkapplications.ack.codec.AprsCodec
 import com.inkapplications.ack.structures.*
+import com.inkapplications.ack.structures.station.StationAddress
 import junit.framework.TestCase.assertEquals
 import org.junit.Rule
 import org.junit.Test
@@ -40,8 +41,8 @@ class Version3Test {
         val fakeParser = object: AprsCodec {
             override fun fromAx25(packet: ByteArray): AprsPacket = AprsPacket(
                 route = PacketRoute(
-                    source = Address("KE0YOG", "72"),
-                    destination = Address("TEST"),
+                    source = StationAddress("KE0YOG", "72"),
+                    destination = StationAddress("TEST"),
                     digipeaters = emptyList(),
                 ),
                 data = PacketData.Unknown(
@@ -78,8 +79,8 @@ class Version3Test {
             override fun fromAx25(packet: ByteArray): AprsPacket = TODO()
             override fun fromString(packet: String): AprsPacket = AprsPacket(
                 route = PacketRoute(
-                    source = Address("KE0YOG", "72"),
-                    destination = Address("TEST"),
+                    source = StationAddress("KE0YOG", "72"),
+                    destination = StationAddress("TEST"),
                     digipeaters = emptyList(),
                 ),
                 data = PacketData.Unknown(

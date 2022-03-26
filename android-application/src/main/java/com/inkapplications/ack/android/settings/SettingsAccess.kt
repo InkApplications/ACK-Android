@@ -48,20 +48,20 @@ class SettingsAccess @Inject constructor(
 
     val settingsViewModel = settingsStateGrouped
         .map { SettingsViewModel(settingsList = it) }
-        .combine(settingValues.observeString(connectionSettings.callsign)) { viewModel, callsign ->
+        .combine(settingValues.observeString(connectionSettings.address)) { viewModel, callsign ->
             viewModel.copy(callsignText = callsign.takeIf { it.isNotBlank() })
         }
         .combine(settingValues.observeInt(connectionSettings.passcode)) { viewModel, passcode ->
             viewModel.copy(verified = passcode != -1)
         }
 
-    val licensePromptFieldValues: Flow<LicensePromptFieldValues> = settingValues.observeString(connectionSettings.callsign)
+    val licensePromptFieldValues: Flow<LicensePromptFieldValues> = settingValues.observeString(connectionSettings.address)
         .combine(settingValues.observeInt(connectionSettings.passcode)) { callsign, passcode ->
             LicensePromptFieldValues(callsign, passcode.takeIf { it != -1 }?.toString().orEmpty())
         }
 
     fun setLicense(values: LicensePromptFieldValues) {
-        settingsStorage.setString(connectionSettings.callsign, values.callsign.trim())
+        settingsStorage.setString(connectionSettings.address, values.callsign.trim())
         settingsStorage.setInt(connectionSettings.passcode, values.passcode.trim().toIntOrNull() ?: -1)
     }
 

@@ -31,8 +31,8 @@ import com.inkapplications.ack.android.capture.log.AprsLogItem
 import com.inkapplications.ack.android.capture.log.LogItemViewModel
 import com.inkapplications.ack.android.capture.map.MapScreen
 import com.inkapplications.ack.android.capture.map.MapViewModel
-import com.inkapplications.ack.android.capture.messages.MessageScreen
-import com.inkapplications.ack.android.capture.messages.MessageScreenController
+import com.inkapplications.ack.android.capture.messages.MessagesScreen
+import com.inkapplications.ack.android.capture.messages.MessagesScreenController
 import com.inkapplications.ack.android.capture.messages.MessageScreenState
 import com.inkapplications.ack.android.trackNavigation
 import com.inkapplications.ack.android.ui.theme.AckScreen
@@ -50,7 +50,7 @@ fun CaptureScreen(
     mapState: State<MapViewModel>,
     logs: State<List<LogItemViewModel>>,
     messageScreenState: State<MessageScreenState>,
-    messageScreenController: MessageScreenController,
+    messagesScreenController: MessagesScreenController,
     mapFactory: (Context) -> View,
     controller: CaptureNavController,
 ) = AckScreen {
@@ -73,7 +73,7 @@ fun CaptureScreen(
                     mapState = mapState,
                     logs = logs,
                     messageScreenState = messageScreenState,
-                    messageScreenController = messageScreenController,
+                    messagesScreenController = messagesScreenController,
                     mapFactory = mapFactory,
                     captureController = controller,
                 )
@@ -320,7 +320,7 @@ private fun CaptureNavHost(
     mapState: State<MapViewModel>,
     logs: State<List<LogItemViewModel>>,
     messageScreenState: State<MessageScreenState>,
-    messageScreenController: MessageScreenController,
+    messagesScreenController: MessagesScreenController,
     mapFactory: (Context) -> View,
     captureController: CaptureNavController,
 ) {
@@ -336,7 +336,7 @@ private fun CaptureNavHost(
                 onLogItemClick = captureController::onLogItemClick,
                 onEnableLocation = captureController::onLocationEnableClick,
                 onDisableLocation = captureController::onLocationDisableClick,
-                bottomContentProtection = 60.dp,
+                bottomContentProtection = AckTheme.dimensions.bottomBarHeight,
             )
         }
         composable("log") {
@@ -346,10 +346,10 @@ private fun CaptureNavHost(
             )
         }
         composable("messages") {
-            MessageScreen(
+            MessagesScreen(
                 screenState = messageScreenState,
-                controller = messageScreenController,
-                bottomContentProtection = 60.dp,
+                controller = messagesScreenController,
+                bottomContentProtection = AckTheme.dimensions.navigationProtection,
             )
         }
     }

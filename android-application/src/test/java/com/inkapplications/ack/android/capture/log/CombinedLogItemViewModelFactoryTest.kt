@@ -3,6 +3,7 @@ package com.inkapplications.ack.android.capture.log
 import com.inkapplications.ack.android.symbol.SymbolFactoryStub
 import com.inkapplications.ack.android.toTestPacket
 import com.inkapplications.ack.structures.*
+import com.inkapplications.ack.structures.station.StationAddress
 import inkapplications.spondee.measure.Fahrenheit
 import inkapplications.spondee.spatial.GeoCoordinates
 import inkapplications.spondee.spatial.latitude
@@ -155,7 +156,7 @@ class CombinedLogItemViewModelFactoryTest {
         val result = factory.create(
             id = 123L,
             packet = PacketData.Message(
-                addressee = Address("KE0YOG-2"),
+                addressee = StationAddress("KE0YOG-2"),
                 message = "Hello KE0YOG",
             ).toTestPacket(),
             metric = false,
@@ -169,7 +170,7 @@ class CombinedLogItemViewModelFactoryTest {
         val result = factory.create(
             id = 123L,
             packet = PacketData.Message(
-                addressee = Address("KE0YOG-2"),
+                addressee = StationAddress("KE0YOG-2"),
                 message = "Hello KE0YOG",
                 messageNumber = 69,
             ).toTestPacket(),

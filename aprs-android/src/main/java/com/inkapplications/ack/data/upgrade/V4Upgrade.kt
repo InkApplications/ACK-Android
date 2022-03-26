@@ -18,7 +18,7 @@ internal class V4Upgrade(
     }
 
     override fun ContentValues.migratePacket(parsed: AprsPacket) {
-        put("addresseeCallsign", (parsed.data as? PacketData.Message)?.addressee?.callsign?.lowercase())
+        put("addresseeCallsign", (parsed.data as? PacketData.Message)?.addressee?.callsign?.canonical)
         put("dataType", parsed.data.javaClass.simpleName)
     }
 }

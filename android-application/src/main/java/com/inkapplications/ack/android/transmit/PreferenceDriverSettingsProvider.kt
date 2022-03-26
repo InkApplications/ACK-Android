@@ -8,16 +8,12 @@ import com.inkapplications.ack.android.settings.observeString
 import com.inkapplications.ack.data.AfskModulationConfiguration
 import com.inkapplications.ack.data.ConnectionConfiguration
 import com.inkapplications.ack.data.drivers.DriverSettingsProvider
-import com.inkapplications.ack.structures.toAddress
 import dagger.Reusable
 import inkapplications.spondee.measure.Meters
 import inkapplications.spondee.structure.Kilo
 import inkapplications.spondee.structure.of
 import kimchi.logger.KimchiLogger
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.*
 import javax.inject.Inject
 import kotlin.time.Duration.Companion.milliseconds
 
@@ -28,8 +24,9 @@ class PreferenceDriversSettingsProvider @Inject constructor(
     transmitSettings: TransmitSettings,
     logger: KimchiLogger,
 ): DriverSettingsProvider {
-    override val internetServiceConfiguration: Flow<ConnectionConfiguration> = settings.observeString(connectionSettings.callsign)
-        .map { ConnectionConfiguration(it.toAddress()) }
+    override val internetServiceConfiguration: Flow<ConnectionConfiguration> = settings.observeData(connectionSettings.address)
+        .filterNotNull()
+        .map { ConnectionConfiguration(it) }
         .combine(settings.observeInt(connectionSettings.passcode)) { settings, passcode ->
             settings.copy(passcode = passcode)
         }

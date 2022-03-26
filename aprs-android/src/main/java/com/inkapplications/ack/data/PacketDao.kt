@@ -13,7 +13,7 @@ internal interface PacketDao {
     @Query("SELECT * FROM packets WHERE id = :id")
     fun findById(id: Long): Flow<PacketEntity?>
 
-    @Query("SELECT * FROM packets WHERE addresseeCallsign = :addresseeCallsign")
+    @Query("SELECT * FROM packets WHERE UPPER(addresseeCallsign) = UPPER(:addresseeCallsign)")
     fun findByAddresseeCallsign(addresseeCallsign: String): Flow<List<PacketEntity>>
 
     @Insert

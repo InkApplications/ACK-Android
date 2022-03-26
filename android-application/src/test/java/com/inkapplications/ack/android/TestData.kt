@@ -3,10 +3,11 @@ package com.inkapplications.ack.android
 import com.inkapplications.ack.data.CapturedPacket
 import com.inkapplications.ack.data.PacketSource
 import com.inkapplications.ack.structures.*
+import com.inkapplications.ack.structures.station.StationAddress
 
 val testRoute = PacketRoute(
-    source = Address("KE0YOG"),
-    destination = Address("KE0YOG", "1"),
+    source = StationAddress("KE0YOG"),
+    destination = StationAddress("KE0YOG", "1"),
     digipeaters = listOf(),
 )
 
