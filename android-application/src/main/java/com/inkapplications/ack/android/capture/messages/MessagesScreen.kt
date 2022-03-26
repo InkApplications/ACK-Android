@@ -19,14 +19,15 @@ import com.inkapplications.ack.android.ui.theme.AckTheme
 fun MessagesScreen(
     screenState: State<MessageScreenState>,
     controller: MessagesScreenController,
+    bottomProtection: Dp,
     bottomContentProtection: Dp,
 ) = AckScreen {
     when (val state = screenState.value) {
-        is MessageScreenState.ConversationList -> ConversationList(state, controller)
+        is MessageScreenState.ConversationList -> ConversationList(state, controller, bottomContentProtection)
         is MessageScreenState.Empty -> EmptyPlaceholder()
     }
     Box(
-        modifier = Modifier.fillMaxSize().padding(bottom = bottomContentProtection),
+        modifier = Modifier.fillMaxSize().padding(bottom = bottomProtection),
         contentAlignment = Alignment.BottomEnd,
     ) {
         FloatingActionButton(
@@ -57,9 +58,13 @@ private fun EmptyPlaceholder() = Box(
 }
 
 @Composable
-private fun ConversationList(state: MessageScreenState.ConversationList, controller: MessagesScreenController) {
+private fun ConversationList(
+    state: MessageScreenState.ConversationList,
+    controller: MessagesScreenController,
+    bottomProtection: Dp,
+) {
     LazyColumn(
-        contentPadding = PaddingValues(bottom = AckTheme.dimensions.navigationProtection)
+        contentPadding = PaddingValues(bottom = bottomProtection)
     ) {
         items(state.conversations) { conversation ->
             ConversationItem(conversation, controller)

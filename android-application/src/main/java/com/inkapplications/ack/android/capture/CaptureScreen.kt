@@ -349,6 +349,7 @@ private fun CaptureNavHost(
             MessagesScreen(
                 screenState = messageScreenState,
                 controller = messagesScreenController,
+                bottomProtection = AckTheme.dimensions.bottomBarHeight,
                 bottomContentProtection = AckTheme.dimensions.navigationProtection,
             )
         }
