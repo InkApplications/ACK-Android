@@ -1,5 +1,9 @@
 package com.inkapplications.ack.android.capture.messages
 
+import com.inkapplications.ack.android.capture.messages.conversation.ConverstationViewState
+import com.inkapplications.ack.android.capture.messages.conversation.MessageItemViewModel
+import com.inkapplications.ack.android.capture.messages.index.ConversationItemViewModel
+import com.inkapplications.ack.android.capture.messages.index.MessageIndexScreenState
 import com.inkapplications.ack.android.connection.ConnectionSettings
 import com.inkapplications.ack.android.settings.SettingsReadAccess
 import com.inkapplications.ack.android.settings.observeData
@@ -33,7 +37,7 @@ class MessageEvents @Inject constructor(
         .map {
             it.entries.map { it.toPair() }.map(conversationItemFactory::create)
         }
-        .map { if (it.isEmpty()) MessageScreenState.Empty else MessageScreenState.ConversationList(it) }
+        .map { if (it.isEmpty()) MessageIndexScreenState.Empty else MessageIndexScreenState.ConversationList(it) }
 
     fun conversationViewState(address: Callsign): Flow<ConverstationViewState> {
         return settings.observeData(connectionSettings.address)

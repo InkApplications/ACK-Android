@@ -1,8 +1,9 @@
-package com.inkapplications.ack.android.capture.messages
+package com.inkapplications.ack.android.capture.messages.conversation
 
 import android.app.Activity
 import androidx.activity.compose.setContent
 import androidx.compose.runtime.collectAsState
+import com.inkapplications.ack.android.capture.messages.MessageEvents
 import com.inkapplications.ack.android.component
 import com.inkapplications.ack.android.trackNavigation
 import com.inkapplications.ack.structures.station.Callsign

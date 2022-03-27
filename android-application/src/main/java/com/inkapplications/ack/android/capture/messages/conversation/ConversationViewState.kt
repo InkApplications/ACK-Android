@@ -1,4 +1,4 @@
-package com.inkapplications.ack.android.capture.messages
+package com.inkapplications.ack.android.capture.messages.conversation
 
 sealed interface ConverstationViewState {
     val title: String

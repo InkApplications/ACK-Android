@@ -31,9 +31,9 @@ import com.inkapplications.ack.android.capture.log.AprsLogItem
 import com.inkapplications.ack.android.capture.log.LogItemViewModel
 import com.inkapplications.ack.android.capture.map.MapScreen
 import com.inkapplications.ack.android.capture.map.MapViewModel
-import com.inkapplications.ack.android.capture.messages.MessagesScreen
-import com.inkapplications.ack.android.capture.messages.MessagesScreenController
-import com.inkapplications.ack.android.capture.messages.MessageScreenState
+import com.inkapplications.ack.android.capture.messages.MessageIndexScreen
+import com.inkapplications.ack.android.capture.messages.index.MessagesScreenController
+import com.inkapplications.ack.android.capture.messages.index.MessageIndexScreenState
 import com.inkapplications.ack.android.trackNavigation
 import com.inkapplications.ack.android.ui.theme.AckScreen
 import com.inkapplications.ack.android.ui.theme.AckTheme
@@ -49,7 +49,7 @@ fun CaptureScreen(
     captureScreenState: State<CaptureScreenViewModel>,
     mapState: State<MapViewModel>,
     logs: State<List<LogItemViewModel>>,
-    messageScreenState: State<MessageScreenState>,
+    messageScreenState: State<MessageIndexScreenState>,
     messagesScreenController: MessagesScreenController,
     mapFactory: (Context) -> View,
     controller: CaptureNavController,
@@ -319,7 +319,7 @@ private fun CaptureNavHost(
     navController: NavHostController,
     mapState: State<MapViewModel>,
     logs: State<List<LogItemViewModel>>,
-    messageScreenState: State<MessageScreenState>,
+    messageScreenState: State<MessageIndexScreenState>,
     messagesScreenController: MessagesScreenController,
     mapFactory: (Context) -> View,
     captureController: CaptureNavController,
@@ -346,7 +346,7 @@ private fun CaptureNavHost(
             )
         }
         composable("messages") {
-            MessagesScreen(
+            MessageIndexScreen(
                 screenState = messageScreenState,
                 controller = messagesScreenController,
                 bottomProtection = AckTheme.dimensions.bottomBarHeight,

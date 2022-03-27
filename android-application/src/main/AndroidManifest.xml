@@ -19,7 +19,7 @@
             </intent-filter>
         </activity>
         <activity android:name="com.inkapplications.ack.android.capture.CaptureActivity" />
-        <activity android:name="com.inkapplications.ack.android.capture.messages.ConversationActivity" />
+        <activity android:name="com.inkapplications.ack.android.capture.messages.conversation.ConversationActivity" />
         <activity android:name="com.inkapplications.ack.android.station.StationActivity" />
         <activity android:name="com.inkapplications.ack.android.settings.SettingsActivity" />
         <activity android:name="com.inkapplications.ack.android.onboard.OnboardActivity" android:windowSoftInputMode="adjustResize" />

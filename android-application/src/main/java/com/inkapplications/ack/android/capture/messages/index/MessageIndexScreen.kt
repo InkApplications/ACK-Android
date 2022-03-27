@@ -12,19 +12,22 @@ import androidx.compose.runtime.State
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.Dp
+import com.inkapplications.ack.android.capture.messages.index.ConversationItemViewModel
+import com.inkapplications.ack.android.capture.messages.index.MessageIndexScreenState
+import com.inkapplications.ack.android.capture.messages.index.MessagesScreenController
 import com.inkapplications.ack.android.ui.theme.AckScreen
 import com.inkapplications.ack.android.ui.theme.AckTheme
 
 @Composable
-fun MessagesScreen(
-    screenState: State<MessageScreenState>,
+fun MessageIndexScreen(
+    screenState: State<MessageIndexScreenState>,
     controller: MessagesScreenController,
     bottomProtection: Dp,
     bottomContentProtection: Dp,
 ) = AckScreen {
     when (val state = screenState.value) {
-        is MessageScreenState.ConversationList -> ConversationList(state, controller, bottomContentProtection)
-        is MessageScreenState.Empty -> EmptyPlaceholder()
+        is MessageIndexScreenState.ConversationList -> ConversationList(state, controller, bottomContentProtection)
+        is MessageIndexScreenState.Empty -> EmptyPlaceholder()
     }
     Box(
         modifier = Modifier.fillMaxSize().padding(bottom = bottomProtection),
@@ -59,7 +62,7 @@ private fun EmptyPlaceholder() = Box(
 
 @Composable
 private fun ConversationList(
-    state: MessageScreenState.ConversationList,
+    state: MessageIndexScreenState.ConversationList,
     controller: MessagesScreenController,
     bottomProtection: Dp,
 ) {

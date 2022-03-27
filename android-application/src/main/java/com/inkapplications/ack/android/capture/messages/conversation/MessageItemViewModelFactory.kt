@@ -1,4 +1,4 @@
-package com.inkapplications.ack.android.capture.messages
+package com.inkapplications.ack.android.capture.messages.conversation
 
 import com.inkapplications.ack.data.CapturedPacket
 import com.inkapplications.ack.structures.PacketData

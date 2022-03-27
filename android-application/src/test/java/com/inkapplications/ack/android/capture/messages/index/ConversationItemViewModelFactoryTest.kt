@@ -1,4 +1,4 @@
-package com.inkapplications.ack.android.capture.messages
+package com.inkapplications.ack.android.capture.messages.index
 
 import com.inkapplications.ack.android.toTestCapturedPacket
 import com.inkapplications.ack.android.toTestPacket

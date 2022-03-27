@@ -11,9 +11,9 @@ import androidx.compose.runtime.collectAsState
 import androidx.core.content.ContextCompat
 import com.inkapplications.ack.android.capture.log.LogItemViewModel
 import com.inkapplications.ack.android.capture.map.*
-import com.inkapplications.ack.android.capture.messages.MessagesScreenController
-import com.inkapplications.ack.android.capture.messages.MessageScreenState
-import com.inkapplications.ack.android.capture.messages.startConversationActivity
+import com.inkapplications.ack.android.capture.messages.index.MessagesScreenController
+import com.inkapplications.ack.android.capture.messages.index.MessageIndexScreenState
+import com.inkapplications.ack.android.capture.messages.conversation.startConversationActivity
 import com.inkapplications.ack.android.component
 import com.inkapplications.ack.android.map.Map
 import com.inkapplications.ack.android.map.getMap
@@ -54,7 +54,7 @@ class CaptureActivity: ExtendedActivity(), CaptureNavController {
             val captureState = captureEvents.screenState.collectAsState(CaptureScreenViewModel())
             val mapState = mapViewModel.collectAsState()
             val logState = logData.logViewModels.collectAsState(emptyList())
-            val messageScreenState = component.messageEvents().messagesScreenState.collectAsState(MessageScreenState.Initial)
+            val messageScreenState = component.messageEvents().messagesScreenState.collectAsState(MessageIndexScreenState.Initial)
             val messagesScreenController = object: MessagesScreenController {
                 override fun onCreateMessageClick() {
                 }

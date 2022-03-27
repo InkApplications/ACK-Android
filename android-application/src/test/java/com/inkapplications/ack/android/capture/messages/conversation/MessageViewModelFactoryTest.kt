@@ -1,6 +1,7 @@
-package com.inkapplications.ack.android.capture.messages
+package com.inkapplications.ack.android.capture.messages.conversation
 
 import com.inkapplications.ack.android.EpochFormatterStub
+import com.inkapplications.ack.android.capture.messages.conversation.MessageItemViewModelFactory
 import com.inkapplications.ack.android.toTestCapturedPacket
 import com.inkapplications.ack.android.toTestPacket
 import com.inkapplications.ack.structures.PacketData
