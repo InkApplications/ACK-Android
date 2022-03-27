@@ -158,7 +158,7 @@ private fun CaptureSettingsFab(
         backgroundColor = AckTheme.colors.brand,
         contentColor = AckTheme.colors.onBrand
     ) {
-        Icon(Icons.Default.SettingsInputAntenna,"")
+        Icon(Icons.Default.SettingsInputAntenna, stringResource(R.string.capture_controls_expand_action))
     }
 }
 
@@ -194,14 +194,14 @@ private fun CaptureSettingsSheet(
         IconButton(
             onClick = { scope.launch { settingsSheetState.bottomSheetState.collapse() } },
         ) {
-            Icon(Icons.Default.ExpandMore, "Close Sheet", modifier = Modifier.padding(AckTheme.dimensions.clickSafety))
+            Icon(Icons.Default.ExpandMore, stringResource(R.string.capture_controls_collapse_action), modifier = Modifier.padding(AckTheme.dimensions.clickSafety))
         }
     }
     captureScreenState.audioCaptureState.whenOff {
         CaptureSettingRow(
             icon = Icons.Outlined.MicOff,
             iconColor = AckTheme.colors.foregroundInactive,
-            name = "Enable Audio Capture",
+            name = stringResource(R.string.capture_controls_audio_capture_disabled_name),
             onClick = captureController::onAudioCaptureEnableClick
         )
     }
@@ -209,7 +209,7 @@ private fun CaptureSettingsSheet(
         CaptureSettingRow(
             icon = Icons.Filled.Mic,
             iconColor = AckTheme.colors.brand,
-            name = "Disable Audio Capture",
+            name = stringResource(R.string.capture_controls_audio_capture_enabled_name),
             onClick = captureController::onAudioCaptureDisableClick
         )
     }
@@ -218,7 +218,7 @@ private fun CaptureSettingsSheet(
         CaptureSettingRow(
             icon = Icons.Outlined.VolumeOff,
             iconColor = AckTheme.colors.foregroundInactive,
-            name = "Enable Audio Transmit",
+            name = stringResource(R.string.capture_controls_audio_transmit_disabled_name),
             modifier = Modifier.alpha(.6f),
         )
     }
@@ -226,7 +226,7 @@ private fun CaptureSettingsSheet(
         CaptureSettingRow(
             icon = Icons.Outlined.VolumeOff,
             iconColor = AckTheme.colors.foregroundInactive,
-            name = "Enable Audio Transmit",
+            name = stringResource(R.string.capture_controls_audio_transmit_disabled_name),
             onClick = captureController::onAudioTransmitEnableClick
         )
     }
@@ -234,7 +234,7 @@ private fun CaptureSettingsSheet(
         CaptureSettingRow(
             icon = Icons.Filled.VolumeUp,
             iconColor = AckTheme.colors.brand,
-            name = "Disable Audio Transmit",
+            name = stringResource(R.string.capture_controls_audio_transmit_enabled_name),
             onClick = captureController::onAudioTransmitDisableClick
         )
     }
@@ -243,7 +243,7 @@ private fun CaptureSettingsSheet(
         CaptureSettingRow(
             icon = Icons.Outlined.CloudDownload,
             iconColor = AckTheme.colors.foregroundInactive,
-            name = "Enable Internet Capture",
+            name = stringResource(R.string.capture_controls_internet_capture_disabled_name),
             onClick = captureController::onInternetCaptureEnableClick
         )
     }
@@ -251,7 +251,7 @@ private fun CaptureSettingsSheet(
         CaptureSettingRow(
             icon = Icons.Filled.CloudDownload,
             iconColor = AckTheme.colors.brand,
-            name = "Disable Internet Capture",
+            name = stringResource(R.string.capture_controls_internet_capture_enabled_name),
             onClick = captureController::onInternetCaptureDisableClick
         )
     }
@@ -260,7 +260,7 @@ private fun CaptureSettingsSheet(
         CaptureSettingRow(
             icon = Icons.Outlined.CloudUpload,
             iconColor = AckTheme.colors.foregroundInactive,
-            name = "Enable Internet Transmit",
+            name = stringResource(R.string.capture_controls_internet_transmit_disabled_name),
             modifier = Modifier.alpha(.6f),
         )
     }
@@ -268,7 +268,7 @@ private fun CaptureSettingsSheet(
         CaptureSettingRow(
             icon = Icons.Outlined.CloudUpload,
             iconColor = AckTheme.colors.foregroundInactive,
-            name = "Enable Internet Transmit",
+            name = stringResource(R.string.capture_controls_internet_transmit_disabled_name),
             onClick = captureController::onInternetTransmitEnableClick
         )
     }
@@ -276,7 +276,7 @@ private fun CaptureSettingsSheet(
         CaptureSettingRow(
             icon = Icons.Filled.CloudUpload,
             iconColor = AckTheme.colors.brand,
-            name = "Disable Internet Transmit",
+            name = stringResource(R.string.capture_controls_internet_transmit_enabled_name),
             onClick = captureController::onInternetTransmitDisableClick
         )
     }
@@ -284,7 +284,7 @@ private fun CaptureSettingsSheet(
     CaptureSettingRow(
         icon = Icons.Default.Settings,
         iconColor = AckTheme.colors.foreground,
-        name = "Settings",
+        name = stringResource(R.string.capture_controls_settings_name),
         onClick = {
             scope.launch {
                 settingsSheetState.bottomSheetState.collapse()

@@ -2,4 +2,5 @@
 <resources>
     <string name="messages_conversation_send_placeholder">Text Message</string>
     <string name="messages_conversation_send_action">Send</string>
+    <string name="messages_compose_action">Compose Message</string>
 </resources>

@@ -11,7 +11,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.Dp
+import com.inkapplications.ack.android.R
 import com.inkapplications.ack.android.capture.messages.index.ConversationItemViewModel
 import com.inkapplications.ack.android.capture.messages.index.MessageIndexScreenState
 import com.inkapplications.ack.android.capture.messages.index.MessagesScreenController
@@ -39,7 +41,7 @@ fun MessageIndexScreen(
             contentColor = contentColorFor(AckTheme.colors.surface),
             modifier = Modifier.padding(AckTheme.dimensions.gutter)
         ) {
-            Icon(Icons.Default.Message, "Compose Message")
+            Icon(Icons.Default.Message, stringResource(R.string.messages_compose_action))
         }
     }
 }

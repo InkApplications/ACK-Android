@@ -54,7 +54,7 @@ fun SettingsScreen(
                             verticalAlignment = Alignment.CenterVertically,
                             modifier = Modifier.padding(AckTheme.dimensions.item),
                         ) {
-                            if (viewModel.verified) Icon(Icons.Default.Verified, "Authenticated", modifier = Modifier.padding(end = AckTheme.dimensions.icon))
+                            if (viewModel.verified) Icon(Icons.Default.Verified, stringResource(R.string.settings_callsign_verified_description), modifier = Modifier.padding(end = AckTheme.dimensions.icon))
                             Text(callsign, style = AckTheme.typography.h2)
                         }
                     }

@@ -30,7 +30,7 @@ fun ConversationScreen(
             IconButton(
                 onClick = controller::onNavigateUpPressed,
             ) {
-                Icon(Icons.Default.ArrowBack, "Back")
+                Icon(Icons.Default.ArrowBack, stringResource(R.string.navigate_up))
             }
             Text(viewState.title, style = AckTheme.typography.h1)
         }

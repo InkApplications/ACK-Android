@@ -13,12 +13,14 @@ import androidx.compose.material.icons.filled.MyLocation
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.viewinterop.AndroidView
 import com.inkapplications.ack.android.capture.log.AprsLogItem
 import com.inkapplications.ack.android.capture.log.LogItemViewModel
 import com.inkapplications.ack.android.ui.theme.AckScreen
 import com.inkapplications.ack.android.ui.theme.AckTheme
+import com.inkapplications.ack.android.R
 
 @Composable
 fun MapScreen(
@@ -63,7 +65,7 @@ fun LocationStateButton(
             contentColor = AckTheme.colors.brand,
             modifier = Modifier.padding(AckTheme.dimensions.gutter)
         ) {
-            Icon(Icons.Default.MyLocation, "")
+            Icon(Icons.Default.MyLocation, stringResource(R.string.map_location_tracking_stop_action))
         }
     } else {
         FloatingActionButton(
@@ -72,7 +74,7 @@ fun LocationStateButton(
             contentColor = contentColorFor(AckTheme.colors.surface),
             modifier = Modifier.padding(AckTheme.dimensions.gutter)
         ) {
-            Icon(Icons.Default.LocationDisabled, "")
+            Icon(Icons.Default.LocationDisabled, stringResource(R.string.map_location_tracking_start_action))
         }
     }
 }
