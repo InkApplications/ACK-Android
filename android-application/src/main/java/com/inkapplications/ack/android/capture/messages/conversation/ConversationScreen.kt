@@ -7,10 +7,16 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Send
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.inkapplications.ack.android.R
 import com.inkapplications.ack.android.ui.theme.AckScreen
 import com.inkapplications.ack.android.ui.theme.AckTheme
 
@@ -31,8 +37,37 @@ fun ConversationScreen(
         when (viewState) {
             is ConverstationViewState.MessageList -> LazyColumn(
                 contentPadding = PaddingValues(vertical = AckTheme.dimensions.gutter),
+                modifier = Modifier.weight(1f)
             ) {
                 items(viewState.messages) { IncomingMessage(it) }
+            }
+        }
+        Surface(
+            shape = AckTheme.shapes.corners,
+            modifier = Modifier.fillMaxWidth().padding(AckTheme.dimensions.gutter),
+        ) {
+            Row(
+               verticalAlignment = Alignment.CenterVertically,
+            ) {
+                val textFieldValue = remember { mutableStateOf("") }
+                OutlinedTextField(
+                    value = textFieldValue.value,
+                    onValueChange = { textFieldValue.value = it },
+                    singleLine = true,
+                    placeholder = { Text(stringResource(R.string.messages_conversation_send_placeholder)) },
+                    colors = TextFieldDefaults.outlinedTextFieldColors(
+                        backgroundColor = Color.Transparent,
+                        focusedBorderColor = Color.Transparent,
+                        unfocusedBorderColor = Color.Transparent,
+                        disabledBorderColor = Color.Transparent,
+                    ),
+                    modifier = Modifier.weight(1f),
+                )
+                IconButton(
+                    onClick = {},
+                ) {
+                    Icon(Icons.Default.Send, stringResource(R.string.messages_conversation_send_action))
+                }
             }
         }
     }
