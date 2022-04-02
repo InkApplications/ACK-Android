@@ -92,12 +92,12 @@ class StationViewModelFactory @Inject constructor(
             receiveIcon = when (packet?.source) {
                 PacketSource.Ax25 -> Icons.Default.SettingsInputAntenna
                 PacketSource.AprsIs -> Icons.Default.Cloud
-                null -> null
+                else -> null
             },
             receiveIconDescription = when (packet?.source) {
                 PacketSource.Ax25 -> "Radio Packet"
                 PacketSource.AprsIs -> "Internet Packet"
-                null -> null
+                else -> null
             },
         )
     }

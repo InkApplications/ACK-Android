@@ -64,7 +64,10 @@ fun ConversationScreen(
                     modifier = Modifier.weight(1f),
                 )
                 IconButton(
-                    onClick = {},
+                    onClick = {
+                        controller.onSendMessage(textFieldValue.value)
+                        textFieldValue.value = ""
+                    },
                 ) {
                     Icon(Icons.Default.Send, stringResource(R.string.messages_conversation_send_action))
                 }

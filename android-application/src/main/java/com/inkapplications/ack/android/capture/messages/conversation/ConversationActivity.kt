@@ -9,6 +9,7 @@ import com.inkapplications.ack.android.trackNavigation
 import com.inkapplications.ack.structures.station.Callsign
 import com.inkapplications.android.extensions.ExtendedActivity
 import com.inkapplications.android.startActivity
+import kotlinx.coroutines.*
 import kimchi.Kimchi
 
 private const val EXTRA_ADDRESS = "aprs.conversation.extra.address"
@@ -30,6 +31,15 @@ class ConversationActivity: ExtendedActivity(), ConversationController {
 
     override fun onNavigateUpPressed() {
         finish()
+    }
+
+    override fun onSendMessage(message: String) {
+        Kimchi.debug("Sending Message: $message")
+        Kimchi.trackEvent("messages_send")
+        foregroundScope.launch {
+            messageEvents.transmitMessage(callsign, message)
+            Kimchi.trace("Message transmit action complete")
+        }
     }
 }
 

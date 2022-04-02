@@ -61,7 +61,7 @@ internal class DaoPacketStorage(
         try {
             return when (data.packetSource) {
                 PacketSource.Ax25 -> codec.fromAx25(data.data)
-                PacketSource.AprsIs -> codec.fromString(data.data.toString(Charsets.UTF_8))
+                PacketSource.AprsIs, PacketSource.Local -> codec.fromString(data.data.toString(Charsets.UTF_8))
             }
         } catch (error: Throwable) {
             logger.warn("Unable to parse packet", error)
