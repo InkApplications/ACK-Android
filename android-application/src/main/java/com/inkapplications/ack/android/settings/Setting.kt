@@ -86,7 +86,7 @@ class StringBackedSetting<T>(
     key: String,
     name: String,
     categoryName: String,
-    defaultValue: T,
+    override val defaultData: T,
     advanced: Boolean = false,
     override val transformer: Transformer<T, String>,
     val inputValidator: Validator<String> = NoValidation,
@@ -95,7 +95,7 @@ class StringBackedSetting<T>(
     key = key,
     name = name,
     categoryName = categoryName,
-    defaultValue = transformer.toStorage(defaultValue),
+    defaultValue = transformer.toStorage(defaultData),
     advanced = advanced,
     validator = object: Validator<String> {
         override fun validate(input: String): ValidationResult {
@@ -117,7 +117,7 @@ class IntBackedSetting<T>(
     key: String,
     name: String,
     categoryName: String,
-    defaultValue: T,
+    override val defaultData: T,
     advanced: Boolean = false,
     override val transformer: Transformer<T, Int>,
     val inputValidator: Validator<Int> = NoValidation,
@@ -126,7 +126,7 @@ class IntBackedSetting<T>(
     key = key,
     name = name,
     categoryName = categoryName,
-    defaultValue = transformer.toStorage(defaultValue),
+    defaultValue = transformer.toStorage(defaultData),
     advanced = advanced,
     validator = object: Validator<Int> {
         override fun validate(input: Int): ValidationResult {

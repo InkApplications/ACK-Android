@@ -8,4 +8,9 @@ sealed interface TransformableSetting<DATA, STORAGE> {
      * Transformer used to store the typed data structure into settings.
      */
     val transformer: Transformer<DATA, STORAGE>
+
+    /**
+     * A default value for the setting, in its data format.
+     */
+    val defaultData: DATA
 }

@@ -16,7 +16,7 @@ class ConnectionSettings @Inject constructor(
         key = "connection.address",
         name = "Callsign",
         categoryName = "Connection",
-        defaultValue = null,
+        defaultData = null,
         advanced = true,
         transformer = object: Transformer<StationAddress?, String> {
             override fun toStorage(data: StationAddress?): String = data.toString()

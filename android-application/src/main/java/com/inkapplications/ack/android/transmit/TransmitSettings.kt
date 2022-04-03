@@ -5,69 +5,83 @@ import com.inkapplications.ack.android.R
 import com.inkapplications.ack.android.input.ValidationResult
 import com.inkapplications.ack.android.input.Validator
 import com.inkapplications.ack.android.settings.*
+import com.inkapplications.ack.android.settings.transformer.*
+import com.inkapplications.ack.structures.Digipeater
+import com.inkapplications.ack.structures.Symbol
+import com.inkapplications.ack.structures.station.StationAddress
+import inkapplications.spondee.measure.Miles
 import inkapplications.spondee.scalar.Percentage
 import inkapplications.spondee.scalar.WholePercentage
 import inkapplications.spondee.structure.value
 import javax.inject.Inject
 import kotlin.math.roundToInt
-import kotlin.time.Duration
+import kotlin.time.Duration.Companion.minutes
+import kotlin.time.Duration.Companion.seconds
 import kotlin.time.ExperimentalTime
+
 
 class TransmitSettings @Inject constructor(
     resources: StringResources,
 ): SettingsProvider {
     @OptIn(ExperimentalTime::class)
-    val minRate = IntSetting(
+    val minRate = IntBackedSetting(
         key = "transmit.rate.min",
         name = resources.getString(R.string.transmit_settings_rate_min),
-        defaultValue = Duration.minutes(10).inWholeMinutes.toInt(),
+        defaultData = 10.minutes,
         categoryName = resources.getString(R.string.transmit_settings_category),
+        transformer = MinuteTransformer,
     )
 
     @OptIn(ExperimentalTime::class)
-    val maxRate = IntSetting(
+    val maxRate = IntBackedSetting(
         key = "transmit.rate.max",
         name = resources.getString(R.string.transmit_settings_rate_max),
-        defaultValue = Duration.minutes(5).inWholeMinutes.toInt(),
+        defaultData = 5.minutes,
         categoryName = resources.getString(R.string.transmit_settings_category),
+        transformer = MinuteTransformer,
     )
 
     @OptIn(ExperimentalTime::class)
-    val distance = IntSetting(
+    val distance = IntBackedSetting(
         key = "transmit.distance",
         name = resources.getString(R.string.transmit_settings_distance),
-        defaultValue = 5,
+        defaultData = Miles.of(5),
         categoryName = resources.getString(R.string.transmit_settings_category),
+        transformer = MileTransformer,
     )
 
     @OptIn(ExperimentalTime::class)
-    val preamble = IntSetting(
+    val preamble = IntBackedSetting(
         key = "transmit.preamble",
         name = resources.getString(R.string.transmit_settings_preamble),
-        defaultValue = Duration.seconds(1).inWholeMilliseconds.toInt(),
+        defaultData = 1.seconds,
         categoryName = resources.getString(R.string.transmit_settings_category),
+        transformer = MillisecondTransformer,
     )
 
-    val digipath = StringSetting(
+    val digipath = StringBackedSetting(
         key = "transmit.digipath",
         name = resources.getString(R.string.transmit_settings_digipath),
-        defaultValue = "WIDE1-1",
+        defaultData = StationAddress("WIDE1", "1").let(::Digipeater).let(::listOf),
         categoryName = resources.getString(R.string.transmit_settings_category),
+        transformer = PathTransformer,
     )
 
-    val symbol = StringSetting(
+    val symbol = StringBackedSetting(
         key = "transmit.symbol",
         name = resources.getString(R.string.transmit_settings_symbol),
-        defaultValue = "/$",
+        defaultData = Symbol.Primary('$'),
         categoryName = resources.getString(R.string.transmit_settings_category),
+        transformer = SymbolTransformer,
     )
 
-    val destination = StringSetting(
+    val destination = StringBackedSetting(
         key = "transmit.destination",
         name = resources.getString(R.string.transmit_settings_destination),
-        defaultValue = "APZ022",
+        defaultData = StationAddress("APZ022"),
         categoryName = resources.getString(R.string.transmit_settings_category),
         advanced = true,
+        transformer = StationAddressTransformer,
     )
 
     val comment = StringSetting(
@@ -80,12 +94,9 @@ class TransmitSettings @Inject constructor(
     val volume = IntBackedSetting(
         key = "transmit.volume",
         name = resources.getString(R.string.transmit_settings_volume),
-        defaultValue = WholePercentage.of(50),
+        defaultData = WholePercentage.of(50),
         categoryName = resources.getString(R.string.transmit_settings_category),
-        transformer = object: Transformer<Percentage, Int> {
-            override fun toStorage(data: Percentage): Int = data.value(WholePercentage).toInt()
-            override fun toData(storage: Int): Percentage = WholePercentage.of(storage)
-        },
+        transformer = PercentageTransformer,
         dataValidator = object: Validator<Percentage> {
             override fun validate(input: Percentage): ValidationResult {
                 return if (input.value(WholePercentage).roundToInt() in (0..100)) {

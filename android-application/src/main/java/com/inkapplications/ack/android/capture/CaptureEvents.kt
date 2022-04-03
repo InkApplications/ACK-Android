@@ -11,18 +11,15 @@ import com.inkapplications.ack.android.transmit.TransmitSettings
 import com.inkapplications.ack.data.drivers.PacketDriver
 import com.inkapplications.ack.data.drivers.PacketDrivers
 import com.inkapplications.ack.structures.*
-import com.inkapplications.ack.structures.station.toStationAddress
 import com.inkapplications.android.extensions.control.ControlState
 import com.inkapplications.coroutines.combinePair
 import com.inkapplications.coroutines.combineTriple
-import inkapplications.spondee.measure.Miles
 import kimchi.logger.KimchiLogger
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.coroutines.coroutineContext
-import kotlin.time.Duration
 import kotlin.time.ExperimentalTime
 
 @Singleton
@@ -132,35 +129,35 @@ class CaptureEvents @Inject constructor(
     suspend fun transmitLoop(driver: PacketDriver) {
         settings.observeData(connectionSettings.address)
             .filterNotNull()
-            .combine(settings.observeString(transmitSettings.digipath)) { callsign, path ->
+            .combine(settings.observeData(transmitSettings.digipath)) { callsign, path ->
                 TransmitPrototype(
-                    path = path.split(',').map { Digipeater(it.toStationAddress()) },
-                    destination = transmitSettings.destination.defaultValue.toStationAddress(),
+                    path = path,
+                    destination = transmitSettings.destination.defaultData,
                     callsign = callsign,
-                    symbol = transmitSettings.symbol.defaultValue.let { symbolOf(it[0], it[1]) },
+                    symbol = transmitSettings.symbol.defaultData,
                     comment = transmitSettings.comment.defaultValue,
-                    minRate = transmitSettings.minRate.defaultValue.let { Duration.minutes(it) },
-                    maxRate = transmitSettings.maxRate.defaultValue.let { Duration.minutes(it) },
-                    distance = transmitSettings.distance.defaultValue.let { Miles.of(it) },
+                    minRate = transmitSettings.minRate.defaultData,
+                    maxRate = transmitSettings.maxRate.defaultData,
+                    distance = transmitSettings.distance.defaultData,
                 )
             }
-            .combine(settings.observeString(transmitSettings.symbol)) { prototype, symbol ->
-                prototype.copy(symbol = symbolOf(symbol[0], symbol[1]))
+            .combine(settings.observeData(transmitSettings.symbol)) { prototype, symbol ->
+                prototype.copy(symbol = symbol)
             }
             .combine(settings.observeString(transmitSettings.comment)) { prototype, comment ->
                 prototype.copy(comment = comment)
             }
-            .combine(settings.observeString(transmitSettings.destination)) { prototype, destination ->
-                prototype.copy(destination = destination.toStationAddress())
+            .combine(settings.observeData(transmitSettings.destination)) { prototype, destination ->
+                prototype.copy(destination = destination)
             }
-            .combine(settings.observeInt(transmitSettings.minRate)) { prototype, rate ->
-                prototype.copy(minRate = Duration.minutes(rate))
+            .combine(settings.observeData(transmitSettings.minRate)) { prototype, rate ->
+                prototype.copy(minRate = rate)
             }
-            .combine(settings.observeInt(transmitSettings.maxRate)) { prototype, rate ->
-                prototype.copy(maxRate = Duration.minutes(rate))
+            .combine(settings.observeData(transmitSettings.maxRate)) { prototype, rate ->
+                prototype.copy(maxRate = rate)
             }
-            .combine(settings.observeInt(transmitSettings.distance)) { prototype, distance ->
-                prototype.copy(distance = Miles.of(distance))
+            .combine(settings.observeData(transmitSettings.distance)) { prototype, distance ->
+                prototype.copy(distance = distance)
             }
             .flatMapLatest { prototype ->
                 locationAccess.observeLocationChanges(prototype.maxRate, prototype.distance)
