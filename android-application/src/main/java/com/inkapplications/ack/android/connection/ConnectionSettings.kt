@@ -1,12 +1,14 @@
 package com.inkapplications.ack.android.connection
 
 import com.inkapplications.ack.android.settings.*
-import com.inkapplications.ack.android.settings.transformer.Transformer
+import com.inkapplications.ack.android.R
+import com.inkapplications.ack.android.settings.transformer.MileTransformer
+import com.inkapplications.ack.android.settings.transformer.OptionalKeyTransformer
+import com.inkapplications.ack.android.settings.transformer.StationAddressTransformer
 import com.inkapplications.android.extensions.StringResources
 import com.inkapplications.ack.data.*
-import com.inkapplications.ack.structures.station.StationAddress
-import com.inkapplications.ack.structures.station.toStationAddress
 import dagger.Reusable
+import inkapplications.spondee.measure.Miles
 import javax.inject.Inject
 
 @Reusable
@@ -15,40 +17,41 @@ class ConnectionSettings @Inject constructor(
 ): SettingsProvider {
     val address = StringBackedSetting(
         key = "connection.address",
-        name = "Callsign",
-        categoryName = "Connection",
+        name = resources.getString(R.string.connection_setting_address_name),
+        categoryName = resources.getString(R.string.connection_setting_category_name),
         defaultData = null,
         advanced = true,
-        transformer = object: Transformer<StationAddress?, String> {
-            override fun toStorage(data: StationAddress?): String = data.toString()
-            override fun toData(storage: String): StationAddress? = storage.takeIf { it.isNotEmpty() }?.toStationAddress()
-        },
+        transformer = OptionalKeyTransformer(
+            nullKey = "",
+            delegate = StationAddressTransformer,
+        )
     )
     val passcode = IntSetting(
         key = "connection.passcode",
-        name = "APRS-IS Passcode",
-        categoryName = "Connection",
+        name = resources.getString(R.string.connection_setting_passcode_name),
+        categoryName = resources.getString(R.string.connection_setting_category_name),
         defaultValue = -1,
         advanced = true,
     )
 
     val server = StringSetting(
         key = "connection.server",
-        name = "APRS-IS Server",
-        categoryName = "Connection",
+        name = resources.getString(R.string.connection_setting_server_name),
+        categoryName = resources.getString(R.string.connection_setting_category_name),
         defaultValue = DEFAULT_CONNECTION_SERVER,
     )
     val port = IntSetting(
         key = "connection.port",
-        name = "APRS-IS Port",
-        categoryName = "Connection",
+        name = resources.getString(R.string.connection_setting_port_name),
+        categoryName = resources.getString(R.string.connection_setting_category_name),
         defaultValue = DEFAULT_CONNECTION_PORT,
     )
-    val radius = IntSetting(
+    val radius = IntBackedSetting(
         key = "connection.radius",
-        name = "APRS-IS Search Radius (km)",
-        categoryName = "Connection",
-        defaultValue = DEFAULT_SEARCH_RADIUS_KILOMETERS,
+        name = resources.getString(R.string.connection_setting_radius_name),
+        categoryName = resources.getString(R.string.connection_setting_category_name),
+        defaultData = Miles.of(DEFAULT_SEARCH_RADIUS_MILES),
+        transformer = MileTransformer,
     )
 
     override val settings: List<Setting> = listOf(

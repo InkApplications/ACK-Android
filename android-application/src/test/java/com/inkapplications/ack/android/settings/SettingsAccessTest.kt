@@ -1,5 +1,6 @@
 package com.inkapplications.ack.android.settings
 
+import com.inkapplications.ack.android.ParrotStringResources
 import com.inkapplications.android.extensions.StubStringResources
 import com.inkapplications.ack.android.connection.ConnectionSettings
 import kotlinx.coroutines.flow.first
@@ -15,7 +16,7 @@ class SettingsAccessTest {
             SettingsProviderStub,
             SettingsReadAccessStub,
             SettingsWriteAccessStub,
-            ConnectionSettings(StubStringResources),
+            ConnectionSettings(ParrotStringResources),
         )
 
         val result = access.settingsStateGrouped.first().map { it.settings }.flatten()
@@ -47,7 +48,7 @@ class SettingsAccessTest {
             settingsProvider,
             SettingsReadAccessStub,
             SettingsWriteAccessStub,
-            ConnectionSettings(StubStringResources),
+            ConnectionSettings(ParrotStringResources),
         )
 
         val result = access.settingsStateGrouped.first().map { it.settings }.flatten()
@@ -69,7 +70,7 @@ class SettingsAccessTest {
             settingsProvider,
             SettingsReadAccessStub,
             SettingsWriteAccessStub,
-            ConnectionSettings(StubStringResources),
+            ConnectionSettings(ParrotStringResources),
         )
 
         access.showAdvancedSettings()
@@ -95,7 +96,7 @@ class SettingsAccessTest {
             settingsProvider,
             SettingsReadAccessStub,
             SettingsWriteAccessStub,
-            ConnectionSettings(StubStringResources),
+            ConnectionSettings(ParrotStringResources),
         )
 
         access.showAdvancedSettings()
@@ -133,7 +134,7 @@ class SettingsAccessTest {
             settingsProvider,
             SettingsReadAccessStub,
             SettingsWriteAccessStub,
-            ConnectionSettings(StubStringResources),
+            ConnectionSettings(ParrotStringResources),
         )
 
         access.showAdvancedSettings()
