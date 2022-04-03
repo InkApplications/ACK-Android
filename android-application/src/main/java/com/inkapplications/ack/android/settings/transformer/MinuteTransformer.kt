@@ -1,6 +1,5 @@
 package com.inkapplications.ack.android.settings.transformer
 
-import com.inkapplications.ack.android.settings.Transformer
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.minutes
 

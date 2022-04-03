@@ -1,6 +1,5 @@
 package com.inkapplications.ack.android.settings.transformer
 
-import com.inkapplications.ack.android.settings.Transformer
 import inkapplications.spondee.scalar.Percentage
 import inkapplications.spondee.scalar.WholePercentage
 import inkapplications.spondee.structure.value

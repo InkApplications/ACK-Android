@@ -1,4 +1,4 @@
-package com.inkapplications.ack.android.settings
+package com.inkapplications.ack.android.settings.transformer
 
 /**
  * Transformer to change settings to/from their storage type.

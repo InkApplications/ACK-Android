@@ -3,6 +3,7 @@ package com.inkapplications.ack.android.settings
 import com.inkapplications.ack.android.input.NoValidation
 import com.inkapplications.ack.android.input.ValidationResult
 import com.inkapplications.ack.android.input.Validator
+import com.inkapplications.ack.android.settings.transformer.Transformer
 
 /**
  * Definition of an individual configuration aspect of the application.

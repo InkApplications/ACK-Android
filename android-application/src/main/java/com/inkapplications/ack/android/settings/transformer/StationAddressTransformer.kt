@@ -1,6 +1,5 @@
 package com.inkapplications.ack.android.settings.transformer
 
-import com.inkapplications.ack.android.settings.Transformer
 import com.inkapplications.ack.structures.station.StationAddress
 import com.inkapplications.ack.structures.station.toStationAddress
 

@@ -1,6 +1,6 @@
 package com.inkapplications.ack.android.transmit
 
-import com.inkapplications.ack.android.settings.Transformer
+import com.inkapplications.ack.android.settings.transformer.Transformer
 import com.inkapplications.ack.structures.Digipeater
 import com.inkapplications.ack.structures.station.toStationAddress
 

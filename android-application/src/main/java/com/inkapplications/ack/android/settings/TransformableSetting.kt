@@ -1,5 +1,7 @@
 package com.inkapplications.ack.android.settings
 
+import com.inkapplications.ack.android.settings.transformer.Transformer
+
 /**
  * A setting with a transformer to use for going between primitives and complex types.
  */

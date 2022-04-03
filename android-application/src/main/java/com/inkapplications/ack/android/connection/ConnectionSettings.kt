@@ -1,6 +1,7 @@
 package com.inkapplications.ack.android.connection
 
 import com.inkapplications.ack.android.settings.*
+import com.inkapplications.ack.android.settings.transformer.Transformer
 import com.inkapplications.android.extensions.StringResources
 import com.inkapplications.ack.data.*
 import com.inkapplications.ack.structures.station.StationAddress

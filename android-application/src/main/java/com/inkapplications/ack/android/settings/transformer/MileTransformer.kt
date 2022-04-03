@@ -1,6 +1,5 @@
 package com.inkapplications.ack.android.settings.transformer
 
-import com.inkapplications.ack.android.settings.Transformer
 import inkapplications.spondee.measure.Length
 import inkapplications.spondee.measure.Miles
 import inkapplications.spondee.structure.value
