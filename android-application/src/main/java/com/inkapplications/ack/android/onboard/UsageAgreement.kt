@@ -17,7 +17,9 @@ fun UsageAgreement(
     controller: UserAgreementController,
 ) {
     Column(
-        modifier = Modifier.padding(AckTheme.dimensions.gutter).verticalScroll(rememberScrollState()),
+        modifier = Modifier.padding(AckTheme.dimensions.gutter)
+            .fillMaxHeight()
+            .verticalScroll(rememberScrollState()),
     ) {
         Text(
             "Usage and Privacy Agreement",
