@@ -42,32 +42,32 @@ class CaptureEvents @Inject constructor(
 
     private val combinedTransmitState = internetTransmitState.combinePair(audioTransmitState)
 
-    private val internetCaptureControlState = settings.observeString(connectionSettings.address)
+    private val internetCaptureControlState = settings.observeData(connectionSettings.address)
         .combine(internetListenState) { callsign, state ->
             when {
-                callsign.isBlank() -> ControlState.Hidden
+                callsign == null -> ControlState.Hidden
                 state -> ControlState.On
                 else -> ControlState.Off
             }
         }
 
-    private val audioTransmitControlState = settings.observeString(connectionSettings.address)
+    private val audioTransmitControlState = settings.observeData(connectionSettings.address)
         .combinePair(audioListenState)
         .combine(audioTransmitState) { (callsign, capturing), transmitting ->
             when {
-                callsign.isBlank() -> ControlState.Hidden
+                callsign == null -> ControlState.Hidden
                 !capturing -> ControlState.Disabled
                 transmitting -> ControlState.On
                 else -> ControlState.Off
             }
         }
 
-    private val internetTransmitControlState = settings.observeString(connectionSettings.address)
+    private val internetTransmitControlState = settings.observeData(connectionSettings.address)
         .combinePair(settings.observeInt(connectionSettings.passcode))
         .combineTriple(internetListenState)
         .combine(internetTransmitState) { (callsign, passcode, capturing), transmitting ->
             when {
-                callsign.isBlank() || passcode == -1 -> ControlState.Hidden
+                callsign == null || passcode == -1 -> ControlState.Hidden
                 !capturing -> ControlState.Disabled
                 transmitting -> ControlState.On
                 else -> ControlState.Off

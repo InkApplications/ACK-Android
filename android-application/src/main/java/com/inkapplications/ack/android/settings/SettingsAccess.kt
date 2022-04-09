@@ -2,6 +2,7 @@ package com.inkapplications.ack.android.settings
 
 import com.inkapplications.ack.android.connection.ConnectionSettings
 import com.inkapplications.ack.android.onboard.LicensePromptFieldValues
+import com.inkapplications.ack.structures.station.toStationAddress
 import com.inkapplications.coroutines.mapEach
 import kotlinx.coroutines.flow.*
 import javax.inject.Inject
@@ -48,20 +49,20 @@ class SettingsAccess @Inject constructor(
 
     val settingsViewModel = settingsStateGrouped
         .map { SettingsViewModel(settingsList = it) }
-        .combine(settingValues.observeString(connectionSettings.address)) { viewModel, callsign ->
-            viewModel.copy(callsignText = callsign.takeIf { it.isNotBlank() })
+        .combine(settingValues.observeData(connectionSettings.address)) { viewModel, callsign ->
+            viewModel.copy(callsignText = callsign?.toString().orEmpty())
         }
         .combine(settingValues.observeInt(connectionSettings.passcode)) { viewModel, passcode ->
             viewModel.copy(verified = passcode != -1)
         }
 
-    val licensePromptFieldValues: Flow<LicensePromptFieldValues> = settingValues.observeString(connectionSettings.address)
+    val licensePromptFieldValues: Flow<LicensePromptFieldValues> = settingValues.observeData(connectionSettings.address)
         .combine(settingValues.observeInt(connectionSettings.passcode)) { callsign, passcode ->
-            LicensePromptFieldValues(callsign, passcode.takeIf { it != -1 }?.toString().orEmpty())
+            LicensePromptFieldValues(callsign?.toString().orEmpty(), passcode.takeIf { it != -1 }?.toString().orEmpty())
         }
 
     fun setLicense(values: LicensePromptFieldValues) {
-        settingsStorage.setString(connectionSettings.address, values.callsign.trim())
+        settingsStorage.setData(connectionSettings.address, values.callsign.trim().takeIf { it.isNotEmpty() }?.toStationAddress())
         settingsStorage.setInt(connectionSettings.passcode, values.passcode.trim().toIntOrNull() ?: -1)
     }
 
