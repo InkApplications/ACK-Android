@@ -2,6 +2,7 @@ package com.inkapplications.ack.android
 
 import android.app.Activity
 import android.app.Application
+import android.app.Service
 import androidx.fragment.app.Fragment
 import com.inkapplications.android.extensions.ApplicationModule
 import com.inkapplications.android.extensions.LifecycleLogger
@@ -38,8 +39,10 @@ class AprsApplication: Application() {
         })
 
         Mapbox.getInstance(this, BuildConfig.MAPBOX_ACCESS_TOKEN)
+        component.captureServiceNotifications().onCreate(this)
     }
 }
 
 val Activity.component get() = (application as AprsApplication).component
 val Fragment.component get() = (activity!!.application as AprsApplication).component
+val Service.component get() = (application as AprsApplication).component

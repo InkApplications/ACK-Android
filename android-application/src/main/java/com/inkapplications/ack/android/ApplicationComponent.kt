@@ -9,6 +9,7 @@ import com.inkapplications.ack.android.capture.map.MapEventsFactory
 import com.inkapplications.ack.android.capture.map.MapModule
 import com.inkapplications.ack.android.capture.messages.MessageEvents
 import com.inkapplications.ack.android.capture.messages.MessagesModule
+import com.inkapplications.ack.android.capture.service.CaptureServiceNotifications
 import com.inkapplications.ack.android.locale.LocaleModule
 import com.inkapplications.ack.android.onboard.OnboardingModule
 import com.inkapplications.ack.android.onboard.OnboardingStateAccess
@@ -56,4 +57,5 @@ interface ApplicationComponent {
     fun stationEvents(): StationEvents
     fun onboardingStateAccess(): OnboardingStateAccess
     fun licenseValidator(): LicensePromptValidator
+    fun captureServiceNotifications(): CaptureServiceNotifications
 }

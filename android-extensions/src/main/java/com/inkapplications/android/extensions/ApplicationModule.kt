@@ -1,6 +1,7 @@
 package com.inkapplications.android.extensions
 
 import android.app.Application
+import android.app.NotificationManager
 import android.content.Context
 import android.content.SharedPreferences
 import android.content.res.Resources
@@ -27,6 +28,9 @@ class ApplicationModule(private val application: Application) {
 
     @Provides
     fun locationManager() = application.getSystemService(Context.LOCATION_SERVICE) as LocationManager
+
+    @Provides
+    fun notificationManager() = application.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 }
 
 @Module

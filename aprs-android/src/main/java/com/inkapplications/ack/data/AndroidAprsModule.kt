@@ -25,7 +25,13 @@ object AndroidAprsModule {
     fun aprsCodec(
         logger: KimchiLogger,
     ): AprsCodec {
-        return Ack(logger).defaultParser()
+        val logAdapter = object: KimchiLogger by logger {
+            override fun debug(message: String, cause: Throwable?) = Unit
+            override fun debug(cause: Throwable?, message: () -> String) = Unit
+            override fun trace(message: String, cause: Throwable?) = Unit
+            override fun trace(cause: Throwable?, message: () -> String) = Unit
+        }
+        return Ack(logAdapter).defaultParser()
     }
 
     @Provides

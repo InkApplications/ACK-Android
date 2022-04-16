@@ -93,6 +93,28 @@ class CaptureEvents @Inject constructor(
             viewModel.copy(internetTransmitState = transmit)
         }
 
+    suspend fun connectAudio() {
+        coroutineScope {
+            launch { listenForPackets() }
+            launch {
+                audioTransmitState.collectLatest {
+                    if (it) transmitLoop(drivers.afskDriver)
+                }
+            }
+        }
+    }
+
+    suspend fun connectInternet() {
+        coroutineScope {
+            launch { listenForInternetPackets() }
+            launch {
+                internetTransmitState.collectLatest {
+                    if (it) transmitLoop(drivers.internetDriver)
+                }
+            }
+        }
+    }
+
     suspend fun listenForPackets() {
         if (audioListenState.value) {
             logger.error("Tried to listen for audio packets while already active")
@@ -107,22 +129,17 @@ class CaptureEvents @Inject constructor(
         }
     }
 
-    suspend fun transmitAudio() {
-        try {
-            audioTransmitState.value = true
-            transmitLoop(drivers.afskDriver)
-        } finally {
-            audioTransmitState.value = false
-        }
+    fun startAudioTransmit() {
+        audioTransmitState.value = true
     }
-
-    suspend fun transmitInternet() {
-        try {
-            internetTransmitState.value = true
-            transmitLoop(drivers.internetDriver)
-        } finally {
-            internetTransmitState.value = false
-        }
+    fun stopAudioTransmit() {
+        audioTransmitState.value = false
+    }
+    fun startInternetTransmit() {
+        internetTransmitState.value = true
+    }
+    fun stopInternetTransmit() {
+        internetTransmitState.value = false
     }
 
     @OptIn(ExperimentalTime::class)

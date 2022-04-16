@@ -15,4 +15,10 @@
     <string name="capture_controls_internet_transmit_disabled_name">Internet Transmit Disabled</string>
     <string name="capture_controls_internet_transmit_enabled_name">Internet Transmit Enabled</string>
     <string name="capture_controls_settings_name">Settings</string>
+    <string name="capture_service_type_afsk">Audio</string>
+    <string name="capture_service_type_internet">Internet</string>
+    <string name="capture_service_channel_name">Monitor Status</string>
+    <string name="capture_service_channel_description">Status notifications when ACK is monitoring APRS</string>
+    <string name="capture_service_notification_title_audio">Monitoring Audio for APRS</string>
+    <string name="capture_service_notification_title_internet">Monitoring Internet for APRS</string>
 </resources>

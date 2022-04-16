@@ -2,6 +2,7 @@ package com.inkapplications.ack.android.capture
 
 import android.Manifest
 import android.content.Context
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.os.PersistableBundle
@@ -14,6 +15,8 @@ import com.inkapplications.ack.android.capture.map.*
 import com.inkapplications.ack.android.capture.messages.index.MessagesScreenController
 import com.inkapplications.ack.android.capture.messages.index.MessageIndexScreenState
 import com.inkapplications.ack.android.capture.messages.conversation.startConversationActivity
+import com.inkapplications.ack.android.capture.service.AudioCaptureService
+import com.inkapplications.ack.android.capture.service.InternetCaptureService
 import com.inkapplications.ack.android.component
 import com.inkapplications.ack.android.map.Map
 import com.inkapplications.ack.android.map.getMap
@@ -38,10 +41,6 @@ class CaptureActivity: ExtendedActivity(), CaptureNavController {
     private var map: Map? = null
     private var mapScope: CoroutineScope = MainScope()
     private val mapViewModel = MutableStateFlow(MapViewModel())
-    private var audioCaptureJob: Job? = null
-    private var internetCaptureJob: Job? = null
-    private var audioTransmitJob: Job? = null
-    private var internetTransmitJob: Job? = null
     private lateinit var captureEvents: CaptureEvents
     private val permissionGate = PermissionGate(this)
 
@@ -129,50 +128,44 @@ class CaptureActivity: ExtendedActivity(), CaptureNavController {
         Kimchi.trackEvent("audio_capture_enable")
         foregroundScope.launch {
             permissionGate.withPermissions(*captureEvents.audioCapturePermissions.toTypedArray()) {
-                Kimchi.info("Start Recording")
-                audioCaptureJob = foregroundScope.launch { captureEvents.listenForPackets() }
+                Kimchi.info("Start AFSK Service")
+                startService(Intent(this@CaptureActivity, AudioCaptureService::class.java))
             }
         }
     }
 
     override fun onAudioCaptureDisableClick() {
         Kimchi.trackEvent("audio_capture_disable")
-        audioCaptureJob?.cancel()
-        audioCaptureJob = null
+        stopService(Intent(this, AudioCaptureService::class.java))
     }
 
     override fun onAudioTransmitEnableClick() {
         Kimchi.trackEvent("audio_transmit_enable")
         foregroundScope.launch {
             permissionGate.withPermissions(*captureEvents.audioTransmitPermissions.toTypedArray()) {
-                audioTransmitJob?.cancel()
-                audioTransmitJob = foregroundScope.launch {
-                    captureEvents.transmitAudio()
-                }
+                captureEvents.startAudioTransmit()
             }
         }
     }
 
     override fun onAudioTransmitDisableClick() {
         Kimchi.trackEvent("audio_transmit_disable")
-        audioTransmitJob?.cancel()
-        audioTransmitJob = null
+        captureEvents.stopAudioTransmit()
     }
 
     override fun onInternetCaptureEnableClick() {
         Kimchi.trackEvent("internet_capture_enable")
         foregroundScope.launch {
             permissionGate.withPermissions(*captureEvents.internetCapturePermissions.toTypedArray()) {
-                Kimchi.info("Enable Internet Service")
-                internetCaptureJob = foregroundScope.launch { captureEvents.listenForInternetPackets() }
+                Kimchi.info("Start Internet Service")
+                startService(Intent(this@CaptureActivity, InternetCaptureService::class.java))
             }
         }
     }
 
     override fun onInternetCaptureDisableClick() {
         Kimchi.trackEvent("internet_capture_disable")
-        internetCaptureJob?.cancel()
-        internetCaptureJob = null
+        stopService(Intent(this, InternetCaptureService::class.java))
     }
 
     override fun onInternetTransmitEnableClick() {
@@ -180,16 +173,14 @@ class CaptureActivity: ExtendedActivity(), CaptureNavController {
         foregroundScope.launch {
             permissionGate.withPermissions(*captureEvents.internetTransmitPermissions.toTypedArray()) {
                 Kimchi.info("Start Internet Transmit")
-                internetTransmitJob?.cancel()
-                internetTransmitJob = foregroundScope.launch { captureEvents.transmitInternet() }
+                captureEvents.startInternetTransmit()
             }
         }
     }
 
     override fun onInternetTransmitDisableClick() {
         Kimchi.trackEvent("internet_transmit_disable")
-        internetTransmitJob?.cancel()
-        internetTransmitJob = null
+        captureEvents.stopInternetTransmit()
     }
 
     override fun onSettingsClick() {
