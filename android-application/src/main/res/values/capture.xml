@@ -7,7 +7,7 @@
     <string name="capture_controls_expand_action">Controls</string>
     <string name="capture_controls_collapse_action">Close</string>
     <string name="capture_controls_audio_capture_disabled_name">Audio Capture Disabled</string>
-    <string name="capture_controls_audio_capture_enabled_name">Audio Capture Enabled</string>
+    <string name="capture_controls_audio_capture_enabled_name">Audio Capture Enabled (level: %s)</string>
     <string name="capture_controls_audio_transmit_disabled_name">Audio Transmit Disabled</string>
     <string name="capture_controls_audio_transmit_enabled_name">Audio Transmit Enabled</string>
     <string name="capture_controls_internet_capture_disabled_name">Internet Capture Disabled</string>

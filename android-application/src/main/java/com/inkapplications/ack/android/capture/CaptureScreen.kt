@@ -209,7 +209,7 @@ private fun CaptureSettingsSheet(
         CaptureSettingRow(
             icon = Icons.Filled.Mic,
             iconColor = AckTheme.colors.brand,
-            name = stringResource(R.string.capture_controls_audio_capture_enabled_name),
+            name = stringResource(R.string.capture_controls_audio_capture_enabled_name, captureScreenState.audioLevel),
             onClick = captureController::onAudioCaptureDisableClick
         )
     }

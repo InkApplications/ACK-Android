@@ -11,21 +11,20 @@ import com.inkapplications.coroutines.combinePair
 import kimchi.logger.KimchiLogger
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.mapNotNull
-import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 
-internal class AfskDriver(
+class AfskDriver internal constructor(
     private val aprsCodec: AprsCodec,
     private val packetStorage: PacketStorage,
     private val audioProcessor: AudioDataProcessor,
     private val modulator: AndroidAfskModulator,
     private val settings: DriverSettingsProvider,
     private val logger: KimchiLogger,
-): PacketDriver {
+): PacketDriver, AudioConnectionMonitor {
     override val incoming = MutableSharedFlow<CapturedPacket>()
     override val receivePermissions: Set<String> = setOf(Manifest.permission.RECORD_AUDIO)
+    override val volume = audioProcessor.volume
     private val transmitQueue = MutableSharedFlow<ByteArray>(extraBufferCapacity = 1, onBufferOverflow = BufferOverflow.DROP_OLDEST)
 
     override suspend fun transmitPacket(packet: AprsPacket, encodingConfig: EncodingConfig) {

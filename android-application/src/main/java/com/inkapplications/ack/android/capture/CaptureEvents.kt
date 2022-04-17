@@ -14,12 +14,15 @@ import com.inkapplications.ack.structures.*
 import com.inkapplications.android.extensions.control.ControlState
 import com.inkapplications.coroutines.combinePair
 import com.inkapplications.coroutines.combineTriple
+import inkapplications.spondee.scalar.WholePercentage
+import inkapplications.spondee.structure.value
 import kimchi.logger.KimchiLogger
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.coroutines.coroutineContext
+import kotlin.math.roundToInt
 import kotlin.time.ExperimentalTime
 
 @Singleton
@@ -91,6 +94,9 @@ class CaptureEvents @Inject constructor(
         }
         .combine(internetTransmitControlState) { viewModel, transmit ->
             viewModel.copy(internetTransmitState = transmit)
+        }
+        .combine(drivers.afskDriver.volume) { viewModel, volume ->
+            viewModel.copy(audioLevel = "${volume?.value(WholePercentage)?.roundToInt()}%")
         }
 
     suspend fun connectAudio() {

@@ -18,7 +18,7 @@ import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 
-internal class InternetDriver(
+class InternetDriver internal constructor(
     private val aprsCodec: AprsCodec,
     private val packetStorage: PacketStorage,
     private val client: AprsDataClient,

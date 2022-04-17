@@ -1,7 +1,11 @@
 package com.inkapplications.ack.data
 
+import inkapplications.spondee.scalar.DecimalPercentage
+import inkapplications.spondee.scalar.Percentage
 import kotlinx.coroutines.channels.consumeEach
-import kotlinx.coroutines.flow.callbackFlow
+import kotlinx.coroutines.flow.*
+import kotlin.math.abs
+import kotlin.math.absoluteValue
 
 private const val overlap = 18
 
@@ -24,11 +28,18 @@ internal class AudioDataProcessor(
 
         invokeOnClose {
             audioIn.cancel()
+            peak.value = null
         }
         audioIn.audioData.consumeEach { decode(it) }
     }
 
-    fun decode(audioData: ShortArray) {
+    private val peak = MutableStateFlow<Short?>(null)
+    val volume: Flow<Percentage?> = peak.map {
+        it?.toDouble()?.absoluteValue?.div(Short.MAX_VALUE)?.let(DecimalPercentage::of)
+    }
+
+    private fun decode(audioData: ShortArray) {
+        peak.value = audioData.maxOf { abs(it.toInt()) }.toShort()
         for (i in audioData.indices) {
             fbuf[fbuf_cnt++] = audioData[i] * (1.0f / 32768.0f)
         }

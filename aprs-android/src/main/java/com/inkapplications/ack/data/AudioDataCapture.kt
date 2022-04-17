@@ -24,7 +24,7 @@ internal class AudioDataCapture(
 ) {
     private val recorder: AudioRecord by lazy {
         AudioRecord(
-            MediaRecorder.AudioSource.DEFAULT,
+            MediaRecorder.AudioSource.MIC,
             SAMPLE_RATE,
             AudioFormat.CHANNEL_IN_MONO,
             AudioFormat.ENCODING_PCM_16BIT,

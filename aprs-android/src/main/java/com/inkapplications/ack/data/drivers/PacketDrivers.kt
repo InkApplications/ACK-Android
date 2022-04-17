@@ -4,8 +4,8 @@ import com.inkapplications.ack.structures.AprsPacket
 import com.inkapplications.ack.structures.EncodingConfig
 
 class PacketDrivers(
-    val internetDriver: PacketDriver,
-    val afskDriver: PacketDriver,
+    val internetDriver: InternetDriver,
+    val afskDriver: AfskDriver,
 ) {
     suspend fun transmitAll(packet: AprsPacket, encodingConfig: EncodingConfig) {
         internetDriver.transmitPacket(packet, encodingConfig)
