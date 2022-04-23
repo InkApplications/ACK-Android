@@ -33,20 +33,18 @@ class MessageEvents @Inject constructor(
     private val connectionSettings: ConnectionSettings,
     private val transmitSettings: TransmitSettings,
     private val messageItemFactory: ViewModelFactory<CapturedPacket, MessageItemViewModel>,
-    private val conversationItemFactory: ViewModelFactory<Pair<Callsign, List<CapturedPacket>>, ConversationItemViewModel>,
+    private val conversationItemFactory: ViewModelFactory<ConversationData, ConversationItemViewModel>,
     private val codec: AprsCodec,
     private val drivers: PacketDrivers,
     private val logger: KimchiLogger,
 ) {
     val messagesScreenState = settings.observeData(connectionSettings.address)
         .onEach { logger.debug("Observing conversations for addressee: $it") }
-        .flatMapLatest { (it?.callsign?.let(packetStorage::findConversations) ?: flowOf(emptyList())) }
-        .onEach { logger.debug("Found ${it.size} conversations") }
-        .filterEach { it.parsed.data is PacketData.Message }
-        .map { it.groupBy { it.parsed.route.source.callsign } }
-        .map {
-            it.entries.map { it.toPair() }.map(conversationItemFactory::create)
+        .flatMapLatest { address ->
+            address?.callsign?.let(packetStorage::findLatestByConversation)?.mapEach { ConversationData(address.callsign, it) } ?: flowOf(emptyList())
         }
+        .onEach { logger.debug("Found ${it.size} conversations") }
+        .mapEach(conversationItemFactory::create)
         .map { if (it.isEmpty()) MessageIndexScreenState.Empty else MessageIndexScreenState.ConversationList(it) }
 
     fun conversationViewState(address: Callsign): Flow<ConverstationViewState> {

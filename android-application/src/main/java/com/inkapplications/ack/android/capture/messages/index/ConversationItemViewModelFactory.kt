@@ -1,8 +1,7 @@
 package com.inkapplications.ack.android.capture.messages.index
 
-import com.inkapplications.ack.data.CapturedPacket
+import com.inkapplications.ack.android.capture.messages.ConversationData
 import com.inkapplications.ack.structures.PacketData
-import com.inkapplications.ack.structures.station.Callsign
 import com.inkapplications.android.extensions.ViewModelFactory
 import dagger.Reusable
 import javax.inject.Inject
@@ -11,14 +10,14 @@ import javax.inject.Inject
  * Create the viewmodel for items in a list of Message conversations.
  */
 @Reusable
-class ConversationItemViewModelFactory @Inject constructor(): ViewModelFactory<Pair<Callsign, List<CapturedPacket>>, ConversationItemViewModel> {
-    override fun create(data: Pair<Callsign, List<CapturedPacket>>): ConversationItemViewModel {
-        val (callsign, messages) = data
-
+class ConversationItemViewModelFactory @Inject constructor(): ViewModelFactory<ConversationData, ConversationItemViewModel> {
+    override fun create(data: ConversationData): ConversationItemViewModel {
+        val message = data.latestMessage.parsed.data as PacketData.Message
+        val correspondent = message.addressee.takeIf { it.callsign != data.selfCallsign } ?: data.latestMessage.parsed.route.source
         return ConversationItemViewModel(
-            name = callsign.canonical,
-            messagePreview = (messages.last().parsed.data as PacketData.Message).message,
-            idCallsign = callsign,
+            name = correspondent.callsign.canonical,
+            messagePreview = message.message,
+            correspondent = correspondent.callsign,
         )
     }
 }

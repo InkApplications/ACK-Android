@@ -24,11 +24,10 @@ internal interface PacketDao {
         SELECT * FROM (
             SELECT sourceCallsign as filterkey, * FROM packets
             WHERE UPPER(addresseeCallsign) = UPPER(:callsign)
-            GROUP BY UPPER(filterkey)
             UNION
             SELECT addresseeCallsign as filterkey, * FROM packets
             WHERE (UPPER(sourceCallsign) = UPPER(:callsign) AND addresseeCallsign IS NOT NULL)
-            GROUP BY UPPER(filterkey)
+            ORDER BY timestamp DESC
         )
         GROUP BY UPPER(filterkey)
     """)

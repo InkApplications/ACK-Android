@@ -81,7 +81,7 @@ private fun ConversationList(
 @OptIn(ExperimentalMaterialApi::class)
 private fun ConversationItem(viewModel: ConversationItemViewModel, controller: MessagesScreenController) {
     Card(
-        onClick = { controller.onConversationClick(viewModel.idCallsign) },
+        onClick = { controller.onConversationClick(viewModel.correspondent) },
         modifier = Modifier.padding(horizontal = AckTheme.dimensions.gutter, vertical = AckTheme.dimensions.singleItem)
     ) {
         Column(modifier = Modifier.padding(AckTheme.dimensions.content).fillMaxWidth()) {

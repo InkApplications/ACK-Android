@@ -39,7 +39,8 @@ object AprsAccessStub: PacketDriver {
 
 object PacketStorageStub: PacketStorage {
     override fun findRecent(count: Int): Flow<List<CapturedPacket>> = flow {}
-    override fun findByAddressee(callsign: Callsign): Flow<List<CapturedPacket>> = flow {}
+    override fun findLatestByConversation(callsign: Callsign): Flow<List<CapturedPacket>> = flow {}
+    override fun findConversation(addressee: Callsign, callsign: Callsign): Flow<List<CapturedPacket>> = flow {}
     override fun findById(id: Long): Flow<CapturedPacket?> = flow {}
     override suspend fun save(data: ByteArray, packet: AprsPacket, source: PacketSource): CapturedPacket = TODO()
 }
