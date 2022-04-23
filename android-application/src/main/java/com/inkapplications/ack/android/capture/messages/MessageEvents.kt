@@ -40,7 +40,7 @@ class MessageEvents @Inject constructor(
 ) {
     val messagesScreenState = settings.observeData(connectionSettings.address)
         .onEach { logger.debug("Observing conversations for addressee: $it") }
-        .flatMapLatest { (it?.callsign?.let(packetStorage::findByAddressee) ?: flowOf(emptyList())) }
+        .flatMapLatest { (it?.callsign?.let(packetStorage::findConversations) ?: flowOf(emptyList())) }
         .onEach { logger.debug("Found ${it.size} conversations") }
         .filterEach { it.parsed.data is PacketData.Message }
         .map { it.groupBy { it.parsed.route.source.callsign } }
@@ -51,8 +51,7 @@ class MessageEvents @Inject constructor(
 
     fun conversationViewState(address: Callsign): Flow<ConverstationViewState> {
         return settings.observeData(connectionSettings.address)
-            .flatMapLatest { (it?.callsign?.let(packetStorage::findByAddressee) ?: flowOf(emptyList())) }
-            .filterEach { it.parsed.route.source.callsign == address }
+            .flatMapLatest { (it?.callsign?.let { packetStorage.findConversation(address, it) } ?: flowOf(emptyList())) }
             .filterEach { it.parsed.data is PacketData.Message }
             .onEach { logger.debug("Loaded ${it.size} messages from $address") }
             .mapEach(messageItemFactory::create)

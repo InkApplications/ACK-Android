@@ -6,7 +6,8 @@ import kotlinx.coroutines.flow.Flow
 
 interface PacketStorage {
     fun findRecent(count: Int): Flow<List<CapturedPacket>>
-    fun findByAddressee(callsign: Callsign): Flow<List<CapturedPacket>>
+    fun findConversations(callsign: Callsign): Flow<List<CapturedPacket>>
+    fun findConversation(addressee: Callsign, callsign: Callsign): Flow<List<CapturedPacket>>
     fun findById(id: Long): Flow<CapturedPacket?>
     suspend fun save(data: ByteArray, packet: AprsPacket, source: PacketSource): CapturedPacket
 }

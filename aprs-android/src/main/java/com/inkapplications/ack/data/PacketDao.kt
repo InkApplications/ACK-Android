@@ -13,8 +13,26 @@ internal interface PacketDao {
     @Query("SELECT * FROM packets WHERE id = :id")
     fun findById(id: Long): Flow<PacketEntity?>
 
-    @Query("SELECT * FROM packets WHERE UPPER(addresseeCallsign) = UPPER(:addresseeCallsign)")
-    fun findByAddresseeCallsign(addresseeCallsign: String): Flow<List<PacketEntity>>
+    @Query("""
+        SELECT * FROM packets 
+        WHERE (UPPER(sourceCallsign) = UPPER(:addresseeCallsign) AND UPPER(addresseeCallsign) = UPPER(:callsign))
+        OR (UPPER(sourceCallsign) = UPPER(:callsign) AND UPPER(addresseeCallsign) = UPPER(:addresseeCallsign))
+    """)
+    fun findConversation(addresseeCallsign: String, callsign: String): Flow<List<PacketEntity>>
+
+    @Query("""
+        SELECT * FROM (
+            SELECT sourceCallsign as filterkey, * FROM packets
+            WHERE UPPER(addresseeCallsign) = UPPER(:callsign)
+            GROUP BY UPPER(filterkey)
+            UNION
+            SELECT addresseeCallsign as filterkey, * FROM packets
+            WHERE (UPPER(sourceCallsign) = UPPER(:callsign) AND addresseeCallsign IS NOT NULL)
+            GROUP BY UPPER(filterkey)
+        )
+        GROUP BY UPPER(filterkey)
+    """)
+    fun findLatestConversationMessages(callsign: String): Flow<List<PacketEntity>>
 
     @Insert
     suspend fun addPacket(packet: PacketEntity): Long

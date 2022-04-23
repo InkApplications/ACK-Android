@@ -30,8 +30,14 @@ internal class DaoPacketStorage(
         return packetDao.findById(id).map { it?.let { createCapturedPacket(it, fromEntityOrNull(it)) } }
     }
 
-    override fun findByAddressee(callsign: Callsign): Flow<List<CapturedPacket>> {
-        return packetDao.findByAddresseeCallsign(callsign.canonical)
+    override fun findConversations(callsign: Callsign): Flow<List<CapturedPacket>> {
+        return packetDao.findLatestConversationMessages(callsign.canonical)
+            .mapEach { createCapturedPacket(it, fromEntityOrNull(it)) }
+            .filterEachNotNull()
+    }
+
+    override fun findConversation(addressee: Callsign, callsign: Callsign): Flow<List<CapturedPacket>> {
+        return packetDao.findConversation(addressee.canonical, callsign.canonical)
             .mapEach { createCapturedPacket(it, fromEntityOrNull(it)) }
             .filterEachNotNull()
     }
