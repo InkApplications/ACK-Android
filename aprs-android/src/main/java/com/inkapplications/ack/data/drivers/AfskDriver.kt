@@ -8,11 +8,14 @@ import com.inkapplications.ack.data.AudioDataProcessor
 import com.inkapplications.ack.structures.AprsPacket
 import com.inkapplications.ack.structures.EncodingConfig
 import com.inkapplications.coroutines.combinePair
+import inkapplications.spondee.scalar.WholePercentage
+import inkapplications.spondee.structure.value
 import kimchi.logger.KimchiLogger
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
+import kotlin.math.roundToInt
 
 class AfskDriver internal constructor(
     private val aprsCodec: AprsCodec,
@@ -51,6 +54,7 @@ class AfskDriver internal constructor(
             launch {
                 settings.afskConfiguration.combinePair(transmitQueue)
                     .collect { (config, data) ->
+                        logger.info("Modulating ${data.size} bytes with a ${config.preamble} preamble at ${config.volume.value(WholePercentage).roundToInt()}% volume")
                         modulator.modulate(data, config.preamble, config.volume)
                     }
             }

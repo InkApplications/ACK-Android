@@ -6,23 +6,23 @@ It has been modified extensively, ported to kotlin, and is redistributed under
 the GNU General Public License v2.0.
 The original source code was obtained from https://github.com/nogy/jsoundmodem.
  */
+import android.media.AudioAttributes
 import android.media.AudioFormat
 import android.media.AudioManager
 import android.media.AudioTrack
+import android.os.Build
 import android.os.Process
 import inkapplications.spondee.scalar.DecimalPercentage
 import inkapplications.spondee.scalar.Percentage
 import inkapplications.spondee.structure.value
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.SupervisorJob
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.newSingleThreadContext
+import kotlinx.coroutines.*
+import kotlin.coroutines.resume
+import kotlin.coroutines.suspendCoroutine
 import kotlin.experimental.or
 import kotlin.math.PI
 import kotlin.math.cos
 import kotlin.math.roundToInt
 import kotlin.time.Duration
-import kotlin.time.ExperimentalTime
 
 private const val FREQ_LOW = 1200
 private const val FREQ_HIGH = 2200
@@ -33,7 +33,6 @@ private const val PCM_BITS = 16
 internal class AndroidAfskModulator {
     private val trackScope = CoroutineScope(SupervisorJob() + newSingleThreadContext("AudioTrack"))
 
-    @OptIn(ExperimentalTime::class)
     fun modulate(data: ByteArray, length: Duration, volume: Percentage) {
         val crc = crc16(data)
         val (frame, frameLength) = frame(data + crc.first + crc.second, (length.inWholeMilliseconds * BPS/8/1000).toInt())
@@ -60,26 +59,42 @@ internal class AndroidAfskModulator {
         }
     }
 
-    private fun send(pcmData: ShortArray, volume: Percentage) {
-        val track = AudioTrack(
-            AudioManager.STREAM_MUSIC,
+    private suspend fun send(pcmData: ShortArray, volume: Percentage) {
+        val track = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            AudioTrack(
+                AudioAttributes.Builder().setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION).setUsage(AudioAttributes.USAGE_NOTIFICATION_RINGTONE).build(),
+                AudioFormat.Builder().setEncoding(AudioFormat.ENCODING_PCM_16BIT).setChannelMask(AudioFormat.CHANNEL_OUT_MONO).setSampleRate(SAMPLE_RATE).build(),
+                pcmData.size * 2,
+                AudioTrack.MODE_STATIC,
+                AudioManager.AUDIO_SESSION_ID_GENERATE,
+            )
+        } else AudioTrack(
+            AudioManager.STREAM_RING,
             SAMPLE_RATE,
             AudioFormat.CHANNEL_OUT_MONO,
             AudioFormat.ENCODING_PCM_16BIT,
             pcmData.size * 2,
-            AudioTrack.MODE_STREAM
+            AudioTrack.MODE_STATIC,
         )
-        track.write(pcmData, 0, pcmData.size)
-        val volume = AudioTrack.getMaxVolume() * volume.value(DecimalPercentage).toFloat()
-        track.setStereoVolume(volume, volume)
-        track.notificationMarkerPosition = pcmData.size
-        track.setPlaybackPositionUpdateListener(object: AudioTrack.OnPlaybackPositionUpdateListener {
-            override fun onMarkerReached(track: AudioTrack) {
-                track.release()
+
+        suspendCoroutine<Unit> { continuation ->
+            track.setPlaybackPositionUpdateListener(object: AudioTrack.OnPlaybackPositionUpdateListener {
+                override fun onMarkerReached(track: AudioTrack) {
+                    track.release()
+                    continuation.resume(Unit)
+                }
+                override fun onPeriodicNotification(track: AudioTrack?) = Unit
+            })
+            track.notificationMarkerPosition = pcmData.size
+            val volume = AudioTrack.getMaxVolume() * volume.value(DecimalPercentage).toFloat()
+            track.setStereoVolume(volume, volume)
+            track.write(pcmData, 0, pcmData.size)
+            runBlocking {
+                // Without this delay the audiotrack will automatically pause shortly after playing. I hate this, but cannot figure out an alternative.
+                delay(500)
             }
-            override fun onPeriodicNotification(track: AudioTrack?) = Unit
-        })
-        track.play()
+            track.play()
+        }
     }
 
     private fun crc16(data: ByteArray): Pair<Byte, Byte> {
