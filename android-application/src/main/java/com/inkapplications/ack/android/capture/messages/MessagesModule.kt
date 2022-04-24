@@ -4,7 +4,6 @@ import com.inkapplications.ack.android.capture.messages.index.ConversationItemVi
 import com.inkapplications.ack.android.capture.messages.conversation.MessageItemViewModel
 import com.inkapplications.ack.android.capture.messages.conversation.MessageItemViewModelFactory
 import com.inkapplications.ack.android.capture.messages.index.ConversationItemViewModel
-import com.inkapplications.ack.data.CapturedPacket
 import com.inkapplications.android.extensions.ViewModelFactory
 import dagger.Module
 import dagger.Provides
@@ -14,14 +13,14 @@ class MessagesModule {
     @Provides
     fun conversationItemFactory(
         factory: ConversationItemViewModelFactory
-    ): ViewModelFactory<ConversationData, ConversationItemViewModel> {
+    ): ViewModelFactory<MessageData, ConversationItemViewModel> {
         return factory
     }
 
     @Provides
     fun messageItemFactory(
         factory: MessageItemViewModelFactory
-    ): ViewModelFactory<CapturedPacket, MessageItemViewModel> {
+    ): ViewModelFactory<MessageData, MessageItemViewModel> {
         return factory
     }
 }

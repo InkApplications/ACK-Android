@@ -3,7 +3,7 @@ package com.inkapplications.ack.android.capture.messages
 import com.inkapplications.ack.data.CapturedPacket
 import com.inkapplications.ack.structures.station.Callsign
 
-data class ConversationData(
+data class MessageData(
     val selfCallsign: Callsign,
-    val latestMessage: CapturedPacket,
+    val message: CapturedPacket,
 )

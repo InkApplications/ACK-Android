@@ -32,8 +32,8 @@ class MessageEvents @Inject constructor(
     private val settings: SettingsReadAccess,
     private val connectionSettings: ConnectionSettings,
     private val transmitSettings: TransmitSettings,
-    private val messageItemFactory: ViewModelFactory<CapturedPacket, MessageItemViewModel>,
-    private val conversationItemFactory: ViewModelFactory<ConversationData, ConversationItemViewModel>,
+    private val messageItemFactory: ViewModelFactory<MessageData, MessageItemViewModel>,
+    private val conversationItemFactory: ViewModelFactory<MessageData, ConversationItemViewModel>,
     private val codec: AprsCodec,
     private val drivers: PacketDrivers,
     private val logger: KimchiLogger,
@@ -41,7 +41,7 @@ class MessageEvents @Inject constructor(
     val messagesScreenState = settings.observeData(connectionSettings.address)
         .onEach { logger.debug("Observing conversations for addressee: $it") }
         .flatMapLatest { address ->
-            address?.callsign?.let(packetStorage::findLatestByConversation)?.mapEach { ConversationData(address.callsign, it) } ?: flowOf(emptyList())
+            address?.callsign?.let(packetStorage::findLatestByConversation)?.mapEach { MessageData(address.callsign, it) } ?: flowOf(emptyList())
         }
         .onEach { logger.debug("Found ${it.size} conversations") }
         .mapEach(conversationItemFactory::create)
@@ -49,8 +49,10 @@ class MessageEvents @Inject constructor(
 
     fun conversationViewState(address: Callsign): Flow<ConverstationViewState> {
         return settings.observeData(connectionSettings.address)
-            .flatMapLatest { (it?.callsign?.let { packetStorage.findConversation(address, it) } ?: flowOf(emptyList())) }
-            .filterEach { it.parsed.data is PacketData.Message }
+            .flatMapLatest { self ->
+                (self?.callsign?.let { packetStorage.findConversation(address, it) }?.mapEach { MessageData(self.callsign, it) } ?: flowOf(emptyList()))
+            }
+            .filterEach { it.message.parsed.data is PacketData.Message }
             .onEach { logger.debug("Loaded ${it.size} messages from $address") }
             .mapEach(messageItemFactory::create)
             .map { ConverstationViewState.MessageList(address.canonical, it) }

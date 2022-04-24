@@ -80,7 +80,7 @@ fun ConversationScreen(
 @Composable
 private fun IncomingMessage(viewModel: MessageItemViewModel) {
     Box(
-        contentAlignment = Alignment.CenterStart,
+        contentAlignment = viewModel.alignment,
         modifier = Modifier.fillMaxWidth().padding(horizontal = AckTheme.dimensions.gutter, vertical = AckTheme.dimensions.singleItem)
     ) {
         Message(viewModel)

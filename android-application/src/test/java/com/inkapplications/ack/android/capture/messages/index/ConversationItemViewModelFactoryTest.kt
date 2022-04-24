@@ -1,6 +1,6 @@
 package com.inkapplications.ack.android.capture.messages.index
 
-import com.inkapplications.ack.android.capture.messages.ConversationData
+import com.inkapplications.ack.android.capture.messages.MessageData
 import com.inkapplications.ack.android.toTestCapturedPacket
 import com.inkapplications.ack.android.toTestPacket
 import com.inkapplications.ack.structures.PacketData
@@ -21,9 +21,9 @@ class ConversationItemViewModelFactoryTest {
             .toTestPacket()
             .toTestCapturedPacket()
             .copy(received = Instant.fromEpochMilliseconds(0))
-        val conversation = ConversationData(
+        val conversation = MessageData(
             selfCallsign = Callsign("KE0YOG"),
-            latestMessage = message,
+            message = message,
         )
         val factory = ConversationItemViewModelFactory()
 
