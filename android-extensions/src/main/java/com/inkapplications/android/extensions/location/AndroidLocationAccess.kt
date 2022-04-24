@@ -42,8 +42,15 @@ class AndroidLocationAccess @Inject constructor(
                 trySendBlocking(location.toUpdate())
             }
         }
-        locationManager.requestLocationUpdates(
+        val providerPreferences = listOf(
+            LocationManager.FUSED_PROVIDER,
             LocationManager.GPS_PROVIDER,
+            LocationManager.NETWORK_PROVIDER,
+            LocationManager.PASSIVE_PROVIDER,
+        )
+        val provider = providerPreferences.firstOrNull { it in locationManager.getProviders(true) } ?: return@callbackFlow
+        locationManager.requestLocationUpdates(
+            provider,
             minTime.inWholeMilliseconds,
             minDistance.value(Meters).toFloat(),
             callback,
