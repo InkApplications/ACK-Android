@@ -91,6 +91,7 @@ private fun IncomingMessage(viewModel: MessageItemViewModel) {
 private fun Message(viewModel: MessageItemViewModel) {
     Card(
         shape = RoundedCornerShape(16.dp),
+        modifier = Modifier.defaultMinSize(minWidth = 75.dp)
     ) {
         Column(
             modifier = Modifier.padding(AckTheme.dimensions.content)
