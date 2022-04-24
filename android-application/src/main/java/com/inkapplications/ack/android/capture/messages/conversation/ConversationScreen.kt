@@ -37,9 +37,10 @@ fun ConversationScreen(
         when (viewState) {
             is ConverstationViewState.MessageList -> LazyColumn(
                 contentPadding = PaddingValues(vertical = AckTheme.dimensions.gutter),
+                reverseLayout = true,
                 modifier = Modifier.weight(1f)
             ) {
-                items(viewState.messages) { IncomingMessage(it) }
+                items(viewState.messages.reversed()) { IncomingMessage(it) }
             }
         }
         Surface(
