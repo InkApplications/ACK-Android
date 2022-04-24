@@ -15,6 +15,7 @@ import com.inkapplications.ack.android.capture.map.*
 import com.inkapplications.ack.android.capture.messages.index.MessagesScreenController
 import com.inkapplications.ack.android.capture.messages.index.MessageIndexScreenState
 import com.inkapplications.ack.android.capture.messages.conversation.startConversationActivity
+import com.inkapplications.ack.android.capture.messages.create.CreateConversationActivity
 import com.inkapplications.ack.android.capture.service.AudioCaptureService
 import com.inkapplications.ack.android.capture.service.InternetCaptureService
 import com.inkapplications.ack.android.component
@@ -56,6 +57,7 @@ class CaptureActivity: ExtendedActivity(), CaptureNavController {
             val messageScreenState = component.messageEvents().messagesScreenState.collectAsState(MessageIndexScreenState.Initial)
             val messagesScreenController = object: MessagesScreenController {
                 override fun onCreateMessageClick() {
+                    startActivity(CreateConversationActivity::class)
                 }
                 override fun onConversationClick(callsign: Callsign) {
                     startConversationActivity(callsign)

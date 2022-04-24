@@ -23,6 +23,7 @@
         <activity android:name="com.inkapplications.ack.android.capture.messages.conversation.ConversationActivity" android:windowSoftInputMode="adjustResize" />
         <activity android:name="com.inkapplications.ack.android.station.StationActivity" />
         <activity android:name="com.inkapplications.ack.android.settings.SettingsActivity" />
+        <activity android:name="com.inkapplications.ack.android.capture.messages.create.CreateConversationActivity" />
         <activity android:name="com.inkapplications.ack.android.onboard.OnboardActivity" android:windowSoftInputMode="adjustResize" />
         <activity android:name="com.inkapplications.ack.android.settings.license.LicenseEditActivity" android:windowSoftInputMode="adjustResize" />
         <service android:name=".capture.service.AudioCaptureService" android:foregroundServiceType="microphone|location" />
