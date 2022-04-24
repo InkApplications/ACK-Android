@@ -11,11 +11,13 @@ import com.inkapplications.ack.data.PacketSource
 import com.inkapplications.ack.data.PacketStorage
 import com.inkapplications.ack.structures.AprsPacket
 import com.inkapplications.ack.structures.EncodingConfig
+import com.inkapplications.ack.structures.PacketData
 import com.inkapplications.ack.structures.station.Callsign
 import com.inkapplications.android.extensions.format.DateTimeFormatter
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.datetime.Instant
+import kotlin.reflect.KClass
 
 /**
  * Spits arguments back out as values for testing.
@@ -43,6 +45,9 @@ object PacketStorageStub: PacketStorage {
     override fun findConversation(addressee: Callsign, callsign: Callsign): Flow<List<CapturedPacket>> = flow {}
     override fun findById(id: Long): Flow<CapturedPacket?> = flow {}
     override suspend fun save(data: ByteArray, packet: AprsPacket, source: PacketSource): CapturedPacket = TODO()
+    override fun count(): Flow<Int> = flow {}
+    override fun countStations(): Flow<Int> = flow {}
+    override fun findMostRecentByType(type: KClass<out PacketData>): Flow<CapturedPacket?> = flow {}
 }
 
 object EpochFormatterStub: DateTimeFormatter {

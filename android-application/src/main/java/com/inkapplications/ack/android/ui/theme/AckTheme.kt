@@ -55,6 +55,12 @@ object AckTheme {
         @Composable
         @ReadOnlyComposable
         get() = TypographyVariant(
+            display = TextStyle(
+                fontFamily = AprsFonts.titleFont,
+                fontWeight = FontWeight.Normal,
+                fontSize = 48.sp,
+                letterSpacing = 0.25.sp
+            ),
             h1 = TextStyle(
                 fontFamily = AprsFonts.titleFont,
                 fontWeight = FontWeight.Normal,

@@ -2,6 +2,7 @@ package com.inkapplications.ack.android
 
 import com.inkapplications.android.extensions.ApplicationModule
 import com.inkapplications.ack.android.capture.CaptureEvents
+import com.inkapplications.ack.android.capture.insights.InsightEvents
 import com.inkapplications.ack.android.firebase.FirebaseModule
 import com.inkapplications.ack.android.capture.log.LogEvents
 import com.inkapplications.ack.android.capture.log.LogModule
@@ -48,6 +49,7 @@ import javax.inject.Singleton
     ]
 )
 interface ApplicationComponent {
+    fun insightEvents(): InsightEvents
     fun captureEvents(): CaptureEvents
     fun mapManager(): MapEventsFactory
     fun settingsAccess(): SettingsAccess

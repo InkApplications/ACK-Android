@@ -13,6 +13,15 @@ internal interface PacketDao {
     @Query("SELECT * FROM packets WHERE id = :id")
     fun findById(id: Long): Flow<PacketEntity?>
 
+    @Query("SELECT count(*) FROM packets")
+    fun countAll(): Flow<Int>
+
+    @Query("SELECT count(DISTINCT sourceCallsign) FROM packets")
+    fun countSources(): Flow<Int>
+
+    @Query("SELECT * FROM packets WHERE dataType = :type ORDER BY timestamp DESC LIMIT 1")
+    fun findMostRecentByType(type: String): Flow<PacketEntity>
+
     @Query("""
         SELECT * FROM packets 
         WHERE (UPPER(sourceCallsign) = UPPER(:addresseeCallsign) AND UPPER(addresseeCallsign) = UPPER(:callsign))

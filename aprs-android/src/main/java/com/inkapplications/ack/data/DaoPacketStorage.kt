@@ -11,6 +11,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
+import kotlin.reflect.KClass
 
 internal class DaoPacketStorage(
     private val packetDao: PacketDao,
@@ -40,6 +41,19 @@ internal class DaoPacketStorage(
         return packetDao.findConversation(addressee.canonical, callsign.canonical)
             .mapEach { createCapturedPacket(it, fromEntityOrNull(it)) }
             .filterEachNotNull()
+    }
+
+    override fun count(): Flow<Int> {
+        return packetDao.countAll()
+    }
+
+    override fun countStations(): Flow<Int> {
+        return packetDao.countSources()
+    }
+
+    override fun findMostRecentByType(type: KClass<out PacketData>): Flow<CapturedPacket?> {
+        return packetDao.findMostRecentByType(type.simpleName!!)
+            .map { createCapturedPacket(it, fromEntityOrNull(it)) }
     }
 
     override suspend fun save(data: ByteArray, packet: AprsPacket, source: PacketSource): CapturedPacket {

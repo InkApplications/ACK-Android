@@ -10,6 +10,7 @@ import android.view.View
 import androidx.activity.compose.setContent
 import androidx.compose.runtime.collectAsState
 import androidx.core.content.ContextCompat
+import com.inkapplications.ack.android.capture.insights.InsightsViewState
 import com.inkapplications.ack.android.capture.log.LogItemViewModel
 import com.inkapplications.ack.android.capture.map.*
 import com.inkapplications.ack.android.capture.messages.index.MessagesScreenController
@@ -49,11 +50,13 @@ class CaptureActivity: ExtendedActivity(), CaptureNavController {
         super.onCreate()
         mapEventsFactory = component.mapManager()
         val logData = component.logData()
+        val insightsEvents = component.insightEvents()
 
         setContent {
             val captureState = captureEvents.screenState.collectAsState(CaptureScreenViewModel())
             val mapState = mapViewModel.collectAsState()
             val logState = logData.logViewModels.collectAsState(emptyList())
+            val insightsState = insightsEvents.viewState.collectAsState(InsightsViewState.Initial)
             val messageScreenState = component.messageEvents().messagesScreenState.collectAsState(MessageIndexScreenState.Initial)
             val messagesScreenController = object: MessagesScreenController {
                 override fun onCreateMessageClick() {
@@ -68,6 +71,7 @@ class CaptureActivity: ExtendedActivity(), CaptureNavController {
                 captureScreenState = captureState,
                 mapState = mapState,
                 logs = logState,
+                insightsState = insightsState,
                 messageScreenState = messageScreenState,
                 messagesScreenController = messagesScreenController,
                 mapFactory = ::createMapView,

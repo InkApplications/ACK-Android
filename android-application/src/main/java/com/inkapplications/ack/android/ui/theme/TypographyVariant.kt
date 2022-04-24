@@ -5,6 +5,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 
 data class TypographyVariant(
+    val display: TextStyle,
     val h1: TextStyle,
     val h2: TextStyle,
     val h3: TextStyle,

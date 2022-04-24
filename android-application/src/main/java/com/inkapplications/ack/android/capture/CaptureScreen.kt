@@ -27,6 +27,8 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.inkapplications.ack.android.R
+import com.inkapplications.ack.android.capture.insights.InsightsScreen
+import com.inkapplications.ack.android.capture.insights.InsightsViewState
 import com.inkapplications.ack.android.capture.log.AprsLogItem
 import com.inkapplications.ack.android.capture.log.LogItemViewModel
 import com.inkapplications.ack.android.capture.map.MapScreen
@@ -48,6 +50,7 @@ import kotlinx.coroutines.launch
 fun CaptureScreen(
     captureScreenState: State<CaptureScreenViewModel>,
     mapState: State<MapViewModel>,
+    insightsState: State<InsightsViewState>,
     logs: State<List<LogItemViewModel>>,
     messageScreenState: State<MessageIndexScreenState>,
     messagesScreenController: MessagesScreenController,
@@ -72,6 +75,7 @@ fun CaptureScreen(
                     navController = navController,
                     mapState = mapState,
                     logs = logs,
+                    insightsState = insightsState,
                     messageScreenState = messageScreenState,
                     messagesScreenController = messagesScreenController,
                     mapFactory = mapFactory,
@@ -133,7 +137,18 @@ private fun CaptureBottomBar(
                     }
                 }
             )
-            Spacer(Modifier.weight(1f, true))
+            BottomNavigationItem(
+                icon = { Icon(Icons.Default.Lightbulb, contentDescription = null) },
+                label = { Text("Insights") },
+                selected = currentRoute == "insights",
+                onClick = {
+                    Kimchi.info("Navigate to insights")
+                    Kimchi.trackNavigation("insights")
+                    if (currentRoute != "insights") {
+                        navController.navigate("insights")
+                    }
+                }
+            )
         }
     }
 }
@@ -319,6 +334,7 @@ private fun CaptureNavHost(
     navController: NavHostController,
     mapState: State<MapViewModel>,
     logs: State<List<LogItemViewModel>>,
+    insightsState: State<InsightsViewState>,
     messageScreenState: State<MessageIndexScreenState>,
     messagesScreenController: MessagesScreenController,
     mapFactory: (Context) -> View,
@@ -352,6 +368,9 @@ private fun CaptureNavHost(
                 bottomProtection = AckTheme.dimensions.bottomBarHeight,
                 bottomContentProtection = AckTheme.dimensions.navigationProtection,
             )
+        }
+        composable("insights") {
+            InsightsScreen(insightsState.value)
         }
     }
 }
