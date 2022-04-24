@@ -81,7 +81,7 @@ fun ConversationScreen(
 private fun IncomingMessage(viewModel: MessageItemViewModel) {
     Box(
         contentAlignment = Alignment.CenterStart,
-        modifier = Modifier.padding(horizontal = AckTheme.dimensions.gutter, vertical = AckTheme.dimensions.singleItem)
+        modifier = Modifier.fillMaxWidth().padding(horizontal = AckTheme.dimensions.gutter, vertical = AckTheme.dimensions.singleItem)
     ) {
         Message(viewModel)
     }
