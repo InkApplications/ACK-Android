@@ -14,8 +14,20 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.test.runTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertTrue
 
 class LogEventsTest {
+    private val settingsWithUnknownFiltered = object: SettingsReadAccess by StubSettings {
+        override fun observeBooleanState(setting: BooleanSetting) = flow {
+            emit(true)
+        }
+    }
+    private val dummyStateFactory = object: LogItemViewModelFactory {
+        override fun create(id: Long, packet: AprsPacket, metric: Boolean): LogItemViewModel {
+            return LogItemViewModel(0, "", "", null)
+        }
+    }
+
     @Test
     fun unknownFilter() = runTest {
         val packetStorage = object: PacketStorage by PacketStorageStub {
@@ -26,28 +38,41 @@ class LogEventsTest {
                 ))
             }
         }
-        val stateFactory = object: LogItemViewModelFactory {
-            override fun create(id: Long, packet: AprsPacket, metric: Boolean): LogItemViewModel {
-                return LogItemViewModel(0, "", "", null)
-            }
-        }
         val localeSettings = LocaleSettings(ParrotStringResources)
         val logSettings = LogSettings(ParrotStringResources)
-        val settings = object: SettingsReadAccess by StubSettings {
-            override fun observeBooleanState(setting: BooleanSetting) = flow {
-                emit(true)
-            }
-        }
         val events = LogEvents(
             packetStorage = packetStorage,
-            stateFactory = stateFactory,
-            settings = settings,
+            stateFactory = dummyStateFactory,
+            settings = settingsWithUnknownFiltered,
             localeSettings = localeSettings,
             logSettings = logSettings,
         )
 
-        val result = events.logViewModels.first()
+        val result = events.logScreenState.first()
 
-        assertEquals(1, result.size)
+        assertTrue(result is LogScreenState.LogList)
+        assertEquals(1, result.logs.size)
+    }
+
+    @Test
+    fun emptyList() = runTest {
+        val packetStorage = object: PacketStorage by PacketStorageStub {
+            override fun findRecent(count: Int): Flow<List<CapturedPacket>> = flow {
+                emit(listOf())
+            }
+        }
+        val localeSettings = LocaleSettings(ParrotStringResources)
+        val logSettings = LogSettings(ParrotStringResources)
+        val events = LogEvents(
+            packetStorage = packetStorage,
+            stateFactory = dummyStateFactory,
+            settings = settingsWithUnknownFiltered,
+            localeSettings = localeSettings,
+            logSettings = logSettings,
+        )
+
+        val result = events.logScreenState.first()
+
+        assertTrue(result is LogScreenState.Empty)
     }
 }

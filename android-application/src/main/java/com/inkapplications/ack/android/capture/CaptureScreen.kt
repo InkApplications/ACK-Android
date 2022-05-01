@@ -4,8 +4,6 @@ import android.content.Context
 import android.view.View
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
@@ -29,8 +27,9 @@ import androidx.navigation.compose.rememberNavController
 import com.inkapplications.ack.android.R
 import com.inkapplications.ack.android.capture.insights.InsightsScreen
 import com.inkapplications.ack.android.capture.insights.InsightsViewState
-import com.inkapplications.ack.android.capture.log.AprsLogItem
-import com.inkapplications.ack.android.capture.log.LogItemViewModel
+import com.inkapplications.ack.android.capture.log.LogScreen
+import com.inkapplications.ack.android.capture.log.LogScreenController
+import com.inkapplications.ack.android.capture.log.LogScreenState
 import com.inkapplications.ack.android.capture.map.MapScreen
 import com.inkapplications.ack.android.capture.map.MapViewModel
 import com.inkapplications.ack.android.capture.messages.MessageIndexScreen
@@ -51,7 +50,8 @@ fun CaptureScreen(
     captureScreenState: State<CaptureScreenViewModel>,
     mapState: State<MapViewModel>,
     insightsState: State<InsightsViewState>,
-    logs: State<List<LogItemViewModel>>,
+    logScreenState: State<LogScreenState>,
+    logScreenController: LogScreenController,
     messageScreenState: State<MessageIndexScreenState>,
     messagesScreenController: MessagesScreenController,
     mapFactory: (Context) -> View,
@@ -74,7 +74,8 @@ fun CaptureScreen(
                 CaptureNavHost(
                     navController = navController,
                     mapState = mapState,
-                    logs = logs,
+                    logScreenState = logScreenState,
+                    logScreenController = logScreenController,
                     insightsState = insightsState,
                     messageScreenState = messageScreenState,
                     messagesScreenController = messagesScreenController,
@@ -333,7 +334,8 @@ private fun CaptureSettingRow(
 private fun CaptureNavHost(
     navController: NavHostController,
     mapState: State<MapViewModel>,
-    logs: State<List<LogItemViewModel>>,
+    logScreenState: State<LogScreenState>,
+    logScreenController: LogScreenController,
     insightsState: State<InsightsViewState>,
     messageScreenState: State<MessageIndexScreenState>,
     messagesScreenController: MessagesScreenController,
@@ -349,7 +351,7 @@ private fun CaptureNavHost(
             MapScreen(
                 state = mapState.value,
                 mapFactory = mapFactory,
-                onLogItemClick = captureController::onLogItemClick,
+                onLogItemClick = captureController::onLogMapItemClick,
                 onEnableLocation = captureController::onLocationEnableClick,
                 onDisableLocation = captureController::onLocationDisableClick,
                 bottomContentProtection = AckTheme.dimensions.bottomBarHeight,
@@ -357,8 +359,8 @@ private fun CaptureNavHost(
         }
         composable("log") {
             LogScreen(
-                logs = logs,
-                controller = captureController,
+                state = logScreenState,
+                controller = logScreenController,
             )
         }
         composable("messages") {
@@ -371,18 +373,6 @@ private fun CaptureNavHost(
         }
         composable("insights") {
             InsightsScreen(insightsState.value)
-        }
-    }
-}
-
-@Composable
-private fun LogScreen(
-    logs: State<List<LogItemViewModel>>,
-    controller: CaptureNavController,
-) = AckScreen {
-    LazyColumn(contentPadding = PaddingValues(bottom = AckTheme.dimensions.navigationProtection)) {
-        items(logs.value) { log ->
-            AprsLogItem(log, controller::onLogItemClick)
         }
     }
 }

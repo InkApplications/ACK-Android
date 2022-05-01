@@ -18,6 +18,6 @@ interface CaptureNavController {
     fun onInternetTransmitEnableClick()
     fun onInternetTransmitDisableClick()
 
-    fun onLogItemClick(log: LogItemViewModel)
+    fun onLogMapItemClick(log: LogItemViewModel)
     fun onSettingsClick()
 }

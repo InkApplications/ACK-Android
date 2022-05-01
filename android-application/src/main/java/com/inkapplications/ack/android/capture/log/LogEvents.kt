@@ -4,9 +4,9 @@ import com.inkapplications.ack.android.locale.LocaleSettings
 import com.inkapplications.ack.android.settings.SettingsReadAccess
 import com.inkapplications.ack.android.settings.observeBoolean
 import com.inkapplications.ack.data.PacketStorage
+import com.inkapplications.ack.structures.PacketData
 import com.inkapplications.coroutines.combinePair
 import com.inkapplications.coroutines.mapEach
-import com.inkapplications.ack.structures.PacketData
 import dagger.Reusable
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
@@ -20,7 +20,7 @@ class LogEvents @Inject constructor(
     localeSettings: LocaleSettings,
     logSettings: LogSettings,
 ) {
-    val logViewModels = settings.observeBoolean(localeSettings.preferMetric)
+    val logScreenState = settings.observeBoolean(localeSettings.preferMetric)
         .combinePair(settings.observeBoolean(logSettings.filterUnknown))
         .flatMapLatest { (metric, filterUnknown) ->
             packetStorage.findRecent(500)
@@ -29,4 +29,5 @@ class LogEvents @Inject constructor(
                 }
                 .mapEach { stateFactory.create(it.id, it.parsed, metric) }
         }
+        .map { if (it.isEmpty()) LogScreenState.Empty else LogScreenState.LogList(it) }
 }

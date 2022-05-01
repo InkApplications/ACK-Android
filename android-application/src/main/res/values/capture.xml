@@ -21,4 +21,5 @@
     <string name="capture_service_channel_description">Status notifications when ACK is monitoring APRS</string>
     <string name="capture_service_notification_title_audio">Monitoring Audio for APRS</string>
     <string name="capture_service_notification_title_internet">Monitoring Internet for APRS</string>
+    <string name="capture_log_empty">No Logs Received Yet</string>
 </resources>
