@@ -37,7 +37,7 @@ fun MapScreen(
     )
     val logState = state.selectedItem
     if (state.selectedItemVisible && logState != null) {
-        Row {
+        Row (modifier = Modifier.padding(top = AckTheme.dimensions.gutter)) {
             AprsLogItem(
                 log = logState,
                 onClick = onLogItemClick,
