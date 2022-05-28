@@ -1,31 +1,48 @@
 package com.inkapplications.ack.android.ui.theme
 
+import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.ReadOnlyComposable
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
 object AckTheme {
-    val darkColors = ColorVariant(
-        brand = ColorPalette.brand,
-        onBrand = ColorPalette.darkStroke,
-        foreground = ColorPalette.lightStroke,
-        background = ColorPalette.darkStroke,
-        surface = ColorPalette.darkStrokeSoftened,
-        error = ColorPalette.red,
-        onError = ColorPalette.lightStroke,
-        light = false,
-    )
+    private val primaryColor
+        @Composable
+        @ReadOnlyComposable
+        get() = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            colorResource(android.R.color.system_accent1_400)
+        } else {
+            ColorPalette.brand
+        }
 
-    val lightColors = darkColors.copy(
-        foreground = ColorPalette.darkStroke,
-        background = ColorPalette.lightStrokeSoftened,
-        surface = ColorPalette.lightStroke,
-    )
+    val darkColors
+        @Composable
+        @ReadOnlyComposable
+        get() = ColorVariant(
+            primary = primaryColor,
+            onPrimary = ColorPalette.darkStroke,
+            foreground = ColorPalette.lightStroke,
+            background = ColorPalette.darkStroke,
+            surface = ColorPalette.darkStrokeSoftened,
+            error = ColorPalette.red,
+            onError = ColorPalette.lightStroke,
+            light = false,
+        )
+
+    val lightColors
+        @Composable
+        @ReadOnlyComposable
+        get() = darkColors.copy(
+            foreground = ColorPalette.darkStroke,
+            background = ColorPalette.lightStrokeSoftened,
+            surface = ColorPalette.lightStroke,
+        )
 
     val colors
         @Composable

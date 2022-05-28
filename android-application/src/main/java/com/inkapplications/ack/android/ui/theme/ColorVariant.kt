@@ -4,8 +4,8 @@ import androidx.compose.material.Colors
 import androidx.compose.ui.graphics.Color
 
 data class ColorVariant(
-    val brand: Color,
-    val onBrand: Color,
+    val primary: Color,
+    val onPrimary: Color,
     val foreground: Color,
     val background: Color,
     val surface: Color,
@@ -16,15 +16,15 @@ data class ColorVariant(
     val foregroundInactive = foreground.copy(alpha = .5f)
 
     val materialColors = Colors(
-        primary = brand,
-        primaryVariant = brand,
-        secondary = brand,
-        secondaryVariant = brand,
+        primary = primary,
+        primaryVariant = primary,
+        secondary = primary,
+        secondaryVariant = primary,
         background = background,
         surface = surface,
         error = error,
-        onPrimary = onBrand,
-        onSecondary = onBrand,
+        onPrimary = onPrimary,
+        onSecondary = onPrimary,
         onBackground = foreground,
         onSurface = foreground,
         onError = onError,

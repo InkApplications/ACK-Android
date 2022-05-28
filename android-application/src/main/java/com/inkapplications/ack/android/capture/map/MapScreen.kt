@@ -62,7 +62,7 @@ fun LocationStateButton(
         FloatingActionButton(
             onClick = onDisableTrackingClick,
             backgroundColor = AckTheme.colors.surface,
-            contentColor = AckTheme.colors.brand,
+            contentColor = AckTheme.colors.primary,
             modifier = Modifier.padding(AckTheme.dimensions.gutter)
         ) {
             Icon(Icons.Default.MyLocation, stringResource(R.string.map_location_tracking_stop_action))
