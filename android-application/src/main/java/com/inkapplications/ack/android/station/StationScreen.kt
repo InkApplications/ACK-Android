@@ -5,6 +5,8 @@ import android.view.View
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.Text
@@ -37,7 +39,9 @@ private fun StationDetails(
     createMapView: (Context) -> View,
     controller: StationScreenController,
 ) {
-    Column {
+    Column(
+        modifier = Modifier.verticalScroll(rememberScrollState()),
+    ) {
         if (viewState.insight.markers.isNotEmpty()) {
             Column {
                 Box {
@@ -113,10 +117,8 @@ private fun StationDetails(
                 style = AckTheme.typography.h2,
                 modifier = Modifier.padding(vertical = AckTheme.dimensions.content),
             )
-            LazyColumn {
-                items(viewState.packets) { log ->
-                    AprsLogItem(log, controller::onLogItemClicked)
-                }
+            viewState.packets.forEach { log ->
+                AprsLogItem(log, controller::onLogItemClicked)
             }
         }
     }

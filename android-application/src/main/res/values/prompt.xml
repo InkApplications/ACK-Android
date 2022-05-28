@@ -3,4 +3,5 @@
     <string name="prompt_save">Save</string>
     <string name="prompt_cancel">Cancel</string>
     <string name="prompt_int_invalid_error">Enter a valid number</string>
+    <string name="input_validator_positive_integer_error">Number must be positive</string>
 </resources>

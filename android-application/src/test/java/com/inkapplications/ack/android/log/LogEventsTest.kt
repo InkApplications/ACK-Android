@@ -1,6 +1,7 @@
 package com.inkapplications.ack.android.log
 
 import com.inkapplications.ack.android.*
+import com.inkapplications.ack.android.input.ZeroInclusivePositiveIntegerValidator
 import com.inkapplications.ack.android.log.index.LogIndexState
 import com.inkapplications.ack.android.locale.LocaleSettings
 import com.inkapplications.ack.android.log.details.LogDetailData
@@ -24,6 +25,8 @@ import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 
 class LogEventsTest {
+    private val stationSettings = StationSettings(ParrotStringResources, ZeroInclusivePositiveIntegerValidator(ParrotStringResources))
+
     private val settingsWithUnknownFiltered = object: SettingsReadAccess by StubSettings {
         override fun observeBooleanState(setting: BooleanSetting) = flow {
             emit(true)
@@ -57,7 +60,7 @@ class LogEventsTest {
             localeSettings = localeSettings,
             logSettings = logSettings,
             logDetailsFactory = stubLogDetailsFactory,
-            stationSettings = StationSettings(),
+            stationSettings = stationSettings,
             logger = EmptyLogger,
         )
 
@@ -83,7 +86,7 @@ class LogEventsTest {
             localeSettings = localeSettings,
             logSettings = logSettings,
             logDetailsFactory = stubLogDetailsFactory,
-            stationSettings = StationSettings(),
+            stationSettings = stationSettings,
             logger = EmptyLogger,
         )
 

@@ -13,8 +13,8 @@ internal interface PacketDao {
     @Query("SELECT * FROM packets WHERE id = :id")
     fun findById(id: Long): Flow<PacketEntity?>
 
-    @Query("SELECT * FROM packets WHERE UPPER(sourceCallsign) = UPPER(:callsign)")
-    fun findBySourceCallsign(callsign: String): Flow<List<PacketEntity>>
+    @Query("SELECT * FROM packets WHERE UPPER(sourceCallsign) = UPPER(:callsign) LIMIT :limit")
+    fun findBySourceCallsign(callsign: String, limit: Int): Flow<List<PacketEntity>>
 
     @Query("SELECT count(*) FROM packets")
     fun countAll(): Flow<Int>

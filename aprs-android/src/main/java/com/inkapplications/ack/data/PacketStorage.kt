@@ -61,7 +61,7 @@ interface PacketStorage {
      *
      * @param callsign The source/origin callsign to find packets of.
      */
-    fun findBySource(callsign: Callsign): Flow<List<CapturedPacket>>
+    fun findBySource(callsign: Callsign, limit: Int? = null): Flow<List<CapturedPacket>>
 
     /**
      * Store a packet locally.

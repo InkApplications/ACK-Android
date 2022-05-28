@@ -56,7 +56,7 @@ object PacketStorageStub: PacketStorage {
     override fun count(): Flow<Int> = flow {}
     override fun countStations(): Flow<Int> = flow {}
     override fun findMostRecentByType(type: KClass<out PacketData>): Flow<CapturedPacket?> = flow {}
-    override fun findBySource(callsign: Callsign): Flow<List<CapturedPacket>> = flow {}
+    override fun findBySource(callsign: Callsign, limit: Int?): Flow<List<CapturedPacket>> = flow {}
 }
 
 object EpochFormatterStub: DateTimeFormatter {

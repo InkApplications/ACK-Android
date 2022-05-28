@@ -4,5 +4,8 @@
     <string name="station_wind_format_wind_only">%1$s at %2$s</string>
     <string name="station_wind_format_speed_only">%s</string>
     <string name="station_wind_format_direction_only">%sº</string>
-    <string name="station_packet_list_title">Packets Received</string>
+    <string name="station_packet_list_title">Recent Packets</string>
+    <string name="station_settings_category">Station Info</string>
+    <string name="station_settings_debug">Show Station Debugging Data</string>
+    <string name="station_settings_recent_limit">Recent Packet Limit</string>
 </resources>
