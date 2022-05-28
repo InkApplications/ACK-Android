@@ -5,12 +5,12 @@ import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
+import android.app.PendingIntent.FLAG_IMMUTABLE
 import android.content.Context
 import android.content.Intent
 import android.os.Build
 import com.inkapplications.ack.android.R
 import com.inkapplications.ack.android.capture.CaptureActivity
-import com.inkapplications.android.extensions.StringResources
 import com.inkapplications.android.extensions.notificationBuilder
 import kimchi.logger.KimchiLogger
 import javax.inject.Inject
@@ -36,10 +36,10 @@ class CaptureServiceNotifications @Inject constructor(
     }
 
     fun createServiceNotification(context: Context, title: String): Notification {
-        val pendingIntent: PendingIntent =
-            Intent(context, CaptureActivity::class.java).let { notificationIntent ->
-                PendingIntent.getActivity(context, 0, notificationIntent, 0)
-            }
+        val flags = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) FLAG_IMMUTABLE else 0
+        val pendingIntent: PendingIntent = Intent(context, CaptureActivity::class.java).let { notificationIntent ->
+            PendingIntent.getActivity(context, 0, notificationIntent, flags)
+        }
 
         return context.notificationBuilder(CHANNEL_ID)
             .setContentTitle(title)
