@@ -20,15 +20,14 @@ import com.inkapplications.ack.android.log.AprsLogItem
 import com.inkapplications.ack.android.ui.*
 import com.inkapplications.ack.android.ui.theme.AckTheme
 
-
 @Composable
 fun StationScreen(
     viewState: StationViewState,
     createMapView: (Context) -> View,
-    onBackPressed: () -> Unit,
+    controller: StationScreenController,
 ) {
     if (viewState is StationViewState.Loaded) {
-        StationDetails(viewState, createMapView, onBackPressed)
+        StationDetails(viewState, createMapView, controller)
     }
 }
 
@@ -36,7 +35,7 @@ fun StationScreen(
 private fun StationDetails(
     viewState: StationViewState.Loaded,
     createMapView: (Context) -> View,
-    onBackPressed: () -> Unit,
+    controller: StationScreenController,
 ) {
     Column {
         if (viewState.insight.markers.isNotEmpty()) {
@@ -47,7 +46,7 @@ private fun StationDetails(
                         modifier = Modifier.aspectRatio(16f / 9f),
                     )
                     IconButton(
-                        onClick = onBackPressed
+                        onClick = controller::onBackPressed
                     ) {
                         Icon(Icons.Default.ArrowBack, stringResource(R.string.navigate_up))
                     }
@@ -82,7 +81,7 @@ private fun StationDetails(
                             ),
                         )
                     },
-                    onBackPressed = onBackPressed
+                    onBackPressed = controller::onBackPressed
                 )
             }
         }
@@ -111,7 +110,7 @@ private fun StationDetails(
             }
             LazyColumn {
                 items(viewState.packets) { log ->
-                    AprsLogItem(log, {})
+                    AprsLogItem(log, controller::onLogItemClicked)
                 }
             }
         }

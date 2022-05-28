@@ -6,6 +6,8 @@ import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.compose.runtime.collectAsState
 import com.inkapplications.ack.android.component
+import com.inkapplications.ack.android.log.LogItemViewModel
+import com.inkapplications.ack.android.log.details.startLogInspectActivity
 import com.inkapplications.ack.android.map.Map
 import com.inkapplications.ack.android.map.getMap
 import com.inkapplications.ack.android.map.lifecycleObserver
@@ -20,7 +22,7 @@ import kimchi.Kimchi
 
 private const val EXTRA_CALLSIGN = "aprs.station.extra.callsign"
 
-class StationActivity: ExtendedActivity() {
+class StationActivity: ExtendedActivity(), StationScreenController {
     private var mapView: MapView? = null
     private lateinit var stationEvents: StationEvents
 
@@ -36,7 +38,7 @@ class StationActivity: ExtendedActivity() {
                 StationScreen(
                     viewState = viewState.value,
                     createMapView = ::createMapView,
-                    onBackPressed = ::onBackPressed,
+                    controller = this,
                 )
             }
         }
@@ -56,6 +58,10 @@ class StationActivity: ExtendedActivity() {
                 map.showMarkers(viewModel.insight.markers)
             }
         }
+    }
+
+    override fun onLogItemClicked(item: LogItemViewModel) {
+        startLogInspectActivity(item.id)
     }
 }
 
