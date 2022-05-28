@@ -108,6 +108,11 @@ private fun StationDetails(
             if (viewState.insight.telemetryValues != null) {
                 TelemetryTable(viewState.insight.telemetryValues, viewState.insight.telemetrySequence)
             }
+            Text(
+                text = stringResource(R.string.station_packet_list_title),
+                style = AckTheme.typography.h2,
+                modifier = Modifier.padding(vertical = AckTheme.dimensions.content),
+            )
             LazyColumn {
                 items(viewState.packets) { log ->
                     AprsLogItem(log, controller::onLogItemClicked)
