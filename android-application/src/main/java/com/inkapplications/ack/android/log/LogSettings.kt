@@ -1,4 +1,4 @@
-package com.inkapplications.ack.android.capture.log
+package com.inkapplications.ack.android.log
 
 import com.inkapplications.android.extensions.StringResources
 import com.inkapplications.ack.android.settings.BooleanSetting

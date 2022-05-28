@@ -1,13 +1,20 @@
-package com.inkapplications.ack.android.capture.log
+package com.inkapplications.ack.android.log
 
 import com.inkapplications.ack.android.*
+import com.inkapplications.ack.android.log.index.LogIndexState
 import com.inkapplications.ack.android.locale.LocaleSettings
+import com.inkapplications.ack.android.log.details.LogDetailData
+import com.inkapplications.ack.android.log.details.LogDetailsState
 import com.inkapplications.ack.android.settings.BooleanSetting
 import com.inkapplications.ack.android.settings.SettingsReadAccess
+import com.inkapplications.ack.android.station.StationSettings
 import com.inkapplications.ack.data.CapturedPacket
 import com.inkapplications.ack.data.PacketStorage
 import com.inkapplications.ack.structures.AprsPacket
 import com.inkapplications.ack.structures.PacketData
+import com.inkapplications.ack.structures.station.Callsign
+import com.inkapplications.android.extensions.ViewModelFactory
+import kimchi.logger.EmptyLogger
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
@@ -24,8 +31,11 @@ class LogEventsTest {
     }
     private val dummyStateFactory = object: LogItemViewModelFactory {
         override fun create(id: Long, packet: AprsPacket, metric: Boolean): LogItemViewModel {
-            return LogItemViewModel(0, "", "", null)
+            return LogItemViewModel(0, Callsign(""), "", "", null)
         }
+    }
+    private val stubLogDetailsFactory = object: ViewModelFactory<LogDetailData, LogDetailsState.LogDetailsViewModel> {
+        override fun create(data: LogDetailData): LogDetailsState.LogDetailsViewModel = TODO()
     }
 
     @Test
@@ -46,11 +56,14 @@ class LogEventsTest {
             settings = settingsWithUnknownFiltered,
             localeSettings = localeSettings,
             logSettings = logSettings,
+            logDetailsFactory = stubLogDetailsFactory,
+            stationSettings = StationSettings(),
+            logger = EmptyLogger,
         )
 
-        val result = events.logScreenState.first()
+        val result = events.logIndexState.first()
 
-        assertTrue(result is LogScreenState.LogList)
+        assertTrue(result is LogIndexState.LogList)
         assertEquals(1, result.logs.size)
     }
 
@@ -69,10 +82,13 @@ class LogEventsTest {
             settings = settingsWithUnknownFiltered,
             localeSettings = localeSettings,
             logSettings = logSettings,
+            logDetailsFactory = stubLogDetailsFactory,
+            stationSettings = StationSettings(),
+            logger = EmptyLogger,
         )
 
-        val result = events.logScreenState.first()
+        val result = events.logIndexState.first()
 
-        assertTrue(result is LogScreenState.Empty)
+        assertTrue(result is LogIndexState.Empty)
     }
 }

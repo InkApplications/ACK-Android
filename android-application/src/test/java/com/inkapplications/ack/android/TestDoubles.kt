@@ -1,5 +1,6 @@
 package com.inkapplications.ack.android
 
+import com.inkapplications.ack.android.map.MarkerViewModel
 import com.inkapplications.android.extensions.StringResources
 import com.inkapplications.ack.android.settings.BooleanSetting
 import com.inkapplications.ack.android.settings.IntSetting
@@ -12,12 +13,19 @@ import com.inkapplications.ack.data.PacketStorage
 import com.inkapplications.ack.structures.AprsPacket
 import com.inkapplications.ack.structures.EncodingConfig
 import com.inkapplications.ack.structures.PacketData
+import com.inkapplications.ack.structures.capabilities.Mapable
 import com.inkapplications.ack.structures.station.Callsign
+import com.inkapplications.android.extensions.ViewModelFactory
 import com.inkapplications.android.extensions.format.DateTimeFormatter
+import inkapplications.spondee.spatial.GeoCoordinates
+import inkapplications.spondee.spatial.latitude
+import inkapplications.spondee.spatial.longitude
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.datetime.Instant
 import kotlin.reflect.KClass
+import kotlin.test.assertNotNull
+import kotlin.test.assertNull
 
 /**
  * Spits arguments back out as values for testing.
@@ -48,8 +56,23 @@ object PacketStorageStub: PacketStorage {
     override fun count(): Flow<Int> = flow {}
     override fun countStations(): Flow<Int> = flow {}
     override fun findMostRecentByType(type: KClass<out PacketData>): Flow<CapturedPacket?> = flow {}
+    override fun findBySource(callsign: Callsign): Flow<List<CapturedPacket>> = flow {}
 }
 
 object EpochFormatterStub: DateTimeFormatter {
     override fun formatTimestamp(instant: Instant): String = instant.toEpochMilliseconds().toString()
+}
+
+object NullMarkerFactoryMock: ViewModelFactory<CapturedPacket, MarkerViewModel?> {
+    override fun create(data: CapturedPacket): MarkerViewModel? = null.also {
+        assertNull((data.parsed.data as? Mapable)?.coordinates)
+    }
+}
+
+val DummyMarker = MarkerViewModel(0, GeoCoordinates(0.latitude, 0.longitude), null)
+
+object DummyMarkerFactoryMock: ViewModelFactory<CapturedPacket, MarkerViewModel?> {
+    override fun create(data: CapturedPacket): MarkerViewModel? = DummyMarker.also {
+        assertNotNull((data.parsed.data as Mapable).coordinates)
+    }
 }

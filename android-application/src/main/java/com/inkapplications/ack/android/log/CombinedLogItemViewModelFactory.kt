@@ -1,4 +1,4 @@
-package com.inkapplications.ack.android.capture.log
+package com.inkapplications.ack.android.log
 
 import com.inkapplications.ack.android.locale.format
 import com.inkapplications.ack.android.symbol.SymbolFactory
@@ -19,6 +19,7 @@ class CombinedLogItemViewModelFactory @Inject constructor(
     ): LogItemViewModel {
         return LogItemViewModel(
             id = id,
+            source = packet.route.source.callsign,
             origin = packet.route.source.toString(),
             comment = when (val data = packet.data) {
                 is PacketData.Position -> "Position${data.comment.append()}"

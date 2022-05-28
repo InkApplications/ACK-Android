@@ -1,7 +1,7 @@
 package com.inkapplications.ack.android.capture.map
 
-import com.inkapplications.ack.android.capture.log.LogItemViewModel
-import com.inkapplications.ack.android.capture.log.CombinedLogItemViewModelFactory
+import com.inkapplications.ack.android.log.LogItemViewModel
+import com.inkapplications.ack.android.log.CombinedLogItemViewModelFactory
 import com.inkapplications.ack.android.locale.LocaleSettings
 import com.inkapplications.ack.android.map.MarkerViewModel
 import com.inkapplications.ack.android.settings.SettingsReadAccess

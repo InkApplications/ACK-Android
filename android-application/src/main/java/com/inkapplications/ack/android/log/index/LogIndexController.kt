@@ -1,9 +1,11 @@
-package com.inkapplications.ack.android.capture.log
+package com.inkapplications.ack.android.log.index
+
+import com.inkapplications.ack.android.log.LogItemViewModel
 
 /**
  * Actions invoked from the Log Index screen
  */
-interface LogScreenController {
+interface LogIndexController {
     /**
      * Invoked when the user clicks a log item in the log list.
      */

@@ -1,10 +1,9 @@
-package com.inkapplications.ack.android.station
+package com.inkapplications.ack.android.log.details
 
 import android.content.Context
 import android.view.View
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.material.Card
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.Text
@@ -16,30 +15,21 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.viewinterop.AndroidView
 import com.inkapplications.ack.android.R
-import com.inkapplications.ack.android.log.AprsLogItem
-import com.inkapplications.ack.android.ui.*
+import com.inkapplications.ack.android.ui.IconRow
+import com.inkapplications.ack.android.ui.NavigationRow
+import com.inkapplications.ack.android.ui.TelemetryTable
 import com.inkapplications.ack.android.ui.theme.AckTheme
 
-
 @Composable
-fun StationScreen(
-    viewState: StationViewState,
+fun LogDetailsScreen(
+    viewState: LogDetailsState,
+    controller: LogDetailsController,
     createMapView: (Context) -> View,
-    onBackPressed: () -> Unit,
 ) {
-    if (viewState is StationViewState.Loaded) {
-        StationDetails(viewState, createMapView, onBackPressed)
-    }
-}
+    if (viewState !is LogDetailsState.LogDetailsViewModel) return
 
-@Composable
-private fun StationDetails(
-    viewState: StationViewState.Loaded,
-    createMapView: (Context) -> View,
-    onBackPressed: () -> Unit,
-) {
     Column {
-        if (viewState.insight.markers.isNotEmpty()) {
+        if (viewState.markers.isNotEmpty()) {
             Column {
                 Box {
                     AndroidView(
@@ -47,20 +37,21 @@ private fun StationDetails(
                         modifier = Modifier.aspectRatio(16f / 9f),
                     )
                     IconButton(
-                        onClick = onBackPressed
+                        onClick = controller::onBackPressed
                     ) {
                         Icon(Icons.Default.ArrowBack, stringResource(R.string.navigate_up))
                     }
                 }
                 Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.padding(top = AckTheme.dimensions.gutter)) {
                     Text(
-                        viewState.insight.name,
+                        viewState.name,
                         style = AckTheme.typography.h1,
                         modifier = Modifier.padding(
                             start = AckTheme.dimensions.gutter,
                             end = AckTheme.dimensions.gutter,
                         ),
                     )
+                    Icon(viewState.receiveIcon, viewState.receiveIconDescription)
                 }
             }
         } else {
@@ -74,15 +65,16 @@ private fun StationDetails(
                 NavigationRow(
                     title = {
                         Text(
-                            viewState.insight.name,
+                            viewState.name,
                             style = AckTheme.typography.h1,
                             modifier = Modifier.padding(
                                 start = AckTheme.dimensions.gutter,
                                 end = AckTheme.dimensions.gutter,
                             ),
                         )
+                        Icon(viewState.receiveIcon, viewState.receiveIconDescription)
                     },
-                    onBackPressed = onBackPressed
+                    onBackPressed = controller::onBackPressed
                 )
             }
         }
@@ -94,24 +86,29 @@ private fun StationDetails(
                 bottom = AckTheme.dimensions.gutter,
             ),
         ) {
-            if (viewState.insight.temperature != null) {
-                IconRow(Icons.Default.WbSunny, viewState.insight.temperature)
+            if (viewState.temperature != null) {
+                IconRow(Icons.Default.WbSunny, viewState.temperature)
             }
-            if (viewState.insight.wind != null) {
-                IconRow(Icons.Default.Air, viewState.insight.wind)
+            if (viewState.wind != null) {
+                IconRow(Icons.Default.Air, viewState.wind)
             }
-            if (viewState.insight.altitude != null) {
-                IconRow(Icons.Default.Terrain, viewState.insight.altitude)
+            if (viewState.altitude != null) {
+                IconRow(Icons.Default.Terrain, viewState.altitude)
             }
-            if (viewState.insight.comment != null) {
-                IconRow(Icons.Default.Comment, viewState.insight.comment)
+            if (viewState.comment != null) {
+                IconRow(Icons.Default.Comment, viewState.comment)
             }
-            if (viewState.insight.telemetryValues != null) {
-                TelemetryTable(viewState.insight.telemetryValues, viewState.insight.telemetrySequence)
+            if (viewState.telemetryValues != null) {
+                TelemetryTable(viewState.telemetryValues, viewState.telemetrySequence)
             }
-            LazyColumn {
-                items(viewState.packets) { log ->
-                    AprsLogItem(log, {})
+            if (viewState.rawSource != null) {
+                Card(modifier = Modifier.fillMaxWidth().padding(vertical = AckTheme.dimensions.content)) {
+                    Column(modifier = Modifier.padding(AckTheme.dimensions.content)) {
+                        Text("Debug Info", style = AckTheme.typography.h2)
+                        Text("Raw Data", style = AckTheme.typography.h3)
+                        Text(viewState.rawSource, style = AckTheme.typography.caption)
+                        Spacer(Modifier.height(AckTheme.dimensions.content))
+                    }
                 }
             }
         }

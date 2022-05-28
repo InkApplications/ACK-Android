@@ -4,8 +4,8 @@ import com.inkapplications.android.extensions.ApplicationModule
 import com.inkapplications.ack.android.capture.CaptureEvents
 import com.inkapplications.ack.android.capture.insights.InsightEvents
 import com.inkapplications.ack.android.firebase.FirebaseModule
-import com.inkapplications.ack.android.capture.log.LogEvents
-import com.inkapplications.ack.android.capture.log.LogModule
+import com.inkapplications.ack.android.log.LogEvents
+import com.inkapplications.ack.android.log.LogModule
 import com.inkapplications.ack.android.capture.map.MapEventsFactory
 import com.inkapplications.ack.android.capture.map.MapModule
 import com.inkapplications.ack.android.capture.messages.MessageEvents

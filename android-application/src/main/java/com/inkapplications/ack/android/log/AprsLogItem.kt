@@ -1,4 +1,4 @@
-package com.inkapplications.ack.android.capture.log
+package com.inkapplications.ack.android.log
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
@@ -10,6 +10,7 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import com.inkapplications.ack.android.capture.log.AprsSymbol
 import com.inkapplications.ack.android.ui.theme.AckTheme
 
 @Composable

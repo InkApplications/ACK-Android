@@ -56,6 +56,12 @@ internal class DaoPacketStorage(
             .map { createCapturedPacket(it, fromEntityOrNull(it)) }
     }
 
+    override fun findBySource(callsign: Callsign): Flow<List<CapturedPacket>> {
+        return packetDao.findBySourceCallsign(callsign.canonical)
+            .mapEach { createCapturedPacket(it, fromEntityOrNull(it)) }
+            .filterEachNotNull()
+    }
+
     override suspend fun save(data: ByteArray, packet: AprsPacket, source: PacketSource): CapturedPacket {
         val entity = PacketEntity(
             id = null,

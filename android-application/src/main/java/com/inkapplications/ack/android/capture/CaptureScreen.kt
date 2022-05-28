@@ -27,9 +27,9 @@ import androidx.navigation.compose.rememberNavController
 import com.inkapplications.ack.android.R
 import com.inkapplications.ack.android.capture.insights.InsightsScreen
 import com.inkapplications.ack.android.capture.insights.InsightsViewState
-import com.inkapplications.ack.android.capture.log.LogScreen
-import com.inkapplications.ack.android.capture.log.LogScreenController
-import com.inkapplications.ack.android.capture.log.LogScreenState
+import com.inkapplications.ack.android.capture.log.LogIndexScreen
+import com.inkapplications.ack.android.log.index.LogIndexController
+import com.inkapplications.ack.android.log.index.LogIndexState
 import com.inkapplications.ack.android.capture.map.MapScreen
 import com.inkapplications.ack.android.capture.map.MapViewModel
 import com.inkapplications.ack.android.capture.messages.MessageIndexScreen
@@ -50,8 +50,8 @@ fun CaptureScreen(
     captureScreenState: State<CaptureScreenViewModel>,
     mapState: State<MapViewModel>,
     insightsState: State<InsightsViewState>,
-    logScreenState: State<LogScreenState>,
-    logScreenController: LogScreenController,
+    logIndexState: State<LogIndexState>,
+    logIndexController: LogIndexController,
     messageScreenState: State<MessageIndexScreenState>,
     messagesScreenController: MessagesScreenController,
     mapFactory: (Context) -> View,
@@ -74,8 +74,8 @@ fun CaptureScreen(
                 CaptureNavHost(
                     navController = navController,
                     mapState = mapState,
-                    logScreenState = logScreenState,
-                    logScreenController = logScreenController,
+                    logIndexState = logIndexState,
+                    logIndexController = logIndexController,
                     insightsState = insightsState,
                     messageScreenState = messageScreenState,
                     messagesScreenController = messagesScreenController,
@@ -334,8 +334,8 @@ private fun CaptureSettingRow(
 private fun CaptureNavHost(
     navController: NavHostController,
     mapState: State<MapViewModel>,
-    logScreenState: State<LogScreenState>,
-    logScreenController: LogScreenController,
+    logIndexState: State<LogIndexState>,
+    logIndexController: LogIndexController,
     insightsState: State<InsightsViewState>,
     messageScreenState: State<MessageIndexScreenState>,
     messagesScreenController: MessagesScreenController,
@@ -358,9 +358,9 @@ private fun CaptureNavHost(
             )
         }
         composable("log") {
-            LogScreen(
-                state = logScreenState,
-                controller = logScreenController,
+            LogIndexScreen(
+                state = logIndexState,
+                controller = logIndexController,
             )
         }
         composable("messages") {

@@ -16,8 +16,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.viewinterop.AndroidView
-import com.inkapplications.ack.android.capture.log.AprsLogItem
-import com.inkapplications.ack.android.capture.log.LogItemViewModel
+import com.inkapplications.ack.android.log.AprsLogItem
+import com.inkapplications.ack.android.log.LogItemViewModel
 import com.inkapplications.ack.android.ui.theme.AckScreen
 import com.inkapplications.ack.android.ui.theme.AckTheme
 import com.inkapplications.ack.android.R

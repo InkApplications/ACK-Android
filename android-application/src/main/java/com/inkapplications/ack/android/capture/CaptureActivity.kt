@@ -11,9 +11,10 @@ import androidx.activity.compose.setContent
 import androidx.compose.runtime.collectAsState
 import androidx.core.content.ContextCompat
 import com.inkapplications.ack.android.capture.insights.InsightsViewState
-import com.inkapplications.ack.android.capture.log.LogItemViewModel
-import com.inkapplications.ack.android.capture.log.LogScreenController
-import com.inkapplications.ack.android.capture.log.LogScreenState
+import com.inkapplications.ack.android.log.LogItemViewModel
+import com.inkapplications.ack.android.log.index.LogIndexController
+import com.inkapplications.ack.android.log.index.LogIndexState
+import com.inkapplications.ack.android.log.details.startLogInspectActivity
 import com.inkapplications.ack.android.capture.map.*
 import com.inkapplications.ack.android.capture.messages.index.MessagesScreenController
 import com.inkapplications.ack.android.capture.messages.index.MessageIndexScreenState
@@ -39,7 +40,7 @@ import kimchi.analytics.intProperty
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.MutableStateFlow
 
-class CaptureActivity: ExtendedActivity(), CaptureNavController, LogScreenController {
+class CaptureActivity: ExtendedActivity(), CaptureNavController, LogIndexController {
     private lateinit var mapEventsFactory: MapEventsFactory
     private var mapView: MapView? = null
     private var map: Map? = null
@@ -57,7 +58,7 @@ class CaptureActivity: ExtendedActivity(), CaptureNavController, LogScreenContro
         setContent {
             val captureState = captureEvents.screenState.collectAsState(CaptureScreenViewModel())
             val mapState = mapViewModel.collectAsState()
-            val logState = logData.logScreenState.collectAsState(LogScreenState.Initial)
+            val logState = logData.logIndexState.collectAsState(LogIndexState.Initial)
             val insightsState = insightsEvents.viewState.collectAsState(InsightsViewState.Initial)
             val messageScreenState = component.messageEvents().messagesScreenState.collectAsState(MessageIndexScreenState.Initial)
             val messagesScreenController = object: MessagesScreenController {
@@ -72,8 +73,8 @@ class CaptureActivity: ExtendedActivity(), CaptureNavController, LogScreenContro
             CaptureScreen(
                 captureScreenState = captureState,
                 mapState = mapState,
-                logScreenState = logState,
-                logScreenController = this,
+                logIndexState = logState,
+                logIndexController = this,
                 insightsState = insightsState,
                 messageScreenState = messageScreenState,
                 messagesScreenController = messagesScreenController,
@@ -115,11 +116,11 @@ class CaptureActivity: ExtendedActivity(), CaptureNavController, LogScreenContro
     }
 
     override fun onLogMapItemClick(log: LogItemViewModel) {
-        startStationActivity(log.id)
+        startStationActivity(log.source)
     }
 
     override fun onLogListItemClick(log: LogItemViewModel) {
-        startStationActivity(log.id)
+        startLogInspectActivity(log.id)
     }
 
     override fun onLocationEnableClick() {

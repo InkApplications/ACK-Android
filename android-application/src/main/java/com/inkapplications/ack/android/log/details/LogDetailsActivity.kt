@@ -1,42 +1,45 @@
-package com.inkapplications.ack.android.station
+package com.inkapplications.ack.android.log.details
 
 import android.app.Activity
 import android.content.Context
 import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.compose.runtime.collectAsState
+import com.inkapplications.ack.android.log.LogEvents
 import com.inkapplications.ack.android.component
 import com.inkapplications.ack.android.map.Map
 import com.inkapplications.ack.android.map.getMap
 import com.inkapplications.ack.android.map.lifecycleObserver
 import com.inkapplications.ack.android.trackNavigation
 import com.inkapplications.ack.android.ui.theme.AckScreen
-import com.inkapplications.ack.structures.station.Callsign
 import com.inkapplications.android.extensions.ExtendedActivity
 import com.inkapplications.android.startActivity
 import com.inkapplications.coroutines.collectOn
 import com.mapbox.mapboxsdk.maps.MapView
 import kimchi.Kimchi
 
-private const val EXTRA_CALLSIGN = "aprs.station.extra.callsign"
+private const val EXTRA_ID = "aprs.station.extra.id"
 
-class StationActivity: ExtendedActivity() {
+/**
+ * Shows information about a particular packet received.
+ */
+class LogDetailsActivity: ExtendedActivity(), LogDetailsController {
     private var mapView: MapView? = null
-    private lateinit var stationEvents: StationEvents
+    private lateinit var logEvents: LogEvents
 
-    private val callsign get() = intent.getStringExtra(EXTRA_CALLSIGN)!!.let(::Callsign)
+    private val id get() = intent.getLongExtra(EXTRA_ID, -1)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        stationEvents = component.stationEvents()
+        logEvents = component.logData()
 
         setContent {
-            val viewState = stationEvents.stationState(callsign).collectAsState(StationViewState.Initial)
+            val viewState = logEvents.stateEvents(id).collectAsState(LogDetailsState.Initial)
             AckScreen {
-                StationScreen(
+                LogDetailsScreen(
                     viewState = viewState.value,
+                    controller = this,
                     createMapView = ::createMapView,
-                    onBackPressed = ::onBackPressed,
                 )
             }
         }
@@ -50,18 +53,18 @@ class StationActivity: ExtendedActivity() {
     }
 
     private fun onMapLoaded(map: Map) {
-        stationEvents.stationState(callsign).collectOn(foregroundScope) { viewModel ->
-            if (viewModel is StationViewState.Loaded) {
-                map.zoomTo(viewModel.insight.mapCameraPosition)
-                map.showMarkers(viewModel.insight.markers)
+        logEvents.stateEvents(id).collectOn(foregroundScope) { viewModel ->
+            if (viewModel is LogDetailsState.LogDetailsViewModel) {
+                map.zoomTo(viewModel.mapCameraPosition)
+                map.showMarkers(viewModel.markers)
             }
         }
     }
 }
 
-fun Activity.startStationActivity(callsign: Callsign) {
-    Kimchi.trackNavigation("station")
-    startActivity(StationActivity::class) {
-        putExtra(EXTRA_CALLSIGN, callsign.canonical)
+fun Activity.startLogInspectActivity(packetId: Long) {
+    Kimchi.trackNavigation("log-inspect")
+    startActivity(LogDetailsActivity::class) {
+        putExtra(EXTRA_ID, packetId)
     }
 }

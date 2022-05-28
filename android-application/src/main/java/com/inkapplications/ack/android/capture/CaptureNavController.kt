@@ -1,6 +1,6 @@
 package com.inkapplications.ack.android.capture
 
-import com.inkapplications.ack.android.capture.log.LogItemViewModel
+import com.inkapplications.ack.android.log.LogItemViewModel
 
 interface CaptureNavController {
     fun onAudioCaptureEnableClick()

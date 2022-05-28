@@ -1,6 +1,6 @@
-package com.inkapplications.ack.android.capture.log
+package com.inkapplications.ack.android.log
 
-import com.inkapplications.ack.android.symbol.SymbolFactoryStub
+import com.inkapplications.ack.android.symbol.SymbolFactoryDummy
 import com.inkapplications.ack.android.toTestPacket
 import com.inkapplications.ack.structures.*
 import com.inkapplications.ack.structures.station.StationAddress
@@ -12,7 +12,7 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 
 class CombinedLogItemViewModelFactoryTest {
-    val factory = CombinedLogItemViewModelFactory(SymbolFactoryStub)
+    val factory = CombinedLogItemViewModelFactory(SymbolFactoryDummy)
 
     @Test
     fun unknownPacket() {

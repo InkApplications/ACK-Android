@@ -15,9 +15,9 @@ fun Length.format(metric: Boolean) = when {
 }
 
 fun Speed.format(metric: Boolean) = when {
-    metric && value(MetersPerSecond) >= 1000 -> KilometersPerHour.format(this)
-    metric -> MetersPerSecond.format(this)
-    else -> MilesPerHour.format(this)
+    metric && value(MetersPerSecond) >= 1000 -> KilometersPerHour.format(this, decimals = 0)
+    metric -> MetersPerSecond.format(this, decimals = 0)
+    else -> MilesPerHour.format(this, decimals = 0)
 }
 
 fun Temperature.format(metric: Boolean) = when {

@@ -13,17 +13,20 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import com.inkapplications.ack.android.R
+import com.inkapplications.ack.android.log.index.LogIndexState
+import com.inkapplications.ack.android.log.index.LogIndexController
+import com.inkapplications.ack.android.log.AprsLogItem
 import com.inkapplications.ack.android.ui.theme.AckScreen
 import com.inkapplications.ack.android.ui.theme.AckTheme
 
 @Composable
-fun LogScreen(
-    state: State<LogScreenState>,
-    controller: LogScreenController,
+fun LogIndexScreen(
+    state: State<LogIndexState>,
+    controller: LogIndexController,
 ) = AckScreen {
     when (val currentState = state.value) {
-        is LogScreenState.LogList -> LogList(currentState, controller)
-        is LogScreenState.Empty -> EmptyState()
+        is LogIndexState.LogList -> LogList(currentState, controller)
+        is LogIndexState.Empty -> EmptyState()
     }
 }
 
@@ -46,8 +49,8 @@ private fun EmptyState() {
 
 @Composable
 private fun LogList(
-    state: LogScreenState.LogList,
-    controller: LogScreenController,
+    state: LogIndexState.LogList,
+    controller: LogIndexController,
 ) {
     LazyColumn(
         contentPadding = PaddingValues(top = AckTheme.dimensions.gutter, bottom = AckTheme.dimensions.navigationProtection)
