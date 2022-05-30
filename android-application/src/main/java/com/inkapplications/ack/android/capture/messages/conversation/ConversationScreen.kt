@@ -97,11 +97,21 @@ private fun Message(viewModel: MessageItemViewModel) {
             modifier = Modifier.padding(AckTheme.dimensions.content)
         ) {
             Text(viewModel.message, style = AckTheme.typography.body)
-            Text(
-                text = viewModel.timestamp,
-                style = AckTheme.typography.caption,
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier.align(Alignment.End),
-            )
+            ) {
+                Text(
+                    text = viewModel.timestamp,
+                    style = AckTheme.typography.caption,
+                    modifier = Modifier.padding(end = AckTheme.dimensions.item),
+                )
+                Icon(
+                    imageVector = viewModel.icon,
+                    contentDescription = viewModel.iconDescription,
+                    modifier = Modifier.size(10.dp),
+                )
+            }
         }
     }
 }

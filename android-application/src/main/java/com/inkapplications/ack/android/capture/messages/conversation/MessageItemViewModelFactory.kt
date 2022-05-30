@@ -1,22 +1,25 @@
 package com.inkapplications.ack.android.capture.messages.conversation
 
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Cloud
+import androidx.compose.material.icons.filled.SettingsInputAntenna
+import androidx.compose.material.icons.filled.Storage
 import androidx.compose.ui.Alignment
+import com.inkapplications.ack.android.R
 import com.inkapplications.ack.android.capture.messages.MessageData
+import com.inkapplications.ack.data.PacketSource
 import com.inkapplications.ack.structures.PacketData
+import com.inkapplications.android.extensions.StringResources
 import com.inkapplications.android.extensions.ViewModelFactory
 import com.inkapplications.android.extensions.format.DateTimeFormatter
 import dagger.Reusable
-import java.text.SimpleDateFormat
 import javax.inject.Inject
 
 @Reusable
 class MessageItemViewModelFactory @Inject constructor(
     private val dateTimeFormatter: DateTimeFormatter,
+    private val stringResources: StringResources,
 ): ViewModelFactory<MessageData, MessageItemViewModel> {
-    private val timestampFormat = SimpleDateFormat("yyyy-MM-dd HH:mm").apply {
-        this.timeZone = java.util.TimeZone.getTimeZone(timeZone.id)
-    }
-
     override fun create(data: MessageData): MessageItemViewModel {
         return MessageItemViewModel(
             message = (data.message.parsed.data as PacketData.Message).message,
@@ -25,7 +28,17 @@ class MessageItemViewModelFactory @Inject constructor(
                 Alignment.CenterEnd
             } else {
                 Alignment.CenterStart
-            }
+            },
+            icon = when (data.message.source) {
+                PacketSource.Ax25 -> Icons.Default.SettingsInputAntenna
+                PacketSource.AprsIs -> Icons.Default.Cloud
+                PacketSource.Local -> Icons.Default.Storage
+            },
+            iconDescription = when(data.message.source) {
+                PacketSource.Ax25 -> stringResources.getString(R.string.messages_item_icon_ax25_description)
+                PacketSource.AprsIs -> stringResources.getString(R.string.messages_item_icon_internet_description)
+                PacketSource.Local -> stringResources.getString(R.string.messages_item_icon_local_description)
+            },
         )
     }
 }
