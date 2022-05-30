@@ -25,8 +25,8 @@ object AckTheme {
         @Composable
         @ReadOnlyComposable
         get() = ColorVariant(
-            primary = primaryColor,
-            onPrimary = ColorPalette.darkStroke,
+            accent = primaryColor,
+            onAccent = ColorPalette.darkStroke,
             foreground = ColorPalette.lightStroke,
             background = ColorPalette.darkStroke,
             surface = ColorPalette.darkStrokeSoftened,

@@ -41,6 +41,7 @@ fun MapScreen(
             AprsLogItem(
                 log = logState,
                 onClick = onLogItemClick,
+                border = true,
             )
         }
     }
@@ -62,7 +63,7 @@ fun LocationStateButton(
         FloatingActionButton(
             onClick = onDisableTrackingClick,
             backgroundColor = AckTheme.colors.surface,
-            contentColor = AckTheme.colors.primary,
+            contentColor = AckTheme.colors.accent,
             modifier = Modifier.padding(AckTheme.dimensions.gutter)
         ) {
             Icon(Icons.Default.MyLocation, stringResource(R.string.map_location_tracking_stop_action))

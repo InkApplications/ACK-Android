@@ -36,7 +36,7 @@ fun StartupScreen() = AckScreen {
                 Icon(
                     painterResource(R.drawable.wave),
                     contentDescription = null,
-                    tint = AckTheme.colors.primary,
+                    tint = AckTheme.colors.accent,
                     modifier = Modifier.padding(bottom = AckTheme.dimensions.content)
                 )
                 Text(stringResource(R.string.application_version, BuildConfig.VERSION_NAME, BuildConfig.VERSION_CODE.toString()))

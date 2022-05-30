@@ -17,7 +17,7 @@ fun IconRow(
     text: String,
     modifier: Modifier = Modifier,
 ) = Row(verticalAlignment = Alignment.CenterVertically, modifier = modifier) {
-    Icon(icon, null, tint = AckTheme.colors.primary, modifier = Modifier.padding(AckTheme.dimensions.icon))
+    Icon(icon, null, tint = AckTheme.colors.accent, modifier = Modifier.padding(AckTheme.dimensions.icon))
     Text(text)
 }
 
@@ -27,6 +27,6 @@ fun IconRow(
     text: String,
     modifier: Modifier = Modifier,
 ) = Row(verticalAlignment = Alignment.CenterVertically, modifier = modifier) {
-    Icon(icon, null, tint = AckTheme.colors.primary, modifier = Modifier.padding(AckTheme.dimensions.icon))
+    Icon(icon, null, tint = AckTheme.colors.accent, modifier = Modifier.padding(AckTheme.dimensions.icon))
     Text(text)
 }

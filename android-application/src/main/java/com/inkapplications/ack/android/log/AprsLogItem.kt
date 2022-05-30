@@ -1,5 +1,6 @@
 package com.inkapplications.ack.android.log
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -10,6 +11,7 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import com.inkapplications.ack.android.capture.log.AprsSymbol
 import com.inkapplications.ack.android.ui.theme.AckTheme
 
@@ -17,8 +19,10 @@ import com.inkapplications.ack.android.ui.theme.AckTheme
 fun AprsLogItem(
     log: LogItemViewModel,
     onClick: (LogItemViewModel) -> Unit,
+    border: Boolean = false,
 ) {
     Card(
+        border = BorderStroke(1.dp, AckTheme.colors.accent).takeIf { border },
         modifier = Modifier
             .padding(
                 vertical = AckTheme.dimensions.singleItem,

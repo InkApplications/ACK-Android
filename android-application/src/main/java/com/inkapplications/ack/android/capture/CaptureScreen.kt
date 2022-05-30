@@ -171,8 +171,8 @@ private fun CaptureSettingsFab(
             }
         },
         shape = RoundedCornerShape(50),
-        backgroundColor = AckTheme.colors.primary,
-        contentColor = AckTheme.colors.onPrimary
+        backgroundColor = AckTheme.colors.accent,
+        contentColor = AckTheme.colors.onAccent
     ) {
         Icon(Icons.Default.SettingsInputAntenna, stringResource(R.string.capture_controls_expand_action))
     }
@@ -224,7 +224,7 @@ private fun CaptureSettingsSheet(
     captureScreenState.audioCaptureState.whenOn {
         CaptureSettingRow(
             icon = Icons.Filled.Mic,
-            iconColor = AckTheme.colors.primary,
+            iconColor = AckTheme.colors.accent,
             name = stringResource(R.string.capture_controls_audio_capture_enabled_name, captureScreenState.audioLevel),
             onClick = captureController::onAudioCaptureDisableClick
         )
@@ -249,7 +249,7 @@ private fun CaptureSettingsSheet(
     captureScreenState.audioTransmitState.whenOn {
         CaptureSettingRow(
             icon = Icons.Filled.VolumeUp,
-            iconColor = AckTheme.colors.primary,
+            iconColor = AckTheme.colors.accent,
             name = stringResource(R.string.capture_controls_audio_transmit_enabled_name),
             onClick = captureController::onAudioTransmitDisableClick
         )
@@ -266,7 +266,7 @@ private fun CaptureSettingsSheet(
     captureScreenState.internetCaptureState.whenOn {
         CaptureSettingRow(
             icon = Icons.Filled.CloudDownload,
-            iconColor = AckTheme.colors.primary,
+            iconColor = AckTheme.colors.accent,
             name = stringResource(R.string.capture_controls_internet_capture_enabled_name),
             onClick = captureController::onInternetCaptureDisableClick
         )
@@ -291,7 +291,7 @@ private fun CaptureSettingsSheet(
     captureScreenState.internetTransmitState.whenOn {
         CaptureSettingRow(
             icon = Icons.Filled.CloudUpload,
-            iconColor = AckTheme.colors.primary,
+            iconColor = AckTheme.colors.accent,
             name = stringResource(R.string.capture_controls_internet_transmit_enabled_name),
             onClick = captureController::onInternetTransmitDisableClick
         )
