@@ -1,21 +1,21 @@
-package com.inkapplications.ack.android.capture.map
+package com.inkapplications.ack.android.map
 
-import com.inkapplications.ack.android.map.CameraPositionDefaults
-import com.inkapplications.ack.android.map.Map
-import com.inkapplications.ack.android.map.MapCameraPosition
-import com.inkapplications.ack.android.map.ZoomLevels
 import com.inkapplications.android.extensions.location.LocationAccess
 import kotlinx.coroutines.flow.*
+import javax.inject.Inject
+import javax.inject.Singleton
 
 /**
  * Provide access to map events.
  */
-class MapEvents(
+@Singleton
+class MapEvents @Inject constructor(
     private val mapData: MapDataRepository,
     private val location: LocationAccess,
-    private val map: Map,
 ) {
-    private val selectedItem = map.selectedId.flatMapLatest {
+    val trackingEnabled = MutableStateFlow(false)
+    val selectedItemId = MutableStateFlow<Long?>(null)
+    private val selectedItem = selectedItemId.flatMapLatest {
         it?.let { mapData.findLogItem(it) } ?: flowOf(null)
     }
 
@@ -29,7 +29,7 @@ class MapEvents(
         .combine(selectedItem) { viewModel, selectedItem ->
             viewModel.copy(selectedItem = selectedItem)
         }
-        .combine(map.trackingState) { viewModel, tracking ->
+        .combine(trackingEnabled) { viewModel, tracking ->
             viewModel.copy(trackPosition = tracking)
         }
         .distinctUntilChanged()

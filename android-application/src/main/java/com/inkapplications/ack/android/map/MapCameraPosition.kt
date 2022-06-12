@@ -9,7 +9,7 @@ import inkapplications.spondee.spatial.longitude
  */
 data class MapCameraPosition(
     val coordinates: GeoCoordinates,
-    val zoom: Double,
+    val zoom: ZoomLevels,
 )
 
 object CameraPositionDefaults {

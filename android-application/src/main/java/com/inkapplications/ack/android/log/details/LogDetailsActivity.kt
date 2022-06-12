@@ -7,9 +7,9 @@ import androidx.activity.compose.setContent
 import androidx.compose.runtime.collectAsState
 import com.inkapplications.ack.android.log.LogEvents
 import com.inkapplications.ack.android.component
-import com.inkapplications.ack.android.map.Map
+import com.inkapplications.ack.android.map.MapController
 import com.inkapplications.ack.android.map.getMap
-import com.inkapplications.ack.android.map.lifecycleObserver
+import com.inkapplications.ack.android.map.mapbox.lifecycleObserver
 import com.inkapplications.ack.android.trackNavigation
 import com.inkapplications.ack.android.ui.theme.AckScreen
 import com.inkapplications.android.extensions.ExtendedActivity
@@ -48,17 +48,21 @@ class LogDetailsActivity: ExtendedActivity(), LogDetailsController {
     private fun createMapView(context: Context) = mapView ?: MapView(context).also { mapView ->
         this.mapView = mapView
 
-        mapView.getMap(this, ::onMapLoaded)
+        mapView.getMap(this, ::onMapLoaded, ::onMapItemClicked)
         lifecycle.addObserver(mapView.lifecycleObserver)
     }
 
-    private fun onMapLoaded(map: Map) {
+    private fun onMapLoaded(map: MapController) {
         logEvents.stateEvents(id).collectOn(foregroundScope) { viewModel ->
             if (viewModel is LogDetailsState.LogDetailsViewModel) {
                 map.zoomTo(viewModel.mapCameraPosition)
                 map.showMarkers(viewModel.markers)
             }
         }
+    }
+
+    private fun onMapItemClicked(id: Long?) {
+        Kimchi.debug("Map Item Clicked: No-Op")
     }
 }
 

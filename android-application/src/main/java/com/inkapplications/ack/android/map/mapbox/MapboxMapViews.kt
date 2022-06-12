@@ -2,6 +2,7 @@ package com.inkapplications.ack.android.map
 
 import android.app.Activity
 import android.content.res.Configuration
+import com.inkapplications.ack.android.map.mapbox.MapboxMapController
 import com.mapbox.mapboxsdk.maps.MapView
 import com.mapbox.mapboxsdk.maps.MapboxMap
 import com.mapbox.mapboxsdk.maps.Style
@@ -26,9 +27,13 @@ inline fun MapView.init(activity: Activity, crossinline onInit: (MapboxMap, Styl
 /**
  * Get a Map object by initializing a Mapbox Map.
  */
-inline fun MapView.getMap(activity: Activity, crossinline onInit: (Map) -> Unit) {
+inline fun MapView.getMap(
+    activity: Activity,
+    crossinline onInit: (MapController) -> Unit,
+    noinline onSelect: (Long?) -> Unit,
+) {
     init(activity) { mapbox, style ->
-        val map = Map(activity, this, mapbox, style, activity.resources)
+        val map = MapboxMapController(activity, this, mapbox, style, activity.resources, onSelect = onSelect)
         onInit(map)
     }
 }

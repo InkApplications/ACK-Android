@@ -1,7 +1,5 @@
-package com.inkapplications.ack.android.capture.map
+package com.inkapplications.ack.android.map
 
-import com.inkapplications.ack.android.map.MarkerViewModel
-import com.inkapplications.ack.android.map.MarkerViewModelFactory
 import com.inkapplications.ack.android.settings.SettingsProvider
 import com.inkapplications.ack.data.CapturedPacket
 import com.inkapplications.android.extensions.ViewModelFactory

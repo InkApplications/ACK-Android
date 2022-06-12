@@ -1,6 +1,6 @@
-package com.inkapplications.ack.android.map
+package com.inkapplications.ack.android.map.mapbox
 
-import android.Manifest.permission
+import android.Manifest
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.res.Resources
@@ -9,6 +9,7 @@ import android.graphics.BitmapFactory
 import androidx.annotation.RequiresPermission
 import com.google.gson.JsonObject
 import com.inkapplications.ack.android.R
+import com.inkapplications.ack.android.map.*
 import com.inkapplications.android.continuePropagation
 import com.mapbox.mapboxsdk.camera.CameraUpdateFactory
 import com.mapbox.mapboxsdk.geometry.LatLng
@@ -21,22 +22,19 @@ import com.mapbox.mapboxsdk.maps.MapboxMap
 import com.mapbox.mapboxsdk.maps.Style
 import com.mapbox.mapboxsdk.plugins.annotation.SymbolManager
 import com.mapbox.mapboxsdk.plugins.annotation.SymbolOptions
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableStateFlow
 import java.util.*
 
 /**
- * Manipulate the Mapbox Map in a generic way.
+ * Adapt a Mapbox Map view into our controller interface.
  */
-class Map(
+class MapboxMapController(
     private val context: Context,
     private val view: MapView,
     private val map: MapboxMap,
     private val style: Style,
-    private val resources: Resources
-) {
-    private val selectedIdState = MutableStateFlow<Long?>(null)
-    val selectedId = selectedIdState
+    private val resources: Resources,
+    private val onSelect: (Long?) -> Unit,
+): MapController {
     private val defaultMarkerId = UUID.randomUUID().toString()
 
     private val locationComponentOptions = LocationComponentOptions.builder(context)
@@ -47,35 +45,29 @@ class Map(
         .locationComponentOptions(locationComponentOptions)
         .build()
 
-    private val positionTrackingState by lazy {
-        map.locationComponent.activateLocationComponent(locationActivationOptions)
-        MutableStateFlow(map.locationComponent.isLocationComponentEnabled)
-    }
-
-    val trackingState: Flow<Boolean> = positionTrackingState
-
     private val symbolManager = SymbolManager(view, map, style).also {
         it.iconAllowOverlap = true
         it.addClickListener {
             val json = (it.data as JsonObject)
             map.animateCamera(CameraUpdateFactory.newLatLng(LatLng(json.get("lat").asDouble, json.get("lon").asDouble)))
-            selectedIdState.value = json.get("id").asLong
+            onSelect(json.get("id").asLong)
             true
         }
         map.addOnMapClickListener {
-            continuePropagation { selectedIdState.value = null }
+            continuePropagation { onSelect(null) }
         }
         style.addImage(defaultMarkerId, BitmapFactory.decodeResource(resources, R.drawable.symbol_14))
     }
 
-    fun initDefaults() {
+    override fun initDefaults() {
         map.uiSettings.run {
             setLogoMargins(logoMarginLeft, logoMarginTop, logoMarginRight, context.resources.getDimensionPixelSize(R.dimen.mapbox_logo_padding_bottom))
         }
         setCamera(CameraPositionDefaults.unknownLocation)
+        map.locationComponent.activateLocationComponent(locationActivationOptions)
     }
 
-    fun showMarkers(markers: Collection<MarkerViewModel>) {
+    override fun showMarkers(markers: Collection<MarkerViewModel>) {
         markers
             .map { marker ->
                 SymbolOptions()
@@ -90,35 +82,40 @@ class Map(
             .run { symbolManager.create(this) }
     }
 
-    fun zoomTo(cameraPosition: MapCameraPosition) {
-        map.animateCamera(CameraUpdateFactory.newLatLngZoom(
-            LatLng(cameraPosition.coordinates.latitude.asDecimal, cameraPosition.coordinates.longitude.asDecimal),
-            cameraPosition.zoom
-        ))
+    override fun zoomTo(cameraPosition: MapCameraPosition) {
+        map.animateCamera(
+            CameraUpdateFactory.newLatLngZoom(
+                LatLng(cameraPosition.coordinates.latitude.asDecimal, cameraPosition.coordinates.longitude.asDecimal),
+                cameraPosition.zoom.mapboxValue
+            )
+        )
     }
 
-    fun setCamera(cameraPosition: MapCameraPosition) {
+    override fun setCamera(cameraPosition: MapCameraPosition) {
         map.cameraPosition = com.mapbox.mapboxsdk.camera.CameraPosition.Builder()
-            .zoom(cameraPosition.zoom)
-            .target(LatLng(cameraPosition.coordinates.latitude.asDecimal, cameraPosition.coordinates.longitude.asDecimal))
+            .zoom(cameraPosition.zoom.mapboxValue)
+            .target(
+                LatLng(
+                    cameraPosition.coordinates.latitude.asDecimal,
+                    cameraPosition.coordinates.longitude.asDecimal
+                )
+            )
             .build()
     }
 
-    @RequiresPermission(anyOf = [permission.ACCESS_FINE_LOCATION, permission.ACCESS_COARSE_LOCATION])
-    fun enablePositionTracking() {
-        positionTrackingState.value = true
+    @RequiresPermission(anyOf = [Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION])
+    override fun enablePositionTracking() {
         map.locationComponent.isLocationComponentEnabled = true
         map.locationComponent.setCameraMode(CameraMode.TRACKING_GPS, object: OnLocationCameraTransitionListener {
             override fun onLocationCameraTransitionFinished(cameraMode: Int) {
-                map.locationComponent.zoomWhileTracking(ZoomLevels.ROADS)
+                map.locationComponent.zoomWhileTracking(ZoomLevels.ROADS.mapboxValue)
             }
             override fun onLocationCameraTransitionCanceled(cameraMode: Int) {}
         })
     }
 
     @SuppressLint("MissingPermission")
-    fun disablePositionTracking() {
-        positionTrackingState.value = false
+    override fun disablePositionTracking() {
         map.locationComponent.isLocationComponentEnabled = false
     }
 

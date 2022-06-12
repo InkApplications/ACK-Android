@@ -1,4 +1,4 @@
-package com.inkapplications.ack.android.capture.map
+package com.inkapplications.ack.android.map
 
 import com.inkapplications.android.extensions.StringResources
 import com.inkapplications.ack.android.R

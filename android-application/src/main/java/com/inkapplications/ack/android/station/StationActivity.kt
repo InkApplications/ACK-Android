@@ -8,9 +8,9 @@ import androidx.compose.runtime.collectAsState
 import com.inkapplications.ack.android.component
 import com.inkapplications.ack.android.log.LogItemViewModel
 import com.inkapplications.ack.android.log.details.startLogInspectActivity
-import com.inkapplications.ack.android.map.Map
+import com.inkapplications.ack.android.map.MapController
 import com.inkapplications.ack.android.map.getMap
-import com.inkapplications.ack.android.map.lifecycleObserver
+import com.inkapplications.ack.android.map.mapbox.lifecycleObserver
 import com.inkapplications.ack.android.trackNavigation
 import com.inkapplications.ack.android.ui.theme.AckScreen
 import com.inkapplications.ack.structures.station.Callsign
@@ -47,17 +47,21 @@ class StationActivity: ExtendedActivity(), StationScreenController {
     private fun createMapView(context: Context) = mapView ?: MapView(context).also { mapView ->
         this.mapView = mapView
 
-        mapView.getMap(this, ::onMapLoaded)
+        mapView.getMap(this, ::onMapLoaded, ::onMapItemClicked)
         lifecycle.addObserver(mapView.lifecycleObserver)
     }
 
-    private fun onMapLoaded(map: Map) {
+    private fun onMapLoaded(map: MapController) {
         stationEvents.stationState(callsign).collectOn(foregroundScope) { viewModel ->
             if (viewModel is StationViewState.Loaded) {
                 map.zoomTo(viewModel.insight.mapCameraPosition)
                 map.showMarkers(viewModel.insight.markers)
             }
         }
+    }
+
+    private fun onMapItemClicked(id: Long?) {
+        Kimchi.debug("Map Item Clicked: No-Op")
     }
 
     override fun onLogItemClicked(item: LogItemViewModel) {

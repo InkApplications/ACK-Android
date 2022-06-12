@@ -30,8 +30,8 @@ import com.inkapplications.ack.android.capture.insights.InsightsViewState
 import com.inkapplications.ack.android.capture.log.LogIndexScreen
 import com.inkapplications.ack.android.log.index.LogIndexController
 import com.inkapplications.ack.android.log.index.LogIndexState
-import com.inkapplications.ack.android.capture.map.MapScreen
-import com.inkapplications.ack.android.capture.map.MapViewModel
+import com.inkapplications.ack.android.map.MapScreen
+import com.inkapplications.ack.android.map.MapViewModel
 import com.inkapplications.ack.android.capture.messages.MessageIndexScreen
 import com.inkapplications.ack.android.capture.messages.index.MessagesScreenController
 import com.inkapplications.ack.android.capture.messages.index.MessageIndexScreenState

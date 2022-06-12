@@ -1,4 +1,4 @@
-package com.inkapplications.ack.android.map
+package com.inkapplications.ack.android.map.mapbox
 
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleObserver
@@ -8,7 +8,7 @@ import com.mapbox.mapboxsdk.maps.MapView
 /**
  * Implementing the lifecycle observer MapBox was too lazy to.
  */
-class MapLifecycleObserver(
+class MapboxLifecycleSubscriber(
     private val view: MapView
 ): LifecycleObserver {
     @OnLifecycleEvent(Lifecycle.Event.ON_START)
@@ -40,4 +40,4 @@ class MapLifecycleObserver(
 /**
  * Get the lifecycle observer for a map.
  */
-val MapView.lifecycleObserver get() = MapLifecycleObserver(this)
+val MapView.lifecycleObserver get() = MapboxLifecycleSubscriber(this)

@@ -15,7 +15,6 @@ import com.inkapplications.ack.android.log.LogItemViewModel
 import com.inkapplications.ack.android.log.index.LogIndexController
 import com.inkapplications.ack.android.log.index.LogIndexState
 import com.inkapplications.ack.android.log.details.startLogInspectActivity
-import com.inkapplications.ack.android.capture.map.*
 import com.inkapplications.ack.android.capture.messages.index.MessagesScreenController
 import com.inkapplications.ack.android.capture.messages.index.MessageIndexScreenState
 import com.inkapplications.ack.android.capture.messages.conversation.startConversationActivity
@@ -23,9 +22,8 @@ import com.inkapplications.ack.android.capture.messages.create.CreateConversatio
 import com.inkapplications.ack.android.capture.service.AudioCaptureService
 import com.inkapplications.ack.android.capture.service.InternetCaptureService
 import com.inkapplications.ack.android.component
-import com.inkapplications.ack.android.map.Map
-import com.inkapplications.ack.android.map.getMap
-import com.inkapplications.ack.android.map.lifecycleObserver
+import com.inkapplications.ack.android.map.*
+import com.inkapplications.ack.android.map.mapbox.lifecycleObserver
 import com.inkapplications.ack.android.settings.SettingsActivity
 import com.inkapplications.ack.android.station.startStationActivity
 import com.inkapplications.ack.android.trackNavigation
@@ -41,9 +39,9 @@ import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.MutableStateFlow
 
 class CaptureActivity: ExtendedActivity(), CaptureNavController, LogIndexController {
-    private lateinit var mapEventsFactory: MapEventsFactory
+    private lateinit var mapEvents: MapEvents
     private var mapView: MapView? = null
-    private var map: Map? = null
+    private var map: MapController? = null
     private var mapScope: CoroutineScope = MainScope()
     private val mapViewModel = MutableStateFlow(MapViewModel())
     private lateinit var captureEvents: CaptureEvents
@@ -51,7 +49,7 @@ class CaptureActivity: ExtendedActivity(), CaptureNavController, LogIndexControl
 
     override fun onCreate() {
         super.onCreate()
-        mapEventsFactory = component.mapManager()
+        mapEvents = component.mapEvents()
         val logData = component.logData()
         val insightsEvents = component.insightEvents()
 
@@ -89,29 +87,38 @@ class CaptureActivity: ExtendedActivity(), CaptureNavController, LogIndexControl
         return if(mapView != null) mapView!! else  MapView(context).also { mapView ->
             this.mapView = mapView
 
-            mapView.getMap(this, ::onMapLoaded)
+            mapView.getMap(this, ::onMapLoaded, ::onMapItemSelected)
             lifecycle.addObserver(mapView.lifecycleObserver)
 
             return mapView
         }
     }
 
-    private fun onMapLoaded(map: Map) {
+    private fun onMapItemSelected(id: Long?) {
+        mapEvents.selectedItemId.value = id
+    }
+
+    private fun onMapLoaded(map: MapController) {
         this.map = map
         mapScope.cancel()
         mapScope = MainScope()
-        val manager = mapEventsFactory.createEventsAccess(map)
 
         map.initDefaults()
 
         when(ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)) {
-            PackageManager.PERMISSION_GRANTED -> map.zoomTo(manager.initialState)
+            PackageManager.PERMISSION_GRANTED -> map.zoomTo(mapEvents.initialState)
         }
 
-        manager.viewState.collectOn(mapScope) { state ->
+        mapEvents.viewState.collectOn(mapScope) { state ->
             Kimchi.trackEvent("map_markers", listOf(intProperty("quantity", state.markers.size)))
             mapViewModel.emit(state)
             map.showMarkers(state.markers)
+
+            if (state.trackPosition) {
+                map.enablePositionTracking()
+            } else {
+                map.disablePositionTracking()
+            }
         }
     }
 

@@ -1,7 +1,6 @@
-package com.inkapplications.ack.android.capture.map
+package com.inkapplications.ack.android.map
 
 import com.inkapplications.ack.android.log.LogItemViewModel
-import com.inkapplications.ack.android.map.MarkerViewModel
 
 /**
  * Model the state of the entire map page.
