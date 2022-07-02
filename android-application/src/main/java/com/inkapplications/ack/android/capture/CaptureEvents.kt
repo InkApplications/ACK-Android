@@ -1,6 +1,7 @@
 package com.inkapplications.ack.android.capture
 
 import android.Manifest
+import com.inkapplications.ack.android.R
 import com.inkapplications.android.extensions.location.LocationAccess
 import com.inkapplications.ack.android.connection.ConnectionSettings
 import com.inkapplications.ack.android.settings.SettingsReadAccess
@@ -11,6 +12,7 @@ import com.inkapplications.ack.android.transmit.TransmitSettings
 import com.inkapplications.ack.data.drivers.PacketDriver
 import com.inkapplications.ack.data.drivers.PacketDrivers
 import com.inkapplications.ack.structures.*
+import com.inkapplications.android.extensions.StringResources
 import com.inkapplications.android.extensions.control.ControlState
 import com.inkapplications.coroutines.combinePair
 import com.inkapplications.coroutines.combineTriple
@@ -32,6 +34,7 @@ class CaptureEvents @Inject constructor(
     private val connectionSettings: ConnectionSettings,
     private val transmitSettings: TransmitSettings,
     private val locationAccess: LocationAccess,
+    private val stringResources: StringResources,
     private val logger: KimchiLogger,
 ) {
     private val audioListenState = MutableStateFlow(false)
@@ -89,6 +92,9 @@ class CaptureEvents @Inject constructor(
                 internetCaptureState = internet,
             )
         }
+        .combine(settings.observeData(connectionSettings.address)) { viewModel, callsign ->
+            viewModel.copy(callsign = callsign?.toString())
+        }
         .combine(audioTransmitControlState) { viewModel, transmit ->
             viewModel.copy(audioTransmitState = transmit)
         }
@@ -96,7 +102,12 @@ class CaptureEvents @Inject constructor(
             viewModel.copy(internetTransmitState = transmit)
         }
         .combine(drivers.afskDriver.volume) { viewModel, volume ->
-            viewModel.copy(audioLevel = "${volume?.value(WholePercentage)?.roundToInt()}%")
+            viewModel.copy(audioLevel = volume
+                ?.value(WholePercentage)
+                ?.roundToInt()
+                ?.let { stringResources.getString(R.string.capture_volume_format, it) }
+                ?: stringResources.getString(R.string.capture_volume_off)
+            )
         }
 
     suspend fun connectAudio() {

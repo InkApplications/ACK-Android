@@ -17,6 +17,7 @@ import com.inkapplications.ack.android.BuildConfig
 import com.inkapplications.ack.android.R
 import com.inkapplications.ack.android.input.IntPrompt
 import com.inkapplications.ack.android.input.StringPrompt
+import com.inkapplications.ack.android.ui.CallsignChip
 import com.inkapplications.ack.android.ui.theme.AckScreen
 import com.inkapplications.ack.android.ui.theme.AckTheme
 import com.inkapplications.ack.android.ui.NavigationRow
@@ -45,19 +46,7 @@ fun SettingsScreen(
             ) {
                 val callsign = viewModel.callsignText
                 if (callsign != null) {
-                    Surface(
-                        shape = RoundedCornerShape(24.dp),
-                        elevation = 1.dp,
-                        onClick = controller::onCallsignEditClick,
-                    ) {
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically,
-                            modifier = Modifier.padding(AckTheme.dimensions.item),
-                        ) {
-                            if (viewModel.verified) Icon(Icons.Default.Verified, stringResource(R.string.settings_callsign_verified_description), modifier = Modifier.padding(end = AckTheme.dimensions.icon))
-                            Text(callsign, style = AckTheme.typography.h2)
-                        }
-                    }
+                    CallsignChip(callsign, viewModel.verified)
                 } else {
                     Button(onClick = controller::onCallsignEditClick) {
                         Text("Add Callsign")

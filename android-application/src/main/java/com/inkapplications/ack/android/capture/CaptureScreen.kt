@@ -2,7 +2,7 @@ package com.inkapplications.ack.android.capture
 
 import android.content.Context
 import android.view.View
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
@@ -14,7 +14,6 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
@@ -36,6 +35,7 @@ import com.inkapplications.ack.android.capture.messages.MessageIndexScreen
 import com.inkapplications.ack.android.capture.messages.index.MessagesScreenController
 import com.inkapplications.ack.android.capture.messages.index.MessageIndexScreenState
 import com.inkapplications.ack.android.trackNavigation
+import com.inkapplications.ack.android.ui.StateLabelledIconButton
 import com.inkapplications.ack.android.ui.theme.AckScreen
 import com.inkapplications.ack.android.ui.theme.AckTheme
 import com.inkapplications.android.extensions.control.whenDisabled
@@ -195,119 +195,141 @@ private fun SettingsSheetWrapper(
     }
 }
 
-@OptIn(ExperimentalMaterialApi::class)
+@OptIn(ExperimentalMaterialApi::class, ExperimentalFoundationApi::class)
 @Composable
 private fun CaptureSettingsSheet(
     captureScreenState: CaptureScreenViewModel,
     captureController: CaptureNavController,
     settingsSheetState: BottomSheetScaffoldState,
-) = Column {
+) = Column(horizontalAlignment = Alignment.CenterHorizontally) {
     val scope = rememberCoroutineScope()
     Row(
         horizontalArrangement = Arrangement.Center,
-        modifier = Modifier.padding(AckTheme.dimensions.content).fillMaxWidth()
+        modifier = Modifier.fillMaxWidth(),
     ) {
         IconButton(
             onClick = { scope.launch { settingsSheetState.bottomSheetState.collapse() } },
         ) {
-            Icon(Icons.Default.ExpandMore, stringResource(R.string.capture_controls_collapse_action), modifier = Modifier.padding(AckTheme.dimensions.clickSafety))
+            Icon(Icons.Default.DragHandle, stringResource(R.string.capture_controls_collapse_action))
         }
     }
-    captureScreenState.audioCaptureState.whenOff {
-        CaptureSettingRow(
-            icon = Icons.Outlined.MicOff,
-            iconColor = AckTheme.colors.foregroundInactive,
-            name = stringResource(R.string.capture_controls_audio_capture_disabled_name),
-            onClick = captureController::onAudioCaptureEnableClick
-        )
-    }
-    captureScreenState.audioCaptureState.whenOn {
-        CaptureSettingRow(
-            icon = Icons.Filled.Mic,
-            iconColor = AckTheme.colors.accent,
-            name = stringResource(R.string.capture_controls_audio_capture_enabled_name, captureScreenState.audioLevel),
-            onClick = captureController::onAudioCaptureDisableClick
-        )
-    }
-
-    captureScreenState.audioTransmitState.whenDisabled {
-        CaptureSettingRow(
-            icon = Icons.Outlined.VolumeOff,
-            iconColor = AckTheme.colors.foregroundInactive,
-            name = stringResource(R.string.capture_controls_audio_transmit_disabled_name),
-            modifier = Modifier.alpha(.6f),
-        )
-    }
-    captureScreenState.audioTransmitState.whenOff {
-        CaptureSettingRow(
-            icon = Icons.Outlined.VolumeOff,
-            iconColor = AckTheme.colors.foregroundInactive,
-            name = stringResource(R.string.capture_controls_audio_transmit_disabled_name),
-            onClick = captureController::onAudioTransmitEnableClick
-        )
-    }
-    captureScreenState.audioTransmitState.whenOn {
-        CaptureSettingRow(
-            icon = Icons.Filled.VolumeUp,
-            iconColor = AckTheme.colors.accent,
-            name = stringResource(R.string.capture_controls_audio_transmit_enabled_name),
-            onClick = captureController::onAudioTransmitDisableClick
-        )
-    }
-
-    captureScreenState.internetCaptureState.whenOff {
-        CaptureSettingRow(
-            icon = Icons.Outlined.CloudDownload,
-            iconColor = AckTheme.colors.foregroundInactive,
-            name = stringResource(R.string.capture_controls_internet_capture_disabled_name),
-            onClick = captureController::onInternetCaptureEnableClick
-        )
-    }
-    captureScreenState.internetCaptureState.whenOn {
-        CaptureSettingRow(
-            icon = Icons.Filled.CloudDownload,
-            iconColor = AckTheme.colors.accent,
-            name = stringResource(R.string.capture_controls_internet_capture_enabled_name),
-            onClick = captureController::onInternetCaptureDisableClick
-        )
-    }
-
-    captureScreenState.internetTransmitState.whenDisabled {
-        CaptureSettingRow(
-            icon = Icons.Outlined.CloudUpload,
-            iconColor = AckTheme.colors.foregroundInactive,
-            name = stringResource(R.string.capture_controls_internet_transmit_disabled_name),
-            modifier = Modifier.alpha(.6f),
-        )
-    }
-    captureScreenState.internetTransmitState.whenOff {
-        CaptureSettingRow(
-            icon = Icons.Outlined.CloudUpload,
-            iconColor = AckTheme.colors.foregroundInactive,
-            name = stringResource(R.string.capture_controls_internet_transmit_disabled_name),
-            onClick = captureController::onInternetTransmitEnableClick
-        )
-    }
-    captureScreenState.internetTransmitState.whenOn {
-        CaptureSettingRow(
-            icon = Icons.Filled.CloudUpload,
-            iconColor = AckTheme.colors.accent,
-            name = stringResource(R.string.capture_controls_internet_transmit_enabled_name),
-            onClick = captureController::onInternetTransmitDisableClick
-        )
-    }
-
-    CaptureSettingRow(
-        icon = Icons.Default.Settings,
-        iconColor = AckTheme.colors.foreground,
-        name = stringResource(R.string.capture_controls_settings_name),
-        onClick = {
-            scope.launch {
-                settingsSheetState.bottomSheetState.collapse()
+    Row(
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = Modifier.fillMaxWidth().padding(horizontal = AckTheme.dimensions.gutter),
+    ) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            Icon(
+                imageVector = Icons.Default.SettingsInputAntenna,
+                contentDescription = null,
+                tint = AckTheme.colors.foreground,
+                modifier = Modifier.padding(horizontal = AckTheme.dimensions.icon)
+            )
+            Text(
+                text = captureScreenState.callsign ?: "Heck",
+                style = AckTheme.typography.h1,
+            )
+        }
+        IconButton(
+            onClick = {
+                scope.launch {
+                    settingsSheetState.bottomSheetState.collapse()
+                }
+                captureController.onSettingsClick()
             }
-            captureController.onSettingsClick()
+        ) {
+            Icon(
+                imageVector = Icons.Default.Settings,
+                contentDescription = stringResource(R.string.capture_controls_settings_name),
+                tint = AckTheme.colors.foreground,
+            )
         }
-    )
+    }
+    Row {
+        captureScreenState.audioCaptureState.whenOff {
+            StateLabelledIconButton(
+                state = captureScreenState.audioCaptureState,
+                title = stringResource(R.string.capture_controls_audio_capture_disabled_name),
+                icon = Icons.Outlined.MicOff,
+                onClick = captureController::onAudioCaptureEnableClick,
+            )
+        }
+        captureScreenState.audioCaptureState.whenOn {
+            StateLabelledIconButton(
+                state = captureScreenState.audioCaptureState,
+                title = stringResource(R.string.capture_controls_audio_capture_enabled_name, captureScreenState.audioLevel),
+                icon = Icons.Filled.Mic,
+                onClick = captureController::onAudioCaptureDisableClick,
+            )
+        }
+
+        captureScreenState.audioTransmitState.whenDisabled {
+            StateLabelledIconButton(
+                state = captureScreenState.audioTransmitState,
+                icon = Icons.Outlined.VolumeOff,
+                title = stringResource(R.string.capture_controls_audio_transmit_disabled_name),
+            )
+        }
+        captureScreenState.audioTransmitState.whenOff {
+            StateLabelledIconButton(
+                state = captureScreenState.audioTransmitState,
+                icon = Icons.Outlined.VolumeOff,
+                title = stringResource(R.string.capture_controls_audio_transmit_disabled_name),
+                onClick = captureController::onAudioTransmitEnableClick,
+            )
+        }
+        captureScreenState.audioTransmitState.whenOn {
+            StateLabelledIconButton(
+                state = captureScreenState.audioTransmitState,
+                icon = Icons.Filled.VolumeUp,
+                title = stringResource(R.string.capture_controls_audio_transmit_enabled_name),
+                onClick = captureController::onAudioTransmitDisableClick,
+            )
+        }
+
+        captureScreenState.internetCaptureState.whenOff {
+            StateLabelledIconButton(
+                state = captureScreenState.internetCaptureState,
+                icon = Icons.Outlined.CloudDownload,
+                title = stringResource(R.string.capture_controls_internet_capture_disabled_name),
+                onClick = captureController::onInternetCaptureEnableClick,
+            )
+        }
+        captureScreenState.internetCaptureState.whenOn {
+            StateLabelledIconButton(
+                state = captureScreenState.internetCaptureState,
+                icon = Icons.Filled.CloudDownload,
+                title = stringResource(R.string.capture_controls_internet_capture_enabled_name),
+                onClick = captureController::onInternetCaptureDisableClick,
+            )
+        }
+
+        captureScreenState.internetTransmitState.whenDisabled {
+            StateLabelledIconButton(
+                state = captureScreenState.internetTransmitState,
+                icon = Icons.Outlined.CloudUpload,
+                title = stringResource(R.string.capture_controls_internet_transmit_disabled_name),
+            )
+        }
+        captureScreenState.internetTransmitState.whenOff {
+            StateLabelledIconButton(
+                state = captureScreenState.internetTransmitState,
+                icon = Icons.Outlined.CloudUpload,
+                title = stringResource(R.string.capture_controls_internet_transmit_disabled_name),
+                onClick = captureController::onInternetTransmitEnableClick,
+            )
+        }
+        captureScreenState.internetTransmitState.whenOn {
+            StateLabelledIconButton(
+                state = captureScreenState.internetTransmitState,
+                icon = Icons.Filled.CloudUpload,
+                title = stringResource(R.string.capture_controls_internet_transmit_enabled_name),
+                onClick = captureController::onInternetTransmitDisableClick,
+            )
+        }
+    }
 }
 
 @Composable

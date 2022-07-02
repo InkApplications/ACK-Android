@@ -14,6 +14,7 @@ data class ColorVariant(
     val light: Boolean,
 ) {
     val foregroundInactive = foreground.copy(alpha = .5f)
+    val surfaceInactive = surface.copy(alpha = .5f)
 
     val materialColors = Colors(
         primary = accent,

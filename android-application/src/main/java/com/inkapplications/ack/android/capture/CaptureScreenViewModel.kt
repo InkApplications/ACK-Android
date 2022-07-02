@@ -8,4 +8,5 @@ data class CaptureScreenViewModel(
     val internetCaptureState: ControlState = ControlState.Hidden,
     val internetTransmitState: ControlState = ControlState.Hidden,
     val audioTransmitState: ControlState = ControlState.Hidden,
+    val callsign: String? = null,
 )
