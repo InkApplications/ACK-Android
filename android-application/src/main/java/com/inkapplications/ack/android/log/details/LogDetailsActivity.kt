@@ -8,14 +8,13 @@ import androidx.compose.runtime.collectAsState
 import com.inkapplications.ack.android.log.LogEvents
 import com.inkapplications.ack.android.component
 import com.inkapplications.ack.android.map.MapController
-import com.inkapplications.ack.android.map.getMap
-import com.inkapplications.ack.android.map.mapbox.lifecycleObserver
+import com.inkapplications.ack.android.map.mapbox.createController
 import com.inkapplications.ack.android.trackNavigation
 import com.inkapplications.ack.android.ui.theme.AckScreen
 import com.inkapplications.android.extensions.ExtendedActivity
 import com.inkapplications.android.startActivity
 import com.inkapplications.coroutines.collectOn
-import com.mapbox.mapboxsdk.maps.MapView
+import com.mapbox.maps.MapView
 import kimchi.Kimchi
 
 private const val EXTRA_ID = "aprs.station.extra.id"
@@ -48,14 +47,13 @@ class LogDetailsActivity: ExtendedActivity(), LogDetailsController {
     private fun createMapView(context: Context) = mapView ?: MapView(context).also { mapView ->
         this.mapView = mapView
 
-        mapView.getMap(this, ::onMapLoaded, ::onMapItemClicked)
-        lifecycle.addObserver(mapView.lifecycleObserver)
+        mapView.createController(this, ::onMapLoaded, ::onMapItemClicked)
     }
 
     private fun onMapLoaded(map: MapController) {
         logEvents.stateEvents(id).collectOn(foregroundScope) { viewModel ->
             if (viewModel is LogDetailsState.LogDetailsViewModel) {
-                map.zoomTo(viewModel.mapCameraPosition)
+                map.setCamera(viewModel.mapCameraPosition)
                 map.showMarkers(viewModel.markers)
             }
         }

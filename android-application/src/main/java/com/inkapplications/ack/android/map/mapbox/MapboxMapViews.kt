@@ -1,39 +1,29 @@
-package com.inkapplications.ack.android.map
+package com.inkapplications.ack.android.map.mapbox
 
 import android.app.Activity
 import android.content.res.Configuration
-import com.inkapplications.ack.android.map.mapbox.MapboxMapController
-import com.mapbox.mapboxsdk.maps.MapView
-import com.mapbox.mapboxsdk.maps.MapboxMap
-import com.mapbox.mapboxsdk.maps.Style
+import com.inkapplications.ack.android.map.MapController
+import com.mapbox.maps.MapView
+import com.mapbox.maps.Style
 
 /**
- * Set the mapbox theme based on Android's light/dark mode.
+ * Create a Map controller by initializing a Mapbox Map.
  */
-inline fun MapView.init(activity: Activity, crossinline onInit: (MapboxMap, Style) -> Unit = { _, _ -> }) {
-    getMapAsync { map ->
-        val theme = if (activity.resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK == Configuration.UI_MODE_NIGHT_YES) {
-            Style.DARK
-        } else {
-            Style.LIGHT
-        }
-
-        map.setStyle(theme) { style ->
-            onInit(map, style)
-        }
-    }
-}
-
-/**
- * Get a Map object by initializing a Mapbox Map.
- */
-inline fun MapView.getMap(
+inline fun MapView.createController(
     activity: Activity,
     crossinline onInit: (MapController) -> Unit,
     noinline onSelect: (Long?) -> Unit,
 ) {
-    init(activity) { mapbox, style ->
-        val map = MapboxMapController(activity, this, mapbox, style, activity.resources, onSelect = onSelect)
-        onInit(map)
+    val map = getMapboxMap()
+    val styleUri = if (activity.resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK == Configuration.UI_MODE_NIGHT_YES) {
+        Style.DARK
+    } else {
+        Style.LIGHT
+    }
+
+    map.loadStyleUri(styleUri) { style ->
+        val controller = MapboxMapController(this, map, style, activity.resources, onSelect = onSelect)
+        controller.initDefaults()
+        onInit(controller)
     }
 }

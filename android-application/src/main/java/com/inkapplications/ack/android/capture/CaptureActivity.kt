@@ -4,12 +4,11 @@ import android.Manifest
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.os.Bundle
-import android.os.PersistableBundle
 import android.view.View
 import androidx.activity.compose.setContent
 import androidx.compose.runtime.collectAsState
 import androidx.core.content.ContextCompat
+import com.inkapplications.ack.android.R
 import com.inkapplications.ack.android.capture.insights.InsightsViewState
 import com.inkapplications.ack.android.log.LogItemViewModel
 import com.inkapplications.ack.android.log.index.LogIndexController
@@ -23,7 +22,7 @@ import com.inkapplications.ack.android.capture.service.AudioCaptureService
 import com.inkapplications.ack.android.capture.service.InternetCaptureService
 import com.inkapplications.ack.android.component
 import com.inkapplications.ack.android.map.*
-import com.inkapplications.ack.android.map.mapbox.lifecycleObserver
+import com.inkapplications.ack.android.map.mapbox.createController
 import com.inkapplications.ack.android.settings.SettingsActivity
 import com.inkapplications.ack.android.station.startStationActivity
 import com.inkapplications.ack.android.trackNavigation
@@ -32,7 +31,7 @@ import com.inkapplications.android.PermissionGate
 import com.inkapplications.android.extensions.ExtendedActivity
 import com.inkapplications.android.startActivity
 import com.inkapplications.coroutines.collectOn
-import com.mapbox.mapboxsdk.maps.MapView
+import com.mapbox.maps.MapView
 import kimchi.Kimchi
 import kimchi.analytics.intProperty
 import kotlinx.coroutines.*
@@ -87,8 +86,7 @@ class CaptureActivity: ExtendedActivity(), CaptureNavController, LogIndexControl
         return if(mapView != null) mapView!! else  MapView(context).also { mapView ->
             this.mapView = mapView
 
-            mapView.getMap(this, ::onMapLoaded, ::onMapItemSelected)
-            lifecycle.addObserver(mapView.lifecycleObserver)
+            mapView.createController(this, ::onMapLoaded, ::onMapItemSelected)
 
             return mapView
         }
@@ -103,7 +101,7 @@ class CaptureActivity: ExtendedActivity(), CaptureNavController, LogIndexControl
         mapScope.cancel()
         mapScope = MainScope()
 
-        map.initDefaults()
+        map.setBottomPadding(resources.getDimension(R.dimen.mapbox_logo_padding_bottom))
 
         when(ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)) {
             PackageManager.PERMISSION_GRANTED -> map.zoomTo(mapEvents.initialState)
@@ -134,14 +132,14 @@ class CaptureActivity: ExtendedActivity(), CaptureNavController, LogIndexControl
         Kimchi.trackEvent("location_track_enable")
         foregroundScope.launch {
             permissionGate.withPermissions(Manifest.permission.ACCESS_FINE_LOCATION) {
-                map?.enablePositionTracking()
+                mapEvents.trackingEnabled.value = true
             }
         }
     }
 
     override fun onLocationDisableClick() {
         Kimchi.trackEvent("location_track_disable")
-        map?.disablePositionTracking()
+        mapEvents.trackingEnabled.value = false
     }
 
     override fun onAudioCaptureEnableClick() {
@@ -206,15 +204,5 @@ class CaptureActivity: ExtendedActivity(), CaptureNavController, LogIndexControl
     override fun onSettingsClick() {
         Kimchi.trackNavigation("settings")
         startActivity(SettingsActivity::class)
-    }
-
-    override fun onSaveInstanceState(outState: Bundle, outPersistentState: PersistableBundle) {
-        mapView?.onSaveInstanceState(outState)
-        super.onSaveInstanceState(outState, outPersistentState)
-    }
-
-    override fun onLowMemory() {
-        mapView?.onLowMemory()
-        super.onLowMemory()
     }
 }

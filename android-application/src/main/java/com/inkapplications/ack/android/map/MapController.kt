@@ -13,6 +13,14 @@ interface MapController {
     fun initDefaults()
 
     /**
+     * Add padding to the bottom of the map.
+     *
+     * This is used when there is an element like a bottom bar obstructing
+     * the full map, and ensures that elements are still displayed properly.
+     */
+    fun setBottomPadding(padding: Float)
+
+    /**
      * Display a set of markers on the map.
      */
     fun showMarkers(markers: Collection<MarkerViewModel>)

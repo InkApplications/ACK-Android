@@ -9,15 +9,14 @@ import com.inkapplications.ack.android.component
 import com.inkapplications.ack.android.log.LogItemViewModel
 import com.inkapplications.ack.android.log.details.startLogInspectActivity
 import com.inkapplications.ack.android.map.MapController
-import com.inkapplications.ack.android.map.getMap
-import com.inkapplications.ack.android.map.mapbox.lifecycleObserver
+import com.inkapplications.ack.android.map.mapbox.createController
 import com.inkapplications.ack.android.trackNavigation
 import com.inkapplications.ack.android.ui.theme.AckScreen
 import com.inkapplications.ack.structures.station.Callsign
 import com.inkapplications.android.extensions.ExtendedActivity
 import com.inkapplications.android.startActivity
 import com.inkapplications.coroutines.collectOn
-import com.mapbox.mapboxsdk.maps.MapView
+import com.mapbox.maps.MapView
 import kimchi.Kimchi
 
 private const val EXTRA_CALLSIGN = "aprs.station.extra.callsign"
@@ -47,14 +46,13 @@ class StationActivity: ExtendedActivity(), StationScreenController {
     private fun createMapView(context: Context) = mapView ?: MapView(context).also { mapView ->
         this.mapView = mapView
 
-        mapView.getMap(this, ::onMapLoaded, ::onMapItemClicked)
-        lifecycle.addObserver(mapView.lifecycleObserver)
+        mapView.createController(this, ::onMapLoaded, ::onMapItemClicked)
     }
 
     private fun onMapLoaded(map: MapController) {
         stationEvents.stationState(callsign).collectOn(foregroundScope) { viewModel ->
             if (viewModel is StationViewState.Loaded) {
-                map.zoomTo(viewModel.insight.mapCameraPosition)
+                map.setCamera(viewModel.insight.mapCameraPosition)
                 map.showMarkers(viewModel.insight.markers)
             }
         }

@@ -103,7 +103,6 @@ dependencies {
     implementation(libraries.material.core)
 
     implementation(libraries.mapbox.android.sdk)
-    implementation(libraries.mapbox.android.plugin.annotation)
 
     implementation(libraries.groupie.core)
     implementation(libraries.groupie.extensions)

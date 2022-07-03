@@ -6,7 +6,7 @@ import android.app.Service
 import androidx.fragment.app.Fragment
 import com.inkapplications.android.extensions.ApplicationModule
 import com.inkapplications.android.extensions.LifecycleLogger
-import com.mapbox.mapboxsdk.Mapbox
+import com.mapbox.maps.ResourceOptionsManager
 import kimchi.bridge.firebase.analytics.FirebaseAnalyticsAdapter
 import kimchi.Kimchi
 import kimchi.KimchiLoggerAnalytics
@@ -38,7 +38,7 @@ class AprsApplication: Application() {
             Kimchi.trace(it)
         })
 
-        Mapbox.getInstance(this, BuildConfig.MAPBOX_ACCESS_TOKEN)
+        ResourceOptionsManager.getDefault(this, BuildConfig.MAPBOX_ACCESS_TOKEN)
         component.captureServiceNotifications().onCreate(this)
     }
 }
