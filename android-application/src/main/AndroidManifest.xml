@@ -8,7 +8,7 @@
         android:icon="@mipmap/ic_launcher"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:label="@string/app_name"
-        android:theme="@style/AprsTheme.Compat.DayNight"
+        android:theme="@style/AckTheme.Compat.DayNight"
         android:name="com.inkapplications.ack.android.AprsApplication">
         <activity
             android:name="com.inkapplications.ack.android.startup.StartupActivity"
@@ -24,10 +24,19 @@
         <activity android:name="com.inkapplications.ack.android.station.StationActivity" />
         <activity android:name="com.inkapplications.ack.android.log.details.LogDetailsActivity" />
         <activity android:name="com.inkapplications.ack.android.settings.SettingsActivity" />
+        <activity android:name="com.inkapplications.ack.android.settings.agreement.UserAgreementActivity" />
         <activity android:name="com.inkapplications.ack.android.capture.messages.create.CreateConversationActivity" />
         <activity android:name="com.inkapplications.ack.android.onboard.OnboardActivity" android:windowSoftInputMode="adjustResize" />
         <activity android:name="com.inkapplications.ack.android.settings.license.LicenseEditActivity" android:windowSoftInputMode="adjustResize" />
         <service android:name=".capture.service.AudioCaptureService" android:foregroundServiceType="microphone|location" />
         <service android:name=".capture.service.InternetCaptureService" android:foregroundServiceType="location" />
+        <activity
+            android:name="com.google.android.gms.oss.licenses.OssLicensesMenuActivity"
+            android:theme="@style/AckActionBarTheme.Compat.DayNight"
+            />
+        <activity
+                android:name="com.google.android.gms.oss.licenses.OssLicensesActivity"
+                android:theme="@style/AckActionBarTheme.Compat.DayNight" />
+
     </application>
 </manifest>

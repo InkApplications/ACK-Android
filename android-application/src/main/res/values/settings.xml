@@ -4,4 +4,7 @@
     <string name="settings_modify_cancel">Cancel</string>
     <string name="settings_modify_apply">Update</string>
     <string name="settings_callsign_verified_description">Authenticated</string>
+    <string name="settings_author_line">Made with ❤️ by Ink Applications</string>
+    <string name="settings_ack_license">User Agreement &amp; License</string>
+    <string name="settings_licenses">OSS Licenses</string>
 </resources>

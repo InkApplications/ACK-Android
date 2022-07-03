@@ -39,6 +39,9 @@ internal abstract class StaticApplicationModule {
     abstract fun stringResources(androidStringResources: AndroidStringResources): StringResources
 
     @Binds
+    abstract fun integerResources(android: AndroidIntegerResources): IntegerResources
+
+    @Binds
     abstract fun locationAccess(locationAccess: AndroidLocationAccess): LocationAccess
 
     @Binds

@@ -4,7 +4,7 @@ activity = "1.4.0"
 compose-compiler = "1.1.1"
 
 [libraries.android-gradle]
-version = "4.2.0"
+version = "7.2.0"
 module = "com.android.tools.build:gradle"
 
 [libraries.androidx-core]

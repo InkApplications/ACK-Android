@@ -15,7 +15,7 @@ fun OnboardScreen(
     onLicenseContinueClick: (LicensePromptFieldValues) -> Unit,
 ) = AckScreen {
     when {
-        state.value.agreementRequired -> UsageAgreement(userAgreementController)
+        state.value.agreementRequired -> UsageAgreementPrompt(userAgreementController)
         state.value.licensePromptRequired -> LicensePromptScreen(
             initialValues = initialLicensePromptFieldValues,
             validator = licenseValidator,

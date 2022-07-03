@@ -3,6 +3,7 @@ plugins {
     kotlin("android")
     kotlin("kapt")
     id("com.google.gms.google-services") apply false
+    id("com.google.android.gms.oss-licenses-plugin")
     id("com.google.firebase.crashlytics")
 }
 
@@ -109,6 +110,8 @@ dependencies {
 
     implementation(libraries.dagger.core)
     kapt(libraries.dagger.compiler)
+
+    implementation(libraries.google.license.core)
 
     implementation(libraries.kimchi.core)
     implementation(libraries.kimchi.firebase.analytics)

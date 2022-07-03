@@ -15,7 +15,7 @@ android {
                 arg("room.schemaLocation", "$projectDir/src/main/schema")
             }
         }
-        setTestInstrumentationRunner("androidx.test.runner.AndroidJUnitRunner")
+        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
     sourceSets {
         // Adds exported schema location as test app assets.

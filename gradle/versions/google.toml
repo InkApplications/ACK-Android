@@ -16,3 +16,11 @@ module = "com.google.dagger:dagger-compiler"
 [libraries.google-services]
 version = "4.3.3"
 module = "com.google.gms:google-services"
+
+[libraries.google-license-plugin]
+version = "0.10.5"
+module = "com.google.android.gms:oss-licenses-plugin"
+
+[libraries.google-license-core]
+version = "17.0.0"
+module = "com.google.android.gms:play-services-oss-licenses"

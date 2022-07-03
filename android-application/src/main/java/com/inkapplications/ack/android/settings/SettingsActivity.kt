@@ -2,7 +2,9 @@ package com.inkapplications.ack.android.settings
 
 import androidx.activity.compose.setContent
 import androidx.compose.runtime.collectAsState
+import com.google.android.gms.oss.licenses.OssLicensesMenuActivity
 import com.inkapplications.ack.android.component
+import com.inkapplications.ack.android.settings.agreement.UserAgreementActivity
 import com.inkapplications.ack.android.settings.license.LicenseEditActivity
 import com.inkapplications.android.extensions.ExtendedActivity
 import com.inkapplications.android.startActivity
@@ -59,5 +61,14 @@ class SettingsActivity: ExtendedActivity(), SettingsController {
             stringProperty("value", newState.toString())
         ))
         settingsAccess.updateBoolean(state.setting.key, newState)
+    }
+
+    override fun onAckLicenseClick() {
+        startActivity(UserAgreementActivity::class)
+    }
+
+    override fun onLicensesClick() {
+        Kimchi.trackEvent("settings_show_licenses")
+        startActivity(OssLicensesMenuActivity::class)
     }
 }

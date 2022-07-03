@@ -7,4 +7,6 @@ interface SettingsController {
     fun onVersionLongPress()
     fun onBackPressed()
     fun onCallsignEditClick()
+    fun onAckLicenseClick()
+    fun onLicensesClick()
 }

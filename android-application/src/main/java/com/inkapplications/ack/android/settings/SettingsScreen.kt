@@ -11,6 +11,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.inkapplications.android.extensions.compose.ui.longClickable
 import com.inkapplications.ack.android.BuildConfig
@@ -97,14 +98,29 @@ fun SettingsScreen(
                     }
                 }
             }
-            Spacer(Modifier.weight(1f))
+            Spacer(Modifier.weight(1f).defaultMinSize(minHeight = AckTheme.dimensions.content))
             Text(
                 text = stringResource(R.string.application_version, BuildConfig.VERSION_NAME, BuildConfig.VERSION_CODE.toString()),
+                style = AckTheme.typography.caption,
+                textAlign = TextAlign.Center,
                 modifier = Modifier
                     .longClickable(controller::onVersionLongPress)
                     .padding(AckTheme.dimensions.clickSafety)
                     .align(Alignment.CenterHorizontally)
             )
+            Text(
+                text = stringResource(R.string.settings_author_line),
+                style = AckTheme.typography.caption,
+                textAlign = TextAlign.Center,
+                modifier = Modifier.fillMaxWidth()
+            )
+            Spacer(Modifier.height(AckTheme.dimensions.content))
+            TextButton(controller::onAckLicenseClick, modifier = Modifier.align(Alignment.CenterHorizontally)) {
+                Text(stringResource(R.string.settings_ack_license))
+            }
+            TextButton(controller::onLicensesClick, modifier = Modifier.align(Alignment.CenterHorizontally)) {
+                Text(stringResource(R.string.settings_licenses))
+            }
         }
     }
 }
