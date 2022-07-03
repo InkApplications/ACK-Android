@@ -46,7 +46,7 @@ fun SettingsScreen(
             ) {
                 val callsign = viewModel.callsignText
                 if (callsign != null) {
-                    CallsignChip(callsign, viewModel.verified)
+                    CallsignChip(callsign, viewModel.verified, controller::onCallsignEditClick)
                 } else {
                     Button(onClick = controller::onCallsignEditClick) {
                         Text("Add Callsign")
