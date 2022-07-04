@@ -49,7 +49,7 @@ fun MessageIndexScreen(
 @Composable
 private fun EmptyPlaceholder() = Box(
     contentAlignment = Alignment.Center,
-    modifier = Modifier.fillMaxSize()
+    modifier = Modifier.padding(bottom = AckTheme.dimensions.navigationProtection).fillMaxSize()
 ) {
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
         Icon(
