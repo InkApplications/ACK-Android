@@ -5,4 +5,5 @@
     <string name="insights_weather_report_info_template">Reported by %s at %s</string>
     <string name="insights_packets_count">Packets Received: %d</string>
     <string name="insights_stations_count">Stations: %d</string>
+    <string name="insights_empty">No packets collected yet.</string>
 </resources>

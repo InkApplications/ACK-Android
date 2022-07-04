@@ -2,6 +2,7 @@ package com.inkapplications.ack.android.capture.insights
 
 sealed interface InsightsViewState {
     object Initial: InsightsViewState
+    object Empty: InsightsViewState
     data class InsightsViewModel(
         val temperature: String,
         val weatherReporter: String,

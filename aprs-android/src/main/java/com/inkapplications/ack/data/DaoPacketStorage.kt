@@ -54,8 +54,7 @@ internal class DaoPacketStorage(
 
     override fun findMostRecentByType(type: KClass<out PacketData>): Flow<CapturedPacket?> {
         return packetDao.findMostRecentByType(type.simpleName!!)
-            .filterNotNull()
-            .map { createCapturedPacket(it, fromEntityOrNull(it)) }
+            .map { if (it == null) null else createCapturedPacket(it, fromEntityOrNull(it)) }
     }
 
     override fun findBySource(callsign: Callsign, limit: Int?): Flow<List<CapturedPacket>> {

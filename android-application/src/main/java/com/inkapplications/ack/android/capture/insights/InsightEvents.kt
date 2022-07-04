@@ -8,8 +8,7 @@ import com.inkapplications.ack.data.PacketStorage
 import com.inkapplications.ack.structures.PacketData
 import com.inkapplications.android.extensions.format.DateTimeFormatter
 import kimchi.logger.KimchiLogger
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.*
 import javax.inject.Inject
 
 class InsightEvents @Inject constructor(
@@ -19,22 +18,25 @@ class InsightEvents @Inject constructor(
     private val localeSettings: LocaleSettings,
     private val logger: KimchiLogger,
 ) {
-    val viewState: Flow<InsightsViewState> = packetStorage.findMostRecentByType(PacketData.Weather::class)
-        .combine(settings.observeBoolean(localeSettings.preferMetric)) { weatherPacket, metric ->
-            val temperature = (weatherPacket?.parsed?.data as? PacketData.Weather)?.temperature
-            InsightsViewState.InsightsViewModel(
-                weatherVisible = temperature != null,
-                temperature = temperature?.let { it.format(metric) }.orEmpty(),
-                weatherReporter = weatherPacket?.parsed?.route?.source?.toString().orEmpty(),
-                weatherReportTime = weatherPacket?.received?.let { dateTimeFormatter.formatTimestamp(it) }.orEmpty(),
-                packets = 0,
-                stations = 0
-            )
-        }
-        .combine(packetStorage.count()) { viewModel, count ->
-            viewModel.copy(packets = count)
-        }
-        .combine(packetStorage.countStations()) { viewModel, count ->
-            viewModel.copy(stations = count)
-        }
+    val viewState: Flow<InsightsViewState> =
+        packetStorage.count()
+            .onEach { logger.debug("Building Insights on $it packets") }
+            .flatMapLatest { packetCount ->
+                if (packetCount == 0) flowOf(InsightsViewState.Empty)
+                else packetStorage.findMostRecentByType(PacketData.Weather::class)
+                    .combine(settings.observeBoolean(localeSettings.preferMetric)) { weatherPacket, metric ->
+                        val temperature = (weatherPacket?.parsed?.data as? PacketData.Weather)?.temperature
+                        InsightsViewState.InsightsViewModel(
+                            weatherVisible = temperature != null,
+                            temperature = temperature?.let { it.format(metric) }.orEmpty(),
+                            weatherReporter = weatherPacket?.parsed?.route?.source?.toString().orEmpty(),
+                            weatherReportTime = weatherPacket?.received?.let { dateTimeFormatter.formatTimestamp(it) }.orEmpty(),
+                            packets = packetCount,
+                            stations = 0,
+                        )
+                    }
+                    .combine(packetStorage.countStations()) { viewModel, count ->
+                        viewModel.copy(stations = count)
+                    }
+            }
 }
