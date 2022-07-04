@@ -8,6 +8,7 @@ import com.inkapplications.coroutines.filterEachNotNull
 import com.inkapplications.coroutines.mapEach
 import kimchi.logger.KimchiLogger
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.map
 import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
@@ -53,6 +54,7 @@ internal class DaoPacketStorage(
 
     override fun findMostRecentByType(type: KClass<out PacketData>): Flow<CapturedPacket?> {
         return packetDao.findMostRecentByType(type.simpleName!!)
+            .filterNotNull()
             .map { createCapturedPacket(it, fromEntityOrNull(it)) }
     }
 

@@ -23,7 +23,7 @@ internal interface PacketDao {
     fun countSources(): Flow<Int>
 
     @Query("SELECT * FROM packets WHERE dataType = :type ORDER BY timestamp DESC LIMIT 1")
-    fun findMostRecentByType(type: String): Flow<PacketEntity>
+    fun findMostRecentByType(type: String): Flow<PacketEntity?>
 
     @Query("""
         SELECT * FROM packets 
