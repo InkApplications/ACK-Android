@@ -5,13 +5,16 @@ import com.inkapplications.ack.android.map.CameraPositionDefaults
 import com.inkapplications.ack.android.map.MapCameraPosition
 import com.inkapplications.ack.android.map.MarkerViewModel
 import com.inkapplications.ack.structures.TelemetryValues
+import com.inkapplications.ack.structures.station.Callsign
 
 sealed interface LogDetailsState {
     object Initial: LogDetailsState
     data class LogDetailsViewModel(
+        val callsign: Callsign,
         val name: String,
         val receiveIcon: ImageVector,
         val receiveIconDescription: String,
+        val timestamp: String,
         val comment: String? = null,
         val markers: List<MarkerViewModel> = emptyList(),
         val mapCameraPosition: MapCameraPosition = CameraPositionDefaults.unknownLocation,

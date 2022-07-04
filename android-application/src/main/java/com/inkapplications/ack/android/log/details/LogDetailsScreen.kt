@@ -48,10 +48,13 @@ fun LogDetailsScreen(
                         style = AckTheme.typography.h1,
                         modifier = Modifier.padding(
                             start = AckTheme.dimensions.gutter,
-                            end = AckTheme.dimensions.gutter,
                         ),
                     )
-                    Icon(viewState.receiveIcon, viewState.receiveIconDescription)
+                    IconButton(
+                        onClick = { controller.onViewStationDetails(viewState.callsign) },
+                    ) {
+                        Icon(Icons.Default.Info, stringResource(R.string.capture_log_info))
+                    }
                 }
             }
         } else {
@@ -69,10 +72,13 @@ fun LogDetailsScreen(
                             style = AckTheme.typography.h1,
                             modifier = Modifier.padding(
                                 start = AckTheme.dimensions.gutter,
-                                end = AckTheme.dimensions.gutter,
                             ),
                         )
-                        Icon(viewState.receiveIcon, viewState.receiveIconDescription)
+                        IconButton(
+                            onClick = { controller.onViewStationDetails(viewState.callsign) },
+                        ) {
+                            Icon(Icons.Default.Info, stringResource(R.string.capture_log_info))
+                        }
                     },
                     onBackPressed = controller::onBackPressed
                 )
@@ -86,6 +92,10 @@ fun LogDetailsScreen(
                 bottom = AckTheme.dimensions.gutter,
             ),
         ) {
+            IconRow(
+                icon = viewState.receiveIcon,
+                viewState.timestamp,
+            )
             if (viewState.temperature != null) {
                 IconRow(Icons.Default.WbSunny, viewState.temperature)
             }

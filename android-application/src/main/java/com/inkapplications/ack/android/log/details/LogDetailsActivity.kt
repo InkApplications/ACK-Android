@@ -9,8 +9,10 @@ import com.inkapplications.ack.android.log.LogEvents
 import com.inkapplications.ack.android.component
 import com.inkapplications.ack.android.map.MapController
 import com.inkapplications.ack.android.map.mapbox.createController
+import com.inkapplications.ack.android.station.startStationActivity
 import com.inkapplications.ack.android.trackNavigation
 import com.inkapplications.ack.android.ui.theme.AckScreen
+import com.inkapplications.ack.structures.station.Callsign
 import com.inkapplications.android.extensions.ExtendedActivity
 import com.inkapplications.android.startActivity
 import com.inkapplications.coroutines.collectOn
@@ -61,6 +63,10 @@ class LogDetailsActivity: ExtendedActivity(), LogDetailsController {
 
     private fun onMapItemClicked(id: Long?) {
         Kimchi.debug("Map Item Clicked: No-Op")
+    }
+
+    override fun onViewStationDetails(callsign: Callsign) {
+        startStationActivity(callsign)
     }
 }
 
