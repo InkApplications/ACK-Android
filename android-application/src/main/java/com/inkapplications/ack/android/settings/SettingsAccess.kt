@@ -50,7 +50,7 @@ class SettingsAccess @Inject constructor(
     val settingsViewModel = settingsStateGrouped
         .map { SettingsViewModel(settingsList = it) }
         .combine(settingValues.observeData(connectionSettings.address)) { viewModel, callsign ->
-            viewModel.copy(callsignText = callsign?.toString().orEmpty())
+            viewModel.copy(callsignText = callsign?.toString())
         }
         .combine(settingValues.observeInt(connectionSettings.passcode)) { viewModel, passcode ->
             viewModel.copy(verified = passcode != -1)

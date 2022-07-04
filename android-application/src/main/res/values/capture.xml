@@ -22,6 +22,7 @@
     <string name="capture_service_notification_title_audio">Monitoring Audio for APRS</string>
     <string name="capture_service_notification_title_internet">Monitoring Internet for APRS</string>
     <string name="capture_log_empty">No Logs Received Yet</string>
-    <string name="capture_volume_format">%s%</string>
+    <string name="capture_volume_format">%s\%%</string>
     <string name="capture_volume_off">off</string>
+    <string name="capture_callsign_missing">No Callsign</string>
 </resources>

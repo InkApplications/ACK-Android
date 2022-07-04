@@ -221,16 +221,29 @@ private fun CaptureSettingsSheet(
         Row(
             verticalAlignment = Alignment.CenterVertically,
         ) {
-            Icon(
-                imageVector = Icons.Default.SettingsInputAntenna,
-                contentDescription = null,
-                tint = AckTheme.colors.foreground,
-                modifier = Modifier.padding(horizontal = AckTheme.dimensions.icon)
-            )
-            Text(
-                text = captureScreenState.callsign ?: "Heck",
-                style = AckTheme.typography.h1,
-            )
+            if (captureScreenState.callsign != null) {
+                Icon(
+                    imageVector = Icons.Default.Badge,
+                    contentDescription = null,
+                    tint = AckTheme.colors.foreground,
+                    modifier = Modifier.padding(horizontal = AckTheme.dimensions.icon)
+                )
+                Text(
+                    text = captureScreenState.callsign,
+                    style = AckTheme.typography.h1,
+                )
+            } else {
+                Icon(
+                    imageVector = Icons.Default.Person,
+                    contentDescription = null,
+                    tint = AckTheme.colors.foreground,
+                    modifier = Modifier.padding(horizontal = AckTheme.dimensions.icon)
+                )
+                Text(
+                    text = stringResource(R.string.capture_callsign_missing),
+                    style = AckTheme.typography.h1,
+                )
+            }
         }
         IconButton(
             onClick = {
