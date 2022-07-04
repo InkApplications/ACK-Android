@@ -5,16 +5,10 @@ plugins {
 }
 
 android {
-    compileSdkVersion(31)
+    compileSdk = 31
 
     defaultConfig {
-        minSdkVersion(21)
-    }
-
-    lintOptions {
-        tasks.lint {
-            enabled = false
-        }
+        minSdk = 21
     }
 
     buildFeatures {
@@ -26,7 +20,6 @@ android {
     }
 
     composeOptions {
-        kotlinCompilerVersion = libraries.versions.kotlin.get()
         kotlinCompilerExtensionVersion = libraries.versions.compose.compiler.get()
     }
 }

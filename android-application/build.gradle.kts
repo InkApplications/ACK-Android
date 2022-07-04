@@ -14,11 +14,11 @@ if (useGoogleServices) {
 }
 
 android {
-    compileSdkVersion(31)
+    compileSdk = 31
     ndkVersion = "21.3.6528147"
     defaultConfig {
-        minSdkVersion(21)
-        targetSdkVersion(31)
+        minSdk = 21
+        targetSdk = 31
         multiDexEnabled = true
         buildConfigField("String", "MAPBOX_ACCESS_TOKEN", "\"${stringProperty("mapboxPublic", "")}\"")
         buildConfigField("boolean", "USE_GOOGLE_SERVICES", useGoogleServices.toString())
@@ -57,11 +57,6 @@ android {
             isMinifyEnabled = false
         }
     }
-    lintOptions {
-        tasks.lint {
-            enabled = false
-        }
-    }
     compileOptions {
         targetCompatibility = JavaVersion.VERSION_1_8
         sourceCompatibility = JavaVersion.VERSION_1_8
@@ -72,7 +67,6 @@ android {
     }
 
     composeOptions {
-        kotlinCompilerVersion = libraries.versions.kotlin.get()
         kotlinCompilerExtensionVersion = libraries.versions.compose.compiler.get()
     }
 

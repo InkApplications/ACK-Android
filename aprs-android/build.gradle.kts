@@ -5,11 +5,11 @@ plugins {
 }
 
 android {
-    compileSdkVersion(31)
+    compileSdk = 31
     ndkVersion = "21.3.6528147"
 
     defaultConfig {
-        minSdkVersion(14)
+        minSdk = 14
         kapt {
             arguments {
                 arg("room.schemaLocation", "$projectDir/src/main/schema")
@@ -22,12 +22,6 @@ android {
         getByName("androidTest").assets.srcDirs("$projectDir/src/main/schema")
     }
 
-
-    lintOptions {
-        tasks.lint {
-            enabled = false
-        }
-    }
     externalNativeBuild {
         cmake {
             version = "3.10.2"
