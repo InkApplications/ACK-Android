@@ -15,6 +15,7 @@ class CreateConversationActivity: ExtendedActivity(), CreateConversationControll
     }
 
     override fun onCreateClick(callsign: String) {
+        finish()
         startConversationActivity(Callsign(callsign))
     }
 }
