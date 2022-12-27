@@ -82,8 +82,8 @@ class CaptureEvents @Inject constructor(
 
     val audioCapturePermissions = drivers.afskDriver.receivePermissions
     val audioTransmitPermissions = drivers.afskDriver.transmitPermissions + Manifest.permission.ACCESS_FINE_LOCATION
-    val internetCapturePermissions = drivers.afskDriver.receivePermissions
-    val internetTransmitPermissions = drivers.afskDriver.transmitPermissions + Manifest.permission.ACCESS_FINE_LOCATION
+    val internetCapturePermissions = drivers.internetDriver.receivePermissions
+    val internetTransmitPermissions = drivers.internetDriver.transmitPermissions + Manifest.permission.ACCESS_FINE_LOCATION
 
     val screenState = audioCaptureControlState
         .combine(internetCaptureControlState) { recording, internet ->
