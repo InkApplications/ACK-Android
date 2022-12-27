@@ -20,24 +20,24 @@ android {
     }
 
     composeOptions {
-        kotlinCompilerExtensionVersion = libraries.versions.compose.compiler.get()
+        kotlinCompilerExtensionVersion = androidLibraries.versions.compose.compiler.get()
     }
 }
 
 dependencies {
-    implementation(libraries.coroutines.core)
+    implementation(kotlinLibraries.coroutines.core)
 
-    api(libraries.androidx.core)
-    api(libraries.androidx.compose.ui)
-    api(libraries.androidx.compose.foundation)
-    implementation(libraries.androidx.preference)
+    api(androidLibraries.androidx.core)
+    api(androidLibraries.androidx.compose.ui)
+    api(androidLibraries.androidx.compose.foundation)
+    implementation(androidLibraries.androidx.preference)
 
-    api(libraries.ack.structures)
+    api(inkLibraries.ack.structures)
 
-    api(libraries.dagger.core)
-    kapt(libraries.dagger.compiler)
+    api(thirdParty.dagger.core)
+    kapt(thirdParty.dagger.compiler)
 
-    testImplementation(libraries.junit)
-    testImplementation(libraries.coroutines.test)
-    testImplementation(libraries.kotlin.test.core)
+    testImplementation(thirdParty.junit)
+    testImplementation(kotlinLibraries.coroutines.test)
+    testImplementation(kotlinLibraries.kotlin.test.core)
 }

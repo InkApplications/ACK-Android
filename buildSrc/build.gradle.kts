@@ -7,10 +7,9 @@ repositories {
     google()
 }
 dependencies {
-    implementation(libraries.kotlin.gradle)
-    implementation(libraries.kotlin.gradle)
-    implementation(libraries.android.gradle)
-    implementation(libraries.google.services)
-    implementation(libraries.google.license.plugin)
-    implementation(libraries.firebase.crashlytics.gradle)
+    implementation(kotlinLibraries.kotlin.gradle)
+    implementation(androidLibraries.android.gradle)
+    implementation(thirdParty.google.services)
+    implementation(thirdParty.google.license.plugin)
+    implementation(thirdParty.firebase.crashlytics.gradle)
 }

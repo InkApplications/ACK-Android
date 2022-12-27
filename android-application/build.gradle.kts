@@ -67,7 +67,7 @@ android {
     }
 
     composeOptions {
-        kotlinCompilerExtensionVersion = libraries.versions.compose.compiler.get()
+        kotlinCompilerExtensionVersion = androidLibraries.versions.compose.compiler.get()
     }
 
     packagingOptions {
@@ -86,42 +86,39 @@ dependencies {
     implementation(projects.androidExtensions)
     implementation(projects.aprsAndroid)
 
-    implementation(libraries.coroutines.android)
+    implementation(kotlinLibraries.coroutines.android)
 
-    implementation(libraries.androidx.appcompat)
-    implementation(libraries.androidx.constraintlayout)
-    implementation(libraries.androidx.recyclerview)
-    implementation(libraries.androidx.preference)
-    implementation(libraries.androidx.activity.ktx)
-    implementation(libraries.bundles.androidx.compose.full)
+    implementation(androidLibraries.androidx.appcompat)
+    implementation(androidLibraries.androidx.constraintlayout)
+    implementation(androidLibraries.androidx.recyclerview)
+    implementation(androidLibraries.androidx.preference)
+    implementation(androidLibraries.androidx.activity.ktx)
+    implementation(androidLibraries.bundles.androidx.compose.full)
 
-    implementation(libraries.material.core)
+    implementation(thirdParty.google.material.core)
 
-    implementation(libraries.mapbox.android.sdk)
+    implementation(thirdParty.mapbox.android.sdk)
 
-    implementation(libraries.groupie.core)
-    implementation(libraries.groupie.extensions)
+    implementation(thirdParty.dagger.core)
+    kapt(thirdParty.dagger.compiler)
 
-    implementation(libraries.dagger.core)
-    kapt(libraries.dagger.compiler)
+    implementation(thirdParty.google.license.core)
 
-    implementation(libraries.google.license.core)
+    implementation(inkLibraries.kimchi.core)
+    implementation(inkLibraries.kimchi.firebase.analytics)
+    implementation(inkLibraries.kimchi.firebase.crashlytics)
 
-    implementation(libraries.kimchi.core)
-    implementation(libraries.kimchi.firebase.analytics)
-    implementation(libraries.kimchi.firebase.crashlytics)
+    api(inkLibraries.spondee.measures)
+    implementation(inkLibraries.ack.client)
 
-    api(libraries.spondee.measures)
-    implementation(libraries.ack.client)
+    implementation(inkLibraries.watermelon.coroutines)
+    implementation(inkLibraries.watermelon.standard)
+    implementation(inkLibraries.watermelon.android)
 
-    implementation(libraries.watermelon.coroutines)
-    implementation(libraries.watermelon.standard)
-    implementation(libraries.watermelon.android)
+    implementation(thirdParty.firebase.config)
+    implementation(thirdParty.firebase.analytics)
 
-    implementation(libraries.firebase.config)
-    implementation(libraries.firebase.analytics)
-
-    testImplementation(libraries.junit)
-    testImplementation(libraries.coroutines.test)
-    testImplementation(libraries.kotlin.test.core)
+    testImplementation(thirdParty.junit)
+    testImplementation(kotlinLibraries.coroutines.test)
+    testImplementation(kotlinLibraries.kotlin.test.core)
 }

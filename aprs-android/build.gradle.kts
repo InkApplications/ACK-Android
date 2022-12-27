@@ -34,27 +34,25 @@ android {
 }
 
 dependencies {
-    api(libraries.coroutines.core)
+    api(kotlinLibraries.coroutines.core)
 
-    androidTestImplementation(libraries.androidx.test.runner)
-    androidTestImplementation(libraries.androidx.test.core)
+    kapt(androidLibraries.androidx.room.compiler)
+    implementation(androidLibraries.androidx.room.runtime)
+    implementation(androidLibraries.androidx.room.ktx)
 
-    api(libraries.ack.codec)
-    api(libraries.ack.client)
-    api(libraries.ack.structures)
+    api(inkLibraries.ack.codec)
+    api(inkLibraries.ack.client)
+    api(inkLibraries.ack.structures)
 
-    api(libraries.kimchi.logger)
+    api(inkLibraries.kimchi.logger)
 
-    implementation(libraries.watermelon.coroutines)
-    implementation(libraries.spondee.measures)
+    implementation(inkLibraries.watermelon.coroutines)
+    implementation(inkLibraries.spondee.measures)
 
-    implementation(libraries.dagger.core)
-    kapt(libraries.dagger.compiler)
+    implementation(thirdParty.dagger.core)
+    kapt(thirdParty.dagger.compiler)
 
-    implementation(ThreeTenBp.noTzDb)
-
-    implementation(libraries.androidx.room.runtime)
-    implementation(libraries.androidx.room.ktx)
-    androidTestImplementation(libraries.androidx.room.testing)
-    kapt(libraries.androidx.room.compiler)
+    androidTestImplementation(androidLibraries.androidx.test.runner)
+    androidTestImplementation(androidLibraries.androidx.test.core)
+    androidTestImplementation(androidLibraries.androidx.room.testing)
 }

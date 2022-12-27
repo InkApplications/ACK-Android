@@ -1,5 +1,0 @@
-[versions]
-
-[libraries.mapbox-android-sdk]
-version = "10.6.0"
-module = "com.mapbox.maps:android"

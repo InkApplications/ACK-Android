@@ -1,0 +1,46 @@
+[versions]
+dagger = "2.37"
+
+[libraries.dagger-core]
+version.ref = "dagger"
+module = "com.google.dagger:dagger"
+
+[libraries.dagger-compiler]
+version.ref = "dagger"
+module = "com.google.dagger:dagger-compiler"
+
+[libraries.firebase-config]
+version = "19.2.0"
+module = "com.google.firebase:firebase-config-ktx"
+
+[libraries.firebase-analytics]
+version = "17.5.0"
+module = "com.google.firebase:firebase-analytics-ktx"
+
+[libraries.firebase-crashlytics-gradle]
+version = "2.3.0"
+module = "com.google.firebase:firebase-crashlytics-gradle"
+
+[libraries.google-material-core]
+version = "1.4.0"
+module = "com.google.android.material:material"
+
+[libraries.google-services]
+version = "4.3.3"
+module = "com.google.gms:google-services"
+
+[libraries.google-license-plugin]
+version = "0.10.5"
+module = "com.google.android.gms:oss-licenses-plugin"
+
+[libraries.google-license-core]
+version = "17.0.0"
+module = "com.google.android.gms:play-services-oss-licenses"
+
+[libraries.junit]
+version = "4.12"
+module = "junit:junit"
+
+[libraries.mapbox-android-sdk]
+version = "10.6.0"
+module = "com.mapbox.maps:android"
