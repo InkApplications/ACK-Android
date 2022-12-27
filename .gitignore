@@ -6,3 +6,6 @@ local.properties
 # Android
 .cxx/
 *.keystore
+
+# Google Play
+google-services.json
