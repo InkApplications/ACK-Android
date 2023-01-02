@@ -5,11 +5,11 @@ import android.location.LocationListener
 import android.location.LocationManager
 import dagger.Reusable
 import inkapplications.spondee.measure.Length
-import inkapplications.spondee.measure.Meters
+import inkapplications.spondee.measure.metric.meters
 import inkapplications.spondee.spatial.GeoCoordinates
 import inkapplications.spondee.spatial.latitude
 import inkapplications.spondee.spatial.longitude
-import inkapplications.spondee.structure.value
+import inkapplications.spondee.structure.toFloat
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.channels.trySendBlocking
 import kotlinx.coroutines.flow.Flow
@@ -17,9 +17,7 @@ import kotlinx.coroutines.flow.callbackFlow
 import javax.inject.Inject
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.minutes
-import kotlin.time.ExperimentalTime
 
-@OptIn(ExperimentalTime::class)
 @Reusable
 class AndroidLocationAccess @Inject constructor(
     private val locationManager: LocationManager,
@@ -52,7 +50,7 @@ class AndroidLocationAccess @Inject constructor(
         locationManager.requestLocationUpdates(
             provider,
             minTime.inWholeMilliseconds,
-            minDistance.value(Meters).toFloat(),
+            minDistance.toMeters().toFloat(),
             callback,
         )
 
@@ -63,6 +61,6 @@ class AndroidLocationAccess @Inject constructor(
 
     private fun Location.toUpdate() = LocationUpdate(
         location = GeoCoordinates(latitude.latitude, longitude.longitude),
-        altitude = Meters.of(altitude),
+        altitude = altitude.meters,
     )
 }

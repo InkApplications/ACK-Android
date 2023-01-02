@@ -1,17 +1,17 @@
 package com.inkapplications.android.extensions.location
 
 import inkapplications.spondee.measure.Length
-import inkapplications.spondee.measure.Miles
+import inkapplications.spondee.measure.us.miles
 import kotlinx.coroutines.flow.Flow
 import kotlin.time.Duration
+import kotlin.time.Duration.Companion.minutes
 import kotlin.time.ExperimentalTime
 
-@OptIn(ExperimentalTime::class)
 interface LocationAccess {
     val lastKnownLocation: LocationUpdate?
 
     fun observeLocationChanges(
-        minTime: Duration = Duration.minutes(5),
-        minDistance: Length = Miles.of(5),
+        minTime: Duration = 5.minutes,
+        minDistance: Length = 5.miles,
     ): Flow<LocationUpdate>
 }

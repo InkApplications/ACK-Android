@@ -4,7 +4,7 @@ import com.inkapplications.ack.android.symbol.SymbolFactoryDummy
 import com.inkapplications.ack.android.toTestPacket
 import com.inkapplications.ack.structures.*
 import com.inkapplications.ack.structures.station.StationAddress
-import inkapplications.spondee.measure.Fahrenheit
+import inkapplications.spondee.measure.us.fahrenheit
 import inkapplications.spondee.spatial.GeoCoordinates
 import inkapplications.spondee.spatial.latitude
 import inkapplications.spondee.spatial.longitude
@@ -64,7 +64,7 @@ class CombinedLogItemViewModelFactoryTest {
         val result = factory.create(
             id = 123L,
             packet = PacketData.Weather(
-                temperature = Fahrenheit.of(72),
+                temperature = 72.fahrenheit,
             ).toTestPacket(),
             metric = false,
         )

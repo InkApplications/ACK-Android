@@ -1,41 +1,33 @@
+@file:OptIn(SimpleNumberFormats::class)
+
 package com.inkapplications.ack.android.locale
 
+import inkapplications.spondee.format.SimpleNumberFormats
 import inkapplications.spondee.format.formatDecimal
 import inkapplications.spondee.measure.*
+import inkapplications.spondee.measure.metric.toCelsius
+import inkapplications.spondee.measure.metric.toKilometersPerHourValue
+import inkapplications.spondee.measure.metric.toMetersPerSecondValue
+import inkapplications.spondee.measure.us.toFahrenheit
+import inkapplications.spondee.measure.us.toFeet
+import inkapplications.spondee.measure.us.toMiles
+import inkapplications.spondee.measure.us.toMilesPerHourValue
 import inkapplications.spondee.structure.*
-import kotlin.time.Duration
-import kotlin.time.DurationUnit
-import kotlin.time.ExperimentalTime
 
 fun Length.format(metric: Boolean) = when {
-    metric && value(Meters) > 1000 -> "${Meters.format(this, Kilo)}"
-    metric -> Meters.format(this)
-    !metric && value(Feet) > 1000 -> Miles.format(this)
-    else -> Feet.format(this)
+    metric && toMeters() > 1000.0 -> toMeters().format(Kilo)
+    metric -> toMeters().format()
+    toFeet() > 1000 -> toMiles().format()
+    else -> toFeet().format()
 }
 
 fun Speed.format(metric: Boolean) = when {
-    metric && value(MetersPerSecond) >= 1000 -> KilometersPerHour.format(this, decimals = 0)
-    metric -> MetersPerSecond.format(this, decimals = 0)
-    else -> MilesPerHour.format(this, decimals = 0)
+    metric && toMetersPerSecondValue() >= 1000 -> "${toKilometersPerHourValue().formatDecimal()}km/h"
+    metric -> "${toMetersPerSecondValue().formatDecimal()}m/s"
+    else -> "${toMilesPerHourValue().formatDecimal()}mph"
 }
 
 fun Temperature.format(metric: Boolean) = when {
-    metric -> Celsius.format(this, decimals = 1)
-    else -> Fahrenheit.format(this, decimals = 0)
-}
-
-@OptIn(ExperimentalTime::class)
-private object KilometersPerHour: DoubleUnit<Speed>, Symbolized, UnitFormatter<Speed> {
-    override val symbol: String = "km/h"
-    override fun convertValue(value: Speed): Double {
-        return value.lengthComponent.value(Kilo, Meters) / value.durationComponent.toDouble(DurationUnit.HOURS)
-    }
-
-    override fun of(value: Number): Speed {
-        return MetersPerSecond.of(Meters.of(Kilo, value).value(Meters) / Duration.hours(1).toDouble(DurationUnit.SECONDS))
-    }
-
-    override fun format(measurement: Speed, decimals: Int, decimalSeparator: Char): String = "${MilesPerHour.convertValue(measurement).formatDecimal(decimals, true, decimalSeparator)}${MilesPerHour.symbol}"
-    override fun format(measurement: Speed, siScale: SiScale, decimals: Int, decimalSeparator: Char): String = "${measurement.value(siScale, this).formatDecimal(decimals, true, decimalSeparator)}${siScale.symbol}${MilesPerHour.symbol}"
+    metric -> toCelsius().format(decimals = 1)
+    else -> toFahrenheit().format()
 }

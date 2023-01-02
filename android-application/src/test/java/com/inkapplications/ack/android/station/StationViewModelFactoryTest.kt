@@ -6,11 +6,9 @@ import com.inkapplications.ack.android.map.MarkerViewModel
 import com.inkapplications.ack.data.CapturedPacket
 import com.inkapplications.ack.data.PacketSource
 import com.inkapplications.ack.structures.*
-import com.inkapplications.ack.structures.capabilities.Mapable
 import com.inkapplications.ack.structures.station.StationAddress
-import com.inkapplications.android.extensions.ViewModelFactory
-import inkapplications.spondee.measure.Fahrenheit
-import inkapplications.spondee.measure.MilesPerHour
+import inkapplications.spondee.measure.us.fahrenheit
+import inkapplications.spondee.measure.us.milesPerHour
 import inkapplications.spondee.spatial.*
 import kotlinx.datetime.Instant
 import org.junit.Test
@@ -57,11 +55,11 @@ class StationViewModelFactoryTest {
     fun positionlessWeatherPacket() {
         val factory = StationInsightViewModelFactory(NullMarkerFactoryMock, dummySummaryFactory)
         val packet = PacketData.Weather(
-            temperature = Fahrenheit.of(72),
+            temperature = 72.fahrenheit,
             windData = WindData(
-                direction = Degrees.of(12),
-                speed = MilesPerHour.of(34),
-                gust = MilesPerHour.of(56),
+                direction = 12.degrees,
+                speed = 34.milesPerHour,
+                gust = 56.milesPerHour,
             )
         ).toTestPacket().toTestCapturedPacket()
         val data = StationData(
@@ -86,8 +84,8 @@ class StationViewModelFactoryTest {
         val factory = StationInsightViewModelFactory(DummyMarkerFactoryMock, dummySummaryFactory)
         val packet = PacketData.Weather(
             coordinates = GeoCoordinates(1.0.latitude, 2.0.longitude),
-            temperature = Fahrenheit.of(72),
-            windData = WindData(Degrees.of(12), MilesPerHour.of(34), MilesPerHour.of(56)),
+            temperature = 72.fahrenheit,
+            windData = WindData(12.degrees, 34.milesPerHour, 56.milesPerHour),
         ).toTestPacket().toTestCapturedPacket()
         val data = StationData(
             packets = listOf(packet),

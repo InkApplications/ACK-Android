@@ -8,7 +8,7 @@ import com.inkapplications.ack.android.settings.transformer.StationAddressTransf
 import com.inkapplications.android.extensions.StringResources
 import com.inkapplications.ack.data.*
 import dagger.Reusable
-import inkapplications.spondee.measure.Miles
+import inkapplications.spondee.measure.us.miles
 import javax.inject.Inject
 
 @Reusable
@@ -50,7 +50,7 @@ class ConnectionSettings @Inject constructor(
         key = "connection.radius",
         name = resources.getString(R.string.connection_setting_radius_name),
         categoryName = resources.getString(R.string.connection_setting_category_name),
-        defaultData = Miles.of(DEFAULT_SEARCH_RADIUS_MILES),
+        defaultData = DEFAULT_SEARCH_RADIUS_MILES.miles,
         transformer = MileTransformer,
     )
 

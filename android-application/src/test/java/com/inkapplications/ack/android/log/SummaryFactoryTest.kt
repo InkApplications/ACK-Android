@@ -2,7 +2,7 @@ package com.inkapplications.ack.android.log
 
 import com.inkapplications.ack.android.ParrotStringResources
 import com.inkapplications.ack.structures.WindData
-import inkapplications.spondee.measure.MilesPerHour
+import inkapplications.spondee.measure.us.milesPerHour
 import inkapplications.spondee.spatial.Cardinal
 import inkapplications.spondee.spatial.toAngle
 import kotlin.test.Test
@@ -22,7 +22,7 @@ class SummaryFactoryTest {
     @Test
     fun speedOnly() {
         val result = factory.createWindSummary(
-            WindData(speed = MilesPerHour.of(12)),
+            WindData(speed = 12.milesPerHour),
             false,
         )
 
@@ -43,7 +43,7 @@ class SummaryFactoryTest {
     fun speedAndDirection() {
         val result = factory.createWindSummary(
             WindData(
-                speed = MilesPerHour.of(12),
+                speed = 12.milesPerHour,
                 direction = Cardinal.East.toAngle(),
             ),
             false,
@@ -56,9 +56,9 @@ class SummaryFactoryTest {
     fun full() {
         val result = factory.createWindSummary(
             WindData(
-                speed = MilesPerHour.of(12),
+                speed = 12.milesPerHour,
                 direction = Cardinal.East.toAngle(),
-                gust = MilesPerHour.of(34)
+                gust = 34.milesPerHour,
             ),
             false,
         )

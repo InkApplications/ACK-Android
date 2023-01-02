@@ -4,7 +4,8 @@ import com.inkapplications.ack.android.R
 import com.inkapplications.ack.android.locale.format
 import com.inkapplications.ack.structures.WindData
 import com.inkapplications.android.extensions.StringResources
-import inkapplications.spondee.spatial.Degrees
+import inkapplications.spondee.spatial.toDegrees
+import inkapplications.spondee.structure.format
 import javax.inject.Inject
 
 /**
@@ -17,7 +18,7 @@ class SummaryFactory @Inject constructor(
      * Create a readable sentence out of various wind data, if available.
      */
     fun createWindSummary(data: WindData, metric: Boolean): String? {
-        val direction = data.direction?.let { Degrees.format(it, decimals = 0) }
+        val direction = data.direction?.toDegrees()?.format()
         val speed = data.speed?.format(metric)
         val gust = data.gust?.format(metric)
 

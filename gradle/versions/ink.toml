@@ -1,6 +1,6 @@
 [versions]
-ack = "0.4.0"
-kimchi-core = "1.1.0"
+ack = "0.5.0"
+kimchi-core = "2.0.2"
 kimchi-firebase = "1.2.0"
 watermelon = "0.3.0"
 
@@ -36,9 +36,9 @@ module = "com.inkapplications.ack:client"
 version.ref = "ack"
 module = "com.inkapplications.ack:structures"
 
-[libraries.spondee-measures]
-version = "0.6.0"
-module = "com.inkapplications.spondee:measures"
+[libraries.spondee-units]
+version = "1.2.0"
+module = "com.inkapplications.spondee:units"
 
 [libraries.watermelon-coroutines]
 version.ref = "watermelon"

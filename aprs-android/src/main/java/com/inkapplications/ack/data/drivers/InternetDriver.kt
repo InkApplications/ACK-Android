@@ -7,7 +7,6 @@ import com.inkapplications.ack.data.*
 import com.inkapplications.ack.structures.AprsPacket
 import com.inkapplications.ack.structures.EncodingConfig
 import com.inkapplications.coroutines.combinePair
-import inkapplications.spondee.measure.Meters
 import inkapplications.spondee.spatial.GeoCoordinates
 import inkapplications.spondee.structure.Kilo
 import inkapplications.spondee.structure.value
@@ -66,10 +65,7 @@ class InternetDriver internal constructor(
                         credentials = settings.credentials,
                         filters = listOf(
                             "r/${location.latitude.asDecimal}/${location.longitude.asDecimal}/${
-                                settings.searchRadius.value(
-                                    Kilo,
-                                    Meters
-                                ).toInt()
+                                settings.searchRadius.toMeters().value(Kilo).toInt()
                             }"
                         )
                     ) { read, write ->

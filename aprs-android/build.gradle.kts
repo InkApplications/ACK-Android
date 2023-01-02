@@ -47,7 +47,7 @@ dependencies {
     api(inkLibraries.kimchi.logger)
 
     implementation(inkLibraries.watermelon.coroutines)
-    implementation(inkLibraries.spondee.measures)
+    implementation(inkLibraries.spondee.units)
 
     implementation(thirdParty.dagger.core)
     kapt(thirdParty.dagger.compiler)

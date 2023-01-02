@@ -7,12 +7,13 @@ import android.location.LocationManager
 import android.os.Bundle
 import androidx.annotation.RequiresPermission
 import dagger.Reusable
-import inkapplications.spondee.measure.Meters
+import inkapplications.spondee.measure.metric.meters
 import inkapplications.spondee.spatial.GeoCoordinates
 import inkapplications.spondee.spatial.latitude
 import inkapplications.spondee.spatial.longitude
 import inkapplications.spondee.structure.Kilo
-import inkapplications.spondee.structure.of
+import inkapplications.spondee.structure.scale
+import inkapplications.spondee.structure.toFloat
 import inkapplications.spondee.structure.value
 import kimchi.logger.KimchiLogger
 import kotlinx.coroutines.Dispatchers
@@ -34,7 +35,7 @@ class AndroidLocationProvider @Inject constructor(
 ) {
     @OptIn(ExperimentalTime::class)
     private val MIN_TIME = Duration.minutes(5).inWholeMilliseconds
-    private val MIN_DISTANCE = Meters.of(Kilo, 1000).value(Meters).toFloat()
+    private val MIN_DISTANCE = 1000.scale(Kilo).meters.toFloat()
 
     @RequiresPermission(Manifest.permission.ACCESS_FINE_LOCATION)
     private val androidLocationFlow: Flow<Location> = callbackFlow {

@@ -17,6 +17,8 @@ import com.inkapplications.android.extensions.control.ControlState
 import com.inkapplications.coroutines.combinePair
 import com.inkapplications.coroutines.combineTriple
 import inkapplications.spondee.scalar.WholePercentage
+import inkapplications.spondee.scalar.toWholePercentage
+import inkapplications.spondee.structure.roundToInt
 import inkapplications.spondee.structure.value
 import kimchi.logger.KimchiLogger
 import kotlinx.coroutines.*
@@ -103,7 +105,7 @@ class CaptureEvents @Inject constructor(
         }
         .combine(drivers.afskDriver.volume) { viewModel, volume ->
             viewModel.copy(audioLevel = volume
-                ?.value(WholePercentage)
+                ?.toWholePercentage()
                 ?.roundToInt()
                 ?.let { stringResources.getString(R.string.capture_volume_format, it) }
                 ?: stringResources.getString(R.string.capture_volume_off)

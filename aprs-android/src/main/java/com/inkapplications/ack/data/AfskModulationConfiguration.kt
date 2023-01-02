@@ -1,12 +1,11 @@
 package com.inkapplications.ack.data
 
 import inkapplications.spondee.scalar.Percentage
-import inkapplications.spondee.scalar.WholePercentage
+import inkapplications.spondee.scalar.percent
 import kotlin.time.Duration
-import kotlin.time.ExperimentalTime
+import kotlin.time.Duration.Companion.milliseconds
 
-@OptIn(ExperimentalTime::class)
 data class AfskModulationConfiguration(
-    val preamble: Duration = Duration.milliseconds(100),
-    val volume: Percentage = WholePercentage.of(50),
+    val preamble: Duration = 100.milliseconds,
+    val volume: Percentage = 50.percent,
 )

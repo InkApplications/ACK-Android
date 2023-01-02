@@ -2,6 +2,7 @@ package com.inkapplications.ack.data
 
 import inkapplications.spondee.scalar.DecimalPercentage
 import inkapplications.spondee.scalar.Percentage
+import inkapplications.spondee.scalar.decimalPercentage
 import kotlinx.coroutines.channels.consumeEach
 import kotlinx.coroutines.flow.*
 import kotlin.math.abs
@@ -35,7 +36,7 @@ internal class AudioDataProcessor(
 
     private val peak = MutableStateFlow<Short?>(null)
     val volume: Flow<Percentage?> = peak.map {
-        it?.toDouble()?.absoluteValue?.div(Short.MAX_VALUE)?.let(DecimalPercentage::of)
+        it?.toDouble()?.absoluteValue?.div(Short.MAX_VALUE)?.decimalPercentage
     }
 
     private fun decode(audioData: ShortArray) {

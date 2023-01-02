@@ -28,7 +28,7 @@ class InsightEvents @Inject constructor(
                         val temperature = (weatherPacket?.parsed?.data as? PacketData.Weather)?.temperature
                         InsightsViewState.InsightsViewModel(
                             weatherVisible = temperature != null,
-                            temperature = temperature?.let { it.format(metric) }.orEmpty(),
+                            temperature = temperature?.format(metric).orEmpty(),
                             weatherReporter = weatherPacket?.parsed?.route?.source?.toString().orEmpty(),
                             weatherReportTime = weatherPacket?.received?.let { dateTimeFormatter.formatTimestamp(it) }.orEmpty(),
                             packets = packetCount,

@@ -12,9 +12,8 @@ import android.media.AudioManager
 import android.media.AudioTrack
 import android.os.Build
 import android.os.Process
-import inkapplications.spondee.scalar.DecimalPercentage
 import inkapplications.spondee.scalar.Percentage
-import inkapplications.spondee.structure.value
+import inkapplications.spondee.structure.toFloat
 import kotlinx.coroutines.*
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
@@ -86,7 +85,7 @@ internal class AndroidAfskModulator {
                 override fun onPeriodicNotification(track: AudioTrack?) = Unit
             })
             track.notificationMarkerPosition = pcmData.size
-            val volume = AudioTrack.getMaxVolume() * volume.value(DecimalPercentage).toFloat()
+            val volume = AudioTrack.getMaxVolume() * volume.toDecimal().toFloat()
             track.setStereoVolume(volume, volume)
             track.write(pcmData, 0, pcmData.size)
             runBlocking {

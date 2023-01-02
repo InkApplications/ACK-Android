@@ -108,7 +108,7 @@ dependencies {
     implementation(inkLibraries.kimchi.firebase.analytics)
     implementation(inkLibraries.kimchi.firebase.crashlytics)
 
-    api(inkLibraries.spondee.measures)
+    api(inkLibraries.spondee.units)
     implementation(inkLibraries.ack.client)
 
     implementation(inkLibraries.watermelon.coroutines)

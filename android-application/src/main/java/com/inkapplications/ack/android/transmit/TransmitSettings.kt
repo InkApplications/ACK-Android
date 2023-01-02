@@ -9,9 +9,12 @@ import com.inkapplications.ack.android.settings.transformer.*
 import com.inkapplications.ack.structures.Digipeater
 import com.inkapplications.ack.structures.Symbol
 import com.inkapplications.ack.structures.station.StationAddress
-import inkapplications.spondee.measure.Miles
+import inkapplications.spondee.measure.us.miles
 import inkapplications.spondee.scalar.Percentage
 import inkapplications.spondee.scalar.WholePercentage
+import inkapplications.spondee.scalar.percent
+import inkapplications.spondee.scalar.toWholePercentage
+import inkapplications.spondee.structure.roundToInt
 import inkapplications.spondee.structure.value
 import javax.inject.Inject
 import kotlin.math.roundToInt
@@ -45,7 +48,7 @@ class TransmitSettings @Inject constructor(
     val distance = IntBackedSetting(
         key = "transmit.distance",
         name = resources.getString(R.string.transmit_settings_distance),
-        defaultData = Miles.of(5),
+        defaultData = 5.miles,
         categoryName = resources.getString(R.string.transmit_settings_category),
         transformer = MileTransformer,
     )
@@ -94,12 +97,12 @@ class TransmitSettings @Inject constructor(
     val volume = IntBackedSetting(
         key = "transmit.volume",
         name = resources.getString(R.string.transmit_settings_volume),
-        defaultData = WholePercentage.of(50),
+        defaultData = 50.percent,
         categoryName = resources.getString(R.string.transmit_settings_category),
         transformer = PercentageTransformer,
         dataValidator = object: Validator<Percentage> {
             override fun validate(input: Percentage): ValidationResult {
-                return if (input.value(WholePercentage).roundToInt() in (0..100)) {
+                return if (input.toWholePercentage().roundToInt() in (0..100)) {
                     ValidationResult.Valid
                 } else {
                     ValidationResult.Error("Must be between 0 and 100")

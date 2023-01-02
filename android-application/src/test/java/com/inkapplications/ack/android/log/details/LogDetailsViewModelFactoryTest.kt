@@ -11,12 +11,9 @@ import com.inkapplications.ack.structures.PacketData
 import com.inkapplications.ack.structures.WindData
 import com.inkapplications.ack.structures.station.StationAddress
 import com.inkapplications.ack.structures.symbolOf
-import inkapplications.spondee.measure.Fahrenheit
-import inkapplications.spondee.measure.MilesPerHour
-import inkapplications.spondee.spatial.Degrees
-import inkapplications.spondee.spatial.GeoCoordinates
-import inkapplications.spondee.spatial.latitude
-import inkapplications.spondee.spatial.longitude
+import inkapplications.spondee.measure.us.fahrenheit
+import inkapplications.spondee.measure.us.milesPerHour
+import inkapplications.spondee.spatial.*
 import kotlinx.datetime.Instant
 import org.junit.Test
 import kotlin.test.*
@@ -101,11 +98,11 @@ class StationViewModelFactoryTest {
     @Test
     fun positionlessWeatherPacket() {
         val packet = PacketData.Weather(
-            temperature = Fahrenheit.of(72),
+            temperature = 72.fahrenheit,
             windData = WindData(
-                direction = Degrees.of(12),
-                speed = MilesPerHour.of(34),
-                gust = MilesPerHour.of(56),
+                direction = 12.degrees,
+                speed = 34.milesPerHour,
+                gust = 56.milesPerHour,
             )
         ).toTestPacket().toTestCapturedPacket()
         val data = LogDetailData(
@@ -128,8 +125,8 @@ class StationViewModelFactoryTest {
     fun weatherPacket() {
         val packet = PacketData.Weather(
             coordinates = GeoCoordinates(1.0.latitude, 2.0.longitude),
-            temperature = Fahrenheit.of(72),
-            windData = WindData(Degrees.of(12), MilesPerHour.of(34), MilesPerHour.of(56)),
+            temperature = 72.fahrenheit,
+            windData = WindData(12.degrees, 34.milesPerHour, 56.milesPerHour),
         ).toTestPacket().toTestCapturedPacket()
         val data = LogDetailData(
             packet = packet,
