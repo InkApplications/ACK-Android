@@ -28,6 +28,7 @@ fun MessageIndexScreen(
     bottomContentProtection: Dp,
 ) = AckScreen {
     when (val state = screenState.value) {
+        MessageIndexScreenState.Initial -> {}
         is MessageIndexScreenState.ConversationList -> ConversationList(state, controller, bottomContentProtection)
         is MessageIndexScreenState.Empty -> EmptyPlaceholder()
     }

@@ -2,7 +2,7 @@
 ack = "0.5.0"
 kimchi-core = "2.0.2"
 kimchi-firebase = "1.2.0"
-watermelon = "0.3.0"
+watermelon = "0.5.0"
 
 [libraries.kimchi-logger]
 version.ref = "kimchi-core"

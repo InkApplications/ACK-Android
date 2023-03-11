@@ -14,11 +14,11 @@ if (useGoogleServices) {
 }
 
 android {
-    compileSdk = 31
+    compileSdk = 33
     ndkVersion = "21.3.6528147"
     defaultConfig {
         minSdk = 21
-        targetSdk = 31
+        targetSdk = 33
         multiDexEnabled = true
         buildConfigField("String", "MAPBOX_ACCESS_TOKEN", "\"${stringProperty("mapboxPublic", "")}\"")
         buildConfigField("boolean", "USE_GOOGLE_SERVICES", useGoogleServices.toString())
@@ -66,10 +66,6 @@ android {
         jvmTarget = "1.8"
     }
 
-    composeOptions {
-        kotlinCompilerExtensionVersion = androidLibraries.versions.compose.compiler.get()
-    }
-
     packagingOptions {
         exclude("META-INF/core.kotlin_module")
         exclude("META-INF/kotlinx-coroutines-core.kotlin_module")
@@ -89,8 +85,6 @@ dependencies {
     implementation(kotlinLibraries.coroutines.android)
 
     implementation(androidLibraries.androidx.appcompat)
-    implementation(androidLibraries.androidx.constraintlayout)
-    implementation(androidLibraries.androidx.recyclerview)
     implementation(androidLibraries.androidx.preference)
     implementation(androidLibraries.androidx.activity.ktx)
     implementation(androidLibraries.bundles.androidx.compose.full)

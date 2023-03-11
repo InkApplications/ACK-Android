@@ -25,6 +25,7 @@ fun LogIndexScreen(
     controller: LogIndexController,
 ) = AckScreen {
     when (val currentState = state.value) {
+        LogIndexState.Initial -> {}
         is LogIndexState.LogList -> LogList(currentState, controller)
         is LogIndexState.Empty -> EmptyState()
     }

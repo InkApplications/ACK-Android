@@ -35,6 +35,7 @@ fun ConversationScreen(
             Text(viewState.title, style = AckTheme.typography.h1)
         }
         when (viewState) {
+            is ConverstationViewState.Initial -> {}
             is ConverstationViewState.MessageList -> LazyColumn(
                 contentPadding = PaddingValues(vertical = AckTheme.dimensions.gutter),
                 reverseLayout = true,
@@ -45,7 +46,9 @@ fun ConversationScreen(
         }
         Surface(
             shape = AckTheme.shapes.corners,
-            modifier = Modifier.fillMaxWidth().padding(AckTheme.dimensions.gutter),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(AckTheme.dimensions.gutter),
         ) {
             Row(
                verticalAlignment = Alignment.CenterVertically,
@@ -81,7 +84,9 @@ fun ConversationScreen(
 private fun IncomingMessage(viewModel: MessageItemViewModel) {
     Box(
         contentAlignment = viewModel.alignment,
-        modifier = Modifier.fillMaxWidth().padding(horizontal = AckTheme.dimensions.gutter, vertical = AckTheme.dimensions.singleItem)
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = AckTheme.dimensions.gutter, vertical = AckTheme.dimensions.singleItem)
     ) {
         Message(viewModel)
     }
