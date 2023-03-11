@@ -1,6 +1,6 @@
 package com.inkapplications.ack.android.log.index
 
-import com.inkapplications.ack.android.log.LogItemViewModel
+import com.inkapplications.ack.android.log.LogItemViewState
 
 /**
  * Screen-state representation of the Log item screen.
@@ -19,5 +19,5 @@ sealed interface LogIndexState {
     /**
      * Loaded a list of log items to be displayed to the user.
      */
-    data class LogList(val logs: List<LogItemViewModel>): LogIndexState
+    data class LogList(val logs: List<LogItemViewState>): LogIndexState
 }

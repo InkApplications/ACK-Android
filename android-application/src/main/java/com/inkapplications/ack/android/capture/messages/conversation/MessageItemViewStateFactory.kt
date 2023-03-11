@@ -10,18 +10,18 @@ import com.inkapplications.ack.android.capture.messages.MessageData
 import com.inkapplications.ack.data.PacketSource
 import com.inkapplications.ack.structures.PacketData
 import com.inkapplications.android.extensions.StringResources
-import com.inkapplications.android.extensions.ViewModelFactory
+import com.inkapplications.android.extensions.ViewStateFactory
 import com.inkapplications.android.extensions.format.DateTimeFormatter
 import dagger.Reusable
 import javax.inject.Inject
 
 @Reusable
-class MessageItemViewModelFactory @Inject constructor(
+class MessageItemViewStateFactory @Inject constructor(
     private val dateTimeFormatter: DateTimeFormatter,
     private val stringResources: StringResources,
-): ViewModelFactory<MessageData, MessageItemViewModel> {
-    override fun create(data: MessageData): MessageItemViewModel {
-        return MessageItemViewModel(
+): ViewStateFactory<MessageData, MessageItemViewState> {
+    override fun create(data: MessageData): MessageItemViewState {
+        return MessageItemViewState(
             message = (data.message.parsed.data as PacketData.Message).message,
             timestamp = dateTimeFormatter.formatTimestamp(data.message.received),
             alignment = if (data.selfCallsign == data.message.parsed.route.source.callsign) {

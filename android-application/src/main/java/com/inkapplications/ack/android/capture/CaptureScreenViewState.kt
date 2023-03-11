@@ -2,7 +2,7 @@ package com.inkapplications.ack.android.capture
 
 import com.inkapplications.android.extensions.control.ControlState
 
-data class CaptureScreenViewModel(
+data class CaptureScreenViewState(
     val audioCaptureState: ControlState = ControlState.Hidden,
     val audioLevel: String = "",
     val internetCaptureState: ControlState = ControlState.Hidden,

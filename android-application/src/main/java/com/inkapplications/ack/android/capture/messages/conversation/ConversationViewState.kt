@@ -6,6 +6,6 @@ sealed interface ConverstationViewState {
     data class Initial(override val title: String): ConverstationViewState
     data class MessageList(
         override val title: String,
-        val messages: List<MessageItemViewModel>,
+        val messages: List<MessageItemViewState>,
     ): ConverstationViewState
 }

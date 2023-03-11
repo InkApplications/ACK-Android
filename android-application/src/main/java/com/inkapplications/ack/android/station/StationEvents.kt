@@ -1,6 +1,6 @@
 package com.inkapplications.ack.android.station
 
-import com.inkapplications.ack.android.log.LogItemViewModelFactory
+import com.inkapplications.ack.android.log.LogItemViewStateFactory
 import com.inkapplications.ack.android.locale.LocaleSettings
 import com.inkapplications.ack.android.settings.SettingsReadAccess
 import com.inkapplications.ack.android.settings.observeBoolean
@@ -16,8 +16,8 @@ import javax.inject.Inject
 @Reusable
 class StationEvents @Inject constructor(
     private val aprs: PacketStorage,
-    private val stationInsightViewModelFactory: StationInsightViewModelFactory,
-    private val logItemViewModelFactory: LogItemViewModelFactory,
+    private val stationInsightViewStateFactory: StationInsightViewStateFactory,
+    private val logItemViewStateFactory: LogItemViewStateFactory,
     private val settings: SettingsReadAccess,
     private val localeSettings: LocaleSettings,
     private val stationSettings: StationSettings,
@@ -38,9 +38,9 @@ class StationEvents @Inject constructor(
             }
             .map {  data ->
                 StationViewState.Loaded(
-                    insight = stationInsightViewModelFactory.create(data),
+                    insight = stationInsightViewStateFactory.create(data),
                     packets = data.packets.map { packet ->
-                        logItemViewModelFactory.create(packet.id, packet.parsed, data.metric)
+                        logItemViewStateFactory.create(packet.id, packet.parsed, data.metric)
                     }
                 )
             }

@@ -8,7 +8,7 @@ import com.inkapplications.ack.structures.PacketData
 import com.inkapplications.ack.structures.capabilities.Commented
 import com.inkapplications.ack.structures.capabilities.Mapable
 import com.inkapplications.ack.structures.capabilities.Report
-import com.inkapplications.android.extensions.ViewModelFactory
+import com.inkapplications.android.extensions.ViewStateFactory
 import dagger.Reusable
 import javax.inject.Inject
 
@@ -16,17 +16,17 @@ import javax.inject.Inject
  * Convert raw station data into data needed to render the insight view for a station.
  */
 @Reusable
-class StationInsightViewModelFactory @Inject constructor(
-    private val markerViewModelFactory: ViewModelFactory<CapturedPacket, MarkerViewModel?>,
+class StationInsightViewStateFactory @Inject constructor(
+    private val markerViewStateFactory: ViewStateFactory<CapturedPacket, MarkerViewState?>,
     private val summaryFactory: SummaryFactory,
-): ViewModelFactory<StationData, InsightViewModel> {
-    override fun create(data: StationData): InsightViewModel {
+): ViewStateFactory<StationData, InsightViewState> {
+    override fun create(data: StationData): InsightViewState {
         val firstMapable = data.packets.firstOrNull { it.parsed.data is Mapable }
         val firstWeatherData = data.packets.firstNotNullOfOrNull { it.parsed.data as? PacketData.Weather }
 
-        return InsightViewModel(
+        return InsightViewState(
             name = data.packets.first().parsed.route.source.callsign.canonical,
-            markers = firstMapable?.let { markerViewModelFactory.create(it) }
+            markers = firstMapable?.let { markerViewStateFactory.create(it) }
                 ?.let { listOf(it) }
                 .orEmpty(),
             mapCameraPosition = (firstMapable?.parsed?.data as? Mapable)?.coordinates

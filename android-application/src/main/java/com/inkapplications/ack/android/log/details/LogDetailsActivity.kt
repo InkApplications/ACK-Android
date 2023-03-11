@@ -54,7 +54,7 @@ class LogDetailsActivity: ExtendedActivity(), LogDetailsController {
 
     private fun onMapLoaded(map: MapController) {
         logEvents.stateEvents(id).collectOn(foregroundScope) { viewModel ->
-            if (viewModel is LogDetailsState.LogDetailsViewModel) {
+            if (viewModel is LogDetailsState.Loaded) {
                 map.setCamera(viewModel.mapCameraPosition)
                 map.showMarkers(viewModel.markers)
             }

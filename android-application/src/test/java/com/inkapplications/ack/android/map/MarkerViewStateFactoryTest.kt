@@ -14,7 +14,7 @@ import kotlin.test.Test
 import kotlin.test.assertNull
 import kotlin.test.assertTrue
 
-class MarkerViewModelFactoryTest {
+class MarkerViewStateFactoryTest {
     val symbolFactoryStub = object: SymbolFactory {
         override val defaultSymbol: Bitmap? get() = TODO()
         override fun createSymbol(symbol: Symbol): Bitmap? = TODO()
@@ -22,7 +22,7 @@ class MarkerViewModelFactoryTest {
 
     @Test
     fun unknown() {
-        val factory = MarkerViewModelFactory(symbolFactoryStub)
+        val factory = MarkerViewStateFactory(symbolFactoryStub)
         val packet = PacketData.Unknown(body = "")
         val result = factory.create(packet.toTestPacket().toTestCapturedPacket())
 
@@ -31,7 +31,7 @@ class MarkerViewModelFactoryTest {
 
     @Test
     fun noCoordinates() {
-        val factory = MarkerViewModelFactory(symbolFactoryStub)
+        val factory = MarkerViewStateFactory(symbolFactoryStub)
         val packet = PacketData.Weather()
         val result = factory.create(packet.toTestPacket().toTestCapturedPacket())
 
@@ -40,7 +40,7 @@ class MarkerViewModelFactoryTest {
 
     @Test
     fun noSymbol() {
-        val factory = MarkerViewModelFactory(SymbolFactoryDummy)
+        val factory = MarkerViewStateFactory(SymbolFactoryDummy)
         val packet = PacketData.Weather()
         val result = factory.create(packet.toTestPacket().toTestCapturedPacket())
 
@@ -56,7 +56,7 @@ class MarkerViewModelFactoryTest {
             }
 
         }
-        val factory = MarkerViewModelFactory(symbolFactorySpy)
+        val factory = MarkerViewStateFactory(symbolFactorySpy)
         val packet = PacketData.Weather(coordinates = GeoCoordinates(0.latitude, 0.longitude))
         val result = factory.create(packet.toTestPacket().toTestCapturedPacket())
 

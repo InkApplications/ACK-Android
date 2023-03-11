@@ -47,8 +47,8 @@ class SettingsAccess @Inject constructor(
         }
         .map { it.sortedBy { it.name } }
 
-    val settingsViewModel = settingsStateGrouped
-        .map { SettingsViewModel(settingsList = it) }
+    val settingsViewState = settingsStateGrouped
+        .map { SettingsViewState(settingsList = it) }
         .combine(settingValues.observeData(connectionSettings.address)) { viewModel, callsign ->
             viewModel.copy(callsignText = callsign?.toString())
         }

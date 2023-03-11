@@ -17,8 +17,8 @@ import com.inkapplications.ack.android.ui.theme.AckTheme
 
 @Composable
 fun AprsLogItem(
-    log: LogItemViewModel,
-    onClick: (LogItemViewModel) -> Unit,
+    log: LogItemViewState,
+    onClick: (LogItemViewState) -> Unit,
     border: Boolean = false,
 ) {
     Card(

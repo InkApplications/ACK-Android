@@ -26,7 +26,7 @@ class InsightEvents @Inject constructor(
                 else packetStorage.findMostRecentByType(PacketData.Weather::class)
                     .combine(settings.observeBoolean(localeSettings.preferMetric)) { weatherPacket, metric ->
                         val temperature = (weatherPacket?.parsed?.data as? PacketData.Weather)?.temperature
-                        InsightsViewState.InsightsViewModel(
+                        InsightsViewState.Loaded(
                             weatherVisible = temperature != null,
                             temperature = temperature?.format(metric).orEmpty(),
                             weatherReporter = weatherPacket?.parsed?.route?.source?.toString().orEmpty(),

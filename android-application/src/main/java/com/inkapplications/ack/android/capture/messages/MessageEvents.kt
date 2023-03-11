@@ -1,8 +1,8 @@
 package com.inkapplications.ack.android.capture.messages
 
 import com.inkapplications.ack.android.capture.messages.conversation.ConverstationViewState
-import com.inkapplications.ack.android.capture.messages.conversation.MessageItemViewModel
-import com.inkapplications.ack.android.capture.messages.index.ConversationItemViewModel
+import com.inkapplications.ack.android.capture.messages.conversation.MessageItemViewState
+import com.inkapplications.ack.android.capture.messages.index.ConversationItemViewState
 import com.inkapplications.ack.android.capture.messages.index.MessageIndexScreenState
 import com.inkapplications.ack.android.connection.ConnectionSettings
 import com.inkapplications.ack.android.settings.SettingsReadAccess
@@ -10,7 +10,6 @@ import com.inkapplications.ack.android.settings.observeData
 import com.inkapplications.ack.android.settings.observeString
 import com.inkapplications.ack.android.transmit.TransmitSettings
 import com.inkapplications.ack.codec.AprsCodec
-import com.inkapplications.ack.data.CapturedPacket
 import com.inkapplications.ack.data.PacketSource
 import com.inkapplications.ack.data.PacketStorage
 import com.inkapplications.ack.data.drivers.PacketDrivers
@@ -18,7 +17,7 @@ import com.inkapplications.ack.structures.*
 import com.inkapplications.ack.structures.station.Callsign
 import com.inkapplications.ack.structures.station.StationAddress
 import com.inkapplications.ack.structures.station.toStationAddress
-import com.inkapplications.android.extensions.ViewModelFactory
+import com.inkapplications.android.extensions.ViewStateFactory
 import com.inkapplications.coroutines.filterEach
 import com.inkapplications.coroutines.mapEach
 import dagger.Reusable
@@ -32,8 +31,8 @@ class MessageEvents @Inject constructor(
     private val settings: SettingsReadAccess,
     private val connectionSettings: ConnectionSettings,
     private val transmitSettings: TransmitSettings,
-    private val messageItemFactory: ViewModelFactory<MessageData, MessageItemViewModel>,
-    private val conversationItemFactory: ViewModelFactory<MessageData, ConversationItemViewModel>,
+    private val messageItemFactory: ViewStateFactory<MessageData, MessageItemViewState>,
+    private val conversationItemFactory: ViewStateFactory<MessageData, ConversationItemViewState>,
     private val codec: AprsCodec,
     private val drivers: PacketDrivers,
     private val logger: KimchiLogger,

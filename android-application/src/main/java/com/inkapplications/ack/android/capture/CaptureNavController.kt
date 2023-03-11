@@ -1,6 +1,6 @@
 package com.inkapplications.ack.android.capture
 
-import com.inkapplications.ack.android.log.LogItemViewModel
+import com.inkapplications.ack.android.log.LogItemViewState
 
 interface CaptureNavController {
     fun onAudioCaptureEnableClick()
@@ -18,6 +18,6 @@ interface CaptureNavController {
     fun onInternetTransmitEnableClick()
     fun onInternetTransmitDisableClick()
 
-    fun onLogMapItemClick(log: LogItemViewModel)
+    fun onLogMapItemClick(log: LogItemViewState)
     fun onSettingsClick()
 }

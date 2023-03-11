@@ -23,7 +23,7 @@ interface MapController {
     /**
      * Display a set of markers on the map.
      */
-    fun showMarkers(markers: Collection<MarkerViewModel>)
+    fun showMarkers(markers: Collection<MarkerViewState>)
 
     /**
      * Animate the map to a specific location and zoom level

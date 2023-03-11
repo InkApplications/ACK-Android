@@ -10,7 +10,7 @@ import kotlinx.datetime.Instant
 import org.junit.Test
 import kotlin.test.assertEquals
 
-class ConversationItemViewModelFactoryTest {
+class ConversationItemViewStateFactoryTest {
     @Test
     fun testConversationItem() {
         val station = "KE0YOF-2".toStationAddress()
@@ -25,7 +25,7 @@ class ConversationItemViewModelFactoryTest {
             selfCallsign = Callsign("KE0YOG"),
             message = message,
         )
-        val factory = ConversationItemViewModelFactory()
+        val factory = ConversationItemViewStateFactory()
 
         val viewModel = factory.create(conversation)
 

@@ -2,7 +2,6 @@ package com.inkapplications.ack.android.map.mapbox
 
 import android.Manifest
 import android.annotation.SuppressLint
-import android.content.Context
 import android.content.res.Resources
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
@@ -17,7 +16,6 @@ import com.mapbox.maps.MapView
 import com.mapbox.maps.MapboxMap
 import com.mapbox.maps.Style
 import com.mapbox.maps.plugin.animation.easeTo
-import com.mapbox.maps.plugin.animation.flyTo
 import com.mapbox.maps.plugin.annotation.annotations
 import com.mapbox.maps.plugin.annotation.generated.PointAnnotationOptions
 import com.mapbox.maps.plugin.annotation.generated.createPointAnnotationManager
@@ -74,7 +72,7 @@ class MapboxMapController(
         view.logo.marginBottom = padding
     }
 
-    override fun showMarkers(markers: Collection<MarkerViewModel>) {
+    override fun showMarkers(markers: Collection<MarkerViewState>) {
         markers
             .map { marker ->
                 PointAnnotationOptions()

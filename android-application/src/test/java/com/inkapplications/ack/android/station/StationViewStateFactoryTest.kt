@@ -2,7 +2,7 @@ package com.inkapplications.ack.android.station
 
 import com.inkapplications.ack.android.*
 import com.inkapplications.ack.android.log.SummaryFactory
-import com.inkapplications.ack.android.map.MarkerViewModel
+import com.inkapplications.ack.android.map.MarkerViewState
 import com.inkapplications.ack.data.CapturedPacket
 import com.inkapplications.ack.data.PacketSource
 import com.inkapplications.ack.structures.*
@@ -14,13 +14,13 @@ import kotlinx.datetime.Instant
 import org.junit.Test
 import kotlin.test.*
 
-class StationViewModelFactoryTest {
+class StationViewStateFactoryTest {
     val dummySummaryFactory = SummaryFactory(ParrotStringResources)
-    val dummyMarker = MarkerViewModel(0, GeoCoordinates(0.latitude, 0.longitude), null)
+    val dummyMarker = MarkerViewState(0, GeoCoordinates(0.latitude, 0.longitude), null)
 
     @Test
     fun unknownPacket() {
-        val factory = StationInsightViewModelFactory(NullMarkerFactoryMock, dummySummaryFactory)
+        val factory = StationInsightViewStateFactory(NullMarkerFactoryMock, dummySummaryFactory)
         val packet = CapturedPacket(
             id = 1,
             received = Instant.fromEpochMilliseconds(2),
@@ -53,7 +53,7 @@ class StationViewModelFactoryTest {
 
     @Test
     fun positionlessWeatherPacket() {
-        val factory = StationInsightViewModelFactory(NullMarkerFactoryMock, dummySummaryFactory)
+        val factory = StationInsightViewStateFactory(NullMarkerFactoryMock, dummySummaryFactory)
         val packet = PacketData.Weather(
             temperature = 72.fahrenheit,
             windData = WindData(
@@ -81,7 +81,7 @@ class StationViewModelFactoryTest {
 
     @Test
     fun weatherPacket() {
-        val factory = StationInsightViewModelFactory(DummyMarkerFactoryMock, dummySummaryFactory)
+        val factory = StationInsightViewStateFactory(DummyMarkerFactoryMock, dummySummaryFactory)
         val packet = PacketData.Weather(
             coordinates = GeoCoordinates(1.0.latitude, 2.0.longitude),
             temperature = 72.fahrenheit,
@@ -106,7 +106,7 @@ class StationViewModelFactoryTest {
 
     @Test
     fun emptyWeatherPacket() {
-        val factory = StationInsightViewModelFactory(DummyMarkerFactoryMock, dummySummaryFactory)
+        val factory = StationInsightViewStateFactory(DummyMarkerFactoryMock, dummySummaryFactory)
         val packet = PacketData.Weather(
             coordinates = GeoCoordinates(1.latitude, 2.longitude),
         ).toTestPacket().toTestCapturedPacket()
@@ -129,7 +129,7 @@ class StationViewModelFactoryTest {
 
     @Test
     fun positionPacket() {
-        val factory = StationInsightViewModelFactory(DummyMarkerFactoryMock, dummySummaryFactory)
+        val factory = StationInsightViewStateFactory(DummyMarkerFactoryMock, dummySummaryFactory)
         val packet = PacketData.Position(
             coordinates = GeoCoordinates(1.latitude, 2.longitude),
             symbol = symbolOf('/', 'a'),

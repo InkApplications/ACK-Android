@@ -2,7 +2,7 @@ package com.inkapplications.ack.android.map
 
 import com.inkapplications.ack.android.settings.SettingsProvider
 import com.inkapplications.ack.data.CapturedPacket
-import com.inkapplications.android.extensions.ViewModelFactory
+import com.inkapplications.android.extensions.ViewStateFactory
 import dagger.Binds
 import dagger.Module
 import dagger.multibindings.IntoSet
@@ -14,5 +14,5 @@ interface MapModule {
     fun settings(mapSettings: MapSettings): SettingsProvider
 
     @Binds
-    fun markerViewModelVactory(factory: MarkerViewModelFactory): ViewModelFactory<CapturedPacket, MarkerViewModel?>
+    fun markerViewStateFactory(factory: MarkerViewStateFactory): ViewStateFactory<CapturedPacket, MarkerViewState?>
 }

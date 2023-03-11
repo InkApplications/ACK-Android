@@ -1,6 +1,6 @@
 package com.inkapplications.ack.android
 
-import com.inkapplications.ack.android.map.MarkerViewModel
+import com.inkapplications.ack.android.map.MarkerViewState
 import com.inkapplications.android.extensions.StringResources
 import com.inkapplications.ack.android.settings.BooleanSetting
 import com.inkapplications.ack.android.settings.IntSetting
@@ -15,7 +15,7 @@ import com.inkapplications.ack.structures.EncodingConfig
 import com.inkapplications.ack.structures.PacketData
 import com.inkapplications.ack.structures.capabilities.Mapable
 import com.inkapplications.ack.structures.station.Callsign
-import com.inkapplications.android.extensions.ViewModelFactory
+import com.inkapplications.android.extensions.ViewStateFactory
 import com.inkapplications.android.extensions.format.DateTimeFormatter
 import inkapplications.spondee.spatial.GeoCoordinates
 import inkapplications.spondee.spatial.latitude
@@ -63,16 +63,16 @@ object EpochFormatterStub: DateTimeFormatter {
     override fun formatTimestamp(instant: Instant): String = instant.toEpochMilliseconds().toString()
 }
 
-object NullMarkerFactoryMock: ViewModelFactory<CapturedPacket, MarkerViewModel?> {
-    override fun create(data: CapturedPacket): MarkerViewModel? = null.also {
+object NullMarkerFactoryMock: ViewStateFactory<CapturedPacket, MarkerViewState?> {
+    override fun create(data: CapturedPacket): MarkerViewState? = null.also {
         assertNull((data.parsed.data as? Mapable)?.coordinates)
     }
 }
 
-val DummyMarker = MarkerViewModel(0, GeoCoordinates(0.latitude, 0.longitude), null)
+val DummyMarker = MarkerViewState(0, GeoCoordinates(0.latitude, 0.longitude), null)
 
-object DummyMarkerFactoryMock: ViewModelFactory<CapturedPacket, MarkerViewModel?> {
-    override fun create(data: CapturedPacket): MarkerViewModel? = DummyMarker.also {
+object DummyMarkerFactoryMock: ViewStateFactory<CapturedPacket, MarkerViewState?> {
+    override fun create(data: CapturedPacket): MarkerViewState? = DummyMarker.also {
         assertNotNull((data.parsed.data as Mapable).coordinates)
     }
 }

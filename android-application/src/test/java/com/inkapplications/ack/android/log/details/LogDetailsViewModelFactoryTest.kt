@@ -18,10 +18,10 @@ import kotlinx.datetime.Instant
 import org.junit.Test
 import kotlin.test.*
 
-class StationViewModelFactoryTest {
+class StationViewStateFactoryTest {
     val dummySummaryFactory = SummaryFactory(ParrotStringResources)
-    val factoryWithNullMarkers = LogDetailsViewModelFactory(NullMarkerFactoryMock, dummySummaryFactory, EpochFormatterStub, ParrotStringResources)
-    val factoryWithDummyMarkers = LogDetailsViewModelFactory(DummyMarkerFactoryMock, dummySummaryFactory, EpochFormatterStub, ParrotStringResources)
+    val factoryWithNullMarkers = LogDetailsViewStateFactory(NullMarkerFactoryMock, dummySummaryFactory, EpochFormatterStub, ParrotStringResources)
+    val factoryWithDummyMarkers = LogDetailsViewStateFactory(DummyMarkerFactoryMock, dummySummaryFactory, EpochFormatterStub, ParrotStringResources)
 
     @Test
     fun nameFormatting() {

@@ -16,22 +16,22 @@ import com.inkapplications.ack.structures.capabilities.Commented
 import com.inkapplications.ack.structures.capabilities.Mapable
 import com.inkapplications.ack.structures.capabilities.Report
 import com.inkapplications.android.extensions.StringResources
-import com.inkapplications.android.extensions.ViewModelFactory
+import com.inkapplications.android.extensions.ViewStateFactory
 import com.inkapplications.android.extensions.format.DateTimeFormatter
 import javax.inject.Inject
 
 /**
  * Convert Log data into the model used to render the view for a specific packet.
  */
-class LogDetailsViewModelFactory @Inject constructor(
-    private val markerFactory: ViewModelFactory<CapturedPacket, MarkerViewModel?>,
+class LogDetailsViewStateFactory @Inject constructor(
+    private val markerFactory: ViewStateFactory<CapturedPacket, MarkerViewState?>,
     private val summaryFactory: SummaryFactory,
     private val timeFormatter: DateTimeFormatter,
     private val stringResources: StringResources,
-): ViewModelFactory<LogDetailData, LogDetailsState.LogDetailsViewModel> {
-    override fun create(data: LogDetailData): LogDetailsState.LogDetailsViewModel {
+): ViewStateFactory<LogDetailData, LogDetailsState.Loaded> {
+    override fun create(data: LogDetailData): LogDetailsState.Loaded {
         val packetData = data.packet.parsed.data
-        return LogDetailsState.LogDetailsViewModel(
+        return LogDetailsState.Loaded(
             callsign = data.packet.parsed.route.source.callsign,
             name = data.packet.parsed.route.source.toString(),
             timestamp = timeFormatter.formatTimestamp(data.packet.received)

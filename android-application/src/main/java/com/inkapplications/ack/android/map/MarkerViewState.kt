@@ -6,7 +6,7 @@ import inkapplications.spondee.spatial.GeoCoordinates
 /**
  * View data for a marker displayed on the map.
  */
-data class MarkerViewModel(
+data class MarkerViewState(
     val id: Long,
     val coordinates: GeoCoordinates,
     val symbol: Bitmap?

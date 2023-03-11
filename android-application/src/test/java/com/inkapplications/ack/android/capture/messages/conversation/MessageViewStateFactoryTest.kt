@@ -18,8 +18,8 @@ import kotlinx.datetime.Instant
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
-class MessageViewModelFactoryTest {
-    private val factory = MessageItemViewModelFactory(EpochFormatterStub, ParrotStringResources)
+class MessageViewStateFactoryTest {
+    private val factory = MessageItemViewStateFactory(EpochFormatterStub, ParrotStringResources)
     private val message = PacketData.Message(
         addressee = "KE0YOF".toStationAddress(),
         message = "Hello World!",

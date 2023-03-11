@@ -9,7 +9,7 @@ import com.inkapplications.ack.android.settings.observeBoolean
 import com.inkapplications.ack.android.station.StationSettings
 import com.inkapplications.ack.data.PacketStorage
 import com.inkapplications.ack.structures.PacketData
-import com.inkapplications.android.extensions.ViewModelFactory
+import com.inkapplications.android.extensions.ViewStateFactory
 import com.inkapplications.coroutines.combinePair
 import com.inkapplications.coroutines.mapEach
 import dagger.Reusable
@@ -20,8 +20,8 @@ import javax.inject.Inject
 @Reusable
 class LogEvents @Inject constructor(
     private val packetStorage: PacketStorage,
-    private val stateFactory: LogItemViewModelFactory,
-    private val logDetailsFactory: ViewModelFactory<LogDetailData, LogDetailsState.LogDetailsViewModel>,
+    private val stateFactory: LogItemViewStateFactory,
+    private val logDetailsFactory: ViewStateFactory<LogDetailData, LogDetailsState.Loaded>,
     private val settings: SettingsReadAccess,
     private val localeSettings: LocaleSettings,
     private val stationSettings: StationSettings,

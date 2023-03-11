@@ -6,7 +6,7 @@ import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.compose.runtime.collectAsState
 import com.inkapplications.ack.android.component
-import com.inkapplications.ack.android.log.LogItemViewModel
+import com.inkapplications.ack.android.log.LogItemViewState
 import com.inkapplications.ack.android.log.details.startLogInspectActivity
 import com.inkapplications.ack.android.map.MapController
 import com.inkapplications.ack.android.map.mapbox.createController
@@ -62,7 +62,7 @@ class StationActivity: ExtendedActivity(), StationScreenController {
         Kimchi.debug("Map Item Clicked: No-Op")
     }
 
-    override fun onLogItemClicked(item: LogItemViewModel) {
+    override fun onLogItemClicked(item: LogItemViewState) {
         startLogInspectActivity(item.id)
     }
 }

@@ -81,7 +81,7 @@ fun ConversationScreen(
 }
 
 @Composable
-private fun IncomingMessage(viewModel: MessageItemViewModel) {
+private fun IncomingMessage(viewModel: MessageItemViewState) {
     Box(
         contentAlignment = viewModel.alignment,
         modifier = Modifier
@@ -93,7 +93,7 @@ private fun IncomingMessage(viewModel: MessageItemViewModel) {
 }
 
 @Composable
-private fun Message(viewModel: MessageItemViewModel) {
+private fun Message(viewModel: MessageItemViewState) {
     Card(
         shape = RoundedCornerShape(16.dp),
         modifier = Modifier.defaultMinSize(minWidth = 75.dp)

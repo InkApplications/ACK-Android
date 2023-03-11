@@ -3,7 +3,7 @@ package com.inkapplications.ack.android.capture.messages.conversation
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.graphics.vector.ImageVector
 
-data class MessageItemViewModel(
+data class MessageItemViewState(
     val message: String,
     val timestamp: String,
     val alignment: Alignment,

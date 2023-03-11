@@ -1,6 +1,6 @@
 package com.inkapplications.ack.android.map
 
-import com.inkapplications.ack.android.log.LogItemViewModel
+import com.inkapplications.ack.android.log.LogItemViewState
 
 /**
  * Model the state of the entire map page.
@@ -8,9 +8,9 @@ import com.inkapplications.ack.android.log.LogItemViewModel
  * This can't include events that are dependent on the map, which loads
  * separately.
  */
-data class MapViewModel(
-    val markers: Collection<MarkerViewModel> = emptyList(),
-    val selectedItem: LogItemViewModel? = null,
+data class MapViewState(
+    val markers: Collection<MarkerViewState> = emptyList(),
+    val selectedItem: LogItemViewState? = null,
     val trackPosition: Boolean = false,
 ) {
     val selectedItemVisible = selectedItem != null

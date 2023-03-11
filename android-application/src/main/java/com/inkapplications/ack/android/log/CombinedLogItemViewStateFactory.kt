@@ -9,15 +9,15 @@ import dagger.Reusable
 import javax.inject.Inject
 
 @Reusable
-class CombinedLogItemViewModelFactory @Inject constructor(
+class CombinedLogItemViewStateFactory @Inject constructor(
     private val symbolFactory: SymbolFactory
-): LogItemViewModelFactory {
+): LogItemViewStateFactory {
     override fun create(
         id: Long,
         packet: AprsPacket,
         metric: Boolean,
-    ): LogItemViewModel {
-        return LogItemViewModel(
+    ): LogItemViewState {
+        return LogItemViewState(
             id = id,
             source = packet.route.source.callsign,
             origin = packet.route.source.toString(),

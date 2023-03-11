@@ -30,7 +30,7 @@ import com.inkapplications.ack.android.capture.log.LogIndexScreen
 import com.inkapplications.ack.android.log.index.LogIndexController
 import com.inkapplications.ack.android.log.index.LogIndexState
 import com.inkapplications.ack.android.map.MapScreen
-import com.inkapplications.ack.android.map.MapViewModel
+import com.inkapplications.ack.android.map.MapViewState
 import com.inkapplications.ack.android.capture.messages.MessageIndexScreen
 import com.inkapplications.ack.android.capture.messages.index.MessagesScreenController
 import com.inkapplications.ack.android.capture.messages.index.MessageIndexScreenState
@@ -47,8 +47,8 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun CaptureScreen(
-    captureScreenState: State<CaptureScreenViewModel>,
-    mapState: State<MapViewModel>,
+    captureScreenState: State<CaptureScreenViewState>,
+    mapState: State<MapViewState>,
     insightsState: State<InsightsViewState>,
     logIndexState: State<LogIndexState>,
     logIndexController: LogIndexController,
@@ -182,7 +182,7 @@ private fun CaptureSettingsFab(
 @Composable
 private fun SettingsSheetWrapper(
     settingsSheetState: BottomSheetScaffoldState,
-    captureScreenState: State<CaptureScreenViewModel>,
+    captureScreenState: State<CaptureScreenViewState>,
     captureController: CaptureNavController,
     content: @Composable () -> Unit,
 ) {
@@ -198,7 +198,7 @@ private fun SettingsSheetWrapper(
 @OptIn(ExperimentalMaterialApi::class, ExperimentalFoundationApi::class)
 @Composable
 private fun CaptureSettingsSheet(
-    captureScreenState: CaptureScreenViewModel,
+    captureScreenState: CaptureScreenViewState,
     captureController: CaptureNavController,
     settingsSheetState: BottomSheetScaffoldState,
 ) = Column(horizontalAlignment = Alignment.CenterHorizontally) {
@@ -368,7 +368,7 @@ private fun CaptureSettingRow(
 @Composable
 private fun CaptureNavHost(
     navController: NavHostController,
-    mapState: State<MapViewModel>,
+    mapState: State<MapViewState>,
     logIndexState: State<LogIndexState>,
     logIndexController: LogIndexController,
     insightsState: State<InsightsViewState>,

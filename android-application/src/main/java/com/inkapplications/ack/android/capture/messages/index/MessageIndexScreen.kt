@@ -14,7 +14,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.Dp
 import com.inkapplications.ack.android.R
-import com.inkapplications.ack.android.capture.messages.index.ConversationItemViewModel
+import com.inkapplications.ack.android.capture.messages.index.ConversationItemViewState
 import com.inkapplications.ack.android.capture.messages.index.MessageIndexScreenState
 import com.inkapplications.ack.android.capture.messages.index.MessagesScreenController
 import com.inkapplications.ack.android.ui.theme.AckScreen
@@ -80,7 +80,7 @@ private fun ConversationList(
 
 @Composable
 @OptIn(ExperimentalMaterialApi::class)
-private fun ConversationItem(viewModel: ConversationItemViewModel, controller: MessagesScreenController) {
+private fun ConversationItem(viewModel: ConversationItemViewState, controller: MessagesScreenController) {
     Card(
         onClick = { controller.onConversationClick(viewModel.correspondent) },
         modifier = Modifier.padding(horizontal = AckTheme.dimensions.gutter, vertical = AckTheme.dimensions.singleItem)

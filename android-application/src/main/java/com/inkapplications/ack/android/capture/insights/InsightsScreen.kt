@@ -5,7 +5,6 @@ import androidx.compose.material.Icon
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Lightbulb
-import androidx.compose.material.icons.filled.Summarize
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -20,7 +19,7 @@ fun InsightsScreen(
 ) {
     AckScreen {
         when (state) {
-            is InsightsViewState.InsightsViewModel -> Insights(state)
+            is InsightsViewState.Loaded -> Insights(state)
             InsightsViewState.Empty -> EmptyPlaceholder()
             InsightsViewState.Initial -> {}
         }
@@ -46,7 +45,7 @@ private fun EmptyPlaceholder() {
 
 @Composable
 private fun Insights(
-    state: InsightsViewState.InsightsViewModel,
+    state: InsightsViewState.Loaded,
 ) {
     Column(
         modifier = Modifier.padding(AckTheme.dimensions.gutter)

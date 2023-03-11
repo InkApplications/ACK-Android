@@ -26,7 +26,7 @@ fun LogDetailsScreen(
     controller: LogDetailsController,
     createMapView: (Context) -> View,
 ) {
-    if (viewState !is LogDetailsState.LogDetailsViewModel) return
+    if (viewState !is LogDetailsState.Loaded) return
 
     Column {
         if (viewState.markers.isNotEmpty()) {

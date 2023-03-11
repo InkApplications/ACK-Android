@@ -17,16 +17,16 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.viewinterop.AndroidView
 import com.inkapplications.ack.android.log.AprsLogItem
-import com.inkapplications.ack.android.log.LogItemViewModel
+import com.inkapplications.ack.android.log.LogItemViewState
 import com.inkapplications.ack.android.ui.theme.AckScreen
 import com.inkapplications.ack.android.ui.theme.AckTheme
 import com.inkapplications.ack.android.R
 
 @Composable
 fun MapScreen(
-    state: MapViewModel,
+    state: MapViewState,
     mapFactory: (Context) -> View,
-    onLogItemClick: (LogItemViewModel) -> Unit,
+    onLogItemClick: (LogItemViewState) -> Unit,
     onEnableLocation: () -> Unit,
     onDisableLocation: () -> Unit,
     bottomContentProtection: Dp,

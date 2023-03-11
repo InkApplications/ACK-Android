@@ -16,7 +16,6 @@ import com.inkapplications.android.extensions.StringResources
 import com.inkapplications.android.extensions.control.ControlState
 import com.inkapplications.coroutines.combinePair
 import com.inkapplications.coroutines.combineTriple
-import inkapplications.spondee.scalar.WholePercentage
 import inkapplications.spondee.scalar.toWholePercentage
 import inkapplications.spondee.structure.roundToInt
 import inkapplications.spondee.structure.value
@@ -26,7 +25,6 @@ import kotlinx.coroutines.flow.*
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.coroutines.coroutineContext
-import kotlin.math.roundToInt
 import kotlin.time.ExperimentalTime
 
 @Singleton
@@ -89,7 +87,7 @@ class CaptureEvents @Inject constructor(
 
     val screenState = audioCaptureControlState
         .combine(internetCaptureControlState) { recording, internet ->
-            CaptureScreenViewModel(
+            CaptureScreenViewState(
                 audioCaptureState = recording,
                 internetCaptureState = internet,
             )

@@ -14,7 +14,7 @@ import com.inkapplications.ack.data.PacketStorage
 import com.inkapplications.ack.structures.AprsPacket
 import com.inkapplications.ack.structures.PacketData
 import com.inkapplications.ack.structures.station.Callsign
-import com.inkapplications.android.extensions.ViewModelFactory
+import com.inkapplications.android.extensions.ViewStateFactory
 import kimchi.logger.EmptyLogger
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
@@ -32,13 +32,13 @@ class LogEventsTest {
             emit(true)
         }
     }
-    private val dummyStateFactory = object: LogItemViewModelFactory {
-        override fun create(id: Long, packet: AprsPacket, metric: Boolean): LogItemViewModel {
-            return LogItemViewModel(0, Callsign(""), "", "", null)
+    private val dummyStateFactory = object: LogItemViewStateFactory {
+        override fun create(id: Long, packet: AprsPacket, metric: Boolean): LogItemViewState {
+            return LogItemViewState(0, Callsign(""), "", "", null)
         }
     }
-    private val stubLogDetailsFactory = object: ViewModelFactory<LogDetailData, LogDetailsState.LogDetailsViewModel> {
-        override fun create(data: LogDetailData): LogDetailsState.LogDetailsViewModel = TODO()
+    private val stubLogDetailsFactory = object: ViewStateFactory<LogDetailData, LogDetailsState.Loaded> {
+        override fun create(data: LogDetailData): LogDetailsState.Loaded = TODO()
     }
 
     @Test

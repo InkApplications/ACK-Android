@@ -10,7 +10,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.core.content.ContextCompat
 import com.inkapplications.ack.android.R
 import com.inkapplications.ack.android.capture.insights.InsightsViewState
-import com.inkapplications.ack.android.log.LogItemViewModel
+import com.inkapplications.ack.android.log.LogItemViewState
 import com.inkapplications.ack.android.log.index.LogIndexController
 import com.inkapplications.ack.android.log.index.LogIndexState
 import com.inkapplications.ack.android.log.details.startLogInspectActivity
@@ -42,7 +42,7 @@ class CaptureActivity: ExtendedActivity(), CaptureNavController, LogIndexControl
     private var mapView: MapView? = null
     private var map: MapController? = null
     private var mapScope: CoroutineScope = MainScope()
-    private val mapViewModel = MutableStateFlow(MapViewModel())
+    private val mapViewState = MutableStateFlow(MapViewState())
     private lateinit var captureEvents: CaptureEvents
     private val permissionGate = PermissionGate(this)
 
@@ -53,8 +53,8 @@ class CaptureActivity: ExtendedActivity(), CaptureNavController, LogIndexControl
         val insightsEvents = component.insightEvents()
 
         setContent {
-            val captureState = captureEvents.screenState.collectAsState(CaptureScreenViewModel())
-            val mapState = mapViewModel.collectAsState()
+            val captureState = captureEvents.screenState.collectAsState(CaptureScreenViewState())
+            val mapState = mapViewState.collectAsState()
             val logState = logData.logIndexState.collectAsState(LogIndexState.Initial)
             val insightsState = insightsEvents.viewState.collectAsState(InsightsViewState.Initial)
             val messageScreenState = component.messageEvents().messagesScreenState.collectAsState(MessageIndexScreenState.Initial)
@@ -109,7 +109,7 @@ class CaptureActivity: ExtendedActivity(), CaptureNavController, LogIndexControl
 
         mapEvents.viewState.collectOn(mapScope) { state ->
             Kimchi.trackEvent("map_markers", listOf(intProperty("quantity", state.markers.size)))
-            mapViewModel.emit(state)
+            mapViewState.emit(state)
             map.showMarkers(state.markers)
 
             if (state.trackPosition) {
@@ -120,11 +120,11 @@ class CaptureActivity: ExtendedActivity(), CaptureNavController, LogIndexControl
         }
     }
 
-    override fun onLogMapItemClick(log: LogItemViewModel) {
+    override fun onLogMapItemClick(log: LogItemViewState) {
         startStationActivity(log.source)
     }
 
-    override fun onLogListItemClick(log: LogItemViewModel) {
+    override fun onLogListItemClick(log: LogItemViewState) {
         startLogInspectActivity(log.id)
     }
 

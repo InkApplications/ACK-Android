@@ -20,7 +20,7 @@ class SettingsActivity: ExtendedActivity(), SettingsController {
         settingsAccess = component.settingsAccess()
 
         setContent {
-            val state = settingsAccess.settingsViewModel.collectAsState(null)
+            val state = settingsAccess.settingsViewState.collectAsState(null)
 
             SettingsScreen(
                 state = state,

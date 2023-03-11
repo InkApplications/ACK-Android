@@ -1,7 +1,7 @@
 package com.inkapplications.ack.android.map
 
-import com.inkapplications.ack.android.log.LogItemViewModel
-import com.inkapplications.ack.android.log.CombinedLogItemViewModelFactory
+import com.inkapplications.ack.android.log.LogItemViewState
+import com.inkapplications.ack.android.log.CombinedLogItemViewStateFactory
 import com.inkapplications.ack.android.locale.LocaleSettings
 import com.inkapplications.ack.android.settings.SettingsReadAccess
 import com.inkapplications.ack.android.settings.observeBoolean
@@ -27,19 +27,19 @@ class MapDataRepository @Inject constructor(
     private val logger: KimchiLogger,
     private val aprs: PacketStorage,
     private val symbolFactory: SymbolFactory,
-    private val logStateFactory: CombinedLogItemViewModelFactory,
+    private val logStateFactory: CombinedLogItemViewStateFactory,
     private val settings: SettingsReadAccess,
     private val mapSettings: MapSettings,
     private val localeSettings: LocaleSettings,
 ) {
-    fun findMarkers(): Flow<Collection<MarkerViewModel>> {
+    fun findMarkers(): Flow<Collection<MarkerViewState>> {
         return settings.observeInt(mapSettings.pinCount)
             .flatMapLatest { pinCount ->
                 aprs.findRecent(pinCount)
                     .map { it.distinctBy { it.parsed.route.source } }
                     .mapEach { packet ->
                         when (val data = packet.parsed.data) {
-                            is PacketData.Position -> MarkerViewModel(packet.id, data.coordinates, symbolFactory.createSymbol(data.symbol))
+                            is PacketData.Position -> MarkerViewState(packet.id, data.coordinates, symbolFactory.createSymbol(data.symbol))
                             else -> null
                         }
                     }
@@ -48,7 +48,7 @@ class MapDataRepository @Inject constructor(
             }
     }
 
-    fun findLogItem(id: Long): Flow<LogItemViewModel?> {
+    fun findLogItem(id: Long): Flow<LogItemViewState?> {
         return settings.observeBoolean(localeSettings.preferMetric).flatMapLatest { metric ->
             aprs.findById(id).map { it?.let { logStateFactory.create(it.id, it.parsed, metric) } }
         }

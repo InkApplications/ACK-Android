@@ -11,8 +11,8 @@ import inkapplications.spondee.spatial.longitude
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
-class CombinedLogItemViewModelFactoryTest {
-    val factory = CombinedLogItemViewModelFactory(SymbolFactoryDummy)
+class CombinedLogItemViewStateFactoryTest {
+    val factory = CombinedLogItemViewStateFactory(SymbolFactoryDummy)
 
     @Test
     fun unknownPacket() {

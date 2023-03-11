@@ -24,8 +24,8 @@ class MapEvents @Inject constructor(
             ?.let { MapCameraPosition(it.location, ZoomLevels.RIVERS) }
             ?: CameraPositionDefaults.unknownLocation
 
-    val viewState: Flow<MapViewModel> = mapData.findMarkers()
-        .map { MapViewModel(markers = it) }
+    val viewState: Flow<MapViewState> = mapData.findMarkers()
+        .map { MapViewState(markers = it) }
         .combine(selectedItem) { viewModel, selectedItem ->
             viewModel.copy(selectedItem = selectedItem)
         }

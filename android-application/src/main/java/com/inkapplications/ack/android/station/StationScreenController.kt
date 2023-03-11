@@ -1,6 +1,6 @@
 package com.inkapplications.ack.android.station
 
-import com.inkapplications.ack.android.log.LogItemViewModel
+import com.inkapplications.ack.android.log.LogItemViewState
 
 /**
  * Actions invoked on the station screen
@@ -15,5 +15,5 @@ interface StationScreenController {
      * Invoked when the user clicks on a log item in the list of packets
      * received for this station.
      */
-    fun onLogItemClicked(item: LogItemViewModel)
+    fun onLogItemClicked(item: LogItemViewState)
 }
