@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="messages_conversation_send_placeholder">Text Message</string>
+    <string name="messages_conversation_empty">No messages yet.</string>
     <string name="messages_conversation_send_action">Send</string>
     <string name="messages_compose_action">Compose Message</string>
     <string name="messages_create_title">New Message</string>

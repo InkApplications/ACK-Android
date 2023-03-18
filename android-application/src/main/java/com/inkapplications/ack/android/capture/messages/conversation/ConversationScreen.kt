@@ -7,6 +7,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Message
 import androidx.compose.material.icons.filled.Send
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -19,6 +20,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.inkapplications.ack.android.R
+import com.inkapplications.ack.android.ui.EmptyBox
 import com.inkapplications.ack.android.ui.theme.AckScreen
 import com.inkapplications.ack.android.ui.theme.AckTheme
 
@@ -39,7 +41,11 @@ fun ConversationScreen(
         }
         when (viewState) {
             is ConversationViewState.Initial -> {}
-            is ConversationViewState.Empty -> {}
+            is ConversationViewState.Empty -> EmptyBox(
+                icon = Icons.Default.Message,
+                caption = stringResource(R.string.messages_conversation_empty),
+                modifier = Modifier.weight(1f),
+            )
             is ConversationViewState.MessageList -> LazyColumn(
                 contentPadding = PaddingValues(vertical = AckTheme.spacing.gutter),
                 reverseLayout = true,
