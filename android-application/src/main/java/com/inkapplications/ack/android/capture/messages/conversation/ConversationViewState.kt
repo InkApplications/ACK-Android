@@ -1,11 +1,31 @@
 package com.inkapplications.ack.android.capture.messages.conversation
 
-sealed interface ConverstationViewState {
+/**
+ * States for a single conversation view.
+ */
+sealed interface ConversationViewState {
+    /**
+     * Title of the page to display in navigation.
+     */
     val title: String
 
-    data class Initial(override val title: String): ConverstationViewState
+    /**
+     * Indicates that no data has been loaded yet.
+     */
+    data class Initial(override val title: String): ConversationViewState
+
+    /**
+     * Indicates that data has been loaded, but there are no messages yet.
+     */
+    data class Empty(override val title: String): ConversationViewState
+
+    /**
+     * Message data for the conversation.
+     *
+     * @param messages The list of message history.
+     */
     data class MessageList(
         override val title: String,
-        val messages: List<MessageItemViewState>,
-    ): ConverstationViewState
+        val messages: List<MessageItemState>,
+    ): ConversationViewState
 }

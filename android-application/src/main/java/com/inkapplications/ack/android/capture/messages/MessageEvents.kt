@@ -1,7 +1,5 @@
 package com.inkapplications.ack.android.capture.messages
 
-import com.inkapplications.ack.android.capture.messages.conversation.ConverstationViewState
-import com.inkapplications.ack.android.capture.messages.conversation.MessageItemViewState
 import com.inkapplications.ack.android.capture.messages.index.ConversationItemViewState
 import com.inkapplications.ack.android.capture.messages.index.MessageIndexScreenState
 import com.inkapplications.ack.android.connection.ConnectionSettings
@@ -18,7 +16,7 @@ import com.inkapplications.ack.structures.station.Callsign
 import com.inkapplications.ack.structures.station.StationAddress
 import com.inkapplications.ack.structures.station.toStationAddress
 import com.inkapplications.android.extensions.ViewStateFactory
-import com.inkapplications.coroutines.filterEach
+import com.inkapplications.coroutines.filterItems
 import com.inkapplications.coroutines.mapEach
 import dagger.Reusable
 import kimchi.logger.KimchiLogger
@@ -31,7 +29,6 @@ class MessageEvents @Inject constructor(
     private val settings: SettingsReadAccess,
     private val connectionSettings: ConnectionSettings,
     private val transmitSettings: TransmitSettings,
-    private val messageItemFactory: ViewStateFactory<MessageData, MessageItemViewState>,
     private val conversationItemFactory: ViewStateFactory<MessageData, ConversationItemViewState>,
     private val codec: AprsCodec,
     private val drivers: PacketDrivers,
@@ -46,15 +43,13 @@ class MessageEvents @Inject constructor(
         .mapEach(conversationItemFactory::create)
         .map { if (it.isEmpty()) MessageIndexScreenState.Empty else MessageIndexScreenState.ConversationList(it) }
 
-    fun conversationViewState(address: Callsign): Flow<ConverstationViewState> {
+    fun conversationList(address: Callsign): Flow<List<MessageData>> {
         return settings.observeData(connectionSettings.address)
             .flatMapLatest { self ->
                 (self?.callsign?.let { packetStorage.findConversation(address, it) }?.mapEach { MessageData(self.callsign, it) } ?: flowOf(emptyList()))
             }
-            .filterEach { it.message.parsed.data is PacketData.Message }
+            .filterItems { it.message.parsed.data is PacketData.Message }
             .onEach { logger.debug("Loaded ${it.size} messages from $address") }
-            .mapEach(messageItemFactory::create)
-            .map { ConverstationViewState.MessageList(address.canonical, it) }
     }
 
     suspend fun transmitMessage(addressee: Callsign, message: String) {

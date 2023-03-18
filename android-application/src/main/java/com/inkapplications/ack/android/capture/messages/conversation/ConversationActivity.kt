@@ -2,7 +2,6 @@ package com.inkapplications.ack.android.capture.messages.conversation
 
 import android.app.Activity
 import androidx.activity.compose.setContent
-import androidx.compose.runtime.collectAsState
 import com.inkapplications.ack.android.capture.messages.MessageEvents
 import com.inkapplications.ack.android.trackNavigation
 import com.inkapplications.ack.structures.station.Callsign
@@ -13,8 +12,14 @@ import kotlinx.coroutines.*
 import kimchi.Kimchi
 import javax.inject.Inject
 
-private const val EXTRA_ADDRESS = "aprs.conversation.extra.address"
+/**
+ * Intent Extra used for the addressee of the conversation.
+ */
+const val EXTRA_ADDRESS = "aprs.conversation.extra.address"
 
+/**
+ * Activity for viewing a single conversation's messages with another station.
+ */
 @AndroidEntryPoint
 class ConversationActivity: ExtendedActivity(), ConversationController {
     @Inject
@@ -24,11 +29,8 @@ class ConversationActivity: ExtendedActivity(), ConversationController {
 
     override fun onCreate() {
         super.onCreate()
-        val initialState = ConverstationViewState.Initial(callsign.canonical)
-
         setContent {
-            val state = messageEvents.conversationViewState(callsign).collectAsState(initialState)
-            ConversationScreen(state.value, this)
+            ConversationScreen(this)
         }
     }
 
@@ -46,6 +48,11 @@ class ConversationActivity: ExtendedActivity(), ConversationController {
     }
 }
 
+/**
+ * Start a conversation activity for a particular station.
+ *
+ * @param callsign The callsign of the station to load messages for.
+ */
 fun Activity.startConversationActivity(callsign: Callsign) {
     Kimchi.trackNavigation("conversation")
     startActivity(ConversationActivity::class) {
