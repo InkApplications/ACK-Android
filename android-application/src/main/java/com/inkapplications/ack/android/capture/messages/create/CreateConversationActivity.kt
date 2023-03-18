@@ -5,6 +5,9 @@ import com.inkapplications.ack.android.capture.messages.conversation.startConver
 import com.inkapplications.ack.structures.station.Callsign
 import com.inkapplications.android.extensions.ExtendedActivity
 
+/**
+ * Screen to prompt the user to start a conversation with a specific station.
+ */
 class CreateConversationActivity: ExtendedActivity(), CreateConversationController {
     override fun onCreate() {
         super.onCreate()
