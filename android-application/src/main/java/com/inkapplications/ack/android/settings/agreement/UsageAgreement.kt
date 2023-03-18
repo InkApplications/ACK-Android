@@ -15,7 +15,7 @@ fun UsageAgreement() {
             text = stringResource(R.string.usage_legal_services_title),
             style = AckTheme.typography.h2,
         )
-        Spacer(Modifier.height(AckTheme.dimensions.item))
+        Spacer(Modifier.height(AckTheme.spacing.item))
         Text(
             text = stringResource(R.string.usage_legal_services_section1),
         )
@@ -23,39 +23,39 @@ fun UsageAgreement() {
             text = stringResource(R.string.usage_legal_services_section2),
         )
 
-        Spacer(Modifier.height(AckTheme.dimensions.content))
+        Spacer(Modifier.height(AckTheme.spacing.content))
 
         Text(
             text = stringResource(R.string.usage_data_privacy_title),
             style = AckTheme.typography.h2,
         )
-        Spacer(Modifier.height(AckTheme.dimensions.item))
+        Spacer(Modifier.height(AckTheme.spacing.item))
         Text(
             text = stringResource(R.string.usage_data_privacy_section1),
         )
-        Spacer(Modifier.height(AckTheme.dimensions.item))
+        Spacer(Modifier.height(AckTheme.spacing.item))
         Text(
             text = stringResource(R.string.usage_data_privacy_section2),
         )
 
-        Spacer(Modifier.height(AckTheme.dimensions.content))
+        Spacer(Modifier.height(AckTheme.spacing.content))
 
         Text(
             text = stringResource(R.string.usage_warranty_title),
             style = AckTheme.typography.h2,
         )
-        Spacer(Modifier.height(AckTheme.dimensions.item))
+        Spacer(Modifier.height(AckTheme.spacing.item))
         Text(
             text = stringResource(R.string.usage_warranty_section1),
         )
 
-        Spacer(Modifier.height(AckTheme.dimensions.content))
+        Spacer(Modifier.height(AckTheme.spacing.content))
 
         Text(
             text = stringResource(R.string.usage_rights_title),
             style = AckTheme.typography.h2,
         )
-        Spacer(Modifier.height(AckTheme.dimensions.item))
+        Spacer(Modifier.height(AckTheme.spacing.item))
         Text(
             text = stringResource(R.string.usage_rights_section1),
         )

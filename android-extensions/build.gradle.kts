@@ -34,8 +34,8 @@ dependencies {
 
     api(inkLibraries.ack.structures)
 
-    api(thirdParty.dagger.core)
-    kapt(thirdParty.dagger.compiler)
+    implementation(thirdParty.bundles.dagger.libraries)
+    kapt(thirdParty.bundles.dagger.kapt)
 
     testImplementation(thirdParty.junit)
     testImplementation(kotlinLibraries.coroutines.test)

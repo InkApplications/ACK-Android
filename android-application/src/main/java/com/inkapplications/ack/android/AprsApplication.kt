@@ -4,9 +4,11 @@ import android.app.Activity
 import android.app.Application
 import android.app.Service
 import androidx.fragment.app.Fragment
+import com.inkapplications.ack.android.capture.service.CaptureServiceNotifications
 import com.inkapplications.android.extensions.ApplicationModule
 import com.inkapplications.android.extensions.LifecycleLogger
 import com.mapbox.maps.ResourceOptionsManager
+import dagger.hilt.android.HiltAndroidApp
 import kimchi.bridge.firebase.analytics.FirebaseAnalyticsAdapter
 import kimchi.Kimchi
 import kimchi.KimchiLoggerAnalytics
@@ -15,13 +17,12 @@ import kimchi.bridge.firebase.crashlytics.FirebaseCrashlyticsLogMessageAdapter
 import kimchi.logger.LogLevel
 import kimchi.logger.defaultWriter
 import kimchi.logger.withThreshold
+import javax.inject.Inject
 
+@HiltAndroidApp
 class AprsApplication: Application() {
-    val component by lazy {
-        DaggerApplicationComponent.builder()
-            .applicationModule(ApplicationModule(this))
-            .build()
-    }
+    @Inject
+    lateinit var captureServiceNotifications: CaptureServiceNotifications
 
     override fun onCreate() {
         super.onCreate()
@@ -39,10 +40,7 @@ class AprsApplication: Application() {
         })
 
         ResourceOptionsManager.getDefault(this, BuildConfig.MAPBOX_ACCESS_TOKEN)
-        component.captureServiceNotifications().onCreate(this)
+        captureServiceNotifications.onCreate(this)
     }
 }
 
-val Activity.component get() = (application as AprsApplication).component
-val Fragment.component get() = (activity!!.application as AprsApplication).component
-val Service.component get() = (application as AprsApplication).component

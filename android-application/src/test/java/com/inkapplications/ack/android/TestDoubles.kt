@@ -13,8 +13,10 @@ import com.inkapplications.ack.data.PacketStorage
 import com.inkapplications.ack.structures.AprsPacket
 import com.inkapplications.ack.structures.EncodingConfig
 import com.inkapplications.ack.structures.PacketData
+import com.inkapplications.ack.structures.PacketRoute
 import com.inkapplications.ack.structures.capabilities.Mapable
 import com.inkapplications.ack.structures.station.Callsign
+import com.inkapplications.ack.structures.station.StationAddress
 import com.inkapplications.android.extensions.ViewStateFactory
 import com.inkapplications.android.extensions.format.DateTimeFormatter
 import inkapplications.spondee.spatial.GeoCoordinates
@@ -59,7 +61,7 @@ object PacketStorageStub: PacketStorage {
     override fun findBySource(callsign: Callsign, limit: Int?): Flow<List<CapturedPacket>> = flow {}
 }
 
-object EpochFormatterStub: DateTimeFormatter {
+object EpochFormatterFake: DateTimeFormatter {
     override fun formatTimestamp(instant: Instant): String = instant.toEpochMilliseconds().toString()
 }
 
@@ -70,9 +72,27 @@ object NullMarkerFactoryMock: ViewStateFactory<CapturedPacket, MarkerViewState?>
 }
 
 val DummyMarker = MarkerViewState(0, GeoCoordinates(0.latitude, 0.longitude), null)
+val DummyPacket = CapturedPacket(
+    id = 0L,
+    received = Instant.DISTANT_PAST,
+    parsed = AprsPacket(
+        route = PacketRoute(
+            source = StationAddress(
+                callsign = Callsign(""),
+            ),
+            destination = StationAddress(
+                callsign = Callsign(""),
+            ),
+            digipeaters = emptyList(),
+        ),
+        data = PacketData.Unknown(""),
+    ),
+    source = PacketSource.Local,
+    raw = byteArrayOf(),
+)
 
 object DummyMarkerFactoryMock: ViewStateFactory<CapturedPacket, MarkerViewState?> {
-    override fun create(data: CapturedPacket): MarkerViewState? = DummyMarker.also {
+    override fun create(data: CapturedPacket): MarkerViewState = DummyMarker.also {
         assertNotNull((data.parsed.data as Mapable).coordinates)
     }
 }

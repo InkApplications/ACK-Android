@@ -37,7 +37,7 @@ fun MapScreen(
     )
     val logState = state.selectedItem
     if (state.selectedItemVisible && logState != null) {
-        Row (modifier = Modifier.padding(top = AckTheme.dimensions.gutter)) {
+        Row (modifier = Modifier.padding(top = AckTheme.spacing.gutter)) {
             AprsLogItem(
                 log = logState,
                 onClick = onLogItemClick,
@@ -64,7 +64,7 @@ fun LocationStateButton(
             onClick = onDisableTrackingClick,
             backgroundColor = AckTheme.colors.surface,
             contentColor = AckTheme.colors.accent,
-            modifier = Modifier.padding(AckTheme.dimensions.gutter)
+            modifier = Modifier.padding(AckTheme.spacing.gutter)
         ) {
             Icon(Icons.Default.MyLocation, stringResource(R.string.map_location_tracking_stop_action))
         }
@@ -73,7 +73,7 @@ fun LocationStateButton(
             onClick = onEnableTrackingClick,
             backgroundColor = AckTheme.colors.surface,
             contentColor = contentColorFor(AckTheme.colors.surface),
-            modifier = Modifier.padding(AckTheme.dimensions.gutter)
+            modifier = Modifier.padding(AckTheme.spacing.gutter)
         ) {
             Icon(Icons.Default.LocationDisabled, stringResource(R.string.map_location_tracking_start_action))
         }

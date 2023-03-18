@@ -36,13 +36,13 @@ private fun EmptyState() {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
-        modifier = Modifier.padding(bottom = AckTheme.dimensions.navigationProtection).fillMaxSize()
+        modifier = Modifier.padding(bottom = AckTheme.spacing.navigationProtection).fillMaxSize()
     ) {
         Icon(
             imageVector = Icons.Default.Summarize,
             contentDescription = null,
             tint = AckTheme.colors.foregroundInactive,
-            modifier = Modifier.size(AckTheme.dimensions.placeholderIcon),
+            modifier = Modifier.size(AckTheme.spacing.placeholderIcon),
         )
         Text(stringResource(R.string.capture_log_empty))
     }
@@ -54,7 +54,7 @@ private fun LogList(
     controller: LogIndexController,
 ) {
     LazyColumn(
-        contentPadding = PaddingValues(top = AckTheme.dimensions.gutter, bottom = AckTheme.dimensions.navigationProtection)
+        contentPadding = PaddingValues(top = AckTheme.spacing.gutter, bottom = AckTheme.spacing.navigationProtection)
     ) {
         items(state.logs) { log ->
             AprsLogItem(log, controller::onLogListItemClick)

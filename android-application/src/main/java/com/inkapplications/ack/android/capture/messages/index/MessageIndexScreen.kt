@@ -40,7 +40,7 @@ fun MessageIndexScreen(
             onClick = controller::onCreateMessageClick,
             backgroundColor = AckTheme.colors.surface,
             contentColor = contentColorFor(AckTheme.colors.surface),
-            modifier = Modifier.padding(AckTheme.dimensions.gutter)
+            modifier = Modifier.padding(AckTheme.spacing.gutter)
         ) {
             Icon(Icons.Default.Message, stringResource(R.string.messages_compose_action))
         }
@@ -50,14 +50,14 @@ fun MessageIndexScreen(
 @Composable
 private fun EmptyPlaceholder() = Box(
     contentAlignment = Alignment.Center,
-    modifier = Modifier.padding(bottom = AckTheme.dimensions.navigationProtection).fillMaxSize()
+    modifier = Modifier.padding(bottom = AckTheme.spacing.navigationProtection).fillMaxSize()
 ) {
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
         Icon(
             imageVector = Icons.Default.Inbox,
             contentDescription = null,
             tint = AckTheme.colors.foregroundInactive,
-            modifier = Modifier.size(AckTheme.dimensions.placeholderIcon),
+            modifier = Modifier.size(AckTheme.spacing.placeholderIcon),
         )
         Text("No messages received")
     }
@@ -83,9 +83,9 @@ private fun ConversationList(
 private fun ConversationItem(viewModel: ConversationItemViewState, controller: MessagesScreenController) {
     Card(
         onClick = { controller.onConversationClick(viewModel.correspondent) },
-        modifier = Modifier.padding(horizontal = AckTheme.dimensions.gutter, vertical = AckTheme.dimensions.singleItem)
+        modifier = Modifier.padding(horizontal = AckTheme.spacing.gutter, vertical = AckTheme.spacing.singleItem)
     ) {
-        Column(modifier = Modifier.padding(AckTheme.dimensions.content).fillMaxWidth()) {
+        Column(modifier = Modifier.padding(AckTheme.spacing.content).fillMaxWidth()) {
             Text(viewModel.name, style = AckTheme.typography.h2)
             Text(viewModel.messagePreview)
         }

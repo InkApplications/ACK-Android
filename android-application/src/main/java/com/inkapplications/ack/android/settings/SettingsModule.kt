@@ -6,9 +6,12 @@ import dagger.Binds
 import dagger.Module
 import dagger.Provides
 import dagger.Reusable
+import dagger.hilt.InstallIn
+import dagger.hilt.components.SingletonComponent
 import dagger.multibindings.Multibinds
 
 @Module(includes = [StaticSettingsModule::class])
+@InstallIn(SingletonComponent::class)
 class SettingsModule {
     @Provides
     @Reusable

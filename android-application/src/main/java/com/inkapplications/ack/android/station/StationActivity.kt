@@ -5,7 +5,6 @@ import android.content.Context
 import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.compose.runtime.collectAsState
-import com.inkapplications.ack.android.component
 import com.inkapplications.ack.android.log.LogItemViewState
 import com.inkapplications.ack.android.log.details.startLogInspectActivity
 import com.inkapplications.ack.android.map.MapController
@@ -17,19 +16,23 @@ import com.inkapplications.android.extensions.ExtendedActivity
 import com.inkapplications.android.startActivity
 import com.inkapplications.coroutines.collectOn
 import com.mapbox.maps.MapView
+import dagger.hilt.android.AndroidEntryPoint
 import kimchi.Kimchi
+import javax.inject.Inject
 
 private const val EXTRA_CALLSIGN = "aprs.station.extra.callsign"
 
+@AndroidEntryPoint
 class StationActivity: ExtendedActivity(), StationScreenController {
+    @Inject
+    lateinit var stationEvents: StationEvents
+
     private var mapView: MapView? = null
-    private lateinit var stationEvents: StationEvents
 
     private val callsign get() = intent.getStringExtra(EXTRA_CALLSIGN)!!.let(::Callsign)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        stationEvents = component.stationEvents()
 
         setContent {
             val viewState = stationEvents.stationState(callsign).collectAsState(StationViewState.Initial)

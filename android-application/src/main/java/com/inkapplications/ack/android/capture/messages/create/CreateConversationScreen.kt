@@ -21,7 +21,7 @@ fun CreateConversationScreen(
 ) {
     AckScreen {
         Column(
-            modifier = Modifier.padding(AckTheme.dimensions.gutter)
+            modifier = Modifier.padding(AckTheme.spacing.gutter)
         ) {
             Text(stringResource(R.string.messages_create_title), style = AckTheme.typography.h1)
 
@@ -30,12 +30,12 @@ fun CreateConversationScreen(
                 value = callsign.value,
                 label = { Text(stringResource(R.string.messages_create_field_callsign_label)) },
                 onValueChange = { callsign.value = it },
-                modifier = Modifier.fillMaxWidth().padding(top = AckTheme.dimensions.content),
+                modifier = Modifier.fillMaxWidth().padding(top = AckTheme.spacing.content),
             )
 
             Button(
                 onClick = { controller.onCreateClick(callsign.value.trim()) },
-                modifier = Modifier.fillMaxWidth().padding(top = AckTheme.dimensions.item),
+                modifier = Modifier.fillMaxWidth().padding(top = AckTheme.spacing.item),
             ) {
                 Text(stringResource(R.string.messages_create_start_action, callsign.value))
             }

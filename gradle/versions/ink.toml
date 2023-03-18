@@ -51,3 +51,10 @@ module = "com.inkapplications.watermelon:standard"
 [libraries.watermelon-android]
 version.ref = "watermelon"
 module = "com.inkapplications.watermelon:android"
+
+[bundles]
+watermelon = [
+    "watermelon-coroutines",
+    "watermelon-standard",
+    "watermelon-android",
+]

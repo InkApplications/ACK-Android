@@ -20,8 +20,8 @@ import kotlin.test.*
 
 class StationViewStateFactoryTest {
     val dummySummaryFactory = SummaryFactory(ParrotStringResources)
-    val factoryWithNullMarkers = LogDetailsViewStateFactory(NullMarkerFactoryMock, dummySummaryFactory, EpochFormatterStub, ParrotStringResources)
-    val factoryWithDummyMarkers = LogDetailsViewStateFactory(DummyMarkerFactoryMock, dummySummaryFactory, EpochFormatterStub, ParrotStringResources)
+    val factoryWithNullMarkers = LogDetailsViewStateFactory(NullMarkerFactoryMock, dummySummaryFactory, EpochFormatterFake, ParrotStringResources)
+    val factoryWithDummyMarkers = LogDetailsViewStateFactory(DummyMarkerFactoryMock, dummySummaryFactory, EpochFormatterFake, ParrotStringResources)
 
     @Test
     fun nameFormatting() {

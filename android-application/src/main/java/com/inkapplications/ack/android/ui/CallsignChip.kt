@@ -54,12 +54,12 @@ private fun CallsignChipContent(
 ) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
-        modifier = Modifier.padding(AckTheme.dimensions.item),
+        modifier = Modifier.padding(AckTheme.spacing.item),
     ) {
         if (verified) Icon(
             Icons.Default.Verified,
             stringResource(R.string.settings_callsign_verified_description),
-            modifier = Modifier.padding(end = AckTheme.dimensions.icon)
+            modifier = Modifier.padding(end = AckTheme.spacing.icon)
         )
         Text(callsign, style = AckTheme.typography.h2)
     }

@@ -3,18 +3,20 @@ package com.inkapplications.ack.android.settings.license
 import androidx.activity.compose.setContent
 import androidx.compose.runtime.collectAsState
 import com.inkapplications.android.extensions.ExtendedActivity
-import com.inkapplications.ack.android.component
 import com.inkapplications.ack.android.onboard.LicensePromptFieldValues
 import com.inkapplications.ack.android.settings.SettingsAccess
+import dagger.hilt.android.AndroidEntryPoint
 import kimchi.Kimchi
 import kimchi.analytics.Property
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class LicenseEditActivity: ExtendedActivity() {
-    private lateinit var settingsAccess: SettingsAccess
+    @Inject
+    lateinit var settingsAccess: SettingsAccess
 
     override fun onCreate() {
         super.onCreate()
-        settingsAccess = component.settingsAccess()
         setContent {
             val fieldState = settingsAccess.licensePromptFieldValues.collectAsState(null).value
             if (fieldState != null) {

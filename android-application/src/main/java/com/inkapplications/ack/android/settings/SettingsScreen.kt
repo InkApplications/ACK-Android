@@ -39,7 +39,7 @@ fun SettingsScreen(
                 horizontalArrangement = Arrangement.Center,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = AckTheme.dimensions.gutter, vertical = AckTheme.dimensions.content),
+                    .padding(horizontal = AckTheme.spacing.gutter, vertical = AckTheme.spacing.content),
             ) {
                 val callsign = viewModel.callsignText
                 if (callsign != null) {
@@ -75,7 +75,7 @@ fun SettingsScreen(
                 else -> {}
             }
             viewModel.settingsList.forEach { group ->
-                Card(modifier = Modifier.padding(vertical = AckTheme.dimensions.item)) {
+                Card(modifier = Modifier.padding(vertical = AckTheme.spacing.item)) {
                     Column {
                         SettingsCategoryRow(group.name)
                         group.settings.forEach { item ->
@@ -94,14 +94,14 @@ fun SettingsScreen(
                     }
                 }
             }
-            Spacer(Modifier.weight(1f).defaultMinSize(minHeight = AckTheme.dimensions.content))
+            Spacer(Modifier.weight(1f).defaultMinSize(minHeight = AckTheme.spacing.content))
             Text(
                 text = stringResource(R.string.application_version, BuildConfig.VERSION_NAME, BuildConfig.VERSION_CODE.toString()),
                 style = AckTheme.typography.caption,
                 textAlign = TextAlign.Center,
                 modifier = Modifier
                     .longClickable(controller::onVersionLongPress)
-                    .padding(AckTheme.dimensions.clickSafety)
+                    .padding(AckTheme.spacing.clickSafety)
                     .align(Alignment.CenterHorizontally)
             )
             Text(
@@ -110,7 +110,7 @@ fun SettingsScreen(
                 textAlign = TextAlign.Center,
                 modifier = Modifier.fillMaxWidth()
             )
-            Spacer(Modifier.height(AckTheme.dimensions.content))
+            Spacer(Modifier.height(AckTheme.spacing.content))
             TextButton(controller::onAckLicenseClick, modifier = Modifier.align(Alignment.CenterHorizontally)) {
                 Text(stringResource(R.string.settings_ack_license))
             }
@@ -124,7 +124,7 @@ fun SettingsScreen(
 
 @Composable
 fun SettingsCategoryRow(name: String) = Row(
-    Modifier.padding(horizontal = AckTheme.dimensions.gutter, vertical = AckTheme.dimensions.item)
+    Modifier.padding(horizontal = AckTheme.spacing.gutter, vertical = AckTheme.spacing.item)
 ) {
-    Text(name, style = AckTheme.typography.h2, modifier = Modifier.padding(vertical = AckTheme.dimensions.item))
+    Text(name, style = AckTheme.typography.h2, modifier = Modifier.padding(vertical = AckTheme.spacing.item))
 }

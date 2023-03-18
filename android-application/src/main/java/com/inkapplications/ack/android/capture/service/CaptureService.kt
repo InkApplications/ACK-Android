@@ -4,14 +4,20 @@ import android.app.*
 import android.content.Intent
 import android.os.IBinder
 import com.inkapplications.ack.android.capture.CaptureEvents
-import com.inkapplications.ack.android.component
+import dagger.hilt.android.AndroidEntryPoint
 import kimchi.Kimchi
 import kotlinx.coroutines.*
+import javax.inject.Inject
 
+@AndroidEntryPoint
 abstract class CaptureService: Service() {
-    protected lateinit var runScope: CoroutineScope
+    @Inject
     protected lateinit var captureEvents: CaptureEvents
-    private lateinit var captureServiceNotifications: CaptureServiceNotifications
+
+    @Inject
+    lateinit var captureServiceNotifications: CaptureServiceNotifications
+
+    protected lateinit var runScope: CoroutineScope
     abstract val notificationId: Int
     abstract val notificationTitle: String
     final override fun onBind(intent: Intent): IBinder? = null
@@ -20,8 +26,6 @@ abstract class CaptureService: Service() {
         super.onCreate()
         Kimchi.info("onCreate ${this::class.java.simpleName}")
         runScope = CoroutineScope(Dispatchers.Main + SupervisorJob())
-        captureEvents = component.captureEvents()
-        captureServiceNotifications = component.captureServiceNotifications()
     }
 
     final override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {

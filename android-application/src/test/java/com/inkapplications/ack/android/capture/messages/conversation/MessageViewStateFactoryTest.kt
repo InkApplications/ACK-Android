@@ -5,7 +5,7 @@ import androidx.compose.material.icons.filled.Cloud
 import androidx.compose.material.icons.filled.SettingsInputAntenna
 import androidx.compose.material.icons.filled.Storage
 import androidx.compose.ui.Alignment
-import com.inkapplications.ack.android.EpochFormatterStub
+import com.inkapplications.ack.android.EpochFormatterFake
 import com.inkapplications.ack.android.ParrotStringResources
 import com.inkapplications.ack.android.capture.messages.MessageData
 import com.inkapplications.ack.android.toTestCapturedPacket
@@ -19,7 +19,7 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 
 class MessageViewStateFactoryTest {
-    private val factory = MessageItemViewStateFactory(EpochFormatterStub, ParrotStringResources)
+    private val factory = MessageItemViewStateFactory(EpochFormatterFake, ParrotStringResources)
     private val message = PacketData.Message(
         addressee = "KE0YOF".toStationAddress(),
         message = "Hello World!",

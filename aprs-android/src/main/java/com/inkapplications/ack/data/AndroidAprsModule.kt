@@ -14,11 +14,14 @@ import com.inkapplications.ack.data.upgrade.V4Upgrade
 import dagger.Module
 import dagger.Provides
 import dagger.Reusable
+import dagger.hilt.InstallIn
+import dagger.hilt.components.SingletonComponent
 import kimchi.logger.KimchiLogger
 import kotlinx.datetime.Clock
 import javax.inject.Singleton
 
 @Module
+@InstallIn(SingletonComponent::class)
 object AndroidAprsModule {
     @Provides
     @Reusable

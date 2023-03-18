@@ -18,7 +18,7 @@ fun UsageAgreementPrompt(
     controller: UserAgreementController,
 ) {
     Column(
-        modifier = Modifier.padding(AckTheme.dimensions.gutter)
+        modifier = Modifier.padding(AckTheme.spacing.gutter)
             .fillMaxHeight()
             .verticalScroll(rememberScrollState()),
     ) {
@@ -26,17 +26,17 @@ fun UsageAgreementPrompt(
             stringResource(R.string.usage_title),
             style = AckTheme.typography.h1,
         )
-        Spacer(Modifier.height(AckTheme.dimensions.content))
+        Spacer(Modifier.height(AckTheme.spacing.content))
         UsageAgreement()
-        Spacer(Modifier.weight(1f).defaultMinSize(minHeight = AckTheme.dimensions.content))
+        Spacer(Modifier.weight(1f).defaultMinSize(minHeight = AckTheme.spacing.content))
         Button(
             onClick = controller::onTermsDeclineClick,
             colors = ButtonDefaults.outlinedButtonColors(),
-            modifier = Modifier.fillMaxWidth().padding(top = AckTheme.dimensions.content),
+            modifier = Modifier.fillMaxWidth().padding(top = AckTheme.spacing.content),
         ) {
             Text(stringResource(R.string.usage_decline_action))
         }
-        Spacer(Modifier.height(AckTheme.dimensions.item))
+        Spacer(Modifier.height(AckTheme.spacing.item))
         Button(
             onClick = controller::onTermsAgreeClick,
             modifier = Modifier.fillMaxWidth(),

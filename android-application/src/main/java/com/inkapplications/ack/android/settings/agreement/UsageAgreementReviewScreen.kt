@@ -22,7 +22,7 @@ fun UsageAgreementReviewScreen(
             title = stringResource(R.string.usage_title),
             onBackPressed = onBackPressed,
         )
-        Column(Modifier.verticalScroll(rememberScrollState()).fillMaxHeight().padding(AckTheme.dimensions.gutter)) {
+        Column(Modifier.verticalScroll(rememberScrollState()).fillMaxHeight().padding(AckTheme.spacing.gutter)) {
             UsageAgreement()
         }
     }

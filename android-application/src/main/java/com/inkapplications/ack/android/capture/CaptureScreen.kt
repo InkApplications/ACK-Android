@@ -25,7 +25,6 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.inkapplications.ack.android.R
 import com.inkapplications.ack.android.capture.insights.InsightsScreen
-import com.inkapplications.ack.android.capture.insights.InsightsViewState
 import com.inkapplications.ack.android.capture.log.LogIndexScreen
 import com.inkapplications.ack.android.log.index.LogIndexController
 import com.inkapplications.ack.android.log.index.LogIndexState
@@ -49,7 +48,6 @@ import kotlinx.coroutines.launch
 fun CaptureScreen(
     captureScreenState: State<CaptureScreenViewState>,
     mapState: State<MapViewState>,
-    insightsState: State<InsightsViewState>,
     logIndexState: State<LogIndexState>,
     logIndexController: LogIndexController,
     messageScreenState: State<MessageIndexScreenState>,
@@ -76,7 +74,6 @@ fun CaptureScreen(
                     mapState = mapState,
                     logIndexState = logIndexState,
                     logIndexController = logIndexController,
-                    insightsState = insightsState,
                     messageScreenState = messageScreenState,
                     messagesScreenController = messagesScreenController,
                     mapFactory = mapFactory,
@@ -216,7 +213,7 @@ private fun CaptureSettingsSheet(
     Row(
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically,
-        modifier = Modifier.fillMaxWidth().padding(horizontal = AckTheme.dimensions.gutter),
+        modifier = Modifier.fillMaxWidth().padding(horizontal = AckTheme.spacing.gutter),
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
@@ -226,7 +223,7 @@ private fun CaptureSettingsSheet(
                     imageVector = Icons.Default.Badge,
                     contentDescription = null,
                     tint = AckTheme.colors.foreground,
-                    modifier = Modifier.padding(horizontal = AckTheme.dimensions.icon)
+                    modifier = Modifier.padding(horizontal = AckTheme.spacing.icon)
                 )
                 Text(
                     text = captureScreenState.callsign,
@@ -237,7 +234,7 @@ private fun CaptureSettingsSheet(
                     imageVector = Icons.Default.Person,
                     contentDescription = null,
                     tint = AckTheme.colors.foreground,
-                    modifier = Modifier.padding(horizontal = AckTheme.dimensions.icon)
+                    modifier = Modifier.padding(horizontal = AckTheme.spacing.icon)
                 )
                 Text(
                     text = stringResource(R.string.capture_callsign_missing),
@@ -357,10 +354,10 @@ private fun CaptureSettingRow(
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier
             .let { if (onClick != null) it.clickable { onClick() } else it }
-            .padding(vertical = AckTheme.dimensions.clickSafety, horizontal = AckTheme.dimensions.gutter)
+            .padding(vertical = AckTheme.spacing.clickSafety, horizontal = AckTheme.spacing.gutter)
             .fillMaxWidth(),
     ) {
-        Icon(icon, null, tint = iconColor, modifier = Modifier.padding(end = AckTheme.dimensions.icon))
+        Icon(icon, null, tint = iconColor, modifier = Modifier.padding(end = AckTheme.spacing.icon))
         Text(name)
     }
 }
@@ -371,7 +368,6 @@ private fun CaptureNavHost(
     mapState: State<MapViewState>,
     logIndexState: State<LogIndexState>,
     logIndexController: LogIndexController,
-    insightsState: State<InsightsViewState>,
     messageScreenState: State<MessageIndexScreenState>,
     messagesScreenController: MessagesScreenController,
     mapFactory: (Context) -> View,
@@ -389,7 +385,7 @@ private fun CaptureNavHost(
                 onLogItemClick = captureController::onLogMapItemClick,
                 onEnableLocation = captureController::onLocationEnableClick,
                 onDisableLocation = captureController::onLocationDisableClick,
-                bottomContentProtection = AckTheme.dimensions.bottomBarHeight,
+                bottomContentProtection = AckTheme.spacing.bottomBarHeight,
             )
         }
         composable("log") {
@@ -402,12 +398,12 @@ private fun CaptureNavHost(
             MessageIndexScreen(
                 screenState = messageScreenState,
                 controller = messagesScreenController,
-                bottomProtection = AckTheme.dimensions.bottomBarHeight,
-                bottomContentProtection = AckTheme.dimensions.navigationProtection,
+                bottomProtection = AckTheme.spacing.bottomBarHeight,
+                bottomContentProtection = AckTheme.spacing.navigationProtection,
             )
         }
         composable("insights") {
-            InsightsScreen(insightsState.value)
+            InsightsScreen()
         }
     }
 }

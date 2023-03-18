@@ -9,7 +9,7 @@ import androidx.activity.compose.setContent
 import androidx.compose.runtime.collectAsState
 import androidx.core.content.ContextCompat
 import com.inkapplications.ack.android.R
-import com.inkapplications.ack.android.capture.insights.InsightsViewState
+import com.inkapplications.ack.android.capture.messages.MessageEvents
 import com.inkapplications.ack.android.log.LogItemViewState
 import com.inkapplications.ack.android.log.index.LogIndexController
 import com.inkapplications.ack.android.log.index.LogIndexState
@@ -20,7 +20,7 @@ import com.inkapplications.ack.android.capture.messages.conversation.startConver
 import com.inkapplications.ack.android.capture.messages.create.CreateConversationActivity
 import com.inkapplications.ack.android.capture.service.AudioCaptureService
 import com.inkapplications.ack.android.capture.service.InternetCaptureService
-import com.inkapplications.ack.android.component
+import com.inkapplications.ack.android.log.LogEvents
 import com.inkapplications.ack.android.map.*
 import com.inkapplications.ack.android.map.mapbox.createController
 import com.inkapplications.ack.android.settings.SettingsActivity
@@ -32,32 +32,41 @@ import com.inkapplications.android.extensions.ExtendedActivity
 import com.inkapplications.android.startActivity
 import com.inkapplications.coroutines.collectOn
 import com.mapbox.maps.MapView
+import dagger.hilt.android.AndroidEntryPoint
 import kimchi.Kimchi
 import kimchi.analytics.intProperty
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.MutableStateFlow
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class CaptureActivity: ExtendedActivity(), CaptureNavController, LogIndexController {
-    private lateinit var mapEvents: MapEvents
+    @Inject
+    lateinit var mapEvents: MapEvents
+
+    @Inject
+    lateinit var logData: LogEvents
+
+    @Inject
+    lateinit var messageEvents: MessageEvents
+
+    @Inject
+    lateinit var captureEvents: CaptureEvents
+
     private var mapView: MapView? = null
     private var map: MapController? = null
     private var mapScope: CoroutineScope = MainScope()
     private val mapViewState = MutableStateFlow(MapViewState())
-    private lateinit var captureEvents: CaptureEvents
     private val permissionGate = PermissionGate(this)
 
     override fun onCreate() {
         super.onCreate()
-        mapEvents = component.mapEvents()
-        val logData = component.logData()
-        val insightsEvents = component.insightEvents()
 
         setContent {
             val captureState = captureEvents.screenState.collectAsState(CaptureScreenViewState())
             val mapState = mapViewState.collectAsState()
             val logState = logData.logIndexState.collectAsState(LogIndexState.Initial)
-            val insightsState = insightsEvents.viewState.collectAsState(InsightsViewState.Initial)
-            val messageScreenState = component.messageEvents().messagesScreenState.collectAsState(MessageIndexScreenState.Initial)
+            val messageScreenState = messageEvents.messagesScreenState.collectAsState(MessageIndexScreenState.Initial)
             val messagesScreenController = object: MessagesScreenController {
                 override fun onCreateMessageClick() {
                     startActivity(CreateConversationActivity::class)
@@ -72,14 +81,12 @@ class CaptureActivity: ExtendedActivity(), CaptureNavController, LogIndexControl
                 mapState = mapState,
                 logIndexState = logState,
                 logIndexController = this,
-                insightsState = insightsState,
                 messageScreenState = messageScreenState,
                 messagesScreenController = messagesScreenController,
                 mapFactory = ::createMapView,
                 controller = this,
             )
         }
-        captureEvents = component.captureEvents()
     }
 
     private fun createMapView(context: Context): View {

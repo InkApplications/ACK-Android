@@ -6,4 +6,11 @@
     <string name="insights_packets_count">Packets Received: %d</string>
     <string name="insights_stations_count">Stations: %d</string>
     <string name="insights_empty">No packets collected yet.</string>
+    <string name="insights_weather_icon_normal">Normal Conditions</string>
+    <string name="insights_weather_icon_rain">Rain</string>
+    <string name="insights_weather_icon_snow">Snow</string>
+    <string name="insights_weather_icon_humid">Humid</string>
+    <string name="insights_weather_icon_wind">Windy</string>
+    <string name="insights_weather_placeholder_caption">No weather data collected yet.</string>
+    <string name="insights_stats_placeholder">No packets collected yet.</string>
 </resources>

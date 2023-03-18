@@ -25,20 +25,20 @@ fun AprsLogItem(
         border = BorderStroke(1.dp, AckTheme.colors.accent).takeIf { border },
         modifier = Modifier
             .padding(
-                vertical = AckTheme.dimensions.singleItem,
-                horizontal = AckTheme.dimensions.gutter
+                vertical = AckTheme.spacing.singleItem,
+                horizontal = AckTheme.spacing.gutter
             )
             .fillMaxWidth()
             .clickable { onClick(log) }
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier.padding(AckTheme.dimensions.content)
+            modifier = Modifier.padding(AckTheme.spacing.content)
         ) {
             AprsSymbol(log.symbol)
 
             Column(
-                modifier = Modifier.padding(start = AckTheme.dimensions.content)
+                modifier = Modifier.padding(start = AckTheme.spacing.content)
             ) {
                 Text(
                     text = log.origin,

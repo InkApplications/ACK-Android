@@ -7,8 +7,11 @@ import com.inkapplications.ack.android.capture.messages.index.ConversationItemVi
 import com.inkapplications.android.extensions.ViewStateFactory
 import dagger.Module
 import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.components.SingletonComponent
 
 @Module
+@InstallIn(SingletonComponent::class)
 class MessagesModule {
     @Provides
     fun conversationItemFactory(

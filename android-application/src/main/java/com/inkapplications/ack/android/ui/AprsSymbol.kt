@@ -19,13 +19,13 @@ fun AprsSymbol(symbol: Bitmap?) {
             bitmap = symbol.asImageBitmap(),
             contentDescription = null,
             modifier = Modifier
-                .width(24.dp + AckTheme.dimensions.icon)
-                .height(24.dp + AckTheme.dimensions.icon)
-                .padding(AckTheme.dimensions.icon)
+                .width(24.dp + AckTheme.spacing.icon)
+                .height(24.dp + AckTheme.spacing.icon)
+                .padding(AckTheme.spacing.icon)
         )
     } else {
         Box(
-            modifier = Modifier.width(24.dp).height(24.dp).padding(AckTheme.dimensions.icon)
+            modifier = Modifier.width(24.dp).height(24.dp).padding(AckTheme.spacing.icon)
         ) {}
     }
 }

@@ -37,7 +37,7 @@ fun ConversationScreen(
         when (viewState) {
             is ConverstationViewState.Initial -> {}
             is ConverstationViewState.MessageList -> LazyColumn(
-                contentPadding = PaddingValues(vertical = AckTheme.dimensions.gutter),
+                contentPadding = PaddingValues(vertical = AckTheme.spacing.gutter),
                 reverseLayout = true,
                 modifier = Modifier.weight(1f)
             ) {
@@ -48,7 +48,7 @@ fun ConversationScreen(
             shape = AckTheme.shapes.corners,
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(AckTheme.dimensions.gutter),
+                .padding(AckTheme.spacing.gutter),
         ) {
             Row(
                verticalAlignment = Alignment.CenterVertically,
@@ -86,7 +86,7 @@ private fun IncomingMessage(viewModel: MessageItemViewState) {
         contentAlignment = viewModel.alignment,
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = AckTheme.dimensions.gutter, vertical = AckTheme.dimensions.singleItem)
+            .padding(horizontal = AckTheme.spacing.gutter, vertical = AckTheme.spacing.singleItem)
     ) {
         Message(viewModel)
     }
@@ -99,7 +99,7 @@ private fun Message(viewModel: MessageItemViewState) {
         modifier = Modifier.defaultMinSize(minWidth = 75.dp)
     ) {
         Column(
-            modifier = Modifier.padding(AckTheme.dimensions.content)
+            modifier = Modifier.padding(AckTheme.spacing.content)
         ) {
             Text(viewModel.message, style = AckTheme.typography.body)
             Row(
@@ -109,7 +109,7 @@ private fun Message(viewModel: MessageItemViewState) {
                 Text(
                     text = viewModel.timestamp,
                     style = AckTheme.typography.caption,
-                    modifier = Modifier.padding(end = AckTheme.dimensions.item),
+                    modifier = Modifier.padding(end = AckTheme.spacing.item),
                 )
                 Icon(
                     imageVector = viewModel.icon,

@@ -53,13 +53,13 @@ private fun StationDetails(
                         Icon(Icons.Default.ArrowBack, stringResource(R.string.navigate_up))
                     }
                 }
-                Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.padding(top = AckTheme.dimensions.gutter)) {
+                Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.padding(top = AckTheme.spacing.gutter)) {
                     Text(
                         viewState.insight.name,
                         style = AckTheme.typography.h1,
                         modifier = Modifier.padding(
-                            start = AckTheme.dimensions.gutter,
-                            end = AckTheme.dimensions.gutter,
+                            start = AckTheme.spacing.gutter,
+                            end = AckTheme.spacing.gutter,
                         ),
                     )
                 }
@@ -67,9 +67,9 @@ private fun StationDetails(
         } else {
             Box(
                 Modifier.padding(
-                    start = AckTheme.dimensions.gutter,
-                    top = AckTheme.dimensions.gutter,
-                    end = AckTheme.dimensions.gutter,
+                    start = AckTheme.spacing.gutter,
+                    top = AckTheme.spacing.gutter,
+                    end = AckTheme.spacing.gutter,
                 )
             ) {
                 NavigationRow(
@@ -78,8 +78,8 @@ private fun StationDetails(
                             viewState.insight.name,
                             style = AckTheme.typography.h1,
                             modifier = Modifier.padding(
-                                start = AckTheme.dimensions.gutter,
-                                end = AckTheme.dimensions.gutter,
+                                start = AckTheme.spacing.gutter,
+                                end = AckTheme.spacing.gutter,
                             ),
                         )
                     },
@@ -89,10 +89,10 @@ private fun StationDetails(
         }
         Column(
             modifier = Modifier.padding(
-                top = AckTheme.dimensions.content,
-                start = AckTheme.dimensions.gutter,
-                end = AckTheme.dimensions.gutter,
-                bottom = AckTheme.dimensions.gutter,
+                top = AckTheme.spacing.content,
+                start = AckTheme.spacing.gutter,
+                end = AckTheme.spacing.gutter,
+                bottom = AckTheme.spacing.gutter,
             ),
         ) {
             if (viewState.insight.temperature != null) {
@@ -113,7 +113,7 @@ private fun StationDetails(
             Text(
                 text = stringResource(R.string.station_packet_list_title),
                 style = AckTheme.typography.h2,
-                modifier = Modifier.padding(vertical = AckTheme.dimensions.content),
+                modifier = Modifier.padding(vertical = AckTheme.spacing.content),
             )
             viewState.packets.forEach { log ->
                 AprsLogItem(log, controller::onLogItemClicked)

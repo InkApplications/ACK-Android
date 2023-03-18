@@ -49,8 +49,8 @@ dependencies {
     implementation(inkLibraries.watermelon.coroutines)
     implementation(inkLibraries.spondee.units)
 
-    implementation(thirdParty.dagger.core)
-    kapt(thirdParty.dagger.compiler)
+    implementation(thirdParty.bundles.dagger.libraries)
+    kapt(thirdParty.bundles.dagger.kapt)
 
     androidTestImplementation(androidLibraries.androidx.test.runner)
     androidTestImplementation(androidLibraries.androidx.test.core)

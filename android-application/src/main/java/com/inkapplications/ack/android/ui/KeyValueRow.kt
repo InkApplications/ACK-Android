@@ -14,6 +14,6 @@ fun KeyValueRow(
     value: String,
     modifier: Modifier = Modifier,
 ) = Row(verticalAlignment = Alignment.CenterVertically, modifier = modifier) {
-    Text(label, style = AckTheme.typography.caption, color = AckTheme.colors.accent, modifier = Modifier.padding(end = AckTheme.dimensions.icon))
+    Text(label, style = AckTheme.typography.caption, color = AckTheme.colors.accent, modifier = Modifier.padding(end = AckTheme.spacing.icon))
     Text(value, style = AckTheme.typography.body)
 }

@@ -7,14 +7,11 @@ import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.inkapplications.ack.android.ui.theme.AckTheme
-import com.inkapplications.android.extensions.control.ControlState
-import com.inkapplications.android.extensions.control.ControlState.*
 
 @Composable
 fun LabelledIconButton(
@@ -30,7 +27,7 @@ fun LabelledIconButton(
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier
-            .padding(vertical = AckTheme.dimensions.clickSafety, horizontal = AckTheme.dimensions.gutter)
+            .padding(vertical = AckTheme.spacing.clickSafety, horizontal = AckTheme.spacing.gutter)
     ) {
         Button(
             onClick = onClick,
@@ -48,14 +45,14 @@ fun LabelledIconButton(
                 imageVector = icon,
                 contentDescription = null,
                 tint = iconColor,
-                modifier = Modifier.padding(AckTheme.dimensions.icon),
+                modifier = Modifier.padding(AckTheme.spacing.icon),
             )
         }
         Text(
             text = title,
             style = AckTheme.typography.caption,
             textAlign = TextAlign.Center,
-            modifier = Modifier.padding(top = AckTheme.dimensions.item)
+            modifier = Modifier.padding(top = AckTheme.spacing.item)
         )
     }
 }

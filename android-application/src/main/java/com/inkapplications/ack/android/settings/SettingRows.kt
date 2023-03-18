@@ -18,7 +18,7 @@ fun IntStateRow(
     verticalAlignment = Alignment.CenterVertically,
     modifier = Modifier
         .clickable(onClick = onClick)
-        .padding(vertical = AckTheme.dimensions.clickSafety, horizontal = AckTheme.dimensions.gutter)
+        .padding(vertical = AckTheme.spacing.clickSafety, horizontal = AckTheme.spacing.gutter)
 ) {
     Text(state.setting.name, fontWeight = FontWeight.Bold)
     Spacer(Modifier.weight(1f))
@@ -33,7 +33,7 @@ fun StringStateRow(
     modifier = Modifier
         .clickable(onClick = onClick)
         .fillMaxWidth()
-        .padding(vertical = AckTheme.dimensions.clickSafety, horizontal = AckTheme.dimensions.gutter)
+        .padding(vertical = AckTheme.spacing.clickSafety, horizontal = AckTheme.spacing.gutter)
 ) {
     Text(state.setting.name, fontWeight = FontWeight.Bold)
     Text(state.value, style = AckTheme.typography.caption)
@@ -47,7 +47,7 @@ fun BooleanStateRow(
     verticalAlignment = Alignment.CenterVertically,
     modifier = Modifier
         .clickable { onChange(!state.value) }
-        .padding(vertical = AckTheme.dimensions.clickSafety, horizontal = AckTheme.dimensions.gutter)
+        .padding(vertical = AckTheme.spacing.clickSafety, horizontal = AckTheme.spacing.gutter)
 ) {
     Text(state.setting.name, fontWeight = FontWeight.Bold)
     Spacer(Modifier.weight(1f))

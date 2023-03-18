@@ -42,12 +42,12 @@ fun LogDetailsScreen(
                         Icon(Icons.Default.ArrowBack, stringResource(R.string.navigate_up))
                     }
                 }
-                Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.padding(top = AckTheme.dimensions.gutter)) {
+                Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.padding(top = AckTheme.spacing.gutter)) {
                     Text(
                         viewState.name,
                         style = AckTheme.typography.h1,
                         modifier = Modifier.padding(
-                            start = AckTheme.dimensions.gutter,
+                            start = AckTheme.spacing.gutter,
                         ),
                     )
                     IconButton(
@@ -60,9 +60,9 @@ fun LogDetailsScreen(
         } else {
             Box(
                 Modifier.padding(
-                    start = AckTheme.dimensions.gutter,
-                    top = AckTheme.dimensions.gutter,
-                    end = AckTheme.dimensions.gutter,
+                    start = AckTheme.spacing.gutter,
+                    top = AckTheme.spacing.gutter,
+                    end = AckTheme.spacing.gutter,
                 )
             ) {
                 NavigationRow(
@@ -71,7 +71,7 @@ fun LogDetailsScreen(
                             viewState.name,
                             style = AckTheme.typography.h1,
                             modifier = Modifier.padding(
-                                start = AckTheme.dimensions.gutter,
+                                start = AckTheme.spacing.gutter,
                             ),
                         )
                         IconButton(
@@ -86,10 +86,10 @@ fun LogDetailsScreen(
         }
         Column(
             modifier = Modifier.padding(
-                top = AckTheme.dimensions.content,
-                start = AckTheme.dimensions.gutter,
-                end = AckTheme.dimensions.gutter,
-                bottom = AckTheme.dimensions.gutter,
+                top = AckTheme.spacing.content,
+                start = AckTheme.spacing.gutter,
+                end = AckTheme.spacing.gutter,
+                bottom = AckTheme.spacing.gutter,
             ),
         ) {
             IconRow(
@@ -112,12 +112,12 @@ fun LogDetailsScreen(
                 TelemetryTable(viewState.telemetryValues, viewState.telemetrySequence)
             }
             if (viewState.rawSource != null) {
-                Card(modifier = Modifier.fillMaxWidth().padding(vertical = AckTheme.dimensions.content)) {
-                    Column(modifier = Modifier.padding(AckTheme.dimensions.content)) {
+                Card(modifier = Modifier.fillMaxWidth().padding(vertical = AckTheme.spacing.content)) {
+                    Column(modifier = Modifier.padding(AckTheme.spacing.content)) {
                         Text("Debug Info", style = AckTheme.typography.h2)
                         Text("Raw Data", style = AckTheme.typography.h3)
                         Text(viewState.rawSource, style = AckTheme.typography.caption)
-                        Spacer(Modifier.height(AckTheme.dimensions.content))
+                        Spacer(Modifier.height(AckTheme.spacing.content))
                     }
                 }
             }

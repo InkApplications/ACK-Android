@@ -4,23 +4,26 @@ import android.app.Activity
 import androidx.activity.compose.setContent
 import androidx.compose.runtime.collectAsState
 import com.inkapplications.ack.android.capture.messages.MessageEvents
-import com.inkapplications.ack.android.component
 import com.inkapplications.ack.android.trackNavigation
 import com.inkapplications.ack.structures.station.Callsign
 import com.inkapplications.android.extensions.ExtendedActivity
 import com.inkapplications.android.startActivity
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.*
 import kimchi.Kimchi
+import javax.inject.Inject
 
 private const val EXTRA_ADDRESS = "aprs.conversation.extra.address"
 
+@AndroidEntryPoint
 class ConversationActivity: ExtendedActivity(), ConversationController {
-    private lateinit var messageEvents: MessageEvents
+    @Inject
+    lateinit var messageEvents: MessageEvents
+
     private val callsign get() = intent.getStringExtra(EXTRA_ADDRESS)!!.let(::Callsign)
 
     override fun onCreate() {
         super.onCreate()
-        messageEvents = component.messageEvents()
         val initialState = ConverstationViewState.Initial(callsign.canonical)
 
         setContent {

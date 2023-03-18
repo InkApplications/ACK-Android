@@ -23,7 +23,7 @@ import com.inkapplications.ack.android.ui.theme.AckTheme
 fun StartupScreen() = AckScreen {
     Box(
         contentAlignment = Alignment.Center,
-        modifier = Modifier.padding(AckTheme.dimensions.gutter).fillMaxHeight().fillMaxWidth()
+        modifier = Modifier.padding(AckTheme.spacing.gutter).fillMaxHeight().fillMaxWidth()
     ) {
         val visible = remember { MutableTransitionState(false) }
         visible.targetState = true
@@ -37,7 +37,7 @@ fun StartupScreen() = AckScreen {
                     painterResource(R.drawable.wave),
                     contentDescription = null,
                     tint = AckTheme.colors.accent,
-                    modifier = Modifier.padding(bottom = AckTheme.dimensions.content)
+                    modifier = Modifier.padding(bottom = AckTheme.spacing.content)
                 )
                 Text(stringResource(R.string.application_version, BuildConfig.VERSION_NAME, BuildConfig.VERSION_CODE.toString()))
             }

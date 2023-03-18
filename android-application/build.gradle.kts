@@ -5,6 +5,7 @@ plugins {
     id("com.google.gms.google-services") apply false
     id("com.google.android.gms.oss-licenses-plugin")
     id("com.google.firebase.crashlytics")
+    id("com.google.dagger.hilt.android")
 }
 
 val useGoogleServices = project.file("google-services.json").exists()
@@ -24,6 +25,7 @@ android {
         buildConfigField("boolean", "USE_GOOGLE_SERVICES", useGoogleServices.toString())
         versionCode = intProperty("versionCode", 1)
         versionName = stringProperty("versionName", "SNAPSHOT")
+        javaCompileOptions.annotationProcessorOptions.arguments["dagger.hilt.disableModulesHaveInstallInCheck"] = "true"
     }
     buildFeatures {
         compose = true
@@ -93,8 +95,8 @@ dependencies {
 
     implementation(thirdParty.mapbox.android.sdk)
 
-    implementation(thirdParty.dagger.core)
-    kapt(thirdParty.dagger.compiler)
+    implementation(thirdParty.bundles.dagger.libraries)
+    kapt(thirdParty.bundles.dagger.kapt)
 
     implementation(thirdParty.google.license.core)
 
@@ -105,9 +107,7 @@ dependencies {
     api(inkLibraries.spondee.units)
     implementation(inkLibraries.ack.client)
 
-    implementation(inkLibraries.watermelon.coroutines)
-    implementation(inkLibraries.watermelon.standard)
-    implementation(inkLibraries.watermelon.android)
+    implementation(inkLibraries.bundles.watermelon)
 
     implementation(thirdParty.firebase.config)
     implementation(thirdParty.firebase.analytics)

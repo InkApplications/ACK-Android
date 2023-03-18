@@ -4,26 +4,29 @@ import androidx.activity.compose.setContent
 import androidx.compose.runtime.collectAsState
 import androidx.lifecycle.lifecycleScope
 import com.inkapplications.ack.android.capture.CaptureActivity
-import com.inkapplications.ack.android.component
 import com.inkapplications.ack.android.settings.SettingsAccess
 import com.inkapplications.ack.android.settings.license.LicensePromptValidator
 import com.inkapplications.android.extensions.ExtendedActivity
 import com.inkapplications.android.startActivity
+import dagger.hilt.android.AndroidEntryPoint
 import kimchi.Kimchi
 import kimchi.analytics.Property
 import kotlinx.coroutines.flow.filter
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class OnboardActivity: ExtendedActivity(), UserAgreementController {
-    private lateinit var stateAccess: OnboardingStateAccess
-    private lateinit var settingsAccess: SettingsAccess
-    private lateinit var licensePromptValidator: LicensePromptValidator
+    @Inject
+    lateinit var stateAccess: OnboardingStateAccess
+
+    @Inject
+    lateinit var settingsAccess: SettingsAccess
+
+    @Inject
+    lateinit var licensePromptValidator: LicensePromptValidator
 
     override fun onCreate() {
         super.onCreate()
-
-        stateAccess = component.onboardingStateAccess()
-        settingsAccess = component.settingsAccess()
-        licensePromptValidator = component.licenseValidator()
 
         setContent {
             val licenseFieldState = settingsAccess.licensePromptFieldValues.collectAsState(null).value

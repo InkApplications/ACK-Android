@@ -9,6 +9,30 @@ module = "com.google.dagger:dagger"
 version.ref = "dagger"
 module = "com.google.dagger:dagger-compiler"
 
+[libraries.hilt-compiler]
+version.ref = "dagger"
+module = "com.google.dagger:hilt-compiler"
+
+[libraries.hilt-plugin]
+version.ref = "dagger"
+module = "com.google.dagger:hilt-android-gradle-plugin"
+
+[libraries.hilt-core]
+version.ref = "dagger"
+module = "com.google.dagger:hilt-android"
+
+[libraries.androidx-hilt-common]
+version = "1.0.0"
+module = " androidx.hilt:hilt-common"
+
+[libraries.androidx-hilt-compiler]
+version = "1.0.0"
+module = " androidx.hilt:hilt-compiler"
+
+[libraries.androidx-hilt-navigation-compose]
+version = "1.0.0"
+module = " androidx.hilt:hilt-navigation-compose"
+
 [libraries.firebase-config]
 version = "21.2.1"
 module = "com.google.firebase:firebase-config-ktx"
@@ -44,3 +68,16 @@ module = "junit:junit"
 [libraries.mapbox-android-sdk]
 version = "10.11.2"
 module = "com.mapbox.maps:android"
+
+[bundles]
+dagger-kapt = [
+    "dagger-compiler",
+    "hilt-compiler",
+    "androidx-hilt-compiler",
+]
+dagger-libraries = [
+    "dagger-core",
+    "hilt-core",
+    "androidx-hilt-common",
+    "androidx-hilt-navigation-compose",
+]

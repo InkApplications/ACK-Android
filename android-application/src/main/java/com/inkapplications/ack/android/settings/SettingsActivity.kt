@@ -3,21 +3,23 @@ package com.inkapplications.ack.android.settings
 import androidx.activity.compose.setContent
 import androidx.compose.runtime.collectAsState
 import com.google.android.gms.oss.licenses.OssLicensesMenuActivity
-import com.inkapplications.ack.android.component
 import com.inkapplications.ack.android.settings.agreement.UserAgreementActivity
 import com.inkapplications.ack.android.settings.license.LicenseEditActivity
 import com.inkapplications.android.extensions.ExtendedActivity
 import com.inkapplications.android.startActivity
+import dagger.hilt.android.AndroidEntryPoint
 import kimchi.Kimchi
 import kimchi.analytics.intProperty
 import kimchi.analytics.stringProperty
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class SettingsActivity: ExtendedActivity(), SettingsController {
-    private lateinit var settingsAccess: SettingsAccess
+    @Inject
+    lateinit var settingsAccess: SettingsAccess
 
     override fun onCreate() {
         super.onCreate()
-        settingsAccess = component.settingsAccess()
 
         setContent {
             val state = settingsAccess.settingsViewState.collectAsState(null)

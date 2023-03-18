@@ -49,7 +49,7 @@ object AckTheme {
         @ReadOnlyComposable
         get() = if (isSystemInDarkTheme()) darkColors else lightColors
 
-    val dimensions
+    val spacing
         @Composable
         @ReadOnlyComposable
         get() = SpacingVariant(
@@ -59,6 +59,13 @@ object AckTheme {
             icon = 8.dp,
             clickSafety = 16.dp,
             placeholderIcon = 120.dp,
+        )
+
+    val sizing
+        @Composable
+        @ReadOnlyComposable
+        get() = SizingVariant(
+            dispayIcon = 48.dp,
         )
 
     val shapes

@@ -38,7 +38,7 @@ fun IntPrompt(
     ) {
         Surface(shape = AckTheme.shapes.corners) {
             Column(
-                modifier = Modifier.padding(AckTheme.dimensions.gutter),
+                modifier = Modifier.padding(AckTheme.spacing.gutter),
             ) {
                 Text(title, style = AckTheme.typography.h2)
                 TextField(
@@ -47,7 +47,7 @@ fun IntPrompt(
                     isError = errorState.value != null,
                     singleLine = true,
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                    modifier = Modifier.padding(top = AckTheme.dimensions.item).fillMaxWidth(),
+                    modifier = Modifier.padding(top = AckTheme.spacing.item).fillMaxWidth(),
                 )
                 Text(
                     text = errorState.value.orEmpty(),
@@ -56,14 +56,14 @@ fun IntPrompt(
 
                 Row(
                     horizontalArrangement = Arrangement.End,
-                    modifier = Modifier.fillMaxWidth().padding(top = AckTheme.dimensions.item),
+                    modifier = Modifier.fillMaxWidth().padding(top = AckTheme.spacing.item),
                 ) {
                     TextButton(
                         onClick = onDismiss,
                         colors = ButtonDefaults.textButtonColors(
                             contentColor = AckTheme.colors.foreground,
                         ),
-                        modifier = Modifier.padding(end = AckTheme.dimensions.item),
+                        modifier = Modifier.padding(end = AckTheme.spacing.item),
                     ) {
                         Text(stringResource(R.string.prompt_cancel))
                     }

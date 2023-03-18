@@ -4,64 +4,163 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material.Icon
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Lightbulb
+import androidx.compose.material.icons.filled.Thermostat
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.inkapplications.ack.android.R
 import com.inkapplications.ack.android.ui.theme.AckScreen
 import com.inkapplications.ack.android.ui.theme.AckTheme
 
 @Composable
 fun InsightsScreen(
-    state: InsightsViewState,
+    viewModel: InsightsViewModel = hiltViewModel()
 ) {
     AckScreen {
-        when (state) {
-            is InsightsViewState.Loaded -> Insights(state)
-            InsightsViewState.Empty -> EmptyPlaceholder()
-            InsightsViewState.Initial -> {}
+        val weatherState = viewModel.weatherState.collectAsState()
+        val statsState = viewModel.statsState.collectAsState()
+
+        Column(
+            modifier = Modifier.padding(AckTheme.spacing.gutter)
+        ) {
+            Text(stringResource(R.string.insights_title), style = AckTheme.typography.h1)
+            Weather(weatherState.value)
+            Stats(statsState.value)
         }
     }
 }
 
 @Composable
-private fun EmptyPlaceholder() {
-    Column(
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center,
-        modifier = Modifier.padding(bottom = AckTheme.dimensions.navigationProtection).fillMaxSize()
-    ) {
-        Icon(
-            imageVector = Icons.Default.Lightbulb,
-            contentDescription = null,
-            tint = AckTheme.colors.foregroundInactive,
-            modifier = Modifier.size(AckTheme.dimensions.placeholderIcon),
-        )
-        Text(stringResource(R.string.insights_empty))
-    }
-}
-
-@Composable
-private fun Insights(
-    state: InsightsViewState.Loaded,
+private fun Stats(
+    state: InsightsStatsState,
 ) {
-    Column(
-        modifier = Modifier.padding(AckTheme.dimensions.gutter)
-    ) {
-        Text(stringResource(R.string.insights_title), style = AckTheme.typography.h1)
-        if (state.weatherVisible) {
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally,
-                modifier = Modifier.fillMaxWidth().padding(vertical = AckTheme.dimensions.content),
-            ) {
-                Text(state.temperature, style = AckTheme.typography.display)
-                Text(stringResource(R.string.insights_weather_report_info_template, state.weatherReporter, state.weatherReportTime), style = AckTheme.typography.caption)
+    Column {
+        Text(stringResource(R.string.insights_packets_title), style = AckTheme.typography.h2, modifier = Modifier.padding(bottom = AckTheme.spacing.content))
+        when (state) {
+            InsightsStatsState.Initial -> {}
+            InsightsStatsState.None -> {
+                Text(stringResource(id = R.string.insights_stats_placeholder), style = AckTheme.typography.body)
+            }
+            is InsightsStatsState.LoadedData -> {
+                Text(stringResource(R.string.insights_packets_count, state.packets), style = AckTheme.typography.body)
+                Text(stringResource(R.string.insights_stations_count, state.stations), style = AckTheme.typography.body)
             }
         }
-        Text(stringResource(R.string.insights_packets_title), style = AckTheme.typography.h2, modifier = Modifier.padding(bottom = AckTheme.dimensions.content))
-        Text(stringResource(R.string.insights_packets_count, state.packets), style = AckTheme.typography.body)
-        Text(stringResource(R.string.insights_stations_count, state.stations), style = AckTheme.typography.body)
+    }
+}
+
+@Composable
+private fun Weather(
+    state: InsightsWeatherState,
+) {
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = AckTheme.spacing.content),
+    ) {
+        when (state) {
+            InsightsWeatherState.Initial,
+            InsightsWeatherState.Unknown -> WeatherPlaceholder()
+            is InsightsWeatherState.DisplayRecent -> WeatherData(state)
+        }
+    }
+}
+
+@Composable
+private fun WeatherData(
+    data: InsightsWeatherState.DisplayRecent,
+) {
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = AckTheme.spacing.content),
+    ) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            WeatherIcon(iconState = data.icon)
+            Text(data.temperature, style = AckTheme.typography.display)
+        }
+        Text(
+            text = stringResource(
+                R.string.insights_weather_report_info_template,
+                data.weatherReporter,
+                data.weatherReportTime
+            ),
+            style = AckTheme.typography.caption
+        )
+    }
+}
+
+@Composable
+private fun WeatherPlaceholder() {
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = AckTheme.spacing.content),
+    ) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            Icon(
+                imageVector = Icons.Default.Thermostat,
+                contentDescription = stringResource(R.string.insights_weather_icon_normal),
+                modifier = Modifier.size(AckTheme.sizing.dispayIcon),
+                tint = AckTheme.colors.foreground,
+            )
+            Text("--", style = AckTheme.typography.display)
+        }
+        Text(
+            text = stringResource(R.string.insights_weather_placeholder_caption),
+            style = AckTheme.typography.caption
+        )
+    }
+}
+
+@Composable
+private fun WeatherIcon(
+    iconState: InsightsWeatherState.WeatherIcon,
+) {
+    val iconModifier = Modifier.size(AckTheme.sizing.dispayIcon)
+    val iconTint = AckTheme.colors.foreground
+
+    when (iconState) {
+        InsightsWeatherState.WeatherIcon.Normal -> Icon(
+            imageVector = Icons.Default.Thermostat,
+            contentDescription = stringResource(R.string.insights_weather_icon_normal),
+            modifier = iconModifier,
+            tint = iconTint,
+        )
+        InsightsWeatherState.WeatherIcon.Rain -> Icon(
+            painter = painterResource(id = R.drawable.ic_rain),
+            contentDescription = stringResource(R.string.insights_weather_icon_rain),
+            modifier = iconModifier,
+            tint = iconTint,
+        )
+        InsightsWeatherState.WeatherIcon.Snow -> Icon(
+            painter = painterResource(id = R.drawable.ic_snow),
+            contentDescription = stringResource(R.string.insights_weather_icon_snow),
+            modifier = iconModifier,
+            tint = iconTint,
+        )
+        InsightsWeatherState.WeatherIcon.Humid -> Icon(
+            painter = painterResource(id = R.drawable.ic_humid),
+            contentDescription = stringResource(R.string.insights_weather_icon_humid),
+            modifier = iconModifier,
+            tint = iconTint,
+        )
+        InsightsWeatherState.WeatherIcon.Windy -> Icon(
+            painter = painterResource(id = R.drawable.ic_windy),
+            contentDescription = stringResource(R.string.insights_weather_icon_wind),
+            modifier = iconModifier,
+            tint = iconTint,
+        )
     }
 }

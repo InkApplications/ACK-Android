@@ -14,26 +14,30 @@ import com.inkapplications.android.extensions.location.LocationAccess
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.components.SingletonComponent
 
 @Module(includes = [ StaticApplicationModule::class ])
-class ApplicationModule(private val application: Application) {
+@InstallIn(SingletonComponent::class)
+class ApplicationModule {
     @Provides
-    fun context(): Context = application
+    fun context(application: Application): Context = application
 
     @Provides
-    fun sharedPreferences(): SharedPreferences = PreferenceManager.getDefaultSharedPreferences(application)
+    fun sharedPreferences(application: Application): SharedPreferences = PreferenceManager.getDefaultSharedPreferences(application)
 
     @Provides
-    fun resources(): Resources = application.resources
+    fun resources(application: Application): Resources = application.resources
 
     @Provides
-    fun locationManager() = application.getSystemService(Context.LOCATION_SERVICE) as LocationManager
+    fun locationManager(application: Application) = application.getSystemService(Context.LOCATION_SERVICE) as LocationManager
 
     @Provides
-    fun notificationManager() = application.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+    fun notificationManager(application: Application) = application.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 }
 
 @Module
+@InstallIn(SingletonComponent::class)
 internal abstract class StaticApplicationModule {
     @Binds
     abstract fun stringResources(androidStringResources: AndroidStringResources): StringResources
