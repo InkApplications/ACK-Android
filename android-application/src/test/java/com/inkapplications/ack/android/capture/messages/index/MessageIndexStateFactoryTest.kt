@@ -9,8 +9,20 @@ import com.inkapplications.ack.structures.station.toStationAddress
 import kotlinx.datetime.Instant
 import org.junit.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertTrue
 
-class ConversationItemViewStateFactoryTest {
+class MessageIndexStateFactoryTest {
+    private val factory = MessageIndexStateFactory()
+
+    @Test
+    fun empty() {
+        val result = factory.createScreenState(
+            latestMessages = emptyList()
+        )
+
+        assertTrue(result is MessageIndexState.Empty)
+    }
+
     @Test
     fun testConversationItem() {
         val station = "KE0YOF-2".toStationAddress()
@@ -25,12 +37,14 @@ class ConversationItemViewStateFactoryTest {
             selfCallsign = Callsign("KE0YOG"),
             message = message,
         )
-        val factory = ConversationItemViewStateFactory()
 
-        val viewModel = factory.create(conversation)
+        val results = factory.createScreenState(listOf(conversation))
+        assertTrue(results is MessageIndexState.ConversationList)
+        assertEquals(1, results.conversations.size)
 
-        assertEquals("First!", viewModel.messagePreview)
-        assertEquals("KE0YOF", viewModel.name)
-        assertEquals(station.callsign, viewModel.correspondent)
+        val result = results.conversations.single()
+        assertEquals("First!", result.messagePreview)
+        assertEquals("KE0YOF", result.name)
+        assertEquals(station.callsign, result.correspondent)
     }
 }

@@ -15,7 +15,7 @@ import com.inkapplications.ack.android.log.index.LogIndexController
 import com.inkapplications.ack.android.log.index.LogIndexState
 import com.inkapplications.ack.android.log.details.startLogInspectActivity
 import com.inkapplications.ack.android.capture.messages.index.MessagesScreenController
-import com.inkapplications.ack.android.capture.messages.index.MessageIndexScreenState
+import com.inkapplications.ack.android.capture.messages.index.MessageIndexState
 import com.inkapplications.ack.android.capture.messages.conversation.startConversationActivity
 import com.inkapplications.ack.android.capture.messages.create.CreateConversationActivity
 import com.inkapplications.ack.android.capture.service.AudioCaptureService
@@ -66,7 +66,6 @@ class CaptureActivity: ExtendedActivity(), CaptureNavController, LogIndexControl
             val captureState = captureEvents.screenState.collectAsState(CaptureScreenViewState())
             val mapState = mapViewState.collectAsState()
             val logState = logData.logIndexState.collectAsState(LogIndexState.Initial)
-            val messageScreenState = messageEvents.messagesScreenState.collectAsState(MessageIndexScreenState.Initial)
             val messagesScreenController = object: MessagesScreenController {
                 override fun onCreateMessageClick() {
                     startActivity(CreateConversationActivity::class)
@@ -81,7 +80,6 @@ class CaptureActivity: ExtendedActivity(), CaptureNavController, LogIndexControl
                 mapState = mapState,
                 logIndexState = logState,
                 logIndexController = this,
-                messageScreenState = messageScreenState,
                 messagesScreenController = messagesScreenController,
                 mapFactory = ::createMapView,
                 controller = this,

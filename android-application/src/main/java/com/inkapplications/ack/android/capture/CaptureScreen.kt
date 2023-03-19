@@ -14,8 +14,6 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
@@ -32,7 +30,6 @@ import com.inkapplications.ack.android.map.MapScreen
 import com.inkapplications.ack.android.map.MapViewState
 import com.inkapplications.ack.android.capture.messages.MessageIndexScreen
 import com.inkapplications.ack.android.capture.messages.index.MessagesScreenController
-import com.inkapplications.ack.android.capture.messages.index.MessageIndexScreenState
 import com.inkapplications.ack.android.trackNavigation
 import com.inkapplications.ack.android.ui.StateLabelledIconButton
 import com.inkapplications.ack.android.ui.theme.AckScreen
@@ -50,7 +47,6 @@ fun CaptureScreen(
     mapState: State<MapViewState>,
     logIndexState: State<LogIndexState>,
     logIndexController: LogIndexController,
-    messageScreenState: State<MessageIndexScreenState>,
     messagesScreenController: MessagesScreenController,
     mapFactory: (Context) -> View,
     controller: CaptureNavController,
@@ -74,7 +70,6 @@ fun CaptureScreen(
                     mapState = mapState,
                     logIndexState = logIndexState,
                     logIndexController = logIndexController,
-                    messageScreenState = messageScreenState,
                     messagesScreenController = messagesScreenController,
                     mapFactory = mapFactory,
                     captureController = controller,
@@ -192,7 +187,7 @@ private fun SettingsSheetWrapper(
     }
 }
 
-@OptIn(ExperimentalMaterialApi::class, ExperimentalFoundationApi::class)
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 private fun CaptureSettingsSheet(
     captureScreenState: CaptureScreenViewState,
@@ -343,32 +338,11 @@ private fun CaptureSettingsSheet(
 }
 
 @Composable
-private fun CaptureSettingRow(
-    icon: ImageVector,
-    iconColor: Color,
-    name: String,
-    modifier: Modifier = Modifier,
-    onClick: (() -> Unit)? = null,
-) = Box(modifier) {
-    Row(
-        verticalAlignment = Alignment.CenterVertically,
-        modifier = Modifier
-            .let { if (onClick != null) it.clickable { onClick() } else it }
-            .padding(vertical = AckTheme.spacing.clickSafety, horizontal = AckTheme.spacing.gutter)
-            .fillMaxWidth(),
-    ) {
-        Icon(icon, null, tint = iconColor, modifier = Modifier.padding(end = AckTheme.spacing.icon))
-        Text(name)
-    }
-}
-
-@Composable
 private fun CaptureNavHost(
     navController: NavHostController,
     mapState: State<MapViewState>,
     logIndexState: State<LogIndexState>,
     logIndexController: LogIndexController,
-    messageScreenState: State<MessageIndexScreenState>,
     messagesScreenController: MessagesScreenController,
     mapFactory: (Context) -> View,
     captureController: CaptureNavController,
@@ -396,7 +370,6 @@ private fun CaptureNavHost(
         }
         composable("messages") {
             MessageIndexScreen(
-                screenState = messageScreenState,
                 controller = messagesScreenController,
                 bottomProtection = AckTheme.spacing.bottomBarHeight,
                 bottomContentProtection = AckTheme.spacing.navigationProtection,

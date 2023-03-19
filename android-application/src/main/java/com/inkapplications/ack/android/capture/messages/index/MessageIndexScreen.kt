@@ -8,32 +8,38 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Inbox
 import androidx.compose.material.icons.filled.Message
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.State
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.Dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.inkapplications.ack.android.R
-import com.inkapplications.ack.android.capture.messages.index.ConversationItemViewState
-import com.inkapplications.ack.android.capture.messages.index.MessageIndexScreenState
+import com.inkapplications.ack.android.capture.messages.index.ConversationItemState
+import com.inkapplications.ack.android.capture.messages.index.MessageIndexState
+import com.inkapplications.ack.android.capture.messages.index.MessageIndexViewModel
 import com.inkapplications.ack.android.capture.messages.index.MessagesScreenController
 import com.inkapplications.ack.android.ui.theme.AckScreen
 import com.inkapplications.ack.android.ui.theme.AckTheme
 
 @Composable
 fun MessageIndexScreen(
-    screenState: State<MessageIndexScreenState>,
     controller: MessagesScreenController,
     bottomProtection: Dp,
     bottomContentProtection: Dp,
+    viewModel: MessageIndexViewModel = hiltViewModel(),
 ) = AckScreen {
+    val screenState = viewModel.indexState.collectAsState()
+
     when (val state = screenState.value) {
-        MessageIndexScreenState.Initial -> {}
-        is MessageIndexScreenState.ConversationList -> ConversationList(state, controller, bottomContentProtection)
-        is MessageIndexScreenState.Empty -> EmptyPlaceholder()
+        MessageIndexState.Initial -> {}
+        is MessageIndexState.ConversationList -> ConversationList(state, controller, bottomContentProtection)
+        is MessageIndexState.Empty -> EmptyPlaceholder()
     }
     Box(
-        modifier = Modifier.fillMaxSize().padding(bottom = bottomProtection),
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(bottom = bottomProtection),
         contentAlignment = Alignment.BottomEnd,
     ) {
         FloatingActionButton(
@@ -50,7 +56,9 @@ fun MessageIndexScreen(
 @Composable
 private fun EmptyPlaceholder() = Box(
     contentAlignment = Alignment.Center,
-    modifier = Modifier.padding(bottom = AckTheme.spacing.navigationProtection).fillMaxSize()
+    modifier = Modifier
+        .padding(bottom = AckTheme.spacing.navigationProtection)
+        .fillMaxSize()
 ) {
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
         Icon(
@@ -65,7 +73,7 @@ private fun EmptyPlaceholder() = Box(
 
 @Composable
 private fun ConversationList(
-    state: MessageIndexScreenState.ConversationList,
+    state: MessageIndexState.ConversationList,
     controller: MessagesScreenController,
     bottomProtection: Dp,
 ) {
@@ -80,12 +88,14 @@ private fun ConversationList(
 
 @Composable
 @OptIn(ExperimentalMaterialApi::class)
-private fun ConversationItem(viewModel: ConversationItemViewState, controller: MessagesScreenController) {
+private fun ConversationItem(viewModel: ConversationItemState, controller: MessagesScreenController) {
     Card(
         onClick = { controller.onConversationClick(viewModel.correspondent) },
         modifier = Modifier.padding(horizontal = AckTheme.spacing.gutter, vertical = AckTheme.spacing.singleItem)
     ) {
-        Column(modifier = Modifier.padding(AckTheme.spacing.content).fillMaxWidth()) {
+        Column(modifier = Modifier
+            .padding(AckTheme.spacing.content)
+            .fillMaxWidth()) {
             Text(viewModel.name, style = AckTheme.typography.h2)
             Text(viewModel.messagePreview)
         }

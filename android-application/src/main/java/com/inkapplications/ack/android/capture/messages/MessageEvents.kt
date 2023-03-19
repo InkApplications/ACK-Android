@@ -1,7 +1,5 @@
 package com.inkapplications.ack.android.capture.messages
 
-import com.inkapplications.ack.android.capture.messages.index.ConversationItemViewState
-import com.inkapplications.ack.android.capture.messages.index.MessageIndexScreenState
 import com.inkapplications.ack.android.connection.ConnectionSettings
 import com.inkapplications.ack.android.settings.SettingsReadAccess
 import com.inkapplications.ack.android.settings.observeData
@@ -15,9 +13,9 @@ import com.inkapplications.ack.structures.*
 import com.inkapplications.ack.structures.station.Callsign
 import com.inkapplications.ack.structures.station.StationAddress
 import com.inkapplications.ack.structures.station.toStationAddress
-import com.inkapplications.android.extensions.ViewStateFactory
 import com.inkapplications.coroutines.filterItems
 import com.inkapplications.coroutines.mapEach
+import com.inkapplications.coroutines.mapItems
 import dagger.Reusable
 import kimchi.logger.KimchiLogger
 import kotlinx.coroutines.flow.*
@@ -29,19 +27,18 @@ class MessageEvents @Inject constructor(
     private val settings: SettingsReadAccess,
     private val connectionSettings: ConnectionSettings,
     private val transmitSettings: TransmitSettings,
-    private val conversationItemFactory: ViewStateFactory<MessageData, ConversationItemViewState>,
     private val codec: AprsCodec,
     private val drivers: PacketDrivers,
     private val logger: KimchiLogger,
 ) {
-    val messagesScreenState = settings.observeData(connectionSettings.address)
+    val latestMessageByConversation = settings.observeData(connectionSettings.address)
         .onEach { logger.debug("Observing conversations for addressee: $it") }
         .flatMapLatest { address ->
-            address?.callsign?.let(packetStorage::findLatestByConversation)?.mapEach { MessageData(address.callsign, it) } ?: flowOf(emptyList())
+            address?.callsign?.let(packetStorage::findLatestByConversation)
+                ?.mapItems { MessageData(address.callsign, it) }
+                ?: flowOf(emptyList())
         }
         .onEach { logger.debug("Found ${it.size} conversations") }
-        .mapEach(conversationItemFactory::create)
-        .map { if (it.isEmpty()) MessageIndexScreenState.Empty else MessageIndexScreenState.ConversationList(it) }
 
     fun conversationList(address: Callsign): Flow<List<MessageData>> {
         return settings.observeData(connectionSettings.address)
