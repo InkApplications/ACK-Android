@@ -31,7 +31,7 @@ class MessageIndexStateFactory @Inject constructor() {
      */
     private fun createConversationItem(data: MessageData): ConversationItemState {
         val message = data.message.parsed.data as PacketData.Message
-        val correspondent = message.addressee.takeIf { it.callsign != data.selfCallsign } ?: data.message.parsed.route.source
+        val correspondent = message.addressee.takeIf { data.isOutgoing } ?: data.message.parsed.route.source
         return ConversationItemState(
             name = correspondent.callsign.canonical,
             messagePreview = message.message,

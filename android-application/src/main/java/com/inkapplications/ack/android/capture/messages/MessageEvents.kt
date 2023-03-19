@@ -21,6 +21,9 @@ import kimchi.logger.KimchiLogger
 import kotlinx.coroutines.flow.*
 import javax.inject.Inject
 
+/**
+ * Aggregates events and settings for packet data relating to messages.
+ */
 @Reusable
 class MessageEvents @Inject constructor(
     private val packetStorage: PacketStorage,
@@ -31,6 +34,10 @@ class MessageEvents @Inject constructor(
     private val drivers: PacketDrivers,
     private val logger: KimchiLogger,
 ) {
+    /**
+     * Observe a list of the latest message in each distinct conversation
+     * by station callsign.
+     */
     val latestMessageByConversation = settings.observeData(connectionSettings.address)
         .onEach { logger.debug("Observing conversations for addressee: $it") }
         .flatMapLatest { address ->
@@ -40,6 +47,11 @@ class MessageEvents @Inject constructor(
         }
         .onEach { logger.debug("Found ${it.size} conversations") }
 
+    /**
+     * Observe the total list of messages sent to and from a particular station.
+     *
+     * @param address The callsign of the station to find messages for.
+     */
     fun conversationList(address: Callsign): Flow<List<MessageData>> {
         return settings.observeData(connectionSettings.address)
             .flatMapLatest { self ->
@@ -49,6 +61,16 @@ class MessageEvents @Inject constructor(
             .onEach { logger.debug("Loaded ${it.size} messages from $address") }
     }
 
+    /**
+     * Transmit a new message via all connected transmission drivers.
+     *
+     * This will immediately transmit the message to any connected drivers
+     * as well as save the message in the local database as a locally
+     * transmitted packet.
+     *
+     * @param addressee The callsign of the station to send the message to.
+     * @param message The body text of the message to be sent.
+     */
     suspend fun transmitMessage(addressee: Callsign, message: String) {
         val packetData = PacketData.Message(
             addressee = StationAddress(addressee),

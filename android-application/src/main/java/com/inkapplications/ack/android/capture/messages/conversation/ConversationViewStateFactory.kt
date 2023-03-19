@@ -66,7 +66,7 @@ class ConversationViewStateFactory @Inject constructor(
         return MessageItemState(
             message = (data.message.parsed.data as PacketData.Message).message,
             timestamp = dateTimeFormatter.formatTimestamp(data.message.received),
-            alignment = if (data.selfCallsign == data.message.parsed.route.source.callsign) {
+            alignment = if (data.isOutgoing) {
                 Alignment.CenterEnd
             } else {
                 Alignment.CenterStart
