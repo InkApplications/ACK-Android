@@ -9,6 +9,9 @@ import kimchi.Kimchi
 import kotlinx.coroutines.*
 import javax.inject.Inject
 
+/**
+ * Service used for capturing packets in the background.
+ */
 @AndroidEntryPoint
 abstract class CaptureService: Service() {
     @Inject
