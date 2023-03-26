@@ -15,7 +15,6 @@ import com.inkapplications.ack.android.log.index.LogIndexController
 import com.inkapplications.ack.android.log.index.LogIndexState
 import com.inkapplications.ack.android.log.details.startLogInspectActivity
 import com.inkapplications.ack.android.capture.messages.index.MessagesScreenController
-import com.inkapplications.ack.android.capture.messages.index.MessageIndexState
 import com.inkapplications.ack.android.capture.messages.conversation.startConversationActivity
 import com.inkapplications.ack.android.capture.messages.create.CreateConversationActivity
 import com.inkapplications.ack.android.capture.service.AudioCaptureService
@@ -39,6 +38,12 @@ import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.MutableStateFlow
 import javax.inject.Inject
 
+/**
+ * Capture controls and data exploration.
+ *
+ * This is the primary activity in the application and provides controls
+ * to capture APRS packets and explore the data that has been captured.
+ */
 @AndroidEntryPoint
 class CaptureActivity: ExtendedActivity(), CaptureNavController, LogIndexController {
     @Inject
@@ -63,7 +68,6 @@ class CaptureActivity: ExtendedActivity(), CaptureNavController, LogIndexControl
         super.onCreate()
 
         setContent {
-            val captureState = captureEvents.screenState.collectAsState(CaptureScreenViewState())
             val mapState = mapViewState.collectAsState()
             val logState = logData.logIndexState.collectAsState(LogIndexState.Initial)
             val messagesScreenController = object: MessagesScreenController {
@@ -76,7 +80,6 @@ class CaptureActivity: ExtendedActivity(), CaptureNavController, LogIndexControl
             }
 
             CaptureScreen(
-                captureScreenState = captureState,
                 mapState = mapState,
                 logIndexState = logState,
                 logIndexController = this,

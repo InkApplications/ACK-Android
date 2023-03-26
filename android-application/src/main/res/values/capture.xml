@@ -24,7 +24,6 @@
     <string name="capture_log_empty">No Logs Received Yet</string>
     <string name="capture_log_info">View Station Details</string>
     <string name="capture_log_received_format">Received %s</string>
-    <string name="capture_volume_format">%s\%%</string>
     <string name="capture_volume_off">off</string>
     <string name="capture_callsign_missing">No Callsign</string>
 </resources>

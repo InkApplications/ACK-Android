@@ -5,9 +5,10 @@ import com.inkapplications.ack.structures.Symbol
 import com.inkapplications.ack.structures.station.StationAddress
 import inkapplications.spondee.measure.Length
 import kotlin.time.Duration
-import kotlin.time.ExperimentalTime
 
-@OptIn(ExperimentalTime::class)
+/**
+ * Data used when creating a transmitted packet.
+ */
 data class TransmitPrototype(
     val path: List<Digipeater>,
     val destination: StationAddress,

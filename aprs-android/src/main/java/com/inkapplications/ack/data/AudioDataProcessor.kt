@@ -1,6 +1,5 @@
 package com.inkapplications.ack.data
 
-import inkapplications.spondee.scalar.DecimalPercentage
 import inkapplications.spondee.scalar.Percentage
 import inkapplications.spondee.scalar.decimalPercentage
 import kotlinx.coroutines.channels.consumeEach

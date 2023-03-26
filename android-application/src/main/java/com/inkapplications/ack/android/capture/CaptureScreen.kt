@@ -11,11 +11,13 @@ import androidx.compose.material.icons.filled.*
 import androidx.compose.material.icons.outlined.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -43,19 +45,20 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun CaptureScreen(
-    captureScreenState: State<CaptureScreenViewState>,
     mapState: State<MapViewState>,
     logIndexState: State<LogIndexState>,
     logIndexController: LogIndexController,
     messagesScreenController: MessagesScreenController,
     mapFactory: (Context) -> View,
     controller: CaptureNavController,
+    viewModel: CaptureViewModel = hiltViewModel(),
 ) = AckScreen {
     val navController = rememberNavController()
     val settingsSheetState = rememberBottomSheetScaffoldState()
+    val captureScreenState = viewModel.controlPanelState.collectAsState()
     SettingsSheetWrapper(
         settingsSheetState = settingsSheetState,
-        captureScreenState = captureScreenState,
+        controlPanelState = captureScreenState,
         captureController = controller,
     ) {
         Column {
@@ -174,12 +177,12 @@ private fun CaptureSettingsFab(
 @Composable
 private fun SettingsSheetWrapper(
     settingsSheetState: BottomSheetScaffoldState,
-    captureScreenState: State<CaptureScreenViewState>,
+    controlPanelState: State<ControlPanelState>,
     captureController: CaptureNavController,
     content: @Composable () -> Unit,
 ) {
     BottomSheetScaffold(
-        sheetContent = { CaptureSettingsSheet(captureScreenState.value, captureController, settingsSheetState) },
+        sheetContent = { CaptureSettingsSheet(controlPanelState.value, captureController, settingsSheetState) },
         scaffoldState = settingsSheetState,
         sheetPeekHeight = 0.dp,
     ) {
@@ -190,7 +193,7 @@ private fun SettingsSheetWrapper(
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 private fun CaptureSettingsSheet(
-    captureScreenState: CaptureScreenViewState,
+    controlPanelState: ControlPanelState,
     captureController: CaptureNavController,
     settingsSheetState: BottomSheetScaffoldState,
 ) = Column(horizontalAlignment = Alignment.CenterHorizontally) {
@@ -208,12 +211,14 @@ private fun CaptureSettingsSheet(
     Row(
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically,
-        modifier = Modifier.fillMaxWidth().padding(horizontal = AckTheme.spacing.gutter),
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = AckTheme.spacing.gutter),
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
         ) {
-            if (captureScreenState.callsign != null) {
+            if (controlPanelState is ControlPanelState.Loaded) {
                 Icon(
                     imageVector = Icons.Default.Badge,
                     contentDescription = null,
@@ -221,18 +226,7 @@ private fun CaptureSettingsSheet(
                     modifier = Modifier.padding(horizontal = AckTheme.spacing.icon)
                 )
                 Text(
-                    text = captureScreenState.callsign,
-                    style = AckTheme.typography.h1,
-                )
-            } else {
-                Icon(
-                    imageVector = Icons.Default.Person,
-                    contentDescription = null,
-                    tint = AckTheme.colors.foreground,
-                    modifier = Modifier.padding(horizontal = AckTheme.spacing.icon)
-                )
-                Text(
-                    text = stringResource(R.string.capture_callsign_missing),
+                    text = controlPanelState.userCallsign,
                     style = AckTheme.typography.h1,
                 )
             }
@@ -253,82 +247,82 @@ private fun CaptureSettingsSheet(
         }
     }
     Row {
-        captureScreenState.audioCaptureState.whenOff {
+        controlPanelState.audioCaptureState.whenOff {
             StateLabelledIconButton(
-                state = captureScreenState.audioCaptureState,
+                state = controlPanelState.audioCaptureState,
                 title = stringResource(R.string.capture_controls_audio_capture_disabled_name),
                 icon = Icons.Outlined.MicOff,
                 onClick = captureController::onAudioCaptureEnableClick,
             )
         }
-        captureScreenState.audioCaptureState.whenOn {
+        controlPanelState.audioCaptureState.whenOn {
             StateLabelledIconButton(
-                state = captureScreenState.audioCaptureState,
-                title = stringResource(R.string.capture_controls_audio_capture_enabled_name, captureScreenState.audioLevel),
+                state = controlPanelState.audioCaptureState,
+                title = stringResource(R.string.capture_controls_audio_capture_enabled_name, (controlPanelState as ControlPanelState.Loaded).audioCaptureLevel),
                 icon = Icons.Filled.Mic,
                 onClick = captureController::onAudioCaptureDisableClick,
             )
         }
 
-        captureScreenState.audioTransmitState.whenDisabled {
+        controlPanelState.audioTransmitState.whenDisabled {
             StateLabelledIconButton(
-                state = captureScreenState.audioTransmitState,
+                state = controlPanelState.audioTransmitState,
                 icon = Icons.Outlined.VolumeOff,
                 title = stringResource(R.string.capture_controls_audio_transmit_disabled_name),
             )
         }
-        captureScreenState.audioTransmitState.whenOff {
+        controlPanelState.audioTransmitState.whenOff {
             StateLabelledIconButton(
-                state = captureScreenState.audioTransmitState,
+                state = controlPanelState.audioTransmitState,
                 icon = Icons.Outlined.VolumeOff,
                 title = stringResource(R.string.capture_controls_audio_transmit_disabled_name),
                 onClick = captureController::onAudioTransmitEnableClick,
             )
         }
-        captureScreenState.audioTransmitState.whenOn {
+        controlPanelState.audioTransmitState.whenOn {
             StateLabelledIconButton(
-                state = captureScreenState.audioTransmitState,
+                state = controlPanelState.audioTransmitState,
                 icon = Icons.Filled.VolumeUp,
                 title = stringResource(R.string.capture_controls_audio_transmit_enabled_name),
                 onClick = captureController::onAudioTransmitDisableClick,
             )
         }
 
-        captureScreenState.internetCaptureState.whenOff {
+        controlPanelState.internetCaptureState.whenOff {
             StateLabelledIconButton(
-                state = captureScreenState.internetCaptureState,
+                state = controlPanelState.internetCaptureState,
                 icon = Icons.Outlined.CloudDownload,
                 title = stringResource(R.string.capture_controls_internet_capture_disabled_name),
                 onClick = captureController::onInternetCaptureEnableClick,
             )
         }
-        captureScreenState.internetCaptureState.whenOn {
+        controlPanelState.internetCaptureState.whenOn {
             StateLabelledIconButton(
-                state = captureScreenState.internetCaptureState,
+                state = controlPanelState.internetCaptureState,
                 icon = Icons.Filled.CloudDownload,
                 title = stringResource(R.string.capture_controls_internet_capture_enabled_name),
                 onClick = captureController::onInternetCaptureDisableClick,
             )
         }
 
-        captureScreenState.internetTransmitState.whenDisabled {
+        controlPanelState.internetTransmitState.whenDisabled {
             StateLabelledIconButton(
-                state = captureScreenState.internetTransmitState,
+                state = controlPanelState.internetTransmitState,
                 icon = Icons.Outlined.CloudUpload,
                 title = stringResource(R.string.capture_controls_internet_transmit_disabled_name),
             )
         }
-        captureScreenState.internetTransmitState.whenOff {
+        controlPanelState.internetTransmitState.whenOff {
             StateLabelledIconButton(
-                state = captureScreenState.internetTransmitState,
+                state = controlPanelState.internetTransmitState,
                 icon = Icons.Outlined.CloudUpload,
                 title = stringResource(R.string.capture_controls_internet_transmit_disabled_name),
                 onClick = captureController::onInternetTransmitEnableClick,
             )
         }
-        captureScreenState.internetTransmitState.whenOn {
+        controlPanelState.internetTransmitState.whenOn {
             StateLabelledIconButton(
-                state = captureScreenState.internetTransmitState,
+                state = controlPanelState.internetTransmitState,
                 icon = Icons.Filled.CloudUpload,
                 title = stringResource(R.string.capture_controls_internet_transmit_enabled_name),
                 onClick = captureController::onInternetTransmitDisableClick,

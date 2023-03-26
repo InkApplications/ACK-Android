@@ -1,32 +1,27 @@
 package com.inkapplications.ack.android.capture
 
 import android.Manifest
-import com.inkapplications.ack.android.R
 import com.inkapplications.android.extensions.location.LocationAccess
 import com.inkapplications.ack.android.connection.ConnectionSettings
 import com.inkapplications.ack.android.settings.SettingsReadAccess
 import com.inkapplications.ack.android.settings.observeData
-import com.inkapplications.ack.android.settings.observeInt
 import com.inkapplications.ack.android.settings.observeString
 import com.inkapplications.ack.android.transmit.TransmitSettings
 import com.inkapplications.ack.data.drivers.PacketDriver
 import com.inkapplications.ack.data.drivers.PacketDrivers
 import com.inkapplications.ack.structures.*
-import com.inkapplications.android.extensions.StringResources
-import com.inkapplications.android.extensions.control.ControlState
 import com.inkapplications.coroutines.combinePair
 import com.inkapplications.coroutines.combineTriple
-import inkapplications.spondee.scalar.toWholePercentage
-import inkapplications.spondee.structure.roundToInt
-import inkapplications.spondee.structure.value
 import kimchi.logger.KimchiLogger
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.coroutines.coroutineContext
-import kotlin.time.ExperimentalTime
 
+/**
+ * Provides data access to abstractions around capturing APRS packets.
+ */
 @Singleton
 class CaptureEvents @Inject constructor(
     private val drivers: PacketDrivers,
@@ -34,133 +29,165 @@ class CaptureEvents @Inject constructor(
     private val connectionSettings: ConnectionSettings,
     private val transmitSettings: TransmitSettings,
     private val locationAccess: LocationAccess,
-    private val stringResources: StringResources,
     private val logger: KimchiLogger,
 ) {
-    private val audioListenState = MutableStateFlow(false)
-    private val internetListenState = MutableStateFlow(false)
-    private val audioTransmitState = MutableStateFlow(false)
-    private val internetTransmitState = MutableStateFlow(false)
+    private val mutableAudioListenState = MutableStateFlow(false)
+    private val mutableInternetListenState = MutableStateFlow(false)
+    private val mutableAudioTransmitState = MutableStateFlow(false)
+    private val mutableInternetTransmitState = MutableStateFlow(false)
 
-    private val audioCaptureControlState = audioListenState.map { listening ->
-        if (listening) ControlState.On else ControlState.Off
-    }
+    /**
+     * Whether the application is currently capturing audio packets
+     */
+    val audioListenState: StateFlow<Boolean> = mutableAudioListenState
 
-    private val combinedTransmitState = internetTransmitState.combinePair(audioTransmitState)
+    /**
+     * Whether the application is currently capturing internet packets
+     */
+    val internetListenState: StateFlow<Boolean> = mutableInternetListenState
 
-    private val internetCaptureControlState = settings.observeData(connectionSettings.address)
-        .combine(internetListenState) { callsign, state ->
-            when {
-                callsign == null -> ControlState.Hidden
-                state -> ControlState.On
-                else -> ControlState.Off
-            }
-        }
+    /**
+     * Whether the application is currently transmitting audio packets
+     */
+    val audioTransmitState: StateFlow<Boolean> = mutableAudioTransmitState
 
-    private val audioTransmitControlState = settings.observeData(connectionSettings.address)
-        .combinePair(audioListenState)
-        .combine(audioTransmitState) { (callsign, capturing), transmitting ->
-            when {
-                callsign == null -> ControlState.Hidden
-                !capturing -> ControlState.Disabled
-                transmitting -> ControlState.On
-                else -> ControlState.Off
-            }
-        }
+    /**
+     * Whether the application is currently transmitting internet packets.
+     */
+    val internetTransmitState: StateFlow<Boolean> = mutableInternetTransmitState
 
-    private val internetTransmitControlState = settings.observeData(connectionSettings.address)
-        .combinePair(settings.observeInt(connectionSettings.passcode))
-        .combineTriple(internetListenState)
-        .combine(internetTransmitState) { (callsign, passcode, capturing), transmitting ->
-            when {
-                callsign == null || passcode == -1 -> ControlState.Hidden
-                !capturing -> ControlState.Disabled
-                transmitting -> ControlState.On
-                else -> ControlState.Off
-            }
-        }
+    /**
+     * The current audio input level, or null when not capturing.
+     */
+    val audioInputVolume = drivers.afskDriver.volume
 
+    private val combinedTransmitState = mutableInternetTransmitState.combinePair(mutableAudioTransmitState)
+
+    /**
+     * Android permissions required for audio capture.
+     */
     val audioCapturePermissions = drivers.afskDriver.receivePermissions
+
+    /**
+     * Android permissions required for audio transmit.
+     */
     val audioTransmitPermissions = drivers.afskDriver.transmitPermissions + Manifest.permission.ACCESS_FINE_LOCATION
+
+    /**
+     * Android permissions required for internet capture.
+     */
     val internetCapturePermissions = drivers.internetDriver.receivePermissions
+
+    /**
+     * Android permissions required for internet transmit.
+     */
     val internetTransmitPermissions = drivers.internetDriver.transmitPermissions + Manifest.permission.ACCESS_FINE_LOCATION
 
-    val screenState = audioCaptureControlState
-        .combine(internetCaptureControlState) { recording, internet ->
-            CaptureScreenViewState(
-                audioCaptureState = recording,
-                internetCaptureState = internet,
-            )
-        }
-        .combine(settings.observeData(connectionSettings.address)) { viewModel, callsign ->
-            viewModel.copy(callsign = callsign?.toString())
-        }
-        .combine(audioTransmitControlState) { viewModel, transmit ->
-            viewModel.copy(audioTransmitState = transmit)
-        }
-        .combine(internetTransmitControlState) { viewModel, transmit ->
-            viewModel.copy(internetTransmitState = transmit)
-        }
-        .combine(drivers.afskDriver.volume) { viewModel, volume ->
-            viewModel.copy(audioLevel = volume
-                ?.toWholePercentage()
-                ?.roundToInt()
-                ?.let { stringResources.getString(R.string.capture_volume_format, it) }
-                ?: stringResources.getString(R.string.capture_volume_off)
-            )
-        }
-
+    /**
+     * Connect the audio driver for listening to audio packets.
+     *
+     * This must be running for audio transmit to work, in addition to capture.
+     */
     suspend fun connectAudio() {
         coroutineScope {
             launch { listenForPackets() }
             launch {
-                audioTransmitState.collectLatest {
+                mutableAudioTransmitState.collectLatest {
                     if (it) transmitLoop(drivers.afskDriver)
                 }
             }
         }
     }
 
+    /**
+     * Connect to the internet capture driver for capturing packets via APRS-IS
+     *
+     * This must be running for internet transmit to work in addition to
+     * capture.
+     */
     suspend fun connectInternet() {
         coroutineScope {
             launch { listenForInternetPackets() }
             launch {
-                internetTransmitState.collectLatest {
+                mutableInternetTransmitState.collectLatest {
                     if (it) transmitLoop(drivers.internetDriver)
                 }
             }
         }
     }
 
-    suspend fun listenForPackets() {
-        if (audioListenState.value) {
+    /**
+     * Start transmitting audio packets.
+     *
+     * Note: [connectAudio] must be running for this to have an effect.
+     */
+    fun startAudioTransmit() {
+        mutableAudioTransmitState.value = true
+    }
+
+    /**
+     * Stop transmitting audio packets.
+     */
+    fun stopAudioTransmit() {
+        mutableAudioTransmitState.value = false
+    }
+
+    /**
+     * Start transmitting internet packets.
+     *
+     * Note: [connectInternet] must be running for this to have an effect.
+     */
+    fun startInternetTransmit() {
+        mutableInternetTransmitState.value = true
+    }
+
+    /**
+     * Stop transmitting internet packets.
+     */
+    fun stopInternetTransmit() {
+        mutableInternetTransmitState.value = false
+    }
+
+    /**
+     * Start listening to audio packets.
+     */
+    private suspend fun listenForPackets() {
+        if (mutableAudioListenState.value) {
             logger.error("Tried to listen for audio packets while already active")
             return
         }
         try {
-            audioListenState.value = true
+            mutableAudioListenState.value = true
             drivers.afskDriver.connect()
         } finally {
             logger.trace("Audio service cancelling")
-            audioListenState.value = false
+            mutableAudioListenState.value = false
         }
     }
 
-    fun startAudioTransmit() {
-        audioTransmitState.value = true
-    }
-    fun stopAudioTransmit() {
-        audioTransmitState.value = false
-    }
-    fun startInternetTransmit() {
-        internetTransmitState.value = true
-    }
-    fun stopInternetTransmit() {
-        internetTransmitState.value = false
+    /**
+     * Start listening to internet packets.
+     */
+    private suspend fun listenForInternetPackets() {
+        if (mutableInternetListenState.value) {
+            logger.error("Tried to listen for internet packets while already active")
+            return
+        }
+        try {
+            mutableInternetListenState.value = true
+            drivers.internetDriver.connect()
+        } catch (e: Throwable) {
+            logger.error("Internet listen terminated", e)
+        } finally {
+            logger.trace("Internet service cancelling")
+            mutableInternetListenState.value = false
+        }
     }
 
-    @OptIn(ExperimentalTime::class)
-    suspend fun transmitLoop(driver: PacketDriver) {
+    /**
+     * Transmit an APRS packet to the specified driver at the configured interval.
+     */
+    private suspend fun transmitLoop(driver: PacketDriver) {
         settings.observeData(connectionSettings.address)
             .filterNotNull()
             .combine(settings.observeData(transmitSettings.digipath)) { callsign, path ->
@@ -219,21 +246,5 @@ class CaptureEvents @Inject constructor(
                     delay(prototype.minRate)
                 }
             }
-    }
-
-    suspend fun listenForInternetPackets() {
-        if (internetListenState.value) {
-            logger.error("Tried to listen for internet packets while already active")
-            return
-        }
-        try {
-            internetListenState.value = true
-            drivers.internetDriver.connect()
-        } catch (e: Throwable) {
-            logger.error("Internet listen terminated", e)
-        } finally {
-            logger.trace("Internet service cancelling")
-            internetListenState.value = false
-        }
     }
 }
