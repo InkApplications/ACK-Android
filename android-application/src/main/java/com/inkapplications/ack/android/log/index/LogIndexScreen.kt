@@ -44,7 +44,7 @@ private fun EmptyState() {
             tint = AckTheme.colors.foregroundInactive,
             modifier = Modifier.size(AckTheme.spacing.placeholderIcon),
         )
-        Text(stringResource(R.string.capture_log_empty))
+        Text(stringResource(R.string.log_index_empty))
     }
 }
 

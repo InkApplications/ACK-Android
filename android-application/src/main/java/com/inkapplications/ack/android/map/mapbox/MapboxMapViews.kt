@@ -3,6 +3,7 @@ package com.inkapplications.ack.android.map.mapbox
 import android.app.Activity
 import android.content.res.Configuration
 import com.inkapplications.ack.android.map.MapController
+import com.inkapplications.ack.android.map.MapState
 import com.mapbox.maps.MapView
 import com.mapbox.maps.Style
 

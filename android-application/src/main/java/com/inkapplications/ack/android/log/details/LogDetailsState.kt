@@ -1,23 +1,29 @@
 package com.inkapplications.ack.android.log.details
 
 import androidx.compose.ui.graphics.vector.ImageVector
-import com.inkapplications.ack.android.map.CameraPositionDefaults
-import com.inkapplications.ack.android.map.MapCameraPosition
-import com.inkapplications.ack.android.map.MarkerViewState
 import com.inkapplications.ack.structures.TelemetryValues
 import com.inkapplications.ack.structures.station.Callsign
 
+/**
+ * Possible states for the Log Details Screen.
+ */
 sealed interface LogDetailsState {
+    /**
+     * Indicates that no data has been loaded yet.
+     */
     object Initial: LogDetailsState
+
+    /**
+     * Log data for the packet.
+     */
     data class Loaded(
         val callsign: Callsign,
         val name: String,
         val receiveIcon: ImageVector,
         val receiveIconDescription: String,
         val timestamp: String,
+        val mapable: Boolean,
         val comment: String? = null,
-        val markers: List<MarkerViewState> = emptyList(),
-        val mapCameraPosition: MapCameraPosition = CameraPositionDefaults.unknownLocation,
         val temperature: String? = null,
         val wind: String? = null,
         val altitude: String? = null,

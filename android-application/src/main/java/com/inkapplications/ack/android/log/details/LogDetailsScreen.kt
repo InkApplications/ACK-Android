@@ -10,30 +10,47 @@ import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.viewinterop.AndroidView
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.inkapplications.ack.android.R
 import com.inkapplications.ack.android.ui.IconRow
 import com.inkapplications.ack.android.ui.NavigationRow
 import com.inkapplications.ack.android.ui.TelemetryTable
 import com.inkapplications.ack.android.ui.theme.AckTheme
 
+/**
+ * Detailed display of the data for a single logged packet.
+ */
 @Composable
 fun LogDetailsScreen(
-    viewState: LogDetailsState,
+    viewModel: LogDetailsViewModel = hiltViewModel(),
     controller: LogDetailsController,
-    createMapView: (Context) -> View,
+    mapViewFactory: (Context) -> View,
 ) {
-    if (viewState !is LogDetailsState.Loaded) return
+    val viewState = viewModel.detailsState.collectAsState().value
 
+    when (viewState) {
+        is LogDetailsState.Initial -> {}
+        is LogDetailsState.Loaded -> Details(viewState, controller, mapViewFactory)
+    }
+}
+
+@Composable
+private fun Details(
+    viewState: LogDetailsState.Loaded,
+    controller: LogDetailsController,
+    mapViewFactory: (Context) -> View,
+) {
     Column {
-        if (viewState.markers.isNotEmpty()) {
+        if (viewState.mapable) {
             Column {
                 Box {
                     AndroidView(
-                        factory = createMapView,
+                        factory = mapViewFactory,
                         modifier = Modifier.aspectRatio(16f / 9f),
                     )
                     IconButton(
@@ -53,7 +70,7 @@ fun LogDetailsScreen(
                     IconButton(
                         onClick = { controller.onViewStationDetails(viewState.callsign) },
                     ) {
-                        Icon(Icons.Default.Info, stringResource(R.string.capture_log_info))
+                        Icon(Icons.Default.Info, stringResource(R.string.log_details_title))
                     }
                 }
             }
@@ -77,7 +94,7 @@ fun LogDetailsScreen(
                         IconButton(
                             onClick = { controller.onViewStationDetails(viewState.callsign) },
                         ) {
-                            Icon(Icons.Default.Info, stringResource(R.string.capture_log_info))
+                            Icon(Icons.Default.Info, stringResource(R.string.log_details_title))
                         }
                     },
                     onBackPressed = controller::onBackPressed
@@ -112,7 +129,9 @@ fun LogDetailsScreen(
                 TelemetryTable(viewState.telemetryValues, viewState.telemetrySequence)
             }
             if (viewState.rawSource != null) {
-                Card(modifier = Modifier.fillMaxWidth().padding(vertical = AckTheme.spacing.content)) {
+                Card(modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = AckTheme.spacing.content)) {
                     Column(modifier = Modifier.padding(AckTheme.spacing.content)) {
                         Text("Debug Info", style = AckTheme.typography.h2)
                         Text("Raw Data", style = AckTheme.typography.h3)

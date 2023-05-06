@@ -20,8 +20,8 @@ import kotlin.test.*
 
 class StationViewStateFactoryTest {
     val dummySummaryFactory = SummaryFactory(ParrotStringResources)
-    val factoryWithNullMarkers = LogDetailsViewStateFactory(NullMarkerFactoryMock, dummySummaryFactory, EpochFormatterFake, ParrotStringResources)
-    val factoryWithDummyMarkers = LogDetailsViewStateFactory(DummyMarkerFactoryMock, dummySummaryFactory, EpochFormatterFake, ParrotStringResources)
+    val factoryWithNullMarkers = LogDetailsViewStateFactory(dummySummaryFactory, EpochFormatterFake, ParrotStringResources)
+    val factoryWithDummyMarkers = LogDetailsViewStateFactory(dummySummaryFactory, EpochFormatterFake, ParrotStringResources)
 
     @Test
     fun nameFormatting() {
@@ -85,7 +85,7 @@ class StationViewStateFactoryTest {
 
         val result = factoryWithNullMarkers.create(LogDetailData(packet = packet))
 
-        assertTrue(result.markers.isEmpty(), "No map markers for unknown packet")
+        assertFalse(result.mapable, "Not mapable for non-map data")
         assertNull(result.temperature, "No temperature for non weather packet")
         assertNull(result.wind, "No wind data for non weather packet")
         assertNull(result.comment, "No comment for unknown packet")
@@ -111,7 +111,7 @@ class StationViewStateFactoryTest {
 
         val result = factoryWithNullMarkers.create(data)
 
-        assertTrue(result.markers.isEmpty(), "No map markers for positionless weather")
+        assertFalse(result.mapable, "Not mapable for non-map data")
         assertEquals("72ºF", result.temperature)
         assertEquals("12º|34mph|56mph", result.wind)
         assertNull(result.comment, "No comment for positionless weather")
@@ -134,7 +134,7 @@ class StationViewStateFactoryTest {
 
         val result = factoryWithDummyMarkers.create(data)
 
-        assertEquals(1, result.markers.size)
+        assertTrue(result.mapable, "Mapable weather data shows map")
         assertEquals("72ºF", result.temperature)
         assertEquals("12º|34mph|56mph", result.wind)
         assertNull(result.comment, "No comment for weather packet")
@@ -155,7 +155,7 @@ class StationViewStateFactoryTest {
 
         val result = factoryWithDummyMarkers.create(data)
 
-        assertEquals(1, result.markers.size)
+        assertTrue(result.mapable, "Mapable weather data shows map")
         assertNull(result.temperature, "No temperature for empty weather packet")
         assertNull(result.wind, "No wind data for empty non weather packet")
         assertNull(result.comment, "No comment for unknown packet")
@@ -178,7 +178,7 @@ class StationViewStateFactoryTest {
 
         val result = factoryWithDummyMarkers.create(data)
 
-        assertEquals(1, result.markers.size)
+        assertTrue(result.mapable, "Mapable position data shows map")
         assertNull(result.temperature, "No temperature for non weather packet")
         assertNull(result.wind, "No wind data for non weather packet")
         assertEquals("test", result.comment)
