@@ -69,7 +69,6 @@ class CaptureActivity: ExtendedActivity(), CaptureNavController, LogIndexControl
 
         setContent {
             val mapState = mapViewState.collectAsState()
-            val logState = logData.logIndexState.collectAsState(LogIndexState.Initial)
             val messagesScreenController = object: MessagesScreenController {
                 override fun onCreateMessageClick() {
                     startActivity(CreateConversationActivity::class)
@@ -81,7 +80,6 @@ class CaptureActivity: ExtendedActivity(), CaptureNavController, LogIndexControl
 
             CaptureScreen(
                 mapState = mapState,
-                logIndexState = logState,
                 logIndexController = this,
                 messagesScreenController = messagesScreenController,
                 mapFactory = ::createMapView,

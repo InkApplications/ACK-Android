@@ -2,6 +2,7 @@ package com.inkapplications.ack.android.log
 
 import com.inkapplications.ack.android.locale.format
 import com.inkapplications.ack.android.symbol.SymbolFactory
+import com.inkapplications.ack.data.CapturedPacket
 import com.inkapplications.ack.structures.AprsPacket
 import com.inkapplications.ack.structures.PacketData
 import com.inkapplications.ack.structures.capabilities.Mapable
@@ -12,6 +13,10 @@ import javax.inject.Inject
 class CombinedLogItemViewStateFactory @Inject constructor(
     private val symbolFactory: SymbolFactory
 ): LogItemViewStateFactory {
+    override fun create(packets: List<CapturedPacket>, metric: Boolean): List<LogItemViewState> {
+        return packets.map { create(it.id, it.parsed, metric) }
+    }
+
     override fun create(
         id: Long,
         packet: AprsPacket,

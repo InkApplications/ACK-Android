@@ -1,8 +1,8 @@
 package com.inkapplications.ack.android.log
 
-import com.inkapplications.ack.android.log.details.LogDetailData
-import com.inkapplications.ack.android.log.index.LogIndexState
 import com.inkapplications.ack.android.locale.LocaleSettings
+import com.inkapplications.ack.android.log.details.LogDetailData
+import com.inkapplications.ack.android.log.index.LogIndexData
 import com.inkapplications.ack.android.map.CameraPositionDefaults
 import com.inkapplications.ack.android.map.MapCameraPosition
 import com.inkapplications.ack.android.map.MapState
@@ -15,16 +15,19 @@ import com.inkapplications.ack.data.PacketStorage
 import com.inkapplications.ack.structures.PacketData
 import com.inkapplications.ack.structures.capabilities.Mapable
 import com.inkapplications.coroutines.combinePair
-import com.inkapplications.coroutines.mapItems
+import com.inkapplications.coroutines.filterItems
 import dagger.Reusable
 import kimchi.logger.KimchiLogger
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 @Reusable
 class LogEvents @Inject constructor(
     private val packetStorage: PacketStorage,
-    private val stateFactory: LogItemViewStateFactory,
     private val markerViewStateFactory: MarkerViewStateFactory,
     private val settings: SettingsReadAccess,
     private val localeSettings: LocaleSettings,
@@ -32,16 +35,13 @@ class LogEvents @Inject constructor(
     logSettings: LogSettings,
     private val logger: KimchiLogger,
 ) {
-    val logIndexState = settings.observeBoolean(localeSettings.preferMetric)
+    val logIndex = settings.observeBoolean(localeSettings.preferMetric)
         .combinePair(settings.observeBoolean(logSettings.filterUnknown))
         .flatMapLatest { (metric, filterUnknown) ->
             packetStorage.findRecent(500)
-                .map {
-                    if (filterUnknown) it.filter { it.parsed.data !is PacketData.Unknown } else it
-                }
-                .mapItems { stateFactory.create(it.id, it.parsed, metric) }
+                .filterItems { !filterUnknown || it.parsed.data !is PacketData.Unknown }
+                .map { LogIndexData(metric, it) }
         }
-        .map { if (it.isEmpty()) LogIndexState.Empty else LogIndexState.LogList(it) }
 
     fun stateEvents(id: Long): Flow<LogDetailData> {
         logger.trace("Observing packet: $id")

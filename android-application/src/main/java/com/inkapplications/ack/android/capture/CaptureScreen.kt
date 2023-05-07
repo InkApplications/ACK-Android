@@ -25,9 +25,8 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.inkapplications.ack.android.R
 import com.inkapplications.ack.android.capture.insights.InsightsScreen
-import com.inkapplications.ack.android.capture.log.LogIndexScreen
+import com.inkapplications.ack.android.log.index.LogIndexScreen
 import com.inkapplications.ack.android.log.index.LogIndexController
-import com.inkapplications.ack.android.log.index.LogIndexState
 import com.inkapplications.ack.android.map.MapScreen
 import com.inkapplications.ack.android.map.MapViewState
 import com.inkapplications.ack.android.capture.messages.MessageIndexScreen
@@ -46,7 +45,6 @@ import kotlinx.coroutines.launch
 @Composable
 fun CaptureScreen(
     mapState: State<MapViewState>,
-    logIndexState: State<LogIndexState>,
     logIndexController: LogIndexController,
     messagesScreenController: MessagesScreenController,
     mapFactory: (Context) -> View,
@@ -71,7 +69,6 @@ fun CaptureScreen(
                 CaptureNavHost(
                     navController = navController,
                     mapState = mapState,
-                    logIndexState = logIndexState,
                     logIndexController = logIndexController,
                     messagesScreenController = messagesScreenController,
                     mapFactory = mapFactory,
@@ -335,7 +332,6 @@ private fun CaptureSettingsSheet(
 private fun CaptureNavHost(
     navController: NavHostController,
     mapState: State<MapViewState>,
-    logIndexState: State<LogIndexState>,
     logIndexController: LogIndexController,
     messagesScreenController: MessagesScreenController,
     mapFactory: (Context) -> View,
@@ -358,7 +354,6 @@ private fun CaptureNavHost(
         }
         composable("log") {
             LogIndexScreen(
-                state = logIndexState,
                 controller = logIndexController,
             )
         }
