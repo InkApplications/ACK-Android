@@ -35,7 +35,7 @@ class StartupActivity: ExtendedActivity() {
         super.onStart()
         foregroundScope.launch {
             initializer.initialize(application)
-            if (onboardingStateAccess.screenState.first().finished) {
+            if (onboardingStateAccess.finished.first()) {
                 startActivity(CaptureActivity::class)
             } else {
                 startActivity(OnboardActivity::class)

@@ -1,19 +1,23 @@
 package com.inkapplications.ack.android.onboard
 
 import androidx.activity.compose.setContent
-import androidx.compose.runtime.collectAsState
-import androidx.lifecycle.lifecycleScope
+import androidx.compose.runtime.LaunchedEffect
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.inkapplications.ack.android.capture.CaptureActivity
 import com.inkapplications.ack.android.settings.SettingsAccess
+import com.inkapplications.ack.android.settings.license.LicensePromptFieldValues
 import com.inkapplications.ack.android.settings.license.LicensePromptValidator
 import com.inkapplications.android.extensions.ExtendedActivity
 import com.inkapplications.android.startActivity
 import dagger.hilt.android.AndroidEntryPoint
 import kimchi.Kimchi
 import kimchi.analytics.Property
-import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.first
 import javax.inject.Inject
 
+/**
+ * Screen that shows required agreements and setup at first launch.
+ */
 @AndroidEntryPoint
 class OnboardActivity: ExtendedActivity(), UserAgreementController {
     @Inject
@@ -29,23 +33,19 @@ class OnboardActivity: ExtendedActivity(), UserAgreementController {
         super.onCreate()
 
         setContent {
-            val licenseFieldState = settingsAccess.licensePromptFieldValues.collectAsState(null).value
+            val viewModel: OnboardingViewModel = hiltViewModel()
 
-            if (licenseFieldState != null) {
-                OnboardScreen(
-                    state = stateAccess.screenState.collectAsState(OnboardingState()),
-                    userAgreementController = this,
-                    initialLicensePromptFieldValues = licenseFieldState,
-                    licenseValidator = licensePromptValidator,
-                    onLicenseContinueClick = ::onLicenseContinueClick,
-                )
+            OnboardScreen(
+                viewModel = viewModel,
+                userAgreementController = this,
+                licenseValidator = licensePromptValidator,
+                onLicenseContinueClick = ::onLicenseContinueClick,
+            )
+
+            LaunchedEffect(null) {
+                viewModel.screenState.first { it is OnboardingState.Complete }
+                onCompleted()
             }
-        }
-
-        lifecycleScope.launchWhenCreated {
-            stateAccess.screenState
-                .filter { it.finished }
-                .collect { onCompleted() }
         }
     }
 

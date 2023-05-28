@@ -1,25 +1,28 @@
 package com.inkapplications.ack.android.onboard
 
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.State
+import androidx.compose.runtime.collectAsState
+import com.inkapplications.ack.android.settings.license.LicensePromptFieldValues
 import com.inkapplications.ack.android.settings.license.LicensePromptScreen
 import com.inkapplications.ack.android.settings.license.LicensePromptValidator
 import com.inkapplications.ack.android.ui.theme.AckScreen
 
 @Composable
 fun OnboardScreen(
-    state: State<OnboardingState>,
+    viewModel: OnboardingViewModel,
     userAgreementController: UserAgreementController,
-    initialLicensePromptFieldValues: LicensePromptFieldValues,
     licenseValidator: LicensePromptValidator,
     onLicenseContinueClick: (LicensePromptFieldValues) -> Unit,
 ) = AckScreen {
-    when {
-        state.value.agreementRequired -> UsageAgreementPrompt(userAgreementController)
-        state.value.licensePromptRequired -> LicensePromptScreen(
-            initialValues = initialLicensePromptFieldValues,
+    val state = viewModel.screenState.collectAsState()
+    when (val onboardingState = state.value) {
+        OnboardingState.Complete -> {}
+        OnboardingState.Initial -> {}
+        is OnboardingState.LicensePrompt -> LicensePromptScreen(
+            initialValues = onboardingState.initialValues,
             validator = licenseValidator,
             onContinue = onLicenseContinueClick,
         )
+        OnboardingState.UserAgreement -> UsageAgreementPrompt(userAgreementController)
     }
 }

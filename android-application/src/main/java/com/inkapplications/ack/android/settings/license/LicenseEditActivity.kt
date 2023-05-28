@@ -3,7 +3,6 @@ package com.inkapplications.ack.android.settings.license
 import androidx.activity.compose.setContent
 import androidx.compose.runtime.collectAsState
 import com.inkapplications.android.extensions.ExtendedActivity
-import com.inkapplications.ack.android.onboard.LicensePromptFieldValues
 import com.inkapplications.ack.android.settings.SettingsAccess
 import dagger.hilt.android.AndroidEntryPoint
 import kimchi.Kimchi

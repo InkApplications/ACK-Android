@@ -1,7 +1,7 @@
 package com.inkapplications.ack.android.settings
 
 import com.inkapplications.ack.android.connection.ConnectionSettings
-import com.inkapplications.ack.android.onboard.LicensePromptFieldValues
+import com.inkapplications.ack.android.settings.license.LicensePromptFieldValues
 import com.inkapplications.ack.structures.station.toStationAddress
 import com.inkapplications.coroutines.mapEach
 import kotlinx.coroutines.flow.*
