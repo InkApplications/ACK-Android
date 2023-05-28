@@ -2,13 +2,17 @@ package com.inkapplications.ack.android.settings.license
 
 import androidx.activity.compose.setContent
 import androidx.compose.runtime.collectAsState
-import com.inkapplications.android.extensions.ExtendedActivity
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.inkapplications.ack.android.settings.SettingsAccess
+import com.inkapplications.android.extensions.ExtendedActivity
 import dagger.hilt.android.AndroidEntryPoint
 import kimchi.Kimchi
 import kimchi.analytics.Property
 import javax.inject.Inject
 
+/**
+ * Displays an edit-form for editing the user's licens after onboarding.
+ */
 @AndroidEntryPoint
 class LicenseEditActivity: ExtendedActivity() {
     @Inject
@@ -17,14 +21,18 @@ class LicenseEditActivity: ExtendedActivity() {
     override fun onCreate() {
         super.onCreate()
         setContent {
-            val fieldState = settingsAccess.licensePromptFieldValues.collectAsState(null).value
-            if (fieldState != null) {
-                LicensePromptScreen(
-                    initialValues = fieldState,
+            val viewModel: LicenseEditViewModel = hiltViewModel()
+            val state = viewModel.state.collectAsState().value
+
+            when (state) {
+                LicenseEditState.Initial -> {}
+                is LicenseEditState.Editable -> LicensePromptScreen(
+                    initialValues = state.initialValues,
                     validator = LicensePromptValidator(),
                     onContinue = ::onContinue
                 )
             }
+
         }
     }
 

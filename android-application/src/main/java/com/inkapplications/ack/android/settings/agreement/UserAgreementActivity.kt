@@ -14,7 +14,7 @@ class UserAgreementActivity: ExtendedActivity() {
         super.onCreate()
 
         setContent {
-            UsageAgreementReviewScreen(::onBackPressed)
+            UsageAgreementReviewScreen(onBackPressedDispatcher::onBackPressed)
         }
     }
 }
