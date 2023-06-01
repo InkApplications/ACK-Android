@@ -5,6 +5,7 @@ import com.inkapplications.ack.android.R
 import com.inkapplications.ack.android.settings.transformer.MileTransformer
 import com.inkapplications.ack.android.settings.transformer.OptionalKeyTransformer
 import com.inkapplications.ack.android.settings.transformer.StationAddressTransformer
+import com.inkapplications.ack.android.settings.transformer.Transformer
 import com.inkapplications.android.extensions.StringResources
 import com.inkapplications.ack.data.*
 import dagger.Reusable
@@ -26,12 +27,19 @@ class ConnectionSettings @Inject constructor(
             delegate = StationAddressTransformer,
         )
     )
-    val passcode = IntSetting(
+
+    val passcode = IntBackedSetting(
         key = "connection.passcode",
         name = resources.getString(R.string.connection_setting_passcode_name),
         categoryName = resources.getString(R.string.connection_setting_category_name),
-        defaultValue = -1,
-        advanced = true,
+        defaultData = null,
+        transformer = OptionalKeyTransformer(
+            nullKey = -1,
+            delegate = object: Transformer<Passcode?, Int> {
+                override fun toStorage(data: Passcode?): Int = data?.value ?: -1
+                override fun toData(storage: Int): Passcode? = storage.takeIf { it != -1 }?.let(::Passcode)
+            },
+        ),
     )
 
     val server = StringSetting(

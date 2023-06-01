@@ -1,6 +1,7 @@
 package com.inkapplications.ack.android.capture
 
 import com.inkapplications.ack.android.ParrotStringResources
+import com.inkapplications.ack.android.settings.Passcode
 import com.inkapplications.ack.structures.station.toStationAddress
 import com.inkapplications.android.extensions.control.ControlState
 import inkapplications.spondee.scalar.percent
@@ -16,7 +17,7 @@ class CaptureScreenFactoryTest {
         internetTransmitEnabled = false
         currentAddress = null
         inputAudioLevel = null
-        passcode = -1
+        passcode = null
     }
     private val factory = CaptureScreenStateFactory(
         stringResources = ParrotStringResources,
@@ -113,7 +114,7 @@ class CaptureScreenFactoryTest {
     fun passcodeAvailable() {
         val result = factory.controlPanelState(data.apply {
             currentAddress = "KE0YOG-7".toStationAddress()
-            passcode = 123
+            passcode = Passcode(123)
         })
 
         assertEquals(ControlState.Off, result.audioCaptureState)
@@ -126,7 +127,7 @@ class CaptureScreenFactoryTest {
     fun internetTransmitEnabled() {
         val result = factory.controlPanelState(data.apply {
             currentAddress = "KE0YOG-7".toStationAddress()
-            passcode = 123
+            passcode = Passcode(123)
             internetCaptureEnabled = true
         })
 
@@ -140,7 +141,7 @@ class CaptureScreenFactoryTest {
     fun internetTransmitting() {
         val result = factory.controlPanelState(data.apply {
             currentAddress = "KE0YOG-7".toStationAddress()
-            passcode = 123
+            passcode = Passcode(123)
             internetCaptureEnabled = true
             internetTransmitEnabled = true
         })

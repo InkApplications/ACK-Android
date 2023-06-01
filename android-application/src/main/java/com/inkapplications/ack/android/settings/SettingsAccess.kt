@@ -3,7 +3,7 @@ package com.inkapplications.ack.android.settings
 import com.inkapplications.ack.android.connection.ConnectionSettings
 import com.inkapplications.ack.android.settings.license.LicensePromptFieldValues
 import com.inkapplications.ack.structures.station.toStationAddress
-import com.inkapplications.coroutines.mapEach
+import com.inkapplications.coroutines.mapItems
 import kotlinx.coroutines.flow.*
 import javax.inject.Inject
 
@@ -16,58 +16,50 @@ class SettingsAccess @Inject constructor(
     private val settingsStorage: SettingsWriteAccess,
     private val connectionSettings: ConnectionSettings,
 ) {
-    private val showingAdvanced = MutableStateFlow(false)
-
-    val settingsStateGrouped = showingAdvanced
-        .map { showAdvanced ->
-            settingsProvider.settings.filter { showAdvanced || !it.advanced }
-        }
-        .map {
-            it.groupBy { it.categoryName }.map { (key, settings) ->
+    fun settingsGroups(advanced: Boolean): Flow<List<SettingsGroup>> {
+        return settingsProvider.settings
+            .filter { advanced || !it.advanced }
+            .groupBy { it.categoryName }
+            .map { (key, settings) ->
                 settings.map { setting ->
-                        when (setting) {
-                            is StringSetting -> settingValues.observeString(setting)
-                                .map { SettingState.StringState(setting, it) }
-                            is IntSetting -> settingValues.observeInt(setting)
-                                .map { SettingState.IntState(setting, it) }
-                            is BooleanSetting -> settingValues.observeBoolean(setting)
-                                .map { SettingState.BooleanState(setting, it) }
-                        }
+                    when (setting) {
+                        is StringSetting -> settingValues.observeString(setting)
+                            .map { SettingState.StringState(setting, it) }
+                        is IntSetting -> settingValues.observeInt(setting)
+                            .map { SettingState.IntState(setting, it) }
+                        is BooleanSetting -> settingValues.observeBoolean(setting)
+                            .map { SettingState.BooleanState(setting, it) }
                     }
-                    .let { combine(*it.toTypedArray()) { it.toList() } }
-                    .map { SettingsGroup(key, it) }
-
+                }.let {
+                    combine(*it.toTypedArray()) { it.toList() }
+                } .map {
+                    SettingsGroup(key, it)
+                }
             }
-        }
-        .flatMapLatest {
-            combine(*it.toTypedArray()) { it.toList() }
-        }
-        .mapEach {
-            it.copy(settings = it.settings.sortedBy { it.setting.name })
-        }
-        .map { it.sortedBy { it.name } }
+            .let {
+                combine(*it.toTypedArray()) { it.toList() }
+            }
+            .mapItems {
+                it.copy(settings = it.settings.sortedBy { it.setting.name })
+            }
+            .map {
+                it.sortedBy { it.name }
+            }
+    }
 
-    val settingsViewState = settingsStateGrouped
-        .map { SettingsViewState(settingsList = it) }
-        .combine(settingValues.observeData(connectionSettings.address)) { viewModel, callsign ->
-            viewModel.copy(callsignText = callsign?.toString())
-        }
-        .combine(settingValues.observeInt(connectionSettings.passcode)) { viewModel, passcode ->
-            viewModel.copy(verified = passcode != -1)
+    val licenseData = settingValues.observeData(connectionSettings.address)
+        .combine(settingValues.observeData(connectionSettings.passcode)) { callsign, passcode ->
+            LicenseData(callsign, passcode)
         }
 
     val licensePromptFieldValues: Flow<LicensePromptFieldValues> = settingValues.observeData(connectionSettings.address)
-        .combine(settingValues.observeInt(connectionSettings.passcode)) { callsign, passcode ->
-            LicensePromptFieldValues(callsign?.toString().orEmpty(), passcode.takeIf { it != -1 }?.toString().orEmpty())
+        .combine(settingValues.observeData(connectionSettings.passcode)) { callsign, passcode ->
+            LicensePromptFieldValues(callsign?.toString().orEmpty(), passcode?.toString().orEmpty())
         }
 
     fun setLicense(values: LicensePromptFieldValues) {
         settingsStorage.setData(connectionSettings.address, values.callsign.trim().takeIf { it.isNotEmpty() }?.toStationAddress())
-        settingsStorage.setInt(connectionSettings.passcode, values.passcode.trim().toIntOrNull() ?: -1)
-    }
-
-    fun showAdvancedSettings() {
-        showingAdvanced.value = true
+        settingsStorage.setData(connectionSettings.passcode, Passcode(values.passcode.trim().toIntOrNull() ?: -1))
     }
 
     fun updateInt(key: String, value: Int) {

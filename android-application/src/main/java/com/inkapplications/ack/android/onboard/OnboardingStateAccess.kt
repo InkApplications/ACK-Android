@@ -28,7 +28,7 @@ class OnboardingStateAccess @Inject constructor(
     private val agreementRevision = readSettings.observeInt(onboardingSettings.agreementRevision)
     private val completedLicensePrompt = readSettings.observeBoolean(onboardingSettings.completedLicensePrompt)
     private val address = readSettings.observeData(connectionSettings.address)
-    private val passcode = readSettings.observeInt(connectionSettings.passcode)
+    private val passcode = readSettings.observeData(connectionSettings.passcode)
 
     /**
      * Data needed to render the onboarding screens.
@@ -47,7 +47,7 @@ class OnboardingStateAccess @Inject constructor(
             data.copy(currentAddress = address)
         }
         .combine(passcode) { data, passcode ->
-            data.copy(currentPasscode = passcode.takeIf { it != -1 })
+            data.copy(currentPasscode = passcode)
         }
 
     /**

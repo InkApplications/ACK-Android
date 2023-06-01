@@ -5,7 +5,6 @@ import androidx.lifecycle.viewModelScope
 import com.inkapplications.ack.android.connection.ConnectionSettings
 import com.inkapplications.ack.android.settings.SettingsReadAccess
 import com.inkapplications.ack.android.settings.observeData
-import com.inkapplications.ack.android.settings.observeInt
 import com.inkapplications.android.extensions.combineApply
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*
@@ -27,7 +26,7 @@ class CaptureViewModel @Inject constructor(
         .combineApply(captureEvents.audioTransmitState) { audioTransmitEnabled = it }
         .combineApply(captureEvents.internetTransmitState) { internetTransmitEnabled = it }
         .combineApply(settings.observeData(connectionSettings.address)) { currentAddress = it }
-        .combineApply(settings.observeInt(connectionSettings.passcode)) { passcode = it }
+        .combineApply(settings.observeData(connectionSettings.passcode)) { passcode = it }
         .combineApply(captureEvents.audioInputVolume) { inputAudioLevel = it }
         .map { captureScreenStateFactory.controlPanelState(it) }
         .stateIn(viewModelScope, SharingStarted.Eagerly, ControlPanelState.Initial)

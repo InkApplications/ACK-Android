@@ -23,8 +23,8 @@ class PreferenceDriversSettingsProvider @Inject constructor(
     override val internetServiceConfiguration: Flow<ConnectionConfiguration> = settings.observeData(connectionSettings.address)
         .filterNotNull()
         .map { ConnectionConfiguration(it) }
-        .combine(settings.observeInt(connectionSettings.passcode)) { settings, passcode ->
-            settings.copy(passcode = passcode)
+        .combine(settings.observeData(connectionSettings.passcode)) { settings, passcode ->
+            settings.copy(passcode = passcode?.value ?: -1)
         }
         .combine(settings.observeString(connectionSettings.server)) { settings, server ->
             settings.copy(host = server)

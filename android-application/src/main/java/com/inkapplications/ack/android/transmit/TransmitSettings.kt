@@ -11,7 +11,6 @@ import com.inkapplications.ack.structures.Symbol
 import com.inkapplications.ack.structures.station.StationAddress
 import inkapplications.spondee.measure.us.miles
 import inkapplications.spondee.scalar.Percentage
-import inkapplications.spondee.scalar.WholePercentage
 import inkapplications.spondee.scalar.percent
 import inkapplications.spondee.scalar.toWholePercentage
 import inkapplications.spondee.structure.roundToInt

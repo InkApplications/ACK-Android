@@ -1,7 +1,7 @@
 package com.inkapplications.ack.android.settings
 
 import androidx.activity.compose.setContent
-import androidx.compose.runtime.collectAsState
+import androidx.activity.viewModels
 import com.google.android.gms.oss.licenses.OssLicensesMenuActivity
 import com.inkapplications.ack.android.settings.agreement.UserAgreementActivity
 import com.inkapplications.ack.android.settings.license.LicenseEditActivity
@@ -18,14 +18,14 @@ class SettingsActivity: ExtendedActivity(), SettingsController {
     @Inject
     lateinit var settingsAccess: SettingsAccess
 
+    private val viewModel: SettingsViewModel by viewModels()
+
     override fun onCreate() {
         super.onCreate()
 
         setContent {
-            val state = settingsAccess.settingsViewState.collectAsState(null)
-
             SettingsScreen(
-                state = state,
+                viewModel = viewModel,
                 controller = this,
             )
         }
@@ -33,7 +33,7 @@ class SettingsActivity: ExtendedActivity(), SettingsController {
 
     override fun onVersionLongPress() {
         Kimchi.trackEvent("settings_show_advanced")
-        settingsAccess.showAdvancedSettings()
+        viewModel.showAdvanced()
     }
 
     override fun onCallsignEditClick() {

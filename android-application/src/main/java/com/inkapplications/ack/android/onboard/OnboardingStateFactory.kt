@@ -1,5 +1,6 @@
 package com.inkapplications.ack.android.onboard
 
+import com.inkapplications.ack.android.settings.Passcode
 import com.inkapplications.ack.android.settings.license.LicensePromptFieldValues
 import com.inkapplications.ack.structures.station.StationAddress
 import dagger.Reusable
@@ -16,7 +17,7 @@ class OnboardingStateFactory @Inject constructor() {
             !data.completedLicense -> OnboardingState.LicensePrompt(
                 initialValues = LicensePromptFieldValues(
                     callsign = data.currentAddress?.toString().orEmpty(),
-                    passcode = data.currentPasscode?.toString().orEmpty(),
+                    passcode = data.currentPasscode?.value?.toString().orEmpty(),
                 )
             )
             else -> OnboardingState.Complete
@@ -31,6 +32,6 @@ class OnboardingStateFactory @Inject constructor() {
         val agreementRevision: Int? = null,
         val completedLicense: Boolean = false,
         val currentAddress: StationAddress? = null,
-        val currentPasscode: Int? = null,
+        val currentPasscode: Passcode? = null,
     )
 }

@@ -1,5 +1,6 @@
 package com.inkapplications.ack.android.onboard
 
+import com.inkapplications.ack.android.settings.Passcode
 import com.inkapplications.ack.structures.station.StationAddress
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -42,7 +43,7 @@ class OnboardingStateFactoryTest {
             agreementRevision = 2,
             completedLicense = false,
             currentAddress = StationAddress("TEST", "7"),
-            currentPasscode = 1234,
+            currentPasscode = Passcode(1234),
         )
 
         val result = factory.screenState(data)

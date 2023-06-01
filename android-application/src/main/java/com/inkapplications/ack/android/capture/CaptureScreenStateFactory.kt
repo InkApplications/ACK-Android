@@ -1,6 +1,7 @@
 package com.inkapplications.ack.android.capture
 
 import com.inkapplications.ack.android.R
+import com.inkapplications.ack.android.settings.Passcode
 import com.inkapplications.ack.structures.station.StationAddress
 import com.inkapplications.android.extensions.StringResources
 import com.inkapplications.android.extensions.control.ControlState
@@ -32,7 +33,7 @@ class CaptureScreenStateFactory @Inject constructor(
                 else -> ControlState.Off
             },
             internetTransmitState = when {
-                data.currentAddress == null || data.passcode == -1 -> ControlState.Hidden
+                data.currentAddress == null || data.passcode == null -> ControlState.Hidden
                 !data.internetCaptureEnabled -> ControlState.Disabled
                 data.internetTransmitEnabled -> ControlState.On
                 else -> ControlState.Off
@@ -60,6 +61,6 @@ class CaptureScreenStateFactory @Inject constructor(
         var internetTransmitEnabled by Delegates.notNull<Boolean>()
         var currentAddress: StationAddress? = null
         var inputAudioLevel: Percentage? = null
-        var passcode by Delegates.notNull<Int>()
+        var passcode: Passcode? = null
     }
 }
