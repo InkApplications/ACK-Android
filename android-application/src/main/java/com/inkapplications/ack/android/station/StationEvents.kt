@@ -25,6 +25,18 @@ class StationEvents @Inject constructor(
 )  {
     suspend fun packet(id: Long) = aprs.findById(id).first()
 
+    fun stationData(callsign: Callsign): Flow<StationData> {
+        logger.trace("Observing Station Data for: $callsign")
+        return settings.observeInt(stationSettings.recentStationEvents)
+            .flatMapLatest { aprs.findBySource(callsign, it) }
+            .combine(settings.observeBoolean(localeSettings.preferMetric)) { packets, metric ->
+                StationData(
+                    packets = packets,
+                    metric = metric,
+                )
+            }
+    }
+
     fun stationState(callsign: Callsign): Flow<StationViewState> {
         logger.trace("Observing Callsign: $callsign")
 

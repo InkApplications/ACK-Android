@@ -1,7 +1,5 @@
 package com.inkapplications.ack.android.station
 
-import android.content.Context
-import android.view.View
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -11,30 +9,31 @@ import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.viewinterop.AndroidView
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.inkapplications.ack.android.R
 import com.inkapplications.ack.android.log.AprsLogItem
+import com.inkapplications.ack.android.map.mapbox.MarkerMap
 import com.inkapplications.ack.android.ui.*
 import com.inkapplications.ack.android.ui.theme.AckTheme
 
 @Composable
 fun StationScreen(
-    viewState: StationViewState,
-    createMapView: (Context) -> View,
+    viewModel: StationViewModel = hiltViewModel(),
     controller: StationScreenController,
 ) {
-    if (viewState is StationViewState.Loaded) {
-        StationDetails(viewState, createMapView, controller)
+    val stationState = viewModel.stationState.collectAsState().value
+    if (stationState is StationViewState.Loaded) {
+        StationDetails(stationState, controller)
     }
 }
 
 @Composable
 private fun StationDetails(
     viewState: StationViewState.Loaded,
-    createMapView: (Context) -> View,
     controller: StationScreenController,
 ) {
     Column(
@@ -43,8 +42,10 @@ private fun StationDetails(
         if (viewState.insight.markers.isNotEmpty()) {
             Column {
                 Box {
-                    AndroidView(
-                        factory = createMapView,
+                    MarkerMap(
+                        markers = viewState.insight.markers,
+                        cameraPosition = viewState.insight.mapCameraPosition,
+                        onMapItemClicked = controller::onMapItemClicked,
                         modifier = Modifier.aspectRatio(16f / 9f),
                     )
                     IconButton(
