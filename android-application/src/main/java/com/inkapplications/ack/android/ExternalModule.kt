@@ -1,5 +1,6 @@
 package com.inkapplications.ack.android
 
+import com.google.android.gms.common.GoogleApiAvailability
 import dagger.Module
 import dagger.Provides
 import dagger.Reusable
@@ -24,4 +25,8 @@ class ExternalModule {
     @Provides
     @Reusable
     fun timezone(): TimeZone = TimeZone.currentSystemDefault()
+
+    @Provides
+    @Reusable
+    fun googleApis(): GoogleApiAvailability = GoogleApiAvailability.getInstance()
 }

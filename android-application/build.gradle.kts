@@ -21,8 +21,9 @@ android {
         minSdk = 21
         targetSdk = 33
         multiDexEnabled = true
-        buildConfigField("String", "MAPBOX_ACCESS_TOKEN", "\"${stringProperty("mapboxPublic", "")}\"")
+        buildConfigField("String", "MAPBOX_ACCESS_TOKEN", optionalStringProperty("mapboxPublic").buildQuote())
         buildConfigField("boolean", "USE_GOOGLE_SERVICES", useGoogleServices.toString())
+        buildConfigField("String", "COMMIT", optionalStringProperty("commit").buildQuote())
         versionCode = intProperty("versionCode", 1)
         versionName = stringProperty("versionName", "SNAPSHOT")
         javaCompileOptions.annotationProcessorOptions.arguments["dagger.hilt.disableModulesHaveInstallInCheck"] = "true"

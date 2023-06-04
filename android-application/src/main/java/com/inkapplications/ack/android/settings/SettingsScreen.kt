@@ -9,11 +9,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
-import com.inkapplications.android.extensions.compose.ui.longClickable
-import com.inkapplications.ack.android.BuildConfig
 import com.inkapplications.ack.android.R
 import com.inkapplications.ack.android.input.IntPrompt
 import com.inkapplications.ack.android.input.StringPrompt
+import com.inkapplications.ack.android.settings.buildinfo.BuildInfo
 import com.inkapplications.ack.android.ui.CallsignChip
 import com.inkapplications.ack.android.ui.theme.AckScreen
 import com.inkapplications.ack.android.ui.theme.AckTheme
@@ -67,15 +66,13 @@ fun SettingsScreen(
         Spacer(Modifier
             .weight(1f)
             .defaultMinSize(minHeight = AckTheme.spacing.content))
-        Text(
-            text = stringResource(R.string.application_version, BuildConfig.VERSION_NAME, BuildConfig.VERSION_CODE.toString()),
-            style = AckTheme.typography.caption,
-            textAlign = TextAlign.Center,
-            modifier = Modifier
-                .longClickable(controller::onVersionLongPress)
-                .padding(AckTheme.spacing.clickSafety)
-                .align(Alignment.CenterHorizontally)
+
+        BuildInfo(
+            buildInfo = viewModel.buildInfoState.collectAsState().value,
+            onVersionLongPress = controller::onVersionLongPress,
+            modifier = Modifier.align(Alignment.CenterHorizontally)
         )
+
         Text(
             text = stringResource(R.string.settings_author_line),
             style = AckTheme.typography.caption,
