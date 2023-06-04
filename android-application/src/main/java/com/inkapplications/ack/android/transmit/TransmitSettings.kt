@@ -14,18 +14,14 @@ import inkapplications.spondee.scalar.Percentage
 import inkapplications.spondee.scalar.percent
 import inkapplications.spondee.scalar.toWholePercentage
 import inkapplications.spondee.structure.roundToInt
-import inkapplications.spondee.structure.value
 import javax.inject.Inject
-import kotlin.math.roundToInt
 import kotlin.time.Duration.Companion.minutes
 import kotlin.time.Duration.Companion.seconds
-import kotlin.time.ExperimentalTime
 
 
 class TransmitSettings @Inject constructor(
     resources: StringResources,
 ): SettingsProvider {
-    @OptIn(ExperimentalTime::class)
     val minRate = IntBackedSetting(
         key = "transmit.rate.min",
         name = resources.getString(R.string.transmit_settings_rate_min),
@@ -34,7 +30,6 @@ class TransmitSettings @Inject constructor(
         transformer = MinuteTransformer,
     )
 
-    @OptIn(ExperimentalTime::class)
     val maxRate = IntBackedSetting(
         key = "transmit.rate.max",
         name = resources.getString(R.string.transmit_settings_rate_max),
@@ -43,7 +38,6 @@ class TransmitSettings @Inject constructor(
         transformer = MinuteTransformer,
     )
 
-    @OptIn(ExperimentalTime::class)
     val distance = IntBackedSetting(
         key = "transmit.distance",
         name = resources.getString(R.string.transmit_settings_distance),
@@ -52,7 +46,6 @@ class TransmitSettings @Inject constructor(
         transformer = MileTransformer,
     )
 
-    @OptIn(ExperimentalTime::class)
     val preamble = IntBackedSetting(
         key = "transmit.preamble",
         name = resources.getString(R.string.transmit_settings_preamble),
