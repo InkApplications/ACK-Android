@@ -52,7 +52,7 @@ fun LabelledIconButton(
             text = title,
             style = AckTheme.typography.caption,
             textAlign = TextAlign.Center,
-            modifier = Modifier.padding(top = AckTheme.spacing.item)
+            modifier = Modifier.padding(top = AckTheme.spacing.item).width(70.dp)
         )
     }
 }

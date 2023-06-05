@@ -1,3 +1,5 @@
+@file:OptIn(ExperimentalLayoutApi::class)
+
 package com.inkapplications.ack.android.capture
 
 import android.content.Context
@@ -243,87 +245,93 @@ private fun CaptureSettingsSheet(
             )
         }
     }
-    Row {
-        controlPanelState.audioCaptureState.whenOff {
-            StateLabelledIconButton(
-                state = controlPanelState.audioCaptureState,
-                title = stringResource(R.string.capture_controls_audio_capture_disabled_name),
-                icon = Icons.Outlined.MicOff,
-                onClick = captureController::onAudioCaptureEnableClick,
-            )
-        }
-        controlPanelState.audioCaptureState.whenOn {
-            StateLabelledIconButton(
-                state = controlPanelState.audioCaptureState,
-                title = stringResource(R.string.capture_controls_audio_capture_enabled_name, (controlPanelState as ControlPanelState.Loaded).audioCaptureLevel),
-                icon = Icons.Filled.Mic,
-                onClick = captureController::onAudioCaptureDisableClick,
-            )
+    FlowRow(
+        horizontalArrangement = Arrangement.Center,
+    ) {
+        Row {
+            controlPanelState.audioCaptureState.whenOff {
+                StateLabelledIconButton(
+                    state = controlPanelState.audioCaptureState,
+                    title = stringResource(R.string.capture_controls_audio_capture_disabled_name),
+                    icon = Icons.Outlined.MicOff,
+                    onClick = captureController::onAudioCaptureEnableClick,
+                )
+            }
+            controlPanelState.audioCaptureState.whenOn {
+                StateLabelledIconButton(
+                    state = controlPanelState.audioCaptureState,
+                    title = stringResource(R.string.capture_controls_audio_capture_enabled_name, (controlPanelState as ControlPanelState.Loaded).audioCaptureLevel),
+                    icon = Icons.Filled.Mic,
+                    onClick = captureController::onAudioCaptureDisableClick,
+                )
+            }
+
+            controlPanelState.audioTransmitState.whenDisabled {
+                StateLabelledIconButton(
+                    state = controlPanelState.audioTransmitState,
+                    icon = Icons.Outlined.VolumeOff,
+                    title = stringResource(R.string.capture_controls_audio_transmit_disabled_name),
+                )
+            }
+            controlPanelState.audioTransmitState.whenOff {
+                StateLabelledIconButton(
+                    state = controlPanelState.audioTransmitState,
+                    icon = Icons.Outlined.VolumeOff,
+                    title = stringResource(R.string.capture_controls_audio_transmit_disabled_name),
+                    onClick = captureController::onAudioTransmitEnableClick,
+                )
+            }
+            controlPanelState.audioTransmitState.whenOn {
+                StateLabelledIconButton(
+                    state = controlPanelState.audioTransmitState,
+                    icon = Icons.Filled.VolumeUp,
+                    title = stringResource(R.string.capture_controls_audio_transmit_enabled_name),
+                    onClick = captureController::onAudioTransmitDisableClick,
+                )
+            }
         }
 
-        controlPanelState.audioTransmitState.whenDisabled {
-            StateLabelledIconButton(
-                state = controlPanelState.audioTransmitState,
-                icon = Icons.Outlined.VolumeOff,
-                title = stringResource(R.string.capture_controls_audio_transmit_disabled_name),
-            )
-        }
-        controlPanelState.audioTransmitState.whenOff {
-            StateLabelledIconButton(
-                state = controlPanelState.audioTransmitState,
-                icon = Icons.Outlined.VolumeOff,
-                title = stringResource(R.string.capture_controls_audio_transmit_disabled_name),
-                onClick = captureController::onAudioTransmitEnableClick,
-            )
-        }
-        controlPanelState.audioTransmitState.whenOn {
-            StateLabelledIconButton(
-                state = controlPanelState.audioTransmitState,
-                icon = Icons.Filled.VolumeUp,
-                title = stringResource(R.string.capture_controls_audio_transmit_enabled_name),
-                onClick = captureController::onAudioTransmitDisableClick,
-            )
-        }
+        Row {
+            controlPanelState.internetCaptureState.whenOff {
+                StateLabelledIconButton(
+                    state = controlPanelState.internetCaptureState,
+                    icon = Icons.Outlined.CloudDownload,
+                    title = stringResource(R.string.capture_controls_internet_capture_disabled_name),
+                    onClick = captureController::onInternetCaptureEnableClick,
+                )
+            }
+            controlPanelState.internetCaptureState.whenOn {
+                StateLabelledIconButton(
+                    state = controlPanelState.internetCaptureState,
+                    icon = Icons.Filled.CloudDownload,
+                    title = stringResource(R.string.capture_controls_internet_capture_enabled_name),
+                    onClick = captureController::onInternetCaptureDisableClick,
+                )
+            }
 
-        controlPanelState.internetCaptureState.whenOff {
-            StateLabelledIconButton(
-                state = controlPanelState.internetCaptureState,
-                icon = Icons.Outlined.CloudDownload,
-                title = stringResource(R.string.capture_controls_internet_capture_disabled_name),
-                onClick = captureController::onInternetCaptureEnableClick,
-            )
-        }
-        controlPanelState.internetCaptureState.whenOn {
-            StateLabelledIconButton(
-                state = controlPanelState.internetCaptureState,
-                icon = Icons.Filled.CloudDownload,
-                title = stringResource(R.string.capture_controls_internet_capture_enabled_name),
-                onClick = captureController::onInternetCaptureDisableClick,
-            )
-        }
-
-        controlPanelState.internetTransmitState.whenDisabled {
-            StateLabelledIconButton(
-                state = controlPanelState.internetTransmitState,
-                icon = Icons.Outlined.CloudUpload,
-                title = stringResource(R.string.capture_controls_internet_transmit_disabled_name),
-            )
-        }
-        controlPanelState.internetTransmitState.whenOff {
-            StateLabelledIconButton(
-                state = controlPanelState.internetTransmitState,
-                icon = Icons.Outlined.CloudUpload,
-                title = stringResource(R.string.capture_controls_internet_transmit_disabled_name),
-                onClick = captureController::onInternetTransmitEnableClick,
-            )
-        }
-        controlPanelState.internetTransmitState.whenOn {
-            StateLabelledIconButton(
-                state = controlPanelState.internetTransmitState,
-                icon = Icons.Filled.CloudUpload,
-                title = stringResource(R.string.capture_controls_internet_transmit_enabled_name),
-                onClick = captureController::onInternetTransmitDisableClick,
-            )
+            controlPanelState.internetTransmitState.whenDisabled {
+                StateLabelledIconButton(
+                    state = controlPanelState.internetTransmitState,
+                    icon = Icons.Outlined.CloudUpload,
+                    title = stringResource(R.string.capture_controls_internet_transmit_disabled_name),
+                )
+            }
+            controlPanelState.internetTransmitState.whenOff {
+                StateLabelledIconButton(
+                    state = controlPanelState.internetTransmitState,
+                    icon = Icons.Outlined.CloudUpload,
+                    title = stringResource(R.string.capture_controls_internet_transmit_disabled_name),
+                    onClick = captureController::onInternetTransmitEnableClick,
+                )
+            }
+            controlPanelState.internetTransmitState.whenOn {
+                StateLabelledIconButton(
+                    state = controlPanelState.internetTransmitState,
+                    icon = Icons.Filled.CloudUpload,
+                    title = stringResource(R.string.capture_controls_internet_transmit_enabled_name),
+                    onClick = captureController::onInternetTransmitDisableClick,
+                )
+            }
         }
     }
 }
