@@ -95,7 +95,7 @@ private fun CaptureBottomBar(
             val currentRoute = navController.currentBackStackEntryAsState().value?.destination?.route
             BottomNavigationItem(
                 icon = { Icon(Icons.Default.Map, contentDescription = null) },
-                label = { Text(stringResource(R.string.menu_capture_map)) },
+                label = { Text(stringResource(R.string.menu_capture_map), softWrap = false) },
                 selected = currentRoute == "map",
                 onClick = {
                     Kimchi.info("Navigate to map")
@@ -107,7 +107,7 @@ private fun CaptureBottomBar(
             )
             BottomNavigationItem(
                 icon = { Icon(Icons.Default.List, contentDescription = null) },
-                label = { Text(stringResource(R.string.menu_capture_log)) },
+                label = { Text(stringResource(R.string.menu_capture_log), softWrap = false) },
                 selected = currentRoute == "log",
                 onClick = {
                     Kimchi.info("Navigate to log")
@@ -120,7 +120,7 @@ private fun CaptureBottomBar(
             Spacer(Modifier.weight(1f, true))
             BottomNavigationItem(
                 icon = { Icon(Icons.Default.Mail, contentDescription = null) },
-                label = { Text("Messages") },
+                label = { Text("Messages", softWrap = false) },
                 selected = currentRoute == "messages",
                 onClick = {
                     Kimchi.info("Navigate to messages")
@@ -132,7 +132,7 @@ private fun CaptureBottomBar(
             )
             BottomNavigationItem(
                 icon = { Icon(Icons.Default.Lightbulb, contentDescription = null) },
-                label = { Text("Insights") },
+                label = { Text("Insights", softWrap = false) },
                 selected = currentRoute == "insights",
                 onClick = {
                     Kimchi.info("Navigate to insights")
