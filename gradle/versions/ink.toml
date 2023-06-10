@@ -1,7 +1,7 @@
 [versions]
 ack = "0.5.0"
 kimchi-core = "2.0.2"
-kimchi-firebase = "1.2.0"
+kimchi-firebase = "2.0.0-beta"
 watermelon = "0.5.0"
 
 [libraries.kimchi-logger]
@@ -18,11 +18,11 @@ module = "com.inkapplications.kimchi:analytics"
 
 [libraries.kimchi-firebase-crashlytics]
 version.ref = "kimchi-firebase"
-module = "com.github.inkapplications.kimchi-firebase-bridge:crashlytics"
+module = "com.inkapplications.kimchi-firebase:crashlytics"
 
 [libraries.kimchi-firebase-analytics]
 version.ref = "kimchi-firebase"
-module = "com.github.inkapplications.kimchi-firebase-bridge:analytics"
+module = "com.inkapplications.kimchi-firebase:analytics"
 
 [libraries.ack-codec]
 version.ref = "ack"

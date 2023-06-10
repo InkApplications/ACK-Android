@@ -7,6 +7,4 @@ import android.app.Application
  *
  * This can be used for testing or as a stand in for disabled services.
  */
-object NoOpInitializer: ApplicationInitializer {
-    override suspend fun initialize(application: Application) = Unit
-}
+val NoOpInitializer = ApplicationInitializer(ApplicationInitializer.Priority.LOW) {}

@@ -11,6 +11,7 @@ import android.content.Intent
 import android.os.Build
 import com.inkapplications.ack.android.R
 import com.inkapplications.ack.android.capture.CaptureActivity
+import com.inkapplications.ack.android.startup.ApplicationInitializer
 import com.inkapplications.android.extensions.notificationBuilder
 import kimchi.logger.KimchiLogger
 import javax.inject.Inject
@@ -23,8 +24,8 @@ private const val CHANNEL_ID = "ack.capture.services"
 class CaptureServiceNotifications @Inject constructor(
     private val notificationManager: NotificationManager,
     private val logger: KimchiLogger,
-) {
-    fun onCreate(application: Application) {
+): ApplicationInitializer {
+    override suspend fun initialize(application: Application) {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
             logger.debug("Skipping notification channel setup")
             return

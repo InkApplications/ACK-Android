@@ -19,7 +19,7 @@ class FirebaseInitializer @Inject constructor(
 ): ApplicationInitializer {
     override suspend fun initialize(application: Application) {
         logger.trace("Initializing Firebase.")
-        suspendCancellableCoroutine<Unit> { continuation ->
+        suspendCancellableCoroutine { continuation ->
             settingsProvider.settings
                 .map { it.key to it.defaultValue }
                 .toMap()

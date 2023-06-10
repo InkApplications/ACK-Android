@@ -16,12 +16,14 @@ class CompositeApplicationInitializer @Inject constructor(
     override suspend fun initialize(application: Application) {
         logger.trace("Initializing Application with ${initializers.size} initializers.")
         coroutineScope {
-            val jobs = initializers.mapIndexed { index, initializer ->
-                async {
-                    initializer.initialize(application)
-                    logger.trace("#$index: <${initializer.javaClass.simpleName}> complete.")
+            val jobs = initializers
+                .sortedBy { it.priority }
+                .mapIndexed { index, initializer ->
+                    async {
+                        initializer.initialize(application)
+                        logger.trace("#$index: <${initializer.javaClass.simpleName}> complete.")
+                    }
                 }
-            }
             jobs.awaitAll()
         }
     }
