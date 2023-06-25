@@ -22,7 +22,10 @@ class SettingsViewStateFactory @Inject constructor() {
     /**
      * Create a list state from the current settings data.
      */
-    fun viewState(data: List<SettingsGroup>): SettingsListViewState {
-        return SettingsListViewState.Loaded(settingsList = data)
+    fun viewState(data: SettingsListData): SettingsListViewState {
+        return SettingsListViewState.Loaded(
+            settingsList = data.settings,
+            advancedVisible = data.visibility >= SettingVisibility.Advanced,
+        )
     }
 }

@@ -6,4 +6,6 @@
     <string name="log_index_empty">No Logs Received Yet</string>
     <string name="log_details_title">View Station Details</string>
     <string name="log_details_received_format">Received %s</string>
+    <string name = "log_setting_filter_unknown">Hide Unknown Packets</string>
+    <string name = "log_setting_category">Log</string>
 </resources>

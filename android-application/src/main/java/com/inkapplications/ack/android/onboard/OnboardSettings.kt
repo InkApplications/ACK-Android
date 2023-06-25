@@ -1,5 +1,6 @@
 package com.inkapplications.ack.android.onboard
 
+import com.inkapplications.ack.android.R
 import com.inkapplications.android.extensions.StringResources
 import com.inkapplications.ack.android.settings.*
 import dagger.Reusable
@@ -11,17 +12,17 @@ class OnboardSettings @Inject constructor(
 ): SettingsProvider {
     val agreementRevision = IntSetting(
         key = "onboarding.agreement",
-        name = "License Agreement Revision",
-        categoryName = "Onboarding",
+        name = resources.getString(R.string.settings_onboard_license),
+        categoryName = resources.getString(R.string.settings_onboard_category),
         defaultValue = 0,
-        advanced = true,
+        visibility = SettingVisibility.Dev,
     )
     val completedLicensePrompt = BooleanSetting(
         key = "onboarding.license",
-        name = "License Prompt Completed",
-        categoryName = "Onboarding",
+        name = resources.getString(R.string.settings_onboard_license),
+        categoryName = resources.getString(R.string.settings_onboard_category),
         defaultValue = false,
-        advanced = true,
+        visibility = SettingVisibility.Dev,
     )
 
     override val settings: List<Setting> = listOf(

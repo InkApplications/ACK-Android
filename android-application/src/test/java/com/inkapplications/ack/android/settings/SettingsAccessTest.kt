@@ -18,10 +18,11 @@ class SettingsAccessTest {
             ConnectionSettings(ParrotStringResources),
         )
 
-        val result = access.settingsGroups(true).first().map { it.settings }.flatten()
+        val result = access.settingsGroups(SettingVisibility.Advanced).first()
+        val list = result.settings.map { it.settings }.flatten()
 
-        assertEquals(2, result.size, "Provider should yield a result for each Setting.")
-        val (first, second) = result
+        assertEquals(2, list.size, "Provider should yield a result for each Setting.")
+        val (first, second) = list
 
         assertTrue(first is SettingState.IntState)
         assertEquals(intSetting.key, first.setting.key, "Settings key is preserved.")
@@ -39,7 +40,7 @@ class SettingsAccessTest {
         val settingsProvider = object: SettingsProvider {
             override val settings: List<Setting> = listOf(
                 stringSetting,
-                StringSetting(key = "advanced", advanced = true, name = "advanced", categoryName = stringSetting.categoryName, defaultValue = "advanced")
+                StringSetting(key = "advanced", visibility = SettingVisibility.Advanced, name = "advanced", categoryName = stringSetting.categoryName, defaultValue = "advanced")
             )
         }
 
@@ -50,10 +51,11 @@ class SettingsAccessTest {
             ConnectionSettings(ParrotStringResources),
         )
 
-        val result = access.settingsGroups(false).first().map { it.settings }.flatten()
+        val result = access.settingsGroups(SettingVisibility.Visible).first()
+        val list = result.settings.map { it.settings }.flatten()
 
-        assertEquals(1, result.size, "List is filtered to only simple settings.")
-        assertEquals(stringSetting.key, (result.first() as SettingState.StringState).setting.key, "Advanced settings are removed from settings list.")
+        assertEquals(1, list.size, "List is filtered to only simple settings.")
+        assertEquals(stringSetting.key, (list.first() as SettingState.StringState).setting.key, "Advanced settings are removed from settings list.")
     }
 
     @Test
@@ -61,7 +63,7 @@ class SettingsAccessTest {
         val settingsProvider = object: SettingsProvider {
             override val settings: List<Setting> = listOf(
                 stringSetting,
-                StringSetting(key = "advanced", advanced = true, name = "zz_advanced", categoryName = stringSetting.categoryName, defaultValue = "advanced")
+                StringSetting(key = "advanced", visibility = SettingVisibility.Advanced, name = "zz_advanced", categoryName = stringSetting.categoryName, defaultValue = "advanced")
             )
         }
 
@@ -72,11 +74,12 @@ class SettingsAccessTest {
             ConnectionSettings(ParrotStringResources),
         )
 
-        val result = access.settingsGroups(true).first().map { it.settings }.flatten()
+        val result = access.settingsGroups(SettingVisibility.Advanced).first()
+        val list = result.settings.map { it.settings }.flatten()
 
-        assertEquals(2, result.size, "List is filtered to only simple settigns.")
-        assertEquals(stringSetting.key, (result[0] as SettingState.StringState).setting.key, "Standard settings are still shown.")
-        assertEquals("advanced", (result[1] as SettingState.StringState).setting.key, "Advanced settings are removed from settings list.")
+        assertEquals(2, list.size, "List is filtered to only simple settigns.")
+        assertEquals(stringSetting.key, (list[0] as SettingState.StringState).setting.key, "Standard settings are still shown.")
+        assertEquals("advanced", (list[1] as SettingState.StringState).setting.key, "Advanced settings are removed from settings list.")
     }
 
     @Test
@@ -97,10 +100,11 @@ class SettingsAccessTest {
             ConnectionSettings(ParrotStringResources),
         )
 
-        val result = access.settingsGroups(true).first()
-        assertEquals(3, result.size, "Settings are broken into categories by name")
+        val result = access.settingsGroups(SettingVisibility.Advanced).first()
 
-        val (first, second, third) = result
+        assertEquals(3, result.settings.size, "Settings are broken into categories by name")
+
+        val (first, second, third) = result.settings
 
         assertEquals("A", first.name, "Categories are sorted by name")
         assertEquals(1, first.settings.size, "Settings are kept in their category")
@@ -134,8 +138,10 @@ class SettingsAccessTest {
             ConnectionSettings(ParrotStringResources),
         )
 
-        val result = access.settingsGroups(true).first().first().settings.map { it.setting.name }
-        assertEquals(listOf("A", "B", "C", "D"), result, "Settings are sorted by name")
+        val result = access.settingsGroups(SettingVisibility.Advanced).first()
+        val list = result.settings.map { it.settings.map { it.setting.name } }.flatten()
+
+        assertEquals(listOf("A", "B", "C", "D"), list, "Settings are sorted by name")
 
     }
 }

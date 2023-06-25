@@ -33,7 +33,7 @@ class SettingsActivity: ExtendedActivity(), SettingsController {
 
     override fun onVersionLongPress() {
         Kimchi.trackEvent("settings_show_advanced")
-        viewModel.showAdvanced()
+        viewModel.showDev()
     }
 
     override fun onCallsignEditClick() {
@@ -72,5 +72,9 @@ class SettingsActivity: ExtendedActivity(), SettingsController {
     override fun onLicensesClick() {
         Kimchi.trackEvent("settings_show_licenses")
         startActivity(OssLicensesMenuActivity::class)
+    }
+
+    override fun onAdvancedChanged(checked: Boolean) {
+        viewModel.showAdvanced(checked)
     }
 }

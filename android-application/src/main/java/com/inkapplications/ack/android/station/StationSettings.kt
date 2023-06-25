@@ -5,6 +5,7 @@ import com.inkapplications.ack.android.input.ZeroInclusivePositiveIntegerValidat
 import com.inkapplications.ack.android.settings.BooleanSetting
 import com.inkapplications.ack.android.settings.IntSetting
 import com.inkapplications.ack.android.settings.Setting
+import com.inkapplications.ack.android.settings.SettingVisibility
 import com.inkapplications.ack.android.settings.SettingsProvider
 import com.inkapplications.android.extensions.StringResources
 import dagger.Reusable
@@ -22,7 +23,7 @@ class StationSettings @Inject constructor(
         name = stringResources.getString(R.string.station_settings_debug),
         categoryName = categoryName,
         defaultValue = false,
-        advanced = true,
+        visibility = SettingVisibility.Dev,
     )
 
     val recentStationEvents = IntSetting(
@@ -30,7 +31,7 @@ class StationSettings @Inject constructor(
         name = stringResources.getString(R.string.station_settings_recent_limit),
         categoryName = categoryName,
         defaultValue = 10,
-        advanced = true,
+        visibility = SettingVisibility.Advanced,
         validator = positiveIntegerValidator,
     )
 

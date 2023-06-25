@@ -17,6 +17,7 @@ import com.inkapplications.ack.android.ui.CallsignChip
 import com.inkapplications.ack.android.ui.theme.AckScreen
 import com.inkapplications.ack.android.ui.theme.AckTheme
 import com.inkapplications.ack.android.ui.NavigationRow
+import com.inkapplications.android.extensions.compose.ui.longClickable
 
 @Composable
 fun SettingsScreen(
@@ -56,10 +57,27 @@ fun SettingsScreen(
             else -> {}
         }
 
-        when (val settingsState = viewModel.settingsList.collectAsState().value) {
+        when (val listState = viewModel.settingsList.collectAsState().value) {
             SettingsListViewState.Initial -> {}
-            is SettingsListViewState.Loaded -> settingsState.settingsList.forEach {
-                SettingsCard(group = it, controller = controller, promptSetting = promptSetting)
+            is SettingsListViewState.Loaded -> {
+                listState.settingsList.forEach {
+                    SettingsCard(group = it, controller = controller, promptSetting = promptSetting)
+                }
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.Center,
+                    modifier = Modifier.fillMaxWidth(),
+                ) {
+                    Text(
+                        text = stringResource(R.string.settings_advanced_toggle_label),
+                        style = AckTheme.typography.caption,
+                        modifier = Modifier.padding(end = AckTheme.spacing.item)
+                    )
+                    Switch(
+                        checked = listState.advancedVisible,
+                        onCheckedChange = controller::onAdvancedChanged,
+                    )
+                }
             }
         }
 

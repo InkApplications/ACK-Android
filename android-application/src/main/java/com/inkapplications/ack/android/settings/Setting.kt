@@ -32,12 +32,18 @@ sealed interface Setting {
     /**
      * Identifies a setting that should be hidden from the user.
      */
-    val advanced: Boolean
+    @Deprecated("Use visibility instead", ReplaceWith("visibility == Visibility.Advanced"))
+    val advanced: Boolean get() { return visibility == SettingVisibility.Advanced }
 
     /**
      * An object to check whether an input value can be allowed for this setting.
      */
     val validator: Validator<*>
+
+    /**
+     * How/when to display the setting in the UI.
+     */
+    val visibility: SettingVisibility
 }
 
 /**
@@ -48,7 +54,7 @@ open class StringSetting(
     override val name: String,
     override val categoryName: String,
     override val defaultValue: String,
-    override val advanced: Boolean = false,
+    override val visibility: SettingVisibility = SettingVisibility.Visible,
     override val validator: Validator<String> = NoValidation,
 ): Setting
 
@@ -60,7 +66,7 @@ open class IntSetting(
     override val name: String,
     override val categoryName: String,
     override val defaultValue: Int,
-    override val advanced: Boolean = false,
+    override val visibility: SettingVisibility = SettingVisibility.Visible,
     override val validator: Validator<Int> = NoValidation,
 ): Setting
 
@@ -72,7 +78,7 @@ data class BooleanSetting(
     override val name: String,
     override val categoryName: String,
     override val defaultValue: Boolean,
-    override val advanced: Boolean = false,
+    override val visibility: SettingVisibility = SettingVisibility.Visible,
     override val validator: Validator<Boolean> = NoValidation,
 ): Setting
 
@@ -88,7 +94,7 @@ class StringBackedSetting<T>(
     name: String,
     categoryName: String,
     override val defaultData: T,
-    advanced: Boolean = false,
+    override val visibility: SettingVisibility = SettingVisibility.Visible,
     override val transformer: Transformer<T, String>,
     val inputValidator: Validator<String> = NoValidation,
     val dataValidator: Validator<T> = NoValidation,
@@ -97,7 +103,7 @@ class StringBackedSetting<T>(
     name = name,
     categoryName = categoryName,
     defaultValue = transformer.toStorage(defaultData),
-    advanced = advanced,
+    visibility = visibility,
     validator = object: Validator<String> {
         override fun validate(input: String): ValidationResult {
             val inputResult = inputValidator.validate(input)
@@ -119,7 +125,7 @@ class IntBackedSetting<T>(
     name: String,
     categoryName: String,
     override val defaultData: T,
-    advanced: Boolean = false,
+    override val visibility: SettingVisibility = SettingVisibility.Visible,
     override val transformer: Transformer<T, Int>,
     val inputValidator: Validator<Int> = NoValidation,
     val dataValidator: Validator<T> = NoValidation,
@@ -128,7 +134,7 @@ class IntBackedSetting<T>(
     name = name,
     categoryName = categoryName,
     defaultValue = transformer.toStorage(defaultData),
-    advanced = advanced,
+    visibility = visibility,
     validator = object: Validator<Int> {
         override fun validate(input: Int): ValidationResult {
             val inputResult = inputValidator.validate(input)

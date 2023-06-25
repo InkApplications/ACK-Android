@@ -21,7 +21,7 @@ class ConnectionSettings @Inject constructor(
         name = resources.getString(R.string.connection_setting_address_name),
         categoryName = resources.getString(R.string.connection_setting_category_name),
         defaultData = null,
-        advanced = true,
+        visibility = SettingVisibility.Dev,
         transformer = OptionalKeyTransformer(
             nullKey = "",
             delegate = StationAddressTransformer,
@@ -33,6 +33,7 @@ class ConnectionSettings @Inject constructor(
         name = resources.getString(R.string.connection_setting_passcode_name),
         categoryName = resources.getString(R.string.connection_setting_category_name),
         defaultData = null,
+        visibility = SettingVisibility.Dev,
         transformer = OptionalKeyTransformer(
             nullKey = -1,
             delegate = object: Transformer<Passcode?, Int> {
@@ -47,13 +48,16 @@ class ConnectionSettings @Inject constructor(
         name = resources.getString(R.string.connection_setting_server_name),
         categoryName = resources.getString(R.string.connection_setting_category_name),
         defaultValue = DEFAULT_CONNECTION_SERVER,
+        visibility = SettingVisibility.Advanced,
     )
     val port = IntSetting(
         key = "connection.port",
         name = resources.getString(R.string.connection_setting_port_name),
         categoryName = resources.getString(R.string.connection_setting_category_name),
         defaultValue = DEFAULT_CONNECTION_PORT,
+        visibility = SettingVisibility.Advanced,
     )
+
     val radius = IntBackedSetting(
         key = "connection.radius",
         name = resources.getString(R.string.connection_setting_radius_name),

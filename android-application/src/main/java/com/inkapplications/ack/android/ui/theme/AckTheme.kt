@@ -33,6 +33,8 @@ object AckTheme {
             error = ColorPalette.red,
             onError = ColorPalette.lightStroke,
             light = false,
+            warnForeground = ColorPalette.lightWarning,
+            dangerForeground = ColorPalette.red,
         )
 
     val lightColors
@@ -42,6 +44,8 @@ object AckTheme {
             foreground = ColorPalette.darkStroke,
             background = ColorPalette.lightStrokeSoftened,
             surface = ColorPalette.lightStroke,
+            warnForeground = ColorPalette.darkWarning,
+            dangerForeground = ColorPalette.red,
         )
 
     val colors

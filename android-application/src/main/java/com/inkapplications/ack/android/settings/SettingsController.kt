@@ -9,4 +9,5 @@ interface SettingsController {
     fun onCallsignEditClick()
     fun onAckLicenseClick()
     fun onLicensesClick()
+    fun onAdvancedChanged(checked: Boolean)
 }

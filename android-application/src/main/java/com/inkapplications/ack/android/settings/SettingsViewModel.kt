@@ -11,6 +11,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.getAndUpdate
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import javax.inject.Inject
@@ -26,10 +27,10 @@ class SettingsViewModel @Inject constructor(
     buildDataAccess: BuildDataAccess,
     buildInfoFactory: BuildInfoFactory,
 ): ViewModel() {
-    private val advanced = MutableStateFlow(false)
+    private val visibility = MutableStateFlow(SettingVisibility.Visible)
 
-    val settingsList = advanced.flatMapLatest { advanced ->
-        settingsAccess.settingsGroups(advanced)
+    val settingsList = visibility.flatMapLatest { visibility ->
+        settingsAccess.settingsGroups(visibility)
     }.map {
         settingsViewStateFactory.viewState(it)
     }.stateIn(viewModelScope, SharingStarted.Eagerly, SettingsListViewState.Initial)
@@ -42,8 +43,18 @@ class SettingsViewModel @Inject constructor(
         .map { buildInfoFactory.buildInfo(it) }
         .stateIn(viewModelScope, SharingStarted.Eagerly, BuildInfoState.Initial)
 
-    fun showAdvanced() {
-        advanced.value = true
+    fun showAdvanced(value: Boolean) {
+        visibility.value = if (value) {
+            SettingVisibility.Advanced
+        } else {
+            SettingVisibility.Visible
+        }
+    }
+
+    fun showDev() {
+        visibility.getAndUpdate {
+            if (it == SettingVisibility.Advanced) SettingVisibility.Dev else it
+        }
     }
 }
 

@@ -15,5 +15,8 @@ object ColorPalette {
     val lightStroke70 = Color(0x70FFFFFF)
     val lightStrokeSoftened = Color(0xFFF2F2F2)
 
+    val darkWarning = Color(0xFFB16D0D)
+    val lightWarning = Color(0xFFFCB652)
+
     val red = Color(0xFFFF432B)
 }

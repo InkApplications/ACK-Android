@@ -12,6 +12,8 @@ data class ColorVariant(
     val error: Color,
     val onError: Color,
     val light: Boolean,
+    val warnForeground: Color,
+    val dangerForeground: Color,
 ) {
     val foregroundInactive = foreground.copy(alpha = .5f)
     val surfaceInactive = surface.copy(alpha = .5f)

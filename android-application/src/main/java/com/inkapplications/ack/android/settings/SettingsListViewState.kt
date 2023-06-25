@@ -14,5 +14,6 @@ sealed interface SettingsListViewState {
      */
     data class Loaded(
         val settingsList: List<SettingsGroup>,
+        val advancedVisible: Boolean,
     ): SettingsListViewState
 }

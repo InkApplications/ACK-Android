@@ -7,7 +7,9 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import com.inkapplications.ack.android.R
 import com.inkapplications.ack.android.ui.theme.AckTheme
 
 @Composable
@@ -20,7 +22,10 @@ fun IntStateRow(
         .clickable(onClick = onClick)
         .padding(vertical = AckTheme.spacing.clickSafety, horizontal = AckTheme.spacing.gutter)
 ) {
-    Text(state.setting.name, fontWeight = FontWeight.Bold)
+    Column {
+        WarningLabel(state.setting)
+        Text(state.setting.name, fontWeight = FontWeight.Bold)
+    }
     Spacer(Modifier.weight(1f))
     Text(state.value.toString(), style = AckTheme.typography.caption)
 }
@@ -35,6 +40,7 @@ fun StringStateRow(
         .fillMaxWidth()
         .padding(vertical = AckTheme.spacing.clickSafety, horizontal = AckTheme.spacing.gutter)
 ) {
+    WarningLabel(state.setting)
     Text(state.setting.name, fontWeight = FontWeight.Bold)
     Text(state.value, style = AckTheme.typography.caption)
 }
@@ -49,7 +55,10 @@ fun BooleanStateRow(
         .clickable { onChange(!state.value) }
         .padding(vertical = AckTheme.spacing.clickSafety, horizontal = AckTheme.spacing.gutter)
 ) {
-    Text(state.setting.name, fontWeight = FontWeight.Bold)
+    Column {
+        WarningLabel(state.setting)
+        Text(state.setting.name, fontWeight = FontWeight.Bold)
+    }
     Spacer(Modifier.weight(1f))
     Switch(
         checked = state.value,
@@ -57,4 +66,21 @@ fun BooleanStateRow(
             onChange(checked)
         }
     )
+}
+
+@Composable
+private fun WarningLabel(setting: Setting) {
+    when (setting.visibility) {
+        SettingVisibility.Advanced -> Text(
+            text = stringResource(R.string.settings_advanced_label),
+            color = AckTheme.colors.warnForeground,
+            style = AckTheme.typography.caption,
+        )
+        SettingVisibility.Dev -> Text(
+            text = stringResource(R.string.settings_dev_label),
+            color = AckTheme.colors.dangerForeground,
+            style = AckTheme.typography.caption,
+        )
+        else -> {}
+    }
 }

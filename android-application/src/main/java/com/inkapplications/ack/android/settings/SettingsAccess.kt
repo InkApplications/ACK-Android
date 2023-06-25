@@ -16,9 +16,9 @@ class SettingsAccess @Inject constructor(
     private val settingsStorage: SettingsWriteAccess,
     private val connectionSettings: ConnectionSettings,
 ) {
-    fun settingsGroups(advanced: Boolean): Flow<List<SettingsGroup>> {
+    fun settingsGroups(visibility: SettingVisibility): Flow<SettingsListData> {
         return settingsProvider.settings
-            .filter { advanced || !it.advanced }
+            .filter { it.visibility <= visibility }
             .groupBy { it.categoryName }
             .map { (key, settings) ->
                 settings.map { setting ->
@@ -44,6 +44,12 @@ class SettingsAccess @Inject constructor(
             }
             .map {
                 it.sortedBy { it.name }
+            }
+            .map {
+                SettingsListData().apply {
+                    this.settings = it
+                    this.visibility = visibility
+                }
             }
     }
 

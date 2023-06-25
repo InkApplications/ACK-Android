@@ -7,4 +7,10 @@
     <string name="settings_author_line">Made with ❤️ by Ink Applications</string>
     <string name="settings_ack_license">User Agreement &amp; License</string>
     <string name="settings_licenses">OSS Licenses</string>
+    <string name="settings_onboard_category">Onboarding</string>
+    <string name="settings_onboard_license">License Agreement Revision</string>
+    <string name="settings_onboard_complete">License Prompt Complete</string>
+    <string name="settings_advanced_toggle_label">Show Advanced</string>
+    <string name="settings_advanced_label">Advanced</string>
+    <string name="settings_dev_label">Dev</string>
 </resources>

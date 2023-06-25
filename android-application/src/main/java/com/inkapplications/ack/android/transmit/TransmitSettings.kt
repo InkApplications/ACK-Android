@@ -51,6 +51,7 @@ class TransmitSettings @Inject constructor(
         name = resources.getString(R.string.transmit_settings_preamble),
         defaultData = 1.seconds,
         categoryName = resources.getString(R.string.transmit_settings_category),
+        visibility = SettingVisibility.Advanced,
         transformer = MillisecondTransformer,
     )
 
@@ -58,6 +59,7 @@ class TransmitSettings @Inject constructor(
         key = "transmit.digipath",
         name = resources.getString(R.string.transmit_settings_digipath),
         defaultData = StationAddress("WIDE1", "1").let(::Digipeater).let(::listOf),
+        visibility = SettingVisibility.Advanced,
         categoryName = resources.getString(R.string.transmit_settings_category),
         transformer = PathTransformer,
     )
@@ -75,7 +77,7 @@ class TransmitSettings @Inject constructor(
         name = resources.getString(R.string.transmit_settings_destination),
         defaultData = StationAddress("APZ022"),
         categoryName = resources.getString(R.string.transmit_settings_category),
-        advanced = true,
+        visibility = SettingVisibility.Advanced,
         transformer = StationAddressTransformer,
     )
 
