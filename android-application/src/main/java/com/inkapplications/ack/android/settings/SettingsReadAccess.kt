@@ -29,7 +29,7 @@ fun SettingsReadAccess.observeBoolean(setting: BooleanSetting): Flow<Boolean> {
  */
 fun <DATA, STORAGE> SettingsReadAccess.observeData(setting: TransformableSetting<DATA, STORAGE>): Flow<DATA> {
     return when (setting) {
-        is IntBackedSetting -> observeInt(setting).map(setting.transformer::toData)
-        is StringBackedSetting -> observeString(setting).map(setting.transformer::toData)
+        is IntBackedSetting -> observeInt(setting).map(setting.storageTransformer::toData)
+        is StringBackedSetting -> observeString(setting).map(setting.storageTransformer::toData)
     }
 }

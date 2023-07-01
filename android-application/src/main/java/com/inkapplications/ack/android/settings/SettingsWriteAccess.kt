@@ -1,7 +1,5 @@
 package com.inkapplications.ack.android.settings
 
-import com.inkapplications.ack.android.settings.transformer.Transformer
-
 /**
  * Provides access to storing key/value preferences for the application.
  */
@@ -13,7 +11,7 @@ interface SettingsWriteAccess {
 
 fun <DATA, STORAGE> SettingsWriteAccess.setData(setting: TransformableSetting<DATA, STORAGE>, value: DATA) {
     return when (setting) {
-        is IntBackedSetting -> setInt(setting, setting.transformer.toStorage(value))
-        is StringBackedSetting -> setString(setting, setting.transformer.toStorage(value))
+        is IntBackedSetting -> setInt(setting, setting.storageTransformer.toStorage(value))
+        is StringBackedSetting -> setString(setting, setting.storageTransformer.toStorage(value))
     }
 }

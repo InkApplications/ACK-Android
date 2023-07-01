@@ -18,7 +18,6 @@ import javax.inject.Inject
 import kotlin.time.Duration.Companion.minutes
 import kotlin.time.Duration.Companion.seconds
 
-
 class TransmitSettings @Inject constructor(
     resources: StringResources,
 ): SettingsProvider {
@@ -27,7 +26,7 @@ class TransmitSettings @Inject constructor(
         name = resources.getString(R.string.transmit_settings_rate_min),
         defaultData = 10.minutes,
         categoryName = resources.getString(R.string.transmit_settings_category),
-        transformer = MinuteTransformer,
+        storageTransformer = MinuteTransformer,
     )
 
     val maxRate = IntBackedSetting(
@@ -35,7 +34,7 @@ class TransmitSettings @Inject constructor(
         name = resources.getString(R.string.transmit_settings_rate_max),
         defaultData = 5.minutes,
         categoryName = resources.getString(R.string.transmit_settings_category),
-        transformer = MinuteTransformer,
+        storageTransformer = MinuteTransformer,
     )
 
     val distance = IntBackedSetting(
@@ -43,7 +42,7 @@ class TransmitSettings @Inject constructor(
         name = resources.getString(R.string.transmit_settings_distance),
         defaultData = 5.miles,
         categoryName = resources.getString(R.string.transmit_settings_category),
-        transformer = MileTransformer,
+        storageTransformer = MileTransformer,
     )
 
     val preamble = IntBackedSetting(
@@ -52,7 +51,7 @@ class TransmitSettings @Inject constructor(
         defaultData = 1.seconds,
         categoryName = resources.getString(R.string.transmit_settings_category),
         visibility = SettingVisibility.Advanced,
-        transformer = MillisecondTransformer,
+        storageTransformer = MillisecondTransformer,
     )
 
     val digipath = StringBackedSetting(
@@ -61,7 +60,7 @@ class TransmitSettings @Inject constructor(
         defaultData = StationAddress("WIDE1", "1").let(::Digipeater).let(::listOf),
         visibility = SettingVisibility.Advanced,
         categoryName = resources.getString(R.string.transmit_settings_category),
-        transformer = PathTransformer,
+        storageTransformer = PathTransformer,
     )
 
     val symbol = StringBackedSetting(
@@ -69,7 +68,7 @@ class TransmitSettings @Inject constructor(
         name = resources.getString(R.string.transmit_settings_symbol),
         defaultData = Symbol.Primary('$'),
         categoryName = resources.getString(R.string.transmit_settings_category),
-        transformer = SymbolTransformer,
+        storageTransformer = SymbolTransformer,
     )
 
     val destination = StringBackedSetting(
@@ -78,7 +77,7 @@ class TransmitSettings @Inject constructor(
         defaultData = StationAddress("APZ022"),
         categoryName = resources.getString(R.string.transmit_settings_category),
         visibility = SettingVisibility.Advanced,
-        transformer = StationAddressTransformer,
+        storageTransformer = StationAddressTransformer,
     )
 
     val comment = StringSetting(
@@ -93,7 +92,7 @@ class TransmitSettings @Inject constructor(
         name = resources.getString(R.string.transmit_settings_volume),
         defaultData = 50.percent,
         categoryName = resources.getString(R.string.transmit_settings_category),
-        transformer = PercentageTransformer,
+        storageTransformer = PercentageTransformer,
         dataValidator = object: Validator<Percentage> {
             override fun validate(input: Percentage): ValidationResult {
                 return if (input.toWholePercentage().roundToInt() in (0..100)) {

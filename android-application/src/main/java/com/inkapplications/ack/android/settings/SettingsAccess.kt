@@ -60,7 +60,7 @@ class SettingsAccess @Inject constructor(
 
     val licensePromptFieldValues: Flow<LicensePromptFieldValues> = settingValues.observeData(connectionSettings.address)
         .combine(settingValues.observeData(connectionSettings.passcode)) { callsign, passcode ->
-            LicensePromptFieldValues(callsign?.toString().orEmpty(), passcode?.toString().orEmpty())
+            LicensePromptFieldValues(callsign?.toString().orEmpty(), passcode?.value?.toString().orEmpty())
         }
 
     fun setLicense(values: LicensePromptFieldValues) {

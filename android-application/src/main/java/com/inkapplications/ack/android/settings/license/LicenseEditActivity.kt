@@ -18,6 +18,9 @@ class LicenseEditActivity: ExtendedActivity() {
     @Inject
     lateinit var settingsAccess: SettingsAccess
 
+    @Inject
+    lateinit var validator: LicensePromptValidator
+
     override fun onCreate() {
         super.onCreate()
         setContent {
@@ -28,7 +31,7 @@ class LicenseEditActivity: ExtendedActivity() {
                 LicenseEditState.Initial -> {}
                 is LicenseEditState.Editable -> LicensePromptScreen(
                     initialValues = state.initialValues,
-                    validator = LicensePromptValidator(),
+                    validator = validator,
                     onContinue = ::onContinue
                 )
             }

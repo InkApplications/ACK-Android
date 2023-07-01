@@ -1,27 +1,51 @@
 package com.inkapplications.ack.android.settings.license
 
+import com.inkapplications.ack.android.R
+import com.inkapplications.ack.android.connection.ConnectionSettings
+import com.inkapplications.ack.android.input.OptionalIntValidator
+import com.inkapplications.ack.android.input.ValidationResult
 import com.inkapplications.ack.client.generatePasscode
+import com.inkapplications.android.extensions.StringResources
 import dagger.Reusable
+import kimchi.logger.KimchiLogger
 import javax.inject.Inject
 
 @Reusable
-class LicensePromptValidator @Inject constructor() {
-    private val callsignRegex = Regex("^[0-9a-zA-Z]{1,3}\\d[0-9a-zA-Z]{0,4}[a-zA-Z](?:-[a-zA-Z0-9]{1,2})?\$")
-
+class LicensePromptValidator @Inject constructor(
+    private val connectionSettings: ConnectionSettings,
+    private val intValidator: OptionalIntValidator,
+    private val stringResources: StringResources,
+    private val logger: KimchiLogger,
+) {
     fun getLicenseError(license: String): String? {
-        return when {
-            license.isBlank() -> null
-            license.trim().matches(callsignRegex) -> null
-            else -> "Invalid Callsign"
-        }
+        return connectionSettings.address.validator
+            .validate(license)
+            .let { (it as? ValidationResult.Error)?.message }
     }
 
     fun getPasscodeError(license: String, passcode: String): String? {
+        val fieldValidation = intValidator.validate(passcode)
+        if (fieldValidation is ValidationResult.Error) return fieldValidation.message
+        
+        val converted = connectionSettings.passcode.fieldTransformer.toStorage(passcode)
+        val inputValidation = connectionSettings.passcode.inputValidator.validate(converted)
+        val data = connectionSettings.passcode.storageTransformer.toData(converted)
         val actual = generatePasscode(license)
+
         return when {
-            passcode.isBlank() -> null
-            actual == passcode.trim().toIntOrNull() -> null
-            else -> "Invalid Passcode"
+            inputValidation is ValidationResult.Error -> inputValidation.message.also {
+                logger.debug("Passcode input validation failed")
+            }
+            data == null -> null
+            converted != actual -> stringResources.getString(R.string.connection_setting_passcode_incorrect)
+            else -> stringResources.getString(R.string.unknown_error).also {
+                logger.debug("Field Validation: $fieldValidation")
+                logger.debug("Converted: $converted")
+                logger.debug("Input Validation: $inputValidation")
+                logger.debug("Data: $data")
+                logger.debug("Actual: $actual")
+                logger.error("Unexpected error validating passcode.")
+            }
         }
     }
 
@@ -29,3 +53,4 @@ class LicensePromptValidator @Inject constructor() {
         return getLicenseError(license) == null && getPasscodeError(license, passcode) == null
     }
 }
+

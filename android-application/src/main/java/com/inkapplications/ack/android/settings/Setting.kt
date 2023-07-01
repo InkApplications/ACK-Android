@@ -3,6 +3,7 @@ package com.inkapplications.ack.android.settings
 import com.inkapplications.ack.android.input.NoValidation
 import com.inkapplications.ack.android.input.ValidationResult
 import com.inkapplications.ack.android.input.Validator
+import com.inkapplications.ack.android.settings.transformer.IntFieldTransformer
 import com.inkapplications.ack.android.settings.transformer.Transformer
 
 /**
@@ -85,9 +86,9 @@ data class BooleanSetting(
 /**
  * Complex data type that is based on a [StringSetting] for storage.
  *
- * @param transformer Used to convert to/from the data structure and a string.
+ * @param storageTransformer Used to convert to/from the data structure and a string.
  * @param inputValidator Used to validate plain input from the user.
- * @param dataValidator Used to validate input from the user, but after it has been transformed by the [transformer].
+ * @param dataValidator Used to validate input from the user, but after it has been transformed by the [storageTransformer].
  */
 class StringBackedSetting<T>(
     key: String,
@@ -95,20 +96,20 @@ class StringBackedSetting<T>(
     categoryName: String,
     override val defaultData: T,
     override val visibility: SettingVisibility = SettingVisibility.Visible,
-    override val transformer: Transformer<T, String>,
+    override val storageTransformer: Transformer<T, String>,
     val inputValidator: Validator<String> = NoValidation,
     val dataValidator: Validator<T> = NoValidation,
 ): StringSetting(
     key = key,
     name = name,
     categoryName = categoryName,
-    defaultValue = transformer.toStorage(defaultData),
+    defaultValue = storageTransformer.toStorage(defaultData),
     visibility = visibility,
     validator = object: Validator<String> {
         override fun validate(input: String): ValidationResult {
             val inputResult = inputValidator.validate(input)
             if (inputResult !is ValidationResult.Valid) return inputResult
-            return transformer.toData(input).run(dataValidator::validate)
+            return storageTransformer.toData(input).run(dataValidator::validate)
         }
     }
 ), TransformableSetting<T, String>
@@ -116,9 +117,9 @@ class StringBackedSetting<T>(
 /**
  * Complex data type that is based on a [IntSetting] for storage.
  *
- * @param transformer Used to convert to/from the data structure and an integer.
+ * @param storageTransformer Used to convert to/from the data structure and an integer.
  * @param inputValidator Used to validate plain input from the user.
- * @param dataValidator Used to validate input from the user, but after it has been transformed by the [transformer].
+ * @param dataValidator Used to validate input from the user, but after it has been transformed by the [storageTransformer].
  */
 class IntBackedSetting<T>(
     key: String,
@@ -126,20 +127,21 @@ class IntBackedSetting<T>(
     categoryName: String,
     override val defaultData: T,
     override val visibility: SettingVisibility = SettingVisibility.Visible,
-    override val transformer: Transformer<T, Int>,
+    override val storageTransformer: Transformer<T, Int>,
     val inputValidator: Validator<Int> = NoValidation,
     val dataValidator: Validator<T> = NoValidation,
+    val fieldTransformer: Transformer<String, Int> = IntFieldTransformer,
 ): IntSetting(
     key = key,
     name = name,
     categoryName = categoryName,
-    defaultValue = transformer.toStorage(defaultData),
+    defaultValue = storageTransformer.toStorage(defaultData),
     visibility = visibility,
     validator = object: Validator<Int> {
         override fun validate(input: Int): ValidationResult {
             val inputResult = inputValidator.validate(input)
             if (inputResult !is ValidationResult.Valid) return inputResult
-            return transformer.toData(input).run(dataValidator::validate)
+            return storageTransformer.toData(input).run(dataValidator::validate)
         }
     }
 ), TransformableSetting<T, Int>

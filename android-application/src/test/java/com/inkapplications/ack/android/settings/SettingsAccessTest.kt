@@ -2,7 +2,9 @@ package com.inkapplications.ack.android.settings
 
 import com.inkapplications.ack.android.ParrotStringResources
 import com.inkapplications.ack.android.connection.ConnectionSettings
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.test.runTest
 import org.junit.Test
 import kotlin.test.assertEquals
@@ -118,6 +120,54 @@ class SettingsAccessTest {
         assertEquals("C", third.name, "Categories are sorted by name")
         assertEquals(1, third.settings.size, "Settings are kept in their category")
         assertEquals("C1", third.settings[0].setting.key, "Settings are kept in their category")
+    }
+
+    @Test
+    fun licensePromptFieldValues() = runTest {
+        val fakeSettings = object: SettingsReadAccess by SettingsReadAccessStub {
+            override fun observeStringState(setting: StringSetting): Flow<String?> {
+                return flow { emit("KE0YOG") }
+            }
+
+            override fun observeIntState(setting: IntSetting): Flow<Int?> {
+                return flow { emit(12345) }
+            }
+        }
+        val access = SettingsAccess(
+            SettingsProviderStub,
+            fakeSettings,
+            SettingsWriteAccessStub,
+            ConnectionSettings(ParrotStringResources),
+        )
+
+        val result = access.licensePromptFieldValues.first()
+
+        assertEquals("KE0YOG", result.callsign)
+        assertEquals("12345", result.passcode)
+    }
+
+    @Test
+    fun emptyLicensePromptFieldValues() = runTest {
+        val fakeSettings = object: SettingsReadAccess by SettingsReadAccessStub {
+            override fun observeStringState(setting: StringSetting): Flow<String?> {
+                return flow { emit(null) }
+            }
+
+            override fun observeIntState(setting: IntSetting): Flow<Int?> {
+                return flow { emit(null) }
+            }
+        }
+        val access = SettingsAccess(
+            SettingsProviderStub,
+            fakeSettings,
+            SettingsWriteAccessStub,
+            ConnectionSettings(ParrotStringResources),
+        )
+
+        val result = access.licensePromptFieldValues.first()
+
+        assertEquals("", result.callsign)
+        assertEquals("", result.passcode)
     }
 
     @Test
