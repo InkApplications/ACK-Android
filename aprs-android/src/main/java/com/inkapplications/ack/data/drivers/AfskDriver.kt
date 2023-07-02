@@ -1,6 +1,7 @@
 package com.inkapplications.ack.data.drivers
 
 import android.Manifest
+import android.os.Build
 import com.inkapplications.ack.codec.AprsCodec
 import com.inkapplications.ack.data.*
 import com.inkapplications.ack.data.AndroidAfskModulator
@@ -25,7 +26,14 @@ class AfskDriver internal constructor(
     private val logger: KimchiLogger,
 ): PacketDriver, AudioConnectionMonitor {
     override val incoming = MutableSharedFlow<CapturedPacket>()
-    override val receivePermissions: Set<String> = setOf(Manifest.permission.RECORD_AUDIO)
+    override val receivePermissions: Set<String> = when {
+        Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU -> setOf(Manifest.permission.RECORD_AUDIO, Manifest.permission.POST_NOTIFICATIONS)
+        else -> setOf(Manifest.permission.RECORD_AUDIO)
+    }
+    override val transmitPermissions: Set<String> = when {
+        Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU -> setOf(Manifest.permission.POST_NOTIFICATIONS)
+        else -> emptySet()
+    }
     override val volume = audioProcessor.volume
     private val transmitQueue = MutableSharedFlow<ByteArray>(extraBufferCapacity = 1, onBufferOverflow = BufferOverflow.DROP_OLDEST)
 
