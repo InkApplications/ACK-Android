@@ -4,8 +4,11 @@
     <string name="connection_setting_address_name">Callsign</string>
     <string name="connection_setting_passcode_name">APRS-IS Passcode</string>
     <string name="connection_setting_server_name">APRS-IS Server</string>
+    <string name="connection_setting_server_invalid">Invalid Hostname</string>
     <string name="connection_setting_port_name">APRS-IS Port</string>
+    <string name="connection_setting_port_invalid">Invalid Port</string>
     <string name="connection_setting_radius_name">APRS-IS Search Radius (mi)</string>
+    <string name="connection_setting_radius_invalid">Invalid Distance</string>
     <string name="connection_setting_address_invalid">Invalid Callsign</string>
     <string name="connection_setting_passcode_invalid">Invalid Passcode</string>
     <string name="connection_setting_passcode_incorrect">Incorrect Passcode</string>

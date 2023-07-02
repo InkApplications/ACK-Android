@@ -4,12 +4,12 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNull
 
-class OptionalKeyTransformerTest {
+class SentinelOptionalTransformerTest {
     private val backingFake = object: Transformer<String, String> {
         override fun toStorage(data: String): String = "STORED"
         override fun toData(storage: String): String = "DATA"
     }
-    val transformer = OptionalKeyTransformer("TestNull", backingFake)
+    val transformer = SentinelOptionalTransformer("TestNull", backingFake)
 
     @Test
     fun toData() {

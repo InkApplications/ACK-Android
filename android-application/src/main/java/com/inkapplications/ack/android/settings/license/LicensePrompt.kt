@@ -1,6 +1,7 @@
 package com.inkapplications.ack.android.settings.license
 
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.Button
 import androidx.compose.material.Text
 import androidx.compose.material.TextField
@@ -8,6 +9,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.input.KeyboardType
 import com.inkapplications.ack.android.ui.theme.AckScreen
 import com.inkapplications.ack.android.ui.theme.AckTheme
 
@@ -48,6 +50,8 @@ fun LicensePromptScreen(
             onValueChange = { passcode.value = it },
             enabled = callsign.value.isNotBlank(),
             isError = passcodeError.value != null,
+            singleLine = true,
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
             modifier = Modifier.fillMaxWidth(),
         )
         if (passcodeError.value != null) Text(passcodeError.value.orEmpty(), style = AckTheme.typography.errorCaption)

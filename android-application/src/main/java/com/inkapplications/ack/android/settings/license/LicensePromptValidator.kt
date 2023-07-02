@@ -2,7 +2,7 @@ package com.inkapplications.ack.android.settings.license
 
 import com.inkapplications.ack.android.R
 import com.inkapplications.ack.android.connection.ConnectionSettings
-import com.inkapplications.ack.android.input.OptionalIntValidator
+import com.inkapplications.ack.android.input.ConvertibleOptionalIntValidator
 import com.inkapplications.ack.android.input.ValidationResult
 import com.inkapplications.ack.client.generatePasscode
 import com.inkapplications.android.extensions.StringResources
@@ -13,7 +13,7 @@ import javax.inject.Inject
 @Reusable
 class LicensePromptValidator @Inject constructor(
     private val connectionSettings: ConnectionSettings,
-    private val intValidator: OptionalIntValidator,
+    private val intValidator: ConvertibleOptionalIntValidator,
     private val stringResources: StringResources,
     private val logger: KimchiLogger,
 ) {

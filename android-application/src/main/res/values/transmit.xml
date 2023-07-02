@@ -10,4 +10,7 @@
     <string name="transmit_settings_destination">Destination</string>
     <string name="transmit_settings_comment">Comment</string>
     <string name="transmit_settings_volume">Volume (%)</string>
+    <string name="transmit_settings_symbol_length">Must be exactly 2 characters</string>
+    <string name="transmit_settings_comment_length">Max-Length is 43 Characters</string>
+    <string name="transmit_settings_volume_range_error">Must be between 0 and 100</string>
 </resources>

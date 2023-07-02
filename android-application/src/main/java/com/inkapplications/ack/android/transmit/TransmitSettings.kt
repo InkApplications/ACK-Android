@@ -2,8 +2,12 @@ package com.inkapplications.ack.android.transmit
 
 import com.inkapplications.android.extensions.StringResources
 import com.inkapplications.ack.android.R
+import com.inkapplications.ack.android.input.IntegerValidator
+import com.inkapplications.ack.android.input.MaxLengthValidator
+import com.inkapplications.ack.android.input.MinLengthValidator
 import com.inkapplications.ack.android.input.ValidationResult
 import com.inkapplications.ack.android.input.Validator
+import com.inkapplications.ack.android.input.plus
 import com.inkapplications.ack.android.settings.*
 import com.inkapplications.ack.android.settings.transformer.*
 import com.inkapplications.ack.structures.Digipeater
@@ -27,6 +31,10 @@ class TransmitSettings @Inject constructor(
         defaultData = 10.minutes,
         categoryName = resources.getString(R.string.transmit_settings_category),
         storageTransformer = MinuteTransformer,
+        inputValidator = IntegerValidator(
+            error = resources.getString(R.string.input_validator_positive_integer_error),
+            zeroInclusive = false,
+        ),
     )
 
     val maxRate = IntBackedSetting(
@@ -35,6 +43,10 @@ class TransmitSettings @Inject constructor(
         defaultData = 5.minutes,
         categoryName = resources.getString(R.string.transmit_settings_category),
         storageTransformer = MinuteTransformer,
+        inputValidator = IntegerValidator(
+            error = resources.getString(R.string.input_validator_positive_integer_error),
+            zeroInclusive = false,
+        ),
     )
 
     val distance = IntBackedSetting(
@@ -43,6 +55,10 @@ class TransmitSettings @Inject constructor(
         defaultData = 5.miles,
         categoryName = resources.getString(R.string.transmit_settings_category),
         storageTransformer = MileTransformer,
+        inputValidator = IntegerValidator(
+            error = resources.getString(R.string.input_validator_positive_integer_error),
+            zeroInclusive = false,
+        ),
     )
 
     val preamble = IntBackedSetting(
@@ -52,6 +68,10 @@ class TransmitSettings @Inject constructor(
         categoryName = resources.getString(R.string.transmit_settings_category),
         visibility = SettingVisibility.Advanced,
         storageTransformer = MillisecondTransformer,
+        inputValidator = IntegerValidator(
+            error = resources.getString(R.string.input_validator_positive_integer_error),
+            zeroInclusive = false,
+        ),
     )
 
     val digipath = StringBackedSetting(
@@ -69,6 +89,13 @@ class TransmitSettings @Inject constructor(
         defaultData = Symbol.Primary('$'),
         categoryName = resources.getString(R.string.transmit_settings_category),
         storageTransformer = SymbolTransformer,
+        inputValidator = MinLengthValidator(
+            minLength = 2,
+            error = resources.getString(R.string.transmit_settings_symbol_length),
+        ) + MaxLengthValidator(
+            maxLength = 2,
+            error = resources.getString(R.string.transmit_settings_symbol_length),
+        ),
     )
 
     val destination = StringBackedSetting(
@@ -85,6 +112,10 @@ class TransmitSettings @Inject constructor(
         name = resources.getString(R.string.transmit_settings_comment),
         defaultValue = "Hello!",
         categoryName = resources.getString(R.string.transmit_settings_category),
+        validator = MaxLengthValidator(
+            maxLength = 43,
+            error = resources.getString(R.string.transmit_settings_comment_length),
+        ),
     )
 
     val volume = IntBackedSetting(
@@ -98,7 +129,9 @@ class TransmitSettings @Inject constructor(
                 return if (input.toWholePercentage().roundToInt() in (0..100)) {
                     ValidationResult.Valid
                 } else {
-                    ValidationResult.Error("Must be between 0 and 100")
+                    ValidationResult.Error(
+                        message = resources.getString(R.string.transmit_settings_volume_range_error),
+                    )
                 }
             }
         }

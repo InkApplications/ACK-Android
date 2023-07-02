@@ -9,7 +9,7 @@ import javax.inject.Inject
  * Ensures that a string can be successfully converted to an integer, or is blank.
  */
 @Reusable
-class OptionalIntValidator @Inject constructor(
+class ConvertibleOptionalIntValidator @Inject constructor(
     private val stringResources: StringResources,
 ) : Validator<String> {
     override fun validate(input: String): ValidationResult {

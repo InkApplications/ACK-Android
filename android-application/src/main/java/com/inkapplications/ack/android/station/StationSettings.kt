@@ -1,7 +1,7 @@
 package com.inkapplications.ack.android.station
 
 import com.inkapplications.ack.android.R
-import com.inkapplications.ack.android.input.ZeroInclusivePositiveIntegerValidator
+import com.inkapplications.ack.android.input.IntegerValidator
 import com.inkapplications.ack.android.settings.BooleanSetting
 import com.inkapplications.ack.android.settings.IntSetting
 import com.inkapplications.ack.android.settings.Setting
@@ -14,7 +14,6 @@ import javax.inject.Inject
 @Reusable
 class StationSettings @Inject constructor(
     stringResources: StringResources,
-    positiveIntegerValidator: ZeroInclusivePositiveIntegerValidator,
 ): SettingsProvider {
     private val categoryName = stringResources.getString(R.string.station_settings_category)
 
@@ -32,7 +31,10 @@ class StationSettings @Inject constructor(
         categoryName = categoryName,
         defaultValue = 10,
         visibility = SettingVisibility.Advanced,
-        validator = positiveIntegerValidator,
+        validator = IntegerValidator(
+            error = stringResources.getString(R.string.input_validator_positive_integer_error),
+            zeroInclusive = false,
+        ),
     )
 
     override val settings: List<Setting> = listOf(
