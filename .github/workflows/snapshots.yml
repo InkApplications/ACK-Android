@@ -10,6 +10,12 @@ jobs:
                 name: Checkout
                 uses: actions/checkout@v2.4.0
             -
+                name: Configure Java
+                uses: actions/setup-java@v2
+                with:
+                    java-version: 17
+                    distribution: adopt-openj9
+            -
                 name: Google Services Setup
                 run: echo '${{secrets.GOOGLE_SERVICES_JSON}}' > android-application/google-services.json
             -
