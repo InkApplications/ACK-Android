@@ -3,9 +3,11 @@ package com.inkapplications.ack.android.capture
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.inkapplications.ack.android.connection.ConnectionSettings
+import com.inkapplications.ack.android.settings.SettingsAccess
 import com.inkapplications.ack.android.settings.SettingsReadAccess
 import com.inkapplications.ack.android.settings.observeData
-import com.inkapplications.android.extensions.combineApply
+import com.inkapplications.ack.data.drivers.PacketDrivers
+import com.inkapplications.coroutines.combine
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*
 import javax.inject.Inject
@@ -18,16 +20,25 @@ class CaptureViewModel @Inject constructor(
     captureEvents: CaptureEvents,
     settings: SettingsReadAccess,
     connectionSettings: ConnectionSettings,
+    settingsAccess: SettingsAccess,
+    drivers: PacketDrivers,
     captureScreenStateFactory: CaptureScreenStateFactory,
 ): ViewModel() {
-    val controlPanelState = flowOf(CaptureScreenStateFactory.CaptureData())
-        .combineApply(captureEvents.audioListenState) { audioCaptureEnabled = it }
-        .combineApply(captureEvents.internetListenState) { internetCaptureEnabled = it }
-        .combineApply(captureEvents.audioTransmitState) { audioTransmitEnabled = it }
-        .combineApply(captureEvents.internetTransmitState) { internetTransmitEnabled = it }
-        .combineApply(settings.observeData(connectionSettings.address)) { currentAddress = it }
-        .combineApply(settings.observeData(connectionSettings.passcode)) { passcode = it }
-        .combineApply(captureEvents.audioInputVolume) { inputAudioLevel = it }
-        .map { captureScreenStateFactory.controlPanelState(it) }
-        .stateIn(viewModelScope, SharingStarted.Eagerly, ControlPanelState.Initial)
+    val controlPanelState: StateFlow<ControlPanelState> = combine(
+        settings.observeData(connectionSettings.driver),
+        settingsAccess.licenseData,
+        captureEvents.audioInputVolume,
+        captureEvents.connectionState,
+        captureEvents.locationTransmitState,
+        drivers.tncDriver.deviceData,
+    ) { driver, license, audioInputVolume, connectedState, positionTransmitState, tncData ->
+        captureScreenStateFactory.controlPanelState(
+            currentDriver = driver,
+            driverConnected = connectedState != ConnectionState.Disconnected,
+            positionTransmit = positionTransmitState,
+            license = license,
+            inputAudioLevel = audioInputVolume,
+            tncConnectionState = tncData.toConnectionState(),
+        )
+    }.stateIn(viewModelScope, SharingStarted.Eagerly, ControlPanelState.Initial)
 }

@@ -1,5 +1,5 @@
 [versions]
-dagger = "2.45"
+dagger = "2.46.1"
 
 [libraries.dagger-core]
 version.ref = "dagger"
@@ -22,16 +22,16 @@ version.ref = "dagger"
 module = "com.google.dagger:hilt-android"
 
 [libraries.androidx-hilt-common]
-version = "1.0.0"
-module = " androidx.hilt:hilt-common"
+version.ref = "dagger"
+module = "com.google.dagger:hilt-android"
 
 [libraries.androidx-hilt-compiler]
-version = "1.0.0"
-module = " androidx.hilt:hilt-compiler"
+version.ref = "dagger"
+module = "com.google.dagger:hilt-compiler"
 
 [libraries.androidx-hilt-navigation-compose]
 version = "1.0.0"
-module = " androidx.hilt:hilt-navigation-compose"
+module = "androidx.hilt:hilt-navigation-compose"
 
 [libraries.firebase-config]
 version = "21.2.1"

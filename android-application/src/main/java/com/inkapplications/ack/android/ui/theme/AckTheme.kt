@@ -62,14 +62,14 @@ object AckTheme {
             item = 8.dp,
             icon = 8.dp,
             clickSafety = 16.dp,
-            placeholderIcon = 120.dp,
         )
 
     val sizing
         @Composable
         @ReadOnlyComposable
         get() = SizingVariant(
-            dispayIcon = 48.dp,
+            dispayIcon = 120.dp,
+            iconButton = 16.dp,
         )
 
     val shapes

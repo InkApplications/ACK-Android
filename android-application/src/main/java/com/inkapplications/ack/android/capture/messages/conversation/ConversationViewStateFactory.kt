@@ -1,6 +1,7 @@
 package com.inkapplications.ack.android.capture.messages.conversation
 
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Bluetooth
 import androidx.compose.material.icons.filled.Cloud
 import androidx.compose.material.icons.filled.SettingsInputAntenna
 import androidx.compose.material.icons.filled.Storage
@@ -74,11 +75,13 @@ class ConversationViewStateFactory @Inject constructor(
             icon = when (data.message.source) {
                 PacketSource.Ax25 -> Icons.Default.SettingsInputAntenna
                 PacketSource.AprsIs -> Icons.Default.Cloud
+                PacketSource.Tnc -> Icons.Default.Bluetooth
                 PacketSource.Local -> Icons.Default.Storage
             },
             iconDescription = when (data.message.source) {
                 PacketSource.Ax25 -> stringResources.getString(R.string.messages_item_icon_ax25_description)
                 PacketSource.AprsIs -> stringResources.getString(R.string.messages_item_icon_internet_description)
+                PacketSource.Tnc -> stringResources.getString(R.string.messages_item_icon_tnc_description)
                 PacketSource.Local -> stringResources.getString(R.string.messages_item_icon_local_description)
             },
         )

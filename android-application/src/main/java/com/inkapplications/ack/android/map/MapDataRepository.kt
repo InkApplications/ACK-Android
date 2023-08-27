@@ -8,9 +8,9 @@ import com.inkapplications.ack.android.settings.observeBoolean
 import com.inkapplications.ack.android.settings.observeInt
 import com.inkapplications.ack.android.symbol.SymbolFactory
 import com.inkapplications.ack.data.PacketStorage
-import com.inkapplications.coroutines.filterEachNotNull
-import com.inkapplications.coroutines.mapEach
 import com.inkapplications.ack.structures.PacketData
+import com.inkapplications.coroutines.filterItemNotNull
+import com.inkapplications.coroutines.mapItems
 import dagger.Reusable
 import kimchi.logger.KimchiLogger
 import kotlinx.coroutines.flow.Flow
@@ -37,13 +37,13 @@ class MapDataRepository @Inject constructor(
             .flatMapLatest { pinCount ->
                 aprs.findRecent(pinCount)
                     .map { it.distinctBy { it.parsed.route.source } }
-                    .mapEach { packet ->
+                    .mapItems { packet ->
                         when (val data = packet.parsed.data) {
                             is PacketData.Position -> MarkerViewState(packet.id, data.coordinates, symbolFactory.createSymbol(data.symbol))
                             else -> null
                         }
                     }
-                    .filterEachNotNull()
+                    .filterItemNotNull()
                     .onEach { logger.info("New set of ${it.size} map markers.") }
             }
     }

@@ -4,8 +4,9 @@ import com.inkapplications.ack.codec.AprsCodec
 import com.inkapplications.ack.structures.AprsPacket
 import com.inkapplications.ack.structures.PacketData
 import com.inkapplications.ack.structures.station.Callsign
-import com.inkapplications.coroutines.filterEachNotNull
-import com.inkapplications.coroutines.mapEach
+import com.inkapplications.coroutines.filterItemNotNull
+import com.inkapplications.coroutines.filterItems
+import com.inkapplications.coroutines.mapItems
 import kimchi.logger.KimchiLogger
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
@@ -24,7 +25,7 @@ internal class DaoPacketStorage(
             .map { entities ->
                 entities.mapNotNull { createCapturedPacket(it, fromEntityOrNull(it)) }
             }
-            .filterEachNotNull()
+            .filterItemNotNull()
     }
 
     override fun findById(id: Long): Flow<CapturedPacket?> {
@@ -33,14 +34,14 @@ internal class DaoPacketStorage(
 
     override fun findLatestByConversation(callsign: Callsign): Flow<List<CapturedPacket>> {
         return packetDao.findLatestConversationMessages(callsign.canonical)
-            .mapEach { createCapturedPacket(it, fromEntityOrNull(it)) }
-            .filterEachNotNull()
+            .mapItems { createCapturedPacket(it, fromEntityOrNull(it)) }
+            .filterItemNotNull()
     }
 
     override fun findConversation(addressee: Callsign, callsign: Callsign): Flow<List<CapturedPacket>> {
         return packetDao.findConversation(addressee.canonical, callsign.canonical)
-            .mapEach { createCapturedPacket(it, fromEntityOrNull(it)) }
-            .filterEachNotNull()
+            .mapItems { createCapturedPacket(it, fromEntityOrNull(it)) }
+            .filterItemNotNull()
     }
 
     override fun count(): Flow<Int> {
@@ -58,8 +59,8 @@ internal class DaoPacketStorage(
 
     override fun findBySource(callsign: Callsign, limit: Int?): Flow<List<CapturedPacket>> {
         return packetDao.findBySourceCallsign(callsign.canonical, limit ?: -1)
-            .mapEach { createCapturedPacket(it, fromEntityOrNull(it)) }
-            .filterEachNotNull()
+            .mapItems { createCapturedPacket(it, fromEntityOrNull(it)) }
+            .filterItemNotNull()
     }
 
     override suspend fun save(data: ByteArray, packet: AprsPacket, source: PacketSource): CapturedPacket {
@@ -86,7 +87,7 @@ internal class DaoPacketStorage(
     private fun fromEntityOrNull(data: PacketEntity): AprsPacket? {
         try {
             return when (data.packetSource) {
-                PacketSource.Ax25 -> codec.fromAx25(data.data)
+                PacketSource.Ax25, PacketSource.Tnc -> codec.fromAx25(data.data)
                 PacketSource.AprsIs, PacketSource.Local -> codec.fromString(data.data.toString(Charsets.UTF_8))
             }
         } catch (error: Throwable) {

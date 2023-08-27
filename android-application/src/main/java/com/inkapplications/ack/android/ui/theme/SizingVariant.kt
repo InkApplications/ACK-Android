@@ -4,4 +4,5 @@ import androidx.compose.ui.unit.Dp
 
 data class SizingVariant(
     val dispayIcon: Dp,
+    val iconButton: Dp,
 )

@@ -14,11 +14,16 @@ import androidx.compose.material.icons.outlined.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.Dialog
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -33,13 +38,15 @@ import com.inkapplications.ack.android.map.MapScreen
 import com.inkapplications.ack.android.map.MapViewState
 import com.inkapplications.ack.android.capture.messages.MessageIndexScreen
 import com.inkapplications.ack.android.capture.messages.index.MessagesScreenController
+import com.inkapplications.ack.android.connection.DriverSelection
+import com.inkapplications.ack.android.connection.readableName
 import com.inkapplications.ack.android.trackNavigation
+import com.inkapplications.ack.android.ui.AckChip
+import com.inkapplications.ack.android.ui.SelectionRow
 import com.inkapplications.ack.android.ui.StateLabelledIconButton
 import com.inkapplications.ack.android.ui.theme.AckScreen
 import com.inkapplications.ack.android.ui.theme.AckTheme
-import com.inkapplications.android.extensions.control.whenDisabled
-import com.inkapplications.android.extensions.control.whenOff
-import com.inkapplications.android.extensions.control.whenOn
+import com.inkapplications.android.extensions.control.ControlState
 import kimchi.Kimchi
 import kotlinx.coroutines.launch
 
@@ -230,108 +237,136 @@ private fun CaptureSettingsSheet(
                 )
             }
         }
-        IconButton(
-            onClick = {
-                scope.launch {
-                    settingsSheetState.bottomSheetState.collapse()
+        Row {
+            IconButton(
+                onClick = {
+                    captureController.onDeviceSettingsClick()
                 }
-                captureController.onSettingsClick()
+            ) {
+                Icon(
+                    imageVector = Icons.Default.SettingsBluetooth,
+                    contentDescription = stringResource(R.string.capture_controls_settings_name),
+                    tint = AckTheme.colors.foreground,
+                )
             }
+            IconButton(
+                onClick = {
+                    scope.launch {
+                        settingsSheetState.bottomSheetState.collapse()
+                    }
+                    captureController.onSettingsClick()
+                }
+            ) {
+                Icon(
+                    imageVector = Icons.Default.Settings,
+                    contentDescription = stringResource(R.string.capture_controls_settings_name),
+                    tint = AckTheme.colors.foreground,
+                )
+            }
+        }
+    }
+    Box(
+        contentAlignment = Alignment.Center,
+        modifier = Modifier.fillMaxWidth(),
+    ) {
+        var selector by remember { mutableStateOf(false) }
+
+        if (selector) {
+            Dialog(
+                onDismissRequest = { selector = false },
+            ) {
+                Card(
+                    modifier = Modifier.fillMaxWidth(),
+                ) {
+                    Column {
+                        Text(
+                            text = "Connection",
+                            style = AckTheme.typography.h1,
+                            modifier = Modifier.padding(
+                                top = AckTheme.spacing.gutter,
+                                start = AckTheme.spacing.gutter,
+                                end = AckTheme.spacing.gutter,
+                                bottom = AckTheme.spacing.content,
+                            )
+                        )
+                        DriverSelection.values().forEach { driver ->
+                            SelectionRow(
+                                name = stringResource(id = driver.readableName),
+                                selected = driver == (controlPanelState as? ControlPanelState.Loaded)?.connectionType,
+                                onClick = {
+                                    captureController.onDriverSelected(driver)
+                                    selector = false
+                                },
+                            )
+                        }
+                    }
+                }
+            }
+        }
+
+        AckChip(
+            onClick = { selector = true },
         ) {
             Icon(
-                imageVector = Icons.Default.Settings,
-                contentDescription = stringResource(R.string.capture_controls_settings_name),
+                imageVector = Icons.Default.Tune,
+                contentDescription = null,
                 tint = AckTheme.colors.foreground,
+                modifier = Modifier.padding(end = AckTheme.spacing.icon),
+            )
+            Text(
+                text = if (controlPanelState is ControlPanelState.Loaded) {
+                    controlPanelState.connection
+                } else {
+                    stringResource(R.string.capture_controls_connection_type_unknown)
+                }
             )
         }
+    }
+    val volume = (controlPanelState as? ControlPanelState.Loaded)?.volumeLevel
+    if (volume != null) {
+        LinearProgressIndicator(
+            progress = volume,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = AckTheme.spacing.item),
+        )
     }
     FlowRow(
         horizontalArrangement = Arrangement.Center,
     ) {
         Row {
-            controlPanelState.audioCaptureState.whenOff {
-                StateLabelledIconButton(
-                    state = controlPanelState.audioCaptureState,
-                    title = stringResource(R.string.capture_controls_audio_capture_disabled_name),
-                    icon = Icons.Outlined.MicOff,
-                    onClick = captureController::onAudioCaptureEnableClick,
-                )
-            }
-            controlPanelState.audioCaptureState.whenOn {
-                StateLabelledIconButton(
-                    state = controlPanelState.audioCaptureState,
-                    title = stringResource(R.string.capture_controls_audio_capture_enabled_name, (controlPanelState as ControlPanelState.Loaded).audioCaptureLevel),
-                    icon = Icons.Filled.Mic,
-                    onClick = captureController::onAudioCaptureDisableClick,
-                )
-            }
-
-            controlPanelState.audioTransmitState.whenDisabled {
-                StateLabelledIconButton(
-                    state = controlPanelState.audioTransmitState,
-                    icon = Icons.Outlined.VolumeOff,
-                    title = stringResource(R.string.capture_controls_audio_transmit_disabled_name),
-                )
-            }
-            controlPanelState.audioTransmitState.whenOff {
-                StateLabelledIconButton(
-                    state = controlPanelState.audioTransmitState,
-                    icon = Icons.Outlined.VolumeOff,
-                    title = stringResource(R.string.capture_controls_audio_transmit_disabled_name),
-                    onClick = captureController::onAudioTransmitEnableClick,
-                )
-            }
-            controlPanelState.audioTransmitState.whenOn {
-                StateLabelledIconButton(
-                    state = controlPanelState.audioTransmitState,
-                    icon = Icons.Filled.VolumeUp,
-                    title = stringResource(R.string.capture_controls_audio_transmit_enabled_name),
-                    onClick = captureController::onAudioTransmitDisableClick,
-                )
-            }
-        }
-
-        Row {
-            controlPanelState.internetCaptureState.whenOff {
-                StateLabelledIconButton(
-                    state = controlPanelState.internetCaptureState,
-                    icon = Icons.Outlined.CloudDownload,
-                    title = stringResource(R.string.capture_controls_internet_capture_disabled_name),
-                    onClick = captureController::onInternetCaptureEnableClick,
-                )
-            }
-            controlPanelState.internetCaptureState.whenOn {
-                StateLabelledIconButton(
-                    state = controlPanelState.internetCaptureState,
-                    icon = Icons.Filled.CloudDownload,
-                    title = stringResource(R.string.capture_controls_internet_capture_enabled_name),
-                    onClick = captureController::onInternetCaptureDisableClick,
-                )
-            }
-
-            controlPanelState.internetTransmitState.whenDisabled {
-                StateLabelledIconButton(
-                    state = controlPanelState.internetTransmitState,
-                    icon = Icons.Outlined.CloudUpload,
-                    title = stringResource(R.string.capture_controls_internet_transmit_disabled_name),
-                )
-            }
-            controlPanelState.internetTransmitState.whenOff {
-                StateLabelledIconButton(
-                    state = controlPanelState.internetTransmitState,
-                    icon = Icons.Outlined.CloudUpload,
-                    title = stringResource(R.string.capture_controls_internet_transmit_disabled_name),
-                    onClick = captureController::onInternetTransmitEnableClick,
-                )
-            }
-            controlPanelState.internetTransmitState.whenOn {
-                StateLabelledIconButton(
-                    state = controlPanelState.internetTransmitState,
-                    icon = Icons.Filled.CloudUpload,
-                    title = stringResource(R.string.capture_controls_internet_transmit_enabled_name),
-                    onClick = captureController::onInternetTransmitDisableClick,
-                )
-            }
+            StateLabelledIconButton(
+                icon = when (controlPanelState.connectState) {
+                    ControlState.On -> Icons.Default.WifiTethering
+                    ControlState.Off,
+                    ControlState.Disabled,
+                    ControlState.Hidden -> Icons.Default.WifiTetheringOff
+                },
+                title = when (controlPanelState.connectState) {
+                    ControlState.On -> stringResource(R.string.capture_controls_connection_on)
+                    ControlState.Off,
+                    ControlState.Disabled,
+                    ControlState.Hidden, -> stringResource(R.string.capture_controls_connection_off)
+                },
+                state = controlPanelState.connectState,
+                onClick = captureController::onConnectionToggleClick,
+            )
+            StateLabelledIconButton(
+                icon = when (controlPanelState.positionTransmitState) {
+                    ControlState.On -> Icons.Default.ModeOfTravel
+                    ControlState.Off,
+                    ControlState.Disabled,
+                    ControlState.Hidden -> Icons.Default.LocationOff
+                },
+                title = when (controlPanelState.positionTransmitState) {
+                    ControlState.On -> stringResource(R.string.capture_controls_position_on)
+                    ControlState.Off,
+                    ControlState.Disabled,
+                    ControlState.Hidden, -> stringResource(R.string.capture_controls_position_off)
+                },
+                state = controlPanelState.positionTransmitState,
+                onClick = captureController::onPositionTransmitToggleClick,
+            )
         }
     }
 }

@@ -48,7 +48,7 @@ private fun EmptyState() {
             imageVector = Icons.Default.Summarize,
             contentDescription = null,
             tint = AckTheme.colors.foregroundInactive,
-            modifier = Modifier.size(AckTheme.spacing.placeholderIcon),
+            modifier = Modifier.size(AckTheme.sizing.dispayIcon),
         )
         Text(stringResource(R.string.log_index_empty))
     }

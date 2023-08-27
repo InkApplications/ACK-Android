@@ -1,6 +1,7 @@
 package com.inkapplications.ack.android.log.details
 
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Bluetooth
 import androidx.compose.material.icons.filled.Cloud
 import androidx.compose.material.icons.filled.SettingsInputAntenna
 import androidx.compose.material.icons.filled.Storage
@@ -43,11 +44,13 @@ class LogDetailsViewStateFactory @Inject constructor(
             receiveIcon = when (data.packet.source) {
                 PacketSource.AprsIs -> Icons.Default.Cloud
                 PacketSource.Ax25 -> Icons.Default.SettingsInputAntenna
+                PacketSource.Tnc -> Icons.Default.Bluetooth
                 PacketSource.Local -> Icons.Default.Storage
             },
             receiveIconDescription = when (data.packet.source) {
                 PacketSource.Ax25 -> stringResources.getString(R.string.log_icon_ax25)
                 PacketSource.AprsIs -> stringResources.getString(R.string.log_icon_aprs_is)
+                PacketSource.Tnc -> stringResources.getString(R.string.log_icon_tnc)
                 PacketSource.Local -> stringResources.getString(R.string.log_icon_local)
             },
         )

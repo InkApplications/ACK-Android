@@ -14,7 +14,6 @@ import com.inkapplications.ack.structures.station.Callsign
 import com.inkapplications.ack.structures.station.StationAddress
 import com.inkapplications.ack.structures.station.toStationAddress
 import com.inkapplications.coroutines.filterItems
-import com.inkapplications.coroutines.mapEach
 import com.inkapplications.coroutines.mapItems
 import dagger.Reusable
 import kimchi.logger.KimchiLogger
@@ -55,7 +54,7 @@ class MessageEvents @Inject constructor(
     fun conversationList(address: Callsign): Flow<List<MessageData>> {
         return settings.observeData(connectionSettings.address)
             .flatMapLatest { self ->
-                (self?.callsign?.let { packetStorage.findConversation(address, it) }?.mapEach { MessageData(self.callsign, it) } ?: flowOf(emptyList()))
+                (self?.callsign?.let { packetStorage.findConversation(address, it) }?.mapItems { MessageData(self.callsign, it) } ?: flowOf(emptyList()))
             }
             .filterItems { it.message.parsed.data is PacketData.Message }
             .onEach { logger.debug("Loaded ${it.size} messages from $address") }

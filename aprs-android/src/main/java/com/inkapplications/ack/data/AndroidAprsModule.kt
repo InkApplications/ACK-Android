@@ -10,6 +10,7 @@ import com.inkapplications.ack.data.drivers.AfskDriver
 import com.inkapplications.ack.data.drivers.DriverSettingsProvider
 import com.inkapplications.ack.data.drivers.InternetDriver
 import com.inkapplications.ack.data.drivers.PacketDrivers
+import com.inkapplications.ack.data.drivers.TncDriver
 import com.inkapplications.ack.data.upgrade.V4Upgrade
 import dagger.Module
 import dagger.Provides
@@ -60,6 +61,7 @@ object AndroidAprsModule {
         androidLocationProvider: AndroidLocationProvider,
         driverSettings: DriverSettingsProvider,
         packetStorage: PacketStorage,
+        tncDriver: TncDriver,
     ): PacketDrivers {
         val audioCapture = AudioDataCapture(logger)
         val audioProcessor = AudioDataProcessor(audioCapture)
@@ -84,6 +86,7 @@ object AndroidAprsModule {
         return PacketDrivers(
             internetDriver = internet,
             afskDriver = afsk,
+            tncDriver = tncDriver,
         )
     }
 }

@@ -65,7 +65,7 @@ private fun EmptyPlaceholder() = Box(
             imageVector = Icons.Default.Inbox,
             contentDescription = null,
             tint = AckTheme.colors.foregroundInactive,
-            modifier = Modifier.size(AckTheme.spacing.placeholderIcon),
+            modifier = Modifier.size(AckTheme.sizing.dispayIcon),
         )
         Text("No messages received")
     }
