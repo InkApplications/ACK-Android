@@ -1,9 +1,10 @@
 [versions]
 room = "2.5.0"
 activity = "1.6.1"
+compose-compiler = "1.4.8"
 
 [libraries.android-gradle]
-version = "7.4.2"
+version = "8.1.1"
 module = "com.android.tools.build:gradle"
 
 [libraries.androidx-core]

@@ -5,6 +5,7 @@ plugins {
 }
 
 android {
+    namespace = "com.inkapplications.android.extensions"
     compileSdk = 33
 
     defaultConfig {
@@ -16,7 +17,10 @@ android {
     }
 
     kotlinOptions {
-        jvmTarget = "1.8"
+        jvmTarget = JavaVersion.VERSION_1_8.toString()
+    }
+    composeOptions {
+        kotlinCompilerExtensionVersion = androidLibraries.versions.compose.compiler.get()
     }
     compileOptions {
         targetCompatibility = JavaVersion.VERSION_1_8

@@ -15,11 +15,11 @@ if (useGoogleServices) {
 }
 
 android {
-    compileSdk = 33
-    ndkVersion = "21.3.6528147"
+    compileSdk = 34
+    namespace = "com.inkapplications.ack.android"
     defaultConfig {
         minSdk = 21
-        targetSdk = 33
+        targetSdk = 34
         multiDexEnabled = true
         buildConfigField("String", "MAPBOX_ACCESS_TOKEN", optionalStringProperty("mapboxPublic").buildQuote())
         buildConfigField("boolean", "USE_GOOGLE_SERVICES", useGoogleServices.toString())
@@ -30,6 +30,7 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
 
     signingConfigs {
@@ -64,14 +65,18 @@ android {
         targetCompatibility = JavaVersion.VERSION_1_8
         sourceCompatibility = JavaVersion.VERSION_1_8
     }
-
     kotlinOptions {
         jvmTarget = "1.8"
     }
+    composeOptions {
+        kotlinCompilerExtensionVersion = androidLibraries.versions.compose.compiler.get()
+    }
 
-    packagingOptions {
-        exclude("META-INF/core.kotlin_module")
-        exclude("META-INF/kotlinx-coroutines-core.kotlin_module")
+    packaging {
+        resources {
+            excludes += "META-INF/core.kotlin_module"
+            excludes += "META-INF/kotlinx-coroutines-core.kotlin_module"
+        }
     }
 
     testOptions {
