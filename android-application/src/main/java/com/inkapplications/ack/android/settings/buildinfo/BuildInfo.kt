@@ -9,7 +9,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import com.inkapplications.ack.android.R
 import com.inkapplications.ack.android.ui.theme.AckTheme
-import com.inkapplications.android.extensions.compose.ui.longClickable
+import com.inkapplications.android.extensions.compose.longClickable
 
 /**
  * A column of information text about the build.

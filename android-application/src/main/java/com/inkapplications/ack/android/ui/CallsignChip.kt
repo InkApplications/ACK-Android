@@ -3,10 +3,7 @@ package com.inkapplications.ack.android.ui
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Icon
-import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Verified
@@ -14,11 +11,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
 import com.inkapplications.ack.android.R
 import com.inkapplications.ack.android.ui.theme.AckTheme
 
-@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun CallsignChip(
     callsign: String,
@@ -27,18 +22,14 @@ fun CallsignChip(
     border: BorderStroke? = null,
 ) {
     if (onClick != null) {
-        Surface(
-            shape = RoundedCornerShape(24.dp),
-            elevation = 1.dp,
+        AckChip(
             border = border,
             onClick = onClick,
         ) {
-            CallsignChipContent(callsign, verified, onClick)
+            CallsignChipContent(callsign, verified)
         }
     } else {
-        Surface(
-            shape = RoundedCornerShape(24.dp),
-            elevation = 1.dp,
+        AckChip(
             border = border,
         ) {
             CallsignChipContent(callsign, verified)
@@ -50,11 +41,9 @@ fun CallsignChip(
 private fun CallsignChipContent(
     callsign: String,
     verified: Boolean,
-    onClick: (() -> Unit)? = null,
 ) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
-        modifier = Modifier.padding(AckTheme.spacing.item),
     ) {
         if (verified) Icon(
             Icons.Default.Verified,

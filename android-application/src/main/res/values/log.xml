@@ -2,6 +2,7 @@
 <resources>
     <string name="log_icon_ax25">Radio Packet</string>
     <string name="log_icon_aprs_is">Internet Packet</string>
+    <string name="log_icon_tnc">TNC Packet</string>
     <string name="log_icon_local">Local Packet</string>
     <string name="log_index_empty">No Logs Received Yet</string>
     <string name="log_details_title">View Station Details</string>

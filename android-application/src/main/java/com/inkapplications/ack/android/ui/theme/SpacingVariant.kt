@@ -9,7 +9,6 @@ data class SpacingVariant(
     val item: Dp,
     val icon: Dp,
     val clickSafety: Dp,
-    val placeholderIcon: Dp,
     val bottomBarHeight: Dp = 60.dp,
     val fabSize: Dp = 40.dp,
 ) {

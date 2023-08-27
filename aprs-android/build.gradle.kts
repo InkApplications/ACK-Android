@@ -40,6 +40,8 @@ dependencies {
     implementation(androidLibraries.androidx.room.runtime)
     implementation(androidLibraries.androidx.room.ktx)
 
+    implementation(projects.androidExtensions)
+
     api(inkLibraries.ack.codec)
     api(inkLibraries.ack.client)
     api(inkLibraries.ack.structures)

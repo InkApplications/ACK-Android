@@ -17,7 +17,6 @@ import com.inkapplications.ack.android.ui.CallsignChip
 import com.inkapplications.ack.android.ui.theme.AckScreen
 import com.inkapplications.ack.android.ui.theme.AckTheme
 import com.inkapplications.ack.android.ui.NavigationRow
-import com.inkapplications.android.extensions.compose.ui.longClickable
 
 @Composable
 fun SettingsScreen(

@@ -5,6 +5,9 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
+    <uses-permission android:name="android.permission.BLUETOOTH"/>
+    <uses-permission android:name="android.permission.BLUETOOTH_SCAN" />
+    <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
     <application
         android:icon="@mipmap/ic_launcher"
         android:roundIcon="@mipmap/ic_launcher_round"
@@ -27,10 +30,10 @@
         <activity android:name="com.inkapplications.ack.android.settings.SettingsActivity" />
         <activity android:name="com.inkapplications.ack.android.settings.agreement.UserAgreementActivity" />
         <activity android:name="com.inkapplications.ack.android.capture.messages.create.CreateConversationActivity" />
+        <activity android:name="com.inkapplications.ack.android.tnc.ConnectTncActivity" />
         <activity android:name="com.inkapplications.ack.android.onboard.OnboardActivity" android:windowSoftInputMode="adjustResize" />
         <activity android:name="com.inkapplications.ack.android.settings.license.LicenseEditActivity" android:windowSoftInputMode="adjustResize" />
-        <service android:name=".capture.service.AudioCaptureService" android:foregroundServiceType="microphone|location" />
-        <service android:name=".capture.service.InternetCaptureService" android:foregroundServiceType="location" />
+        <service android:name=".capture.service.BackgroundCaptureService" android:foregroundServiceType="microphone|location" />
         <activity
             android:name="com.google.android.gms.oss.licenses.OssLicensesMenuActivity"
             android:theme="@style/AckActionBarTheme.Compat.DayNight"

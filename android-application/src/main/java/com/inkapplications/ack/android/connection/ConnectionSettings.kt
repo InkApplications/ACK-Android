@@ -4,12 +4,14 @@ import com.inkapplications.ack.android.settings.*
 import com.inkapplications.ack.android.R
 import com.inkapplications.ack.android.input.IntegerValidator
 import com.inkapplications.ack.android.input.RegexValidator
+import com.inkapplications.ack.android.input.enumInputValidator
 import com.inkapplications.ack.android.settings.transformer.MileTransformer
 import com.inkapplications.ack.android.settings.transformer.OptionalIntTransformer
 import com.inkapplications.ack.android.settings.transformer.SentinelOptionalTransformer
 import com.inkapplications.ack.android.settings.transformer.StationAddressTransformer
 import com.inkapplications.ack.android.settings.transformer.Transformer
 import com.inkapplications.ack.android.settings.transformer.TrimmingTransformer
+import com.inkapplications.ack.android.settings.transformer.enumTransformer
 import com.inkapplications.ack.android.settings.transformer.plus
 import com.inkapplications.android.extensions.StringResources
 import com.inkapplications.ack.data.*
@@ -95,11 +97,27 @@ class ConnectionSettings @Inject constructor(
         ),
     )
 
+    val driver = StringBackedSetting(
+        key = "connection.driver",
+        categoryName = resources.getString(R.string.connection_setting_category_name),
+        defaultData = DriverSelection.Audio,
+        name = resources.getString(R.string.transmit_settings_driver),
+        visibility = SettingVisibility.Dev,
+        storageTransformer = enumTransformer(),
+        inputValidator = enumInputValidator<DriverSelection>(
+            error = resources.getString(
+                R.string.settings_validation_not_in_set,
+                DriverSelection.values().joinToString { it.name },
+            ),
+        ),
+    )
+
     override val settings: List<Setting> = listOf(
         address,
         passcode,
         server,
         port,
         radius,
+        driver,
     )
 }

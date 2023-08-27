@@ -1,51 +1,12 @@
 package com.inkapplications.ack.android.capture
 
+import com.inkapplications.ack.android.connection.DriverSelection
 import com.inkapplications.ack.android.log.LogItemViewState
 
 /**
  * Capture navigation and control panel options.
  */
 interface CaptureNavController {
-    /**
-     * Invoked when the user clicks the enable audio capture button.
-     */
-    fun onAudioCaptureEnableClick()
-
-    /**
-     * Invoked when the user clicks the disable audio capture button.
-     */
-    fun onAudioCaptureDisableClick()
-
-    /**
-     * Invoked when the user clicks the enable audio transmit button.
-     */
-    fun onAudioTransmitEnableClick()
-
-    /**
-     * Invoked when the user clicks the disable audio transmit button.
-     */
-    fun onAudioTransmitDisableClick()
-
-    /**
-     * Invoked when the user clicks the enable internet capture button.
-     */
-    fun onInternetCaptureEnableClick()
-
-    /**
-     * Invoked when the user clicks the enable internet capture button.
-     */
-    fun onInternetCaptureDisableClick()
-
-    /**
-     * Invoked when the user clicks the disable internet transmit button.
-     */
-    fun onInternetTransmitEnableClick()
-
-    /**
-     * Invoked when the user clicks the disable internet transmit button.
-     */
-    fun onInternetTransmitDisableClick()
-
     /**
      * Invoked when the user clicks to enable location tracking on the map.
      */
@@ -67,4 +28,24 @@ interface CaptureNavController {
      * Invoked when the user clicks on the settings button.
      */
     fun onSettingsClick()
+
+    /**
+     * Invoked when the user clicks on the device connection settings button.
+     */
+    fun onDeviceSettingsClick()
+
+    /**
+     * Invoked when the user clicks on the connected/disconnected button toggle.
+     */
+    fun onConnectionToggleClick()
+
+    /**
+     * Invoked when the user clicks on the transmit position toggle.
+     */
+    fun onPositionTransmitToggleClick()
+
+    /**
+     * Invoked when the user selects a new radio driver.
+     */
+    fun onDriverSelected(selection: DriverSelection)
 }

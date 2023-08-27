@@ -33,7 +33,7 @@ fun EmptyBox(
             imageVector = icon,
             contentDescription = null,
             tint = AckTheme.colors.foregroundInactive,
-            modifier = Modifier.size(AckTheme.spacing.placeholderIcon),
+            modifier = Modifier.size(AckTheme.sizing.dispayIcon),
         )
         Text(caption)
     }

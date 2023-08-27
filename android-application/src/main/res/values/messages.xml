@@ -9,5 +9,6 @@
     <string name="messages_create_start_action">Start Messaging %s</string>
     <string name="messages_item_icon_ax25_description">Radio Packet</string>
     <string name="messages_item_icon_internet_description">Internet Packet</string>
+    <string name="messages_item_icon_tnc_description">TNC Packet</string>
     <string name="messages_item_icon_local_description">Transmitted Packet</string>
 </resources>

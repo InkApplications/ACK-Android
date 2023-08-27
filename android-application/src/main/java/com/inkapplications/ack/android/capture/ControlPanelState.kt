@@ -1,5 +1,6 @@
 package com.inkapplications.ack.android.capture
 
+import com.inkapplications.ack.android.connection.DriverSelection
 import com.inkapplications.android.extensions.control.ControlState
 
 /**
@@ -7,33 +8,21 @@ import com.inkapplications.android.extensions.control.ControlState
  */
 sealed interface ControlPanelState {
     /**
-     * View state of the audio capture toggle button.
+     * State of the connection toggle button.
      */
-    val audioCaptureState: ControlState
+    val connectState: ControlState
 
     /**
-     * View state of the internet capture toggle button.
+     * State of the position toggle button.
      */
-    val internetCaptureState: ControlState
-
-    /**
-     * View state of the internet transmission toggle button.
-     */
-    val internetTransmitState: ControlState
-
-    /**
-     * View state of the audio transmission toggle button.
-     */
-    val audioTransmitState: ControlState
+    val positionTransmitState: ControlState
 
     /**
      * Object used before any data has been loaded successfully.
      */
     object Initial: ControlPanelState {
-        override val audioCaptureState: ControlState = ControlState.Hidden
-        override val internetCaptureState: ControlState = ControlState.Hidden
-        override val internetTransmitState: ControlState = ControlState.Hidden
-        override val audioTransmitState: ControlState = ControlState.Hidden
+        override val connectState: ControlState = ControlState.Disabled
+        override val positionTransmitState: ControlState = ControlState.Disabled
     }
 
     /**
@@ -44,15 +33,30 @@ sealed interface ControlPanelState {
          * The user's current callsign, as a readable string.
          */
         val userCallsign: String,
-        override val audioCaptureState: ControlState,
-        override val internetCaptureState: ControlState,
-        override val internetTransmitState: ControlState,
-        override val audioTransmitState: ControlState,
 
         /**
-         * A readable string for the user's current audio level when
-         * capturing audio.
+         * Level of the input volume, if applicable to the connection.
          */
-        val audioCaptureLevel: String,
+        val volumeLevel: Float?,
+
+        /**
+         * Name of the current connection type.
+         */
+        val connection: String,
+
+        /**
+         * Data type for the current connection
+         */
+        val connectionType: DriverSelection,
+
+        /**
+         * State of the connection toggle button.
+         */
+        override val connectState: ControlState,
+
+        /**
+         * State of the position toggle button.
+         */
+        override val positionTransmitState: ControlState,
     ): ControlPanelState
 }

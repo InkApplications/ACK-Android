@@ -13,4 +13,5 @@
     <string name="settings_advanced_toggle_label">Show Advanced</string>
     <string name="settings_advanced_label">Advanced</string>
     <string name="settings_dev_label">Dev</string>
+    <string name="settings_validation_not_in_set">Must be one of: %s</string>
 </resources>

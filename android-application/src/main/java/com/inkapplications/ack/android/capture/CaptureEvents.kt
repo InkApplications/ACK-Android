@@ -1,20 +1,40 @@
 package com.inkapplications.ack.android.capture
 
-import android.Manifest
-import com.inkapplications.android.extensions.location.LocationAccess
 import com.inkapplications.ack.android.connection.ConnectionSettings
+import com.inkapplications.ack.android.connection.DriverSelection
 import com.inkapplications.ack.android.settings.SettingsReadAccess
+import com.inkapplications.ack.android.settings.SettingsWriteAccess
 import com.inkapplications.ack.android.settings.observeData
 import com.inkapplications.ack.android.settings.observeString
+import com.inkapplications.ack.android.settings.setData
 import com.inkapplications.ack.android.transmit.TransmitSettings
 import com.inkapplications.ack.data.drivers.PacketDriver
 import com.inkapplications.ack.data.drivers.PacketDrivers
-import com.inkapplications.ack.structures.*
+import com.inkapplications.ack.structures.AprsPacket
+import com.inkapplications.ack.structures.EncodingConfig
+import com.inkapplications.ack.structures.EncodingPreference
+import com.inkapplications.ack.structures.PacketData
+import com.inkapplications.ack.structures.PacketRoute
+import com.inkapplications.android.extensions.location.LocationAccess
 import com.inkapplications.coroutines.combinePair
 import com.inkapplications.coroutines.combineTriple
 import kimchi.logger.KimchiLogger
-import kotlinx.coroutines.*
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.getAndUpdate
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.updateAndGet
+import kotlinx.coroutines.isActive
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.coroutines.coroutineContext
@@ -25,172 +45,158 @@ import kotlin.coroutines.coroutineContext
 @Singleton
 class CaptureEvents @Inject constructor(
     private val drivers: PacketDrivers,
-    private val settings: SettingsReadAccess,
+    private val readSettings: SettingsReadAccess,
+    private val writeSettings: SettingsWriteAccess,
     private val connectionSettings: ConnectionSettings,
     private val transmitSettings: TransmitSettings,
     private val locationAccess: LocationAccess,
     private val logger: KimchiLogger,
 ) {
-    private val mutableAudioListenState = MutableStateFlow(false)
-    private val mutableInternetListenState = MutableStateFlow(false)
-    private val mutableAudioTransmitState = MutableStateFlow(false)
-    private val mutableInternetTransmitState = MutableStateFlow(false)
+    private val mutableConnectionState = MutableStateFlow(ConnectionState.Disconnected)
+    private val connectionEnabled = mutableConnectionState.map { it != ConnectionState.Disconnected }.distinctUntilChanged()
+    private val mutableLocationTransmitState = MutableStateFlow(false)
+
+    private val currentDriver = readSettings.observeData(connectionSettings.driver)
+        .map {
+            when (it) {
+                DriverSelection.Audio -> drivers.afskDriver
+                DriverSelection.Internet -> drivers.internetDriver
+                DriverSelection.Tnc -> drivers.tncDriver
+            }
+        }
 
     /**
-     * Whether the application is currently capturing audio packets
+     * The current state of the selected APRS driver connection.
      */
-    val audioListenState: StateFlow<Boolean> = mutableAudioListenState
+    val connectionState: StateFlow<ConnectionState> = mutableConnectionState
 
     /**
-     * Whether the application is currently capturing internet packets
+     * Whether the option to repeatedly transmit the device location is enabled.
      */
-    val internetListenState: StateFlow<Boolean> = mutableInternetListenState
-
-    /**
-     * Whether the application is currently transmitting audio packets
-     */
-    val audioTransmitState: StateFlow<Boolean> = mutableAudioTransmitState
-
-    /**
-     * Whether the application is currently transmitting internet packets.
-     */
-    val internetTransmitState: StateFlow<Boolean> = mutableInternetTransmitState
+    val locationTransmitState: StateFlow<Boolean> = mutableLocationTransmitState
 
     /**
      * The current audio input level, or null when not capturing.
      */
     val audioInputVolume = drivers.afskDriver.volume
 
-    private val combinedTransmitState = mutableInternetTransmitState.combinePair(mutableAudioTransmitState)
-
     /**
-     * Android permissions required for audio capture.
-     */
-    val audioCapturePermissions = drivers.afskDriver.receivePermissions
-
-    /**
-     * Android permissions required for audio transmit.
-     */
-    val audioTransmitPermissions = drivers.afskDriver.transmitPermissions + Manifest.permission.ACCESS_FINE_LOCATION
-
-    /**
-     * Android permissions required for internet capture.
-     */
-    val internetCapturePermissions = drivers.internetDriver.receivePermissions
-
-    /**
-     * Android permissions required for internet transmit.
-     */
-    val internetTransmitPermissions = drivers.internetDriver.transmitPermissions + Manifest.permission.ACCESS_FINE_LOCATION
-
-    /**
-     * Connect the audio driver for listening to audio packets.
+     * Change the current APRS driver.
      *
-     * This must be running for audio transmit to work, in addition to capture.
+     * Note: This will disconnect the current driver and location state
+     * if enabled, and will require a reconnection.
      */
-    suspend fun connectAudio() {
-        coroutineScope {
-            launch { listenForPackets() }
-            launch {
-                mutableAudioTransmitState.collectLatest {
-                    if (it) transmitLoop(drivers.afskDriver)
-                }
+    fun changeDriver(value: DriverSelection) {
+        mutableConnectionState.value = ConnectionState.Disconnected
+        mutableLocationTransmitState.value = false
+        writeSettings.setData(connectionSettings.driver, value)
+    }
+
+    /**
+     * Connect or disconnect the currently selected APRS driver.
+     *
+     * This will transition through the [ConnectionState.Connecting] state
+     * until the driver is ready during connection.
+     */
+    fun toggleConnectionState() {
+        mutableConnectionState.updateAndGet {
+            when (it) {
+                ConnectionState.Disconnected -> ConnectionState.Connecting
+                ConnectionState.Connecting, ConnectionState.Connected -> ConnectionState.Disconnected
+            }
+        }.also {
+            if (it == ConnectionState.Disconnected) {
+                mutableLocationTransmitState.value = false
             }
         }
     }
 
     /**
-     * Connect to the internet capture driver for capturing packets via APRS-IS
-     *
-     * This must be running for internet transmit to work in addition to
-     * capture.
+     * Enable/disable the repeated transmission of device location.
      */
-    suspend fun connectInternet() {
-        coroutineScope {
-            launch { listenForInternetPackets() }
-            launch {
-                mutableInternetTransmitState.collectLatest {
-                    if (it) transmitLoop(drivers.internetDriver)
-                }
+    fun toggleLocationTransmitState() {
+        mutableLocationTransmitState.getAndUpdate { !it }
+    }
+
+    /**
+     * Bind listeners required to start the collection of APRS packets.
+     *
+     * This should be called from an activity to handle the start of the
+     * [BackgroundCaptureService] as well as handling permissions requests
+     * that drivers may need.
+     */
+    suspend fun collectConnectionEvents(
+        requestPermissions: suspend (permissions: Set<String>) -> Boolean,
+        startBackgroundService: suspend () -> Unit,
+        stopBackgroundService: suspend () -> Unit,
+    ) {
+        connectionEnabled.collectLatest { connect ->
+            if (connect) {
+                currentDriver
+                    .onEach { logger.debug { "Current Driver: ${it::class.simpleName}" } }
+                    .collectLatest { driver ->
+                        if (requestPermissions(driver.receivePermissions)) {
+                            startBackgroundService()
+                        } else {
+                            logger.info("Permissions not granted. Stopping Service")
+                            stopBackgroundService()
+                        }
+                    }
+            } else {
+                logger.info("Disconnecting Background Service.")
+                stopBackgroundService()
             }
         }
     }
 
     /**
-     * Start transmitting audio packets.
+     * Start the collection and transmission of APRS packets for the current
+     * driver.
      *
-     * Note: [connectAudio] must be running for this to have an effect.
-     */
-    fun startAudioTransmit() {
-        mutableAudioTransmitState.value = true
-    }
-
-    /**
-     * Stop transmitting audio packets.
-     */
-    fun stopAudioTransmit() {
-        mutableAudioTransmitState.value = false
-    }
-
-    /**
-     * Start transmitting internet packets.
+     * This should be called from a background service so that the application
+     * does not need to remain in the foreground.
      *
-     * Note: [connectInternet] must be running for this to have an effect.
+     * This method will suspend indefinitely while connected! to stop
+     * transmission, cancel the job that this is called inside.
+     * Cancellation is handled gracefully and will set the connection state
+     * back to [ConnectionState.Disconnected] when canceled.
+     *
+     * Note that the driver may become disconnected for external reasons,
+     * such as when changing the source driver, which will also cause the
+     * suspension to end.
      */
-    fun startInternetTransmit() {
-        mutableInternetTransmitState.value = true
-    }
-
-    /**
-     * Stop transmitting internet packets.
-     */
-    fun stopInternetTransmit() {
-        mutableInternetTransmitState.value = false
-    }
-
-    /**
-     * Start listening to audio packets.
-     */
-    private suspend fun listenForPackets() {
-        if (mutableAudioListenState.value) {
-            logger.error("Tried to listen for audio packets while already active")
-            return
-        }
-        try {
-            mutableAudioListenState.value = true
-            drivers.afskDriver.connect()
-        } finally {
-            logger.trace("Audio service cancelling")
-            mutableAudioListenState.value = false
-        }
-    }
-
-    /**
-     * Start listening to internet packets.
-     */
-    private suspend fun listenForInternetPackets() {
-        if (mutableInternetListenState.value) {
-            logger.error("Tried to listen for internet packets while already active")
-            return
-        }
-        try {
-            mutableInternetListenState.value = true
-            drivers.internetDriver.connect()
-        } catch (e: Throwable) {
-            logger.error("Internet listen terminated", e)
-        } finally {
-            logger.trace("Internet service cancelling")
-            mutableInternetListenState.value = false
-        }
+    suspend fun connectDriver() {
+        logger.info("Connect Driver")
+        currentDriver.combinePair(connectionState.filter { it != ConnectionState.Connected })
+            .collectLatest { (driver, connection) ->
+                if (connection != ConnectionState.Connecting) return@collectLatest
+                logger.debug { "Connecting to Driver: ${driver::class.simpleName}" }
+                coroutineScope {
+                    mutableConnectionState.value = ConnectionState.Connected
+                    val transmitJob = launch { transmitLoop(driver) }
+                    launch {
+                        try {
+                            driver.connect()
+                        } catch (e: Throwable) {
+                            logger.error(e) { "Driver connection failed" }
+                        } finally {
+                            logger.info("Driver connection canceling")
+                            transmitJob.cancel()
+                            mutableConnectionState.value = ConnectionState.Disconnected
+                            mutableLocationTransmitState.value = false
+                        }
+                    }
+                }
+            }
     }
 
     /**
      * Transmit an APRS packet to the specified driver at the configured interval.
      */
     private suspend fun transmitLoop(driver: PacketDriver) {
-        settings.observeData(connectionSettings.address)
+        readSettings.observeData(connectionSettings.address)
             .filterNotNull()
-            .combine(settings.observeData(transmitSettings.digipath)) { callsign, path ->
+            .combine(readSettings.observeData(transmitSettings.digipath)) { callsign, path ->
                 TransmitPrototype(
                     path = path,
                     destination = transmitSettings.destination.defaultData,
@@ -202,31 +208,31 @@ class CaptureEvents @Inject constructor(
                     distance = transmitSettings.distance.defaultData,
                 )
             }
-            .combine(settings.observeData(transmitSettings.symbol)) { prototype, symbol ->
+            .combine(readSettings.observeData(transmitSettings.symbol)) { prototype, symbol ->
                 prototype.copy(symbol = symbol)
             }
-            .combine(settings.observeString(transmitSettings.comment)) { prototype, comment ->
+            .combine(readSettings.observeString(transmitSettings.comment)) { prototype, comment ->
                 prototype.copy(comment = comment)
             }
-            .combine(settings.observeData(transmitSettings.destination)) { prototype, destination ->
+            .combine(readSettings.observeData(transmitSettings.destination)) { prototype, destination ->
                 prototype.copy(destination = destination)
             }
-            .combine(settings.observeData(transmitSettings.minRate)) { prototype, rate ->
+            .combine(readSettings.observeData(transmitSettings.minRate)) { prototype, rate ->
                 prototype.copy(minRate = rate)
             }
-            .combine(settings.observeData(transmitSettings.maxRate)) { prototype, rate ->
+            .combine(readSettings.observeData(transmitSettings.maxRate)) { prototype, rate ->
                 prototype.copy(maxRate = rate)
             }
-            .combine(settings.observeData(transmitSettings.distance)) { prototype, distance ->
+            .combine(readSettings.observeData(transmitSettings.distance)) { prototype, distance ->
                 prototype.copy(distance = distance)
             }
             .flatMapLatest { prototype ->
                 locationAccess.observeLocationChanges(prototype.maxRate, prototype.distance)
                     .map { prototype to it }
             }
-            .combineTriple(combinedTransmitState)
-            .collectLatest { (prototype, update) ->
-                while (coroutineContext.isActive) {
+            .combineTriple(locationTransmitState)
+            .collectLatest { (prototype, update, transmitting) ->
+                while (coroutineContext.isActive && transmitting) {
                     val packet = AprsPacket(
                         route = PacketRoute(
                             source = prototype.callsign,
