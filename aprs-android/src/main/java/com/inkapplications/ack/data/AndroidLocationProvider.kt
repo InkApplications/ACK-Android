@@ -25,7 +25,7 @@ import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
-import kotlin.time.Duration
+import kotlin.time.Duration.Companion.minutes
 import kotlin.time.ExperimentalTime
 
 @Reusable
@@ -33,8 +33,7 @@ class AndroidLocationProvider @Inject constructor(
     private val locationManager: LocationManager,
     private val logger: KimchiLogger,
 ) {
-    @OptIn(ExperimentalTime::class)
-    private val MIN_TIME = Duration.minutes(5).inWholeMilliseconds
+    private val MIN_TIME = 5.minutes.inWholeMilliseconds
     private val MIN_DISTANCE = 1000.scale(Kilo).meters.toFloat()
 
     @RequiresPermission(Manifest.permission.ACCESS_FINE_LOCATION)

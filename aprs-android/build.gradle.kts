@@ -5,6 +5,7 @@ plugins {
 }
 
 android {
+    namespace = "com.inkapplications.ack.data"
     compileSdk = 33
     ndkVersion = "21.3.6528147"
 
@@ -28,8 +29,17 @@ android {
             path = File("${projectDir}/src/main/cpp/CMakeLists.txt")
         }
     }
-    packagingOptions {
-        exclude("META-INF/kotlinx-coroutines-core.kotlin_module")
+    packaging {
+        resources {
+            excludes += "META-INF/kotlinx-coroutines-core.kotlin_module"
+        }
+    }
+    compileOptions {
+        targetCompatibility = JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.VERSION_1_8
+    }
+    kotlinOptions {
+        jvmTarget = "1.8"
     }
 }
 

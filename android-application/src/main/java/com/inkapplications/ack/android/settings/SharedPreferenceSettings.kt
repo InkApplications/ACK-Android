@@ -2,7 +2,6 @@ package com.inkapplications.ack.android.settings
 
 import android.content.SharedPreferences
 import kotlinx.coroutines.channels.awaitClose
-import kotlinx.coroutines.channels.sendBlocking
 import kotlinx.coroutines.channels.trySendBlocking
 import kotlinx.coroutines.flow.*
 import javax.inject.Inject
@@ -13,7 +12,7 @@ import javax.inject.Inject
 class SharedPreferenceSettings @Inject constructor(
     private val preferences: SharedPreferences
 ): SettingsReadAccess, SettingsWriteAccess {
-    private val updates = callbackFlow<String> {
+    private val updates = callbackFlow {
         val listener = SharedPreferences.OnSharedPreferenceChangeListener { _, key ->
             trySendBlocking(key)
         }
@@ -27,7 +26,7 @@ class SharedPreferenceSettings @Inject constructor(
 
     override fun observeStringState(setting: StringSetting): Flow<String?> {
         return updates
-            .filter { it == setting.key }
+            .filter { it == setting.key || it == null }
             .onStart { emit(setting.key) }
             .map { preferences.getString(setting.key, null) }
     }
@@ -36,14 +35,14 @@ class SharedPreferenceSettings @Inject constructor(
 
     override fun observeIntState(setting: IntSetting): Flow<Int?> {
         return updates
-            .filter { it == setting.key }
+            .filter { it == setting.key || it == null }
             .onStart { emit(setting.key) }
             .map { preferences.getOptionalInt(setting.key) }
     }
 
     override fun observeBooleanState(setting: BooleanSetting): Flow<Boolean?> {
         return updates
-            .filter { it == setting.key }
+            .filter { it == setting.key || it == null }
             .onStart { emit(setting.key) }
             .map { preferences.getOptionalBoolean(setting.key) }
     }

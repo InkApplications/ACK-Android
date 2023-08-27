@@ -19,4 +19,11 @@ subprojects {
     tasks.withType(Test::class) {
         testLogging.exceptionFormat = TestExceptionFormat.FULL
     }
+    afterEvaluate {
+        tasks.withType<org.jetbrains.kotlin.gradle.tasks.KaptGenerateStubs> {
+            kotlinOptions {
+                jvmTarget = JavaVersion.VERSION_1_8.toString()
+            }
+        }
+    }
 }
