@@ -5,6 +5,7 @@ import com.inkapplications.ack.android.connection.DriverSelection
 import com.inkapplications.ack.android.settings.LicenseData
 import com.inkapplications.ack.android.settings.Passcode
 import com.inkapplications.ack.structures.station.toStationAddress
+import com.inkapplications.android.extensions.bluetooth.BluetoothDeviceData
 import com.inkapplications.android.extensions.control.ControlState
 import inkapplications.spondee.scalar.percent
 import kotlin.test.Test
@@ -16,6 +17,8 @@ class CaptureScreenFactoryTest {
         stringResources = ParrotStringResources,
     )
 
+    private val FakeDevice = BluetoothDeviceData("", null, "", null, null, 0)
+
     @Test
     fun internetDefault() {
         val result = factory.controlPanelState(
@@ -24,7 +27,7 @@ class CaptureScreenFactoryTest {
             driverConnected = false,
             positionTransmit = false,
             license = LicenseData(),
-            tncConnectionState = ConnectionState.Disconnected,
+            connectedTncDevice = null
         )
 
         assertTrue(result is ControlPanelState.Loaded)
@@ -46,7 +49,7 @@ class CaptureScreenFactoryTest {
             license = LicenseData(
                 address = "KE0YOG-7".toStationAddress()
             ),
-            tncConnectionState = ConnectionState.Disconnected,
+            connectedTncDevice = null,
         )
 
         assertTrue(result is ControlPanelState.Loaded)
@@ -66,7 +69,7 @@ class CaptureScreenFactoryTest {
                 address = "KE0YOG-7".toStationAddress(),
                 passcode = Passcode(12345),
             ),
-            tncConnectionState = ConnectionState.Disconnected,
+            connectedTncDevice = null,
         )
 
         assertTrue(result is ControlPanelState.Loaded)
@@ -86,7 +89,7 @@ class CaptureScreenFactoryTest {
                 address = "KE0YOG-7".toStationAddress(),
                 passcode = Passcode(12345),
             ),
-            tncConnectionState = ConnectionState.Disconnected,
+            connectedTncDevice = null,
         )
 
         assertTrue(result is ControlPanelState.Loaded)
@@ -106,7 +109,7 @@ class CaptureScreenFactoryTest {
                 address = "KE0YOG-7".toStationAddress(),
                 passcode = Passcode(12345),
             ),
-            tncConnectionState = ConnectionState.Disconnected,
+            connectedTncDevice = null,
         )
 
         assertTrue(result is ControlPanelState.Loaded)
@@ -123,7 +126,7 @@ class CaptureScreenFactoryTest {
             driverConnected = false,
             positionTransmit = false,
             license = LicenseData(),
-            tncConnectionState = ConnectionState.Disconnected,
+            connectedTncDevice = null,
         )
 
         assertTrue(result is ControlPanelState.Loaded)
@@ -140,7 +143,7 @@ class CaptureScreenFactoryTest {
             driverConnected = true,
             positionTransmit = false,
             license = LicenseData(),
-            tncConnectionState = ConnectionState.Disconnected,
+            connectedTncDevice = null,
         )
 
         assertTrue(result is ControlPanelState.Loaded)
@@ -159,7 +162,7 @@ class CaptureScreenFactoryTest {
             license = LicenseData(
                 address = "KE0YOG-7".toStationAddress(),
             ),
-            tncConnectionState = ConnectionState.Disconnected,
+            connectedTncDevice = null,
         )
 
         assertTrue(result is ControlPanelState.Loaded)
@@ -178,7 +181,7 @@ class CaptureScreenFactoryTest {
             license = LicenseData(
                 address = "KE0YOG-7".toStationAddress(),
             ),
-            tncConnectionState = ConnectionState.Disconnected,
+            connectedTncDevice = null,
         )
 
         assertTrue(result is ControlPanelState.Loaded)
@@ -197,7 +200,7 @@ class CaptureScreenFactoryTest {
             license = LicenseData(
                 address = "KE0YOG-7".toStationAddress(),
             ),
-            tncConnectionState = ConnectionState.Disconnected,
+            connectedTncDevice = null,
         )
 
         assertTrue(result is ControlPanelState.Loaded)
@@ -214,7 +217,7 @@ class CaptureScreenFactoryTest {
             driverConnected = false,
             positionTransmit = false,
             license = LicenseData(),
-            tncConnectionState = ConnectionState.Disconnected,
+            connectedTncDevice = null,
         )
 
         assertTrue(result is ControlPanelState.Loaded)
@@ -231,7 +234,7 @@ class CaptureScreenFactoryTest {
             driverConnected = false,
             positionTransmit = false,
             license = LicenseData(),
-            tncConnectionState = ConnectionState.Connected,
+            connectedTncDevice = FakeDevice,
         )
 
         assertTrue(result is ControlPanelState.Loaded)
@@ -248,7 +251,7 @@ class CaptureScreenFactoryTest {
             driverConnected = true,
             positionTransmit = false,
             license = LicenseData(),
-            tncConnectionState = ConnectionState.Connected,
+            connectedTncDevice = FakeDevice,
         )
 
         assertTrue(result is ControlPanelState.Loaded)
@@ -267,7 +270,7 @@ class CaptureScreenFactoryTest {
             license = LicenseData(
                 address = "KE0YOG-7".toStationAddress(),
             ),
-            tncConnectionState = ConnectionState.Connected,
+            connectedTncDevice = FakeDevice,
         )
 
         assertTrue(result is ControlPanelState.Loaded)
@@ -286,7 +289,7 @@ class CaptureScreenFactoryTest {
             license = LicenseData(
                 address = "KE0YOG-7".toStationAddress(),
             ),
-            tncConnectionState = ConnectionState.Connected,
+            connectedTncDevice = FakeDevice,
         )
 
         assertTrue(result is ControlPanelState.Loaded)

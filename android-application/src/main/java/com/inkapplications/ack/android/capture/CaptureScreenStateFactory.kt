@@ -5,6 +5,7 @@ import com.inkapplications.ack.android.connection.DriverSelection
 import com.inkapplications.ack.android.connection.readableName
 import com.inkapplications.ack.android.settings.LicenseData
 import com.inkapplications.android.extensions.StringResources
+import com.inkapplications.android.extensions.bluetooth.BluetoothDeviceData
 import com.inkapplications.android.extensions.control.ControlState
 import dagger.Reusable
 import inkapplications.spondee.scalar.Percentage
@@ -27,7 +28,7 @@ class CaptureScreenStateFactory @Inject constructor(
         positionTransmit: Boolean,
         license: LicenseData,
         inputAudioLevel: Percentage?,
-        tncConnectionState: ConnectionState,
+        connectedTncDevice: BluetoothDeviceData?,
     ): ControlPanelState {
         return ControlPanelState.Loaded(
             userCallsign = license.address?.toString() ?: stringResources.getString(R.string.capture_callsign_missing),
@@ -35,7 +36,7 @@ class CaptureScreenStateFactory @Inject constructor(
             connection = stringResources.getString(currentDriver.readableName),
             connectState = when {
                 driverConnected -> ControlState.On
-                currentDriver == DriverSelection.Tnc && tncConnectionState != ConnectionState.Connected -> ControlState.Disabled
+                currentDriver == DriverSelection.Tnc && connectedTncDevice == null -> ControlState.Disabled
                 currentDriver == DriverSelection.Internet && license.address == null -> ControlState.Disabled
                 else -> ControlState.Off
             },
@@ -43,7 +44,7 @@ class CaptureScreenStateFactory @Inject constructor(
             positionTransmitState = when {
                 positionTransmit -> ControlState.On
                 !driverConnected -> ControlState.Disabled
-                currentDriver == DriverSelection.Tnc && tncConnectionState != ConnectionState.Connected -> ControlState.Disabled
+                currentDriver == DriverSelection.Tnc && connectedTncDevice == null -> ControlState.Disabled
                 currentDriver == DriverSelection.Internet && license.passcode == null -> ControlState.Disabled
                 license.address == null -> ControlState.Disabled
                 else -> ControlState.Off
