@@ -93,7 +93,7 @@ class TransmitSettings @Inject constructor(
     )
 
     val symbol = StringBackedSetting(
-        key = "transmit.symbol",
+        key = "transmit.symbol.normalized",
         name = resources.getString(R.string.transmit_settings_symbol),
         defaultData = Symbol.Primary('$'),
         categoryName = resources.getString(R.string.transmit_settings_category),

@@ -1,5 +1,6 @@
 package com.inkapplications.ack.android.settings
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Switch
@@ -7,10 +8,16 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.inkapplications.ack.android.R
+import com.inkapplications.ack.android.symbol.SymbolSelectorViewModel
 import com.inkapplications.ack.android.ui.theme.AckTheme
+import com.inkapplications.ack.structures.Symbol
+import com.inkapplications.ack.structures.symbolOf
 
 @Composable
 fun IntStateRow(
@@ -68,6 +75,42 @@ fun BooleanStateRow(
     )
 }
 
+/**
+ * APRS Symbol selection setting state.
+ */
+@Composable
+fun SymbolStateRow(
+    state: SettingState.StringState,
+    setting: StringBackedSetting<Symbol>,
+    symbolViewModel: SymbolSelectorViewModel = hiltViewModel(),
+    onClick: () -> Unit,
+) = Row(
+    verticalAlignment = Alignment.CenterVertically,
+    modifier = Modifier
+        .clickable(onClick = onClick)
+        .padding(vertical = AckTheme.spacing.clickSafety, horizontal = AckTheme.spacing.gutter)
+) {
+    Column {
+        WarningLabel(setting)
+        Text(setting.name, fontWeight = FontWeight.Bold)
+    }
+    Spacer(Modifier.weight(1f))
+
+    val bitmap = symbolViewModel.createBitmap(symbolOf(state.value))
+    if (bitmap != null) {
+        Image(
+            bitmap = bitmap.asImageBitmap(),
+            contentDescription = null,
+            modifier = Modifier
+                .width(24.dp)
+                .height(24.dp),
+        )
+    }
+}
+
+/**
+ * Warning label for advanced or dev settings.
+ */
 @Composable
 private fun WarningLabel(setting: Setting) {
     when (setting.visibility) {

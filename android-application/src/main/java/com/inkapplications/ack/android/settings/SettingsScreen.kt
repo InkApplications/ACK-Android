@@ -13,10 +13,13 @@ import com.inkapplications.ack.android.R
 import com.inkapplications.ack.android.input.IntPrompt
 import com.inkapplications.ack.android.input.StringPrompt
 import com.inkapplications.ack.android.settings.buildinfo.BuildInfo
+import com.inkapplications.ack.android.symbol.SymbolPrompt
 import com.inkapplications.ack.android.ui.CallsignChip
 import com.inkapplications.ack.android.ui.theme.AckScreen
 import com.inkapplications.ack.android.ui.theme.AckTheme
 import com.inkapplications.ack.android.ui.NavigationRow
+import com.inkapplications.ack.structures.Symbol
+import com.inkapplications.ack.structures.code
 
 @Composable
 fun SettingsScreen(
@@ -32,8 +35,23 @@ fun SettingsScreen(
         )
         LicenseRow(viewModel.licenseState.collectAsState(), controller)
         val promptSetting = remember { mutableStateOf<SettingState?>(null) }
-        when (val settingState = promptSetting.value) {
-            is SettingState.IntState -> IntPrompt(
+        val settingState = promptSetting.value
+        when {
+            settingState is SettingState.StringState && settingState.setting is StringBackedSetting<*> && settingState.setting.defaultData is Symbol -> {
+                val symbolSetting = settingState.setting as StringBackedSetting<Symbol>
+                SymbolPrompt(
+                    title = symbolSetting.name,
+                    value = symbolSetting.storageTransformer.toData(settingState.value),
+                    onDismiss = { promptSetting.value = null },
+                    onSubmit = {
+                        if (it != null) {
+                            controller.onStringSettingChanged(settingState, it.code)
+                        }
+                        promptSetting.value = null
+                    }
+                )
+            }
+            settingState is SettingState.IntState -> IntPrompt(
                 title = settingState.setting.name,
                 value = settingState.value,
                 validator = settingState.setting.validator,
@@ -43,7 +61,7 @@ fun SettingsScreen(
                     promptSetting.value = null
                 }
             )
-            is SettingState.StringState -> StringPrompt(
+            settingState is SettingState.StringState -> StringPrompt(
                 title = settingState.setting.name,
                 value = settingState.value,
                 validator = settingState.setting.validator,
@@ -142,14 +160,21 @@ private fun SettingsCard(
         Column {
             SettingsCategoryRow(group.name)
             group.settings.forEach { item ->
-                when (item) {
-                    is SettingState.BooleanState -> BooleanStateRow(item) {
+                val setting = item.setting
+                when {
+                    item is SettingState.StringState && setting is StringBackedSetting<*> && setting.defaultData is Symbol -> {
+                        val symbolSetting = setting as StringBackedSetting<Symbol>
+                        SymbolStateRow(item, symbolSetting) {
+                            promptSetting.value = item
+                        }
+                    }
+                    item is SettingState.BooleanState -> BooleanStateRow(item) {
                         controller.onSwitchSettingChanged(item, it)
                     }
-                    is SettingState.IntState -> IntStateRow(item) {
+                    item is SettingState.IntState -> IntStateRow(item) {
                         promptSetting.value = item
                     }
-                    is SettingState.StringState -> StringStateRow(item) {
+                    item is SettingState.StringState -> StringStateRow(item) {
                         promptSetting.value = item
                     }
                 }

@@ -17,7 +17,7 @@ import javax.inject.Inject
 class MarkerViewStateFactory @Inject constructor(
     private val symbolFactory: SymbolFactory,
 ): ViewStateFactory<CapturedPacket, MarkerViewState?> {
-    private val defaultWeatherSymbol = symbolOf('/', 'W')
+    private val defaultWeatherSymbol = symbolOf('W', '/')
 
     override fun create(data: CapturedPacket): MarkerViewState? {
         val mapable = data.parsed.data as? Mapable ?: return null
