@@ -7,11 +7,11 @@ import kotlin.test.assertEquals
 class SymbolTransformerTest {
     @Test
     fun toStorage() {
-        assertEquals("/$", Symbol.Primary('$').let(SymbolTransformer::toStorage))
+        assertEquals("$/", Symbol.Primary('$').let(SymbolTransformer::toStorage))
     }
 
     @Test
     fun toData() {
-        assertEquals(Symbol.Primary('$'), SymbolTransformer.toData("/$"))
+        assertEquals(Symbol.Primary('$'), SymbolTransformer.toData("$/"))
     }
 }

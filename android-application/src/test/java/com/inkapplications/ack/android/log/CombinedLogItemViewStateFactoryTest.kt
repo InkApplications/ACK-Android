@@ -35,7 +35,7 @@ class CombinedLogItemViewStateFactoryTest {
             id = 123L,
             packet = PacketData.Position(
                 coordinates = GeoCoordinates(12f.latitude, 34f.longitude),
-                symbol = symbolOf('/', '-'),
+                symbol = symbolOf('-', '/'),
                 comment = "Test Position",
             ).toTestPacket(),
             metric = false,
@@ -51,7 +51,7 @@ class CombinedLogItemViewStateFactoryTest {
             packet = PacketData.Position(
                 comment = "",
                 coordinates = GeoCoordinates(12f.latitude, 34f.longitude),
-                symbol = symbolOf('/', '-'),
+                symbol = symbolOf('-', '/'),
             ).toTestPacket(),
             metric = false,
         )
@@ -89,7 +89,7 @@ class CombinedLogItemViewStateFactoryTest {
             id = 123L,
             packet = PacketData.ObjectReport(
                 coordinates = GeoCoordinates(12f.latitude, 34f.longitude),
-                symbol = symbolOf('/', '-'),
+                symbol = symbolOf('-', '/'),
                 comment = "Hello World",
                 name = "Test Object",
                 state = ReportState.Live,
@@ -106,7 +106,7 @@ class CombinedLogItemViewStateFactoryTest {
             id = 123L,
             packet = PacketData.ObjectReport(
                 coordinates = GeoCoordinates(12f.latitude, 34f.longitude),
-                symbol = symbolOf('/', '-'),
+                symbol = symbolOf('-', '/'),
                 name = "Test Object",
                 comment = " ",
                 state = ReportState.Live,
@@ -123,7 +123,7 @@ class CombinedLogItemViewStateFactoryTest {
             id = 123L,
             packet = PacketData.ItemReport(
                 coordinates = GeoCoordinates(12f.latitude, 34f.longitude),
-                symbol = symbolOf('/', '-'),
+                symbol = symbolOf('-', '/'),
                 name = "Test Item",
                 comment = "Hello World",
                 state = ReportState.Live,
@@ -140,7 +140,7 @@ class CombinedLogItemViewStateFactoryTest {
             id = 123L,
             packet = PacketData.ItemReport(
                 coordinates = GeoCoordinates(12f.latitude, 34f.longitude),
-                symbol = symbolOf('/', '-'),
+                symbol = symbolOf('-', '/'),
                 name = "Test Item",
                 comment = " ",
                 state = ReportState.Live,

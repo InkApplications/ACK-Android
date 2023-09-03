@@ -21,7 +21,7 @@ class AndroidSymbolFactory @Inject constructor(
     private val resources = context.resources
 
     override val defaultSymbol by lazy {
-        createSymbol(symbolOf('/', '"'))
+        createSymbol(symbolOf('"', '/'))
     }
 
     override fun createSymbol(symbol: Symbol): Bitmap? {
