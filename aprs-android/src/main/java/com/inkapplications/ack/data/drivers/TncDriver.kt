@@ -17,6 +17,7 @@ import com.inkapplications.coroutines.filterItems
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.filterNotNull
@@ -39,16 +40,18 @@ class TncDriver @Inject constructor(
      */
     private val SPP_UID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB")
 
-    private val connectingDevice = MutableStateFlow<BluetoothDeviceData?>(null)
-    private val connectedDevice = MutableStateFlow<BluetoothDeviceData?>(null)
+    private val mutableConnectingDevice = MutableStateFlow<BluetoothDeviceData?>(null)
+    private val mutableConnectedDevice = MutableStateFlow<BluetoothDeviceData?>(null)
     private val inputStream = MutableStateFlow<InputStream?>(null)
     private val outputStream = MutableStateFlow<OutputStream?>(null)
     private val networkDevices = bluetoothAccess.devices
         .filterItems { it.majorClass == BluetoothClass.Device.Major.NETWORKING }
 
+    val connectedDevice: StateFlow<BluetoothDeviceData?> = mutableConnectedDevice
+
     val deviceData: Flow<ConnectTncData> = combine(
         connectedDevice,
-        connectingDevice,
+        mutableConnectingDevice,
         networkDevices,
     ) { connected, connecting, devices ->
         ConnectTncData(
@@ -66,22 +69,22 @@ class TncDriver @Inject constructor(
 
     @RequiresPermission(allOf = [Manifest.permission.BLUETOOTH_CONNECT, Manifest.permission.BLUETOOTH_SCAN])
     fun connectDevice(device: BluetoothDeviceData) {
-        connectingDevice.value = device
+        mutableConnectingDevice.value = device
         bluetoothAccess.connect(device, SPP_UID) { input, output ->
-            connectedDevice.value = device
-            connectingDevice.value = null
+            mutableConnectedDevice.value = device
+            mutableConnectingDevice.value = null
             inputStream.value = input
             outputStream.value = output
-            connectedDevice.filter { it == null }.first()
+            mutableConnectedDevice.filter { it == null }.first()
             disconnect()
         }
     }
 
     fun disconnect() {
-        connectingDevice.value = null
+        mutableConnectingDevice.value = null
         inputStream.value = null
         outputStream.value = null
-        connectedDevice.value = null
+        mutableConnectedDevice.value = null
     }
 
     override suspend fun transmitPacket(packet: AprsPacket, encodingConfig: EncodingConfig) {

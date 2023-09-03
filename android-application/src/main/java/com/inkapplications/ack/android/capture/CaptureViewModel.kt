@@ -30,7 +30,7 @@ class CaptureViewModel @Inject constructor(
         captureEvents.audioInputVolume,
         captureEvents.connectionState,
         captureEvents.locationTransmitState,
-        drivers.tncDriver.deviceData,
+        drivers.tncDriver.connectedDevice,
     ) { driver, license, audioInputVolume, connectedState, positionTransmitState, tncData ->
         captureScreenStateFactory.controlPanelState(
             currentDriver = driver,
@@ -38,7 +38,7 @@ class CaptureViewModel @Inject constructor(
             positionTransmit = positionTransmitState,
             license = license,
             inputAudioLevel = audioInputVolume,
-            tncConnectionState = tncData.toConnectionState(),
+            connectedTncDevice = tncData,
         )
     }.stateIn(viewModelScope, SharingStarted.Eagerly, ControlPanelState.Initial)
 }
