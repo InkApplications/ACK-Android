@@ -4,6 +4,7 @@ package com.inkapplications.ack.android.capture
 
 import android.content.Context
 import android.view.View
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -60,8 +61,9 @@ fun CaptureScreen(
     controller: CaptureNavController,
     viewModel: CaptureViewModel = hiltViewModel(),
 ) = AckScreen {
-    val navController = rememberNavController()
     val settingsSheetState = rememberBottomSheetScaffoldState()
+    val navController = rememberNavController()
+    navController.enableOnBackPressed(!settingsSheetState.bottomSheetState.isExpanded)
     val captureScreenState = viewModel.controlPanelState.collectAsState()
     SettingsSheetWrapper(
         settingsSheetState = settingsSheetState,
@@ -204,6 +206,9 @@ private fun CaptureSettingsSheet(
     settingsSheetState: BottomSheetScaffoldState,
 ) = Column(horizontalAlignment = Alignment.CenterHorizontally) {
     val scope = rememberCoroutineScope()
+    BackHandler(enabled = settingsSheetState.bottomSheetState.isExpanded) {
+        scope.launch { settingsSheetState.bottomSheetState.collapse() }
+    }
     Row(
         horizontalArrangement = Arrangement.Center,
         modifier = Modifier.fillMaxWidth(),
