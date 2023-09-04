@@ -9,8 +9,8 @@
     <string name="capture_controls_expand_action">Controls</string>
     <string name="capture_controls_collapse_action">Close</string>
     <string name="capture_controls_connection_type_unknown">Unknown</string>
-    <string name="capture_controls_connection_off">Receive Off</string>
-    <string name="capture_controls_connection_on">Receiving</string>
+    <string name="capture_controls_connection_off">Not Connected</string>
+    <string name="capture_controls_connection_on">Connected</string>
     <string name="capture_controls_position_off">Position Disabled</string>
     <string name="capture_controls_position_on">Position Enabled</string>
     <string name="capture_controls_settings_name">Settings</string>

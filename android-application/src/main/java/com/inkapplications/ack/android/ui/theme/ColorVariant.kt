@@ -24,7 +24,7 @@ data class ColorVariant(
         secondary = accent,
         secondaryVariant = accent,
         background = background,
-        surface = surface,
+        surface = background,
         error = error,
         onPrimary = onAccent,
         onSecondary = onAccent,

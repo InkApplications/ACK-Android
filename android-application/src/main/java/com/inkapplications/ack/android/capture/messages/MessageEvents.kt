@@ -1,6 +1,7 @@
 package com.inkapplications.ack.android.capture.messages
 
 import com.inkapplications.ack.android.connection.ConnectionSettings
+import com.inkapplications.ack.android.connection.DriverSelection
 import com.inkapplications.ack.android.settings.SettingsReadAccess
 import com.inkapplications.ack.android.settings.observeData
 import com.inkapplications.ack.android.settings.observeString
@@ -45,6 +46,15 @@ class MessageEvents @Inject constructor(
                 ?: flowOf(emptyList())
         }
         .onEach { logger.debug("Found ${it.size} conversations") }
+
+    private val currentDriver = settings.observeData(connectionSettings.driver)
+        .map {
+            when (it) {
+                DriverSelection.Audio -> drivers.afskDriver
+                DriverSelection.Internet -> drivers.internetDriver
+                DriverSelection.Tnc -> drivers.tncDriver
+            }
+        }
 
     /**
      * Observe the total list of messages sent to and from a particular station.
@@ -93,7 +103,7 @@ class MessageEvents @Inject constructor(
         )
         val encodingConfig = EncodingConfig(compression = EncodingPreference.Disfavored)
 
-        drivers.transmitAll(packet, encodingConfig)
+        currentDriver.first().transmitPacket(packet, encodingConfig)
         val encoded = codec.toString(packet)
         packetStorage.save(encoded.toByteArray(), packet, PacketSource.Local)
     }

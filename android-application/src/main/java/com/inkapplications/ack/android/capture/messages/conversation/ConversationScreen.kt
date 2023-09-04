@@ -1,5 +1,6 @@
 package com.inkapplications.ack.android.capture.messages.conversation
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -31,7 +32,9 @@ fun ConversationScreen(
 ) = AckScreen {
     Column {
         val viewState = viewModel.conversationState.collectAsState().value
-        TopAppBar {
+        TopAppBar(
+            elevation = 1.dp,
+        ) {
             IconButton(
                 onClick = controller::onNavigateUpPressed,
             ) {
@@ -56,34 +59,43 @@ fun ConversationScreen(
         }
         Surface(
             shape = AckTheme.shapes.corners,
+            color = AckTheme.colors.surface,
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(AckTheme.spacing.gutter),
         ) {
-            Row(
-               verticalAlignment = Alignment.CenterVertically,
-            ) {
-                val textFieldValue = remember { mutableStateOf("") }
-                OutlinedTextField(
-                    value = textFieldValue.value,
-                    onValueChange = { textFieldValue.value = it },
-                    singleLine = true,
-                    placeholder = { Text(stringResource(R.string.messages_conversation_send_placeholder)) },
-                    colors = TextFieldDefaults.outlinedTextFieldColors(
-                        backgroundColor = Color.Transparent,
-                        focusedBorderColor = Color.Transparent,
-                        unfocusedBorderColor = Color.Transparent,
-                        disabledBorderColor = Color.Transparent,
-                    ),
-                    modifier = Modifier.weight(1f),
+            Column {
+                Text(
+                    text = viewState.connectionText,
+                    style = AckTheme.typography.caption,
+                    modifier = Modifier.align(Alignment.CenterHorizontally).padding(top = AckTheme.spacing.item)
                 )
-                IconButton(
-                    onClick = {
-                        controller.onSendMessage(textFieldValue.value)
-                        textFieldValue.value = ""
-                    },
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
                 ) {
-                    Icon(Icons.Default.Send, stringResource(R.string.messages_conversation_send_action))
+                    val textFieldValue = remember { mutableStateOf("") }
+                    OutlinedTextField(
+                        value = textFieldValue.value,
+                        onValueChange = { textFieldValue.value = it },
+                        singleLine = true,
+                        placeholder = { Text(stringResource(R.string.messages_conversation_send_placeholder)) },
+                        colors = TextFieldDefaults.outlinedTextFieldColors(
+                            backgroundColor = Color.Transparent,
+                            focusedBorderColor = Color.Transparent,
+                            unfocusedBorderColor = Color.Transparent,
+                            disabledBorderColor = Color.Transparent,
+                        ),
+                        modifier = Modifier.weight(1f),
+                    )
+                    IconButton(
+                        onClick = {
+                            controller.onSendMessage(textFieldValue.value)
+                            textFieldValue.value = ""
+                        },
+                        enabled = viewState.sendEnabled,
+                    ) {
+                        Icon(Icons.Default.Send, stringResource(R.string.messages_conversation_send_action))
+                    }
                 }
             }
         }
