@@ -42,8 +42,8 @@ object AckTheme {
         @ReadOnlyComposable
         get() = darkColors.copy(
             foreground = ColorPalette.darkStroke,
-            background = ColorPalette.lightStrokeSoftened,
-            surface = ColorPalette.lightStroke,
+            background = ColorPalette.lightStroke,
+            surface = ColorPalette.lightStrokeSoftened,
             warnForeground = ColorPalette.darkWarning,
             dangerForeground = ColorPalette.red,
         )

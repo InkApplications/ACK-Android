@@ -46,7 +46,9 @@ fun MapScreen(
         }
     }
     Box(
-        modifier = Modifier.fillMaxSize().padding(bottom = bottomContentProtection),
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(bottom = bottomContentProtection),
         contentAlignment = Alignment.BottomEnd,
     ) {
         LocationStateButton(state.trackPosition, onEnableLocation, onDisableLocation)

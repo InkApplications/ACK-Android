@@ -56,7 +56,9 @@ class CaptureEvents @Inject constructor(
     private val connectionEnabled = mutableConnectionState.map { it != ConnectionState.Disconnected }.distinctUntilChanged()
     private val mutableLocationTransmitState = MutableStateFlow(false)
 
-    private val currentDriver = readSettings.observeData(connectionSettings.driver)
+    val driverSelection = readSettings.observeData(connectionSettings.driver)
+
+    private val currentDriver = driverSelection
         .map {
             when (it) {
                 DriverSelection.Audio -> drivers.afskDriver

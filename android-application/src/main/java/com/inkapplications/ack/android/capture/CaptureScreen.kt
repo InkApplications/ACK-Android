@@ -93,15 +93,18 @@ private fun CaptureBottomBar(
     navController: NavHostController,
 ) {
     BottomAppBar(
-        backgroundColor = AckTheme.colors.surface,
+        backgroundColor = AckTheme.colors.background,
         contentColor = contentColorFor(AckTheme.colors.surface),
         cutoutShape = RoundedCornerShape(50),
+        contentPadding = PaddingValues(0.dp),
+        modifier = Modifier.fillMaxWidth(),
     ) {
+        val currentRoute = navController.currentBackStackEntryAsState().value?.destination?.route
         BottomNavigation(
             backgroundColor = AckTheme.colors.surface,
             contentColor = contentColorFor(AckTheme.colors.surface),
+            modifier = Modifier.fillMaxWidth()
         ) {
-            val currentRoute = navController.currentBackStackEntryAsState().value?.destination?.route
             BottomNavigationItem(
                 icon = { Icon(Icons.Default.Map, contentDescription = null) },
                 label = { Text(stringResource(R.string.menu_capture_map), softWrap = false) },
