@@ -5,7 +5,6 @@ import inkapplications.spondee.measure.us.miles
 import kotlinx.coroutines.flow.Flow
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.minutes
-import kotlin.time.ExperimentalTime
 
 interface LocationAccess {
     val lastKnownLocation: LocationUpdate?

@@ -35,7 +35,7 @@ class CaptureViewModel @Inject constructor(
         captureScreenStateFactory.controlPanelState(
             currentDriver = driver,
             driverConnected = connectedState != ConnectionState.Disconnected,
-            positionTransmit = positionTransmitState,
+            positionTransmit = positionTransmitState != ConnectionState.Disconnected,
             license = license,
             inputAudioLevel = audioInputVolume,
             connectedTncDevice = tncData,

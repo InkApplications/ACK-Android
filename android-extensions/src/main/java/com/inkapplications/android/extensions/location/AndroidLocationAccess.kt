@@ -10,6 +10,7 @@ import inkapplications.spondee.spatial.GeoCoordinates
 import inkapplications.spondee.spatial.latitude
 import inkapplications.spondee.spatial.longitude
 import inkapplications.spondee.structure.toFloat
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.channels.trySendBlocking
 import kotlinx.coroutines.flow.Flow
@@ -46,7 +47,11 @@ class AndroidLocationAccess @Inject constructor(
             LocationManager.NETWORK_PROVIDER,
             LocationManager.PASSIVE_PROVIDER,
         )
-        val provider = providerPreferences.firstOrNull { it in locationManager.getProviders(true) } ?: return@callbackFlow
+        val provider = providerPreferences.firstOrNull { it in locationManager.getProviders(true) } ?: run {
+            cancel()
+            awaitClose()
+            return@callbackFlow
+        }
         locationManager.requestLocationUpdates(
             provider,
             minTime.inWholeMilliseconds,

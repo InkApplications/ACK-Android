@@ -2,6 +2,7 @@ package com.inkapplications.ack.data
 
 import inkapplications.spondee.scalar.Percentage
 import inkapplications.spondee.scalar.decimalPercentage
+import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.channels.consumeEach
 import kotlinx.coroutines.flow.*
 import kotlin.math.abs
@@ -26,11 +27,11 @@ internal class AudioDataProcessor(
 
         audioIn.capture()
 
-        invokeOnClose {
+        audioIn.audioData.consumeEach { decode(it) }
+        awaitClose {
             audioIn.cancel()
             peak.value = null
         }
-        audioIn.audioData.consumeEach { decode(it) }
     }
 
     private val peak = MutableStateFlow<Short?>(null)

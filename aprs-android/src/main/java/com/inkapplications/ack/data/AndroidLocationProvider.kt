@@ -38,6 +38,25 @@ class AndroidLocationProvider @Inject constructor(
 
     @RequiresPermission(Manifest.permission.ACCESS_FINE_LOCATION)
     private val androidLocationFlow: Flow<Location> = callbackFlow {
+        val listener = object : LocationListener {
+            override fun onLocationChanged(location: Location) {
+                logger.debug("Location Changed: $location")
+                trySendBlocking(location)
+            }
+
+            override fun onStatusChanged(p0: String?, p1: Int, p2: Bundle?) {
+                logger.debug("Location Status Changed: $p0 $p1")
+            }
+
+            override fun onProviderEnabled(p0: String) {
+                logger.debug("Location Provider Enabled: $p0")
+            }
+
+            override fun onProviderDisabled(p0: String) {
+                logger.debug("Location Provider Disabled: $p0")
+            }
+        }
+
         withContext(Dispatchers.Main) {
             locationManager.getLastKnownLocation(LocationManager.PASSIVE_PROVIDER)
                 ?.run { send(this) }
@@ -46,27 +65,12 @@ class AndroidLocationProvider @Inject constructor(
                 LocationManager.GPS_PROVIDER,
                 MIN_TIME,
                 MIN_DISTANCE,
-                object : LocationListener {
-                    override fun onLocationChanged(location: Location) {
-                        logger.debug("Location Changed: $location")
-                        trySendBlocking(location)
-                    }
-
-                    override fun onStatusChanged(p0: String?, p1: Int, p2: Bundle?) {
-                        logger.debug("Location Status Changed: $p0 $p1")
-                    }
-
-                    override fun onProviderEnabled(p0: String) {
-                        logger.debug("Location Provider Enabled: $p0")
-                    }
-
-                    override fun onProviderDisabled(p0: String) {
-                        logger.debug("Location Provider Disabled: $p0")
-                    }
-                }
+                listener,
             )
         }
-        awaitClose()
+        awaitClose {
+            locationManager.removeUpdates(listener)
+        }
     }
 
     @RequiresPermission(Manifest.permission.ACCESS_FINE_LOCATION)

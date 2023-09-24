@@ -86,7 +86,7 @@ class CaptureActivity: ExtendedActivity(), CaptureNavController, LogIndexControl
         }
 
         lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.RESUMED) {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
                 captureEvents.collectConnectionEvents(
                     requestPermissions = { permissions ->
                         Kimchi.debug("Permissions Request: ${permissions.joinToString()}")

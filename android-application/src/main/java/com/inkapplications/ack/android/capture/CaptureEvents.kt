@@ -1,5 +1,6 @@
 package com.inkapplications.ack.android.capture
 
+import android.Manifest
 import com.inkapplications.ack.android.connection.ConnectionSettings
 import com.inkapplications.ack.android.connection.DriverSelection
 import com.inkapplications.ack.android.settings.SettingsReadAccess
@@ -19,6 +20,7 @@ import com.inkapplications.android.extensions.location.LocationAccess
 import com.inkapplications.coroutines.combinePair
 import com.inkapplications.coroutines.combineTriple
 import kimchi.logger.KimchiLogger
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -31,10 +33,12 @@ import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.getAndUpdate
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onCompletion
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.updateAndGet
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.coroutines.coroutineContext
@@ -54,7 +58,7 @@ class CaptureEvents @Inject constructor(
 ) {
     private val mutableConnectionState = MutableStateFlow(ConnectionState.Disconnected)
     private val connectionEnabled = mutableConnectionState.map { it != ConnectionState.Disconnected }.distinctUntilChanged()
-    private val mutableLocationTransmitState = MutableStateFlow(false)
+    private val mutableLocationTransmitState = MutableStateFlow(ConnectionState.Disconnected)
 
     val driverSelection = readSettings.observeData(connectionSettings.driver)
 
@@ -75,7 +79,7 @@ class CaptureEvents @Inject constructor(
     /**
      * Whether the option to repeatedly transmit the device location is enabled.
      */
-    val locationTransmitState: StateFlow<Boolean> = mutableLocationTransmitState
+    val locationTransmitState: StateFlow<ConnectionState> = mutableLocationTransmitState
 
     /**
      * The current audio input level, or null when not capturing.
@@ -90,7 +94,7 @@ class CaptureEvents @Inject constructor(
      */
     fun changeDriver(value: DriverSelection) {
         mutableConnectionState.value = ConnectionState.Disconnected
-        mutableLocationTransmitState.value = false
+        mutableLocationTransmitState.value = ConnectionState.Disconnected
         writeSettings.setData(connectionSettings.driver, value)
     }
 
@@ -108,7 +112,7 @@ class CaptureEvents @Inject constructor(
             }
         }.also {
             if (it == ConnectionState.Disconnected) {
-                mutableLocationTransmitState.value = false
+                mutableLocationTransmitState.value = ConnectionState.Disconnected
             }
         }
     }
@@ -117,7 +121,12 @@ class CaptureEvents @Inject constructor(
      * Enable/disable the repeated transmission of device location.
      */
     fun toggleLocationTransmitState() {
-        mutableLocationTransmitState.getAndUpdate { !it }
+        mutableLocationTransmitState.getAndUpdate {
+            when (it) {
+                ConnectionState.Disconnected -> ConnectionState.Connecting
+                ConnectionState.Connecting, ConnectionState.Connected -> ConnectionState.Disconnected
+            }
+        }
     }
 
     /**
@@ -132,21 +141,43 @@ class CaptureEvents @Inject constructor(
         startBackgroundService: suspend () -> Unit,
         stopBackgroundService: suspend () -> Unit,
     ) {
-        connectionEnabled.collectLatest { connect ->
-            if (connect) {
-                currentDriver
-                    .onEach { logger.debug { "Current Driver: ${it::class.simpleName}" } }
-                    .collectLatest { driver ->
-                        if (requestPermissions(driver.receivePermissions)) {
-                            startBackgroundService()
-                        } else {
-                            logger.info("Permissions not granted. Stopping Service")
-                            stopBackgroundService()
+        coroutineScope {
+            launch {
+                currentDriver.combinePair(connectionEnabled)
+                    .collectLatest { (driver, connect) ->
+                        when {
+                            !connect -> {
+                                logger.info("Disconnecting Background Service.")
+                                stopBackgroundService()
+                            }
+                            connect && requestPermissions(driver.receivePermissions) -> {
+                                logger.info("Starting Background Service")
+                                startBackgroundService()
+                            }
+                            else -> {
+                                logger.info("Permissions not granted. Stopping Service")
+                                stopBackgroundService()
+                            }
                         }
                     }
-            } else {
-                logger.info("Disconnecting Background Service.")
-                stopBackgroundService()
+            }
+            launch {
+                currentDriver.combinePair(mutableLocationTransmitState)
+                    .collectLatest { (driver, transmitState) ->
+                        when {
+                            transmitState != ConnectionState.Connecting -> {
+                                logger.trace("Permission request not needed for state: $transmitState")
+                            }
+                            requestPermissions(driver.transmitPermissions + Manifest.permission.ACCESS_FINE_LOCATION) -> {
+                                logger.info("Transmit permissions granted. Setting to connected state.")
+                                mutableLocationTransmitState.value = ConnectionState.Connected
+                            }
+                            else -> {
+                                logger.warn("Location transmit permissions not granted.")
+                                mutableLocationTransmitState.value = ConnectionState.Disconnected
+                            }
+                        }
+                    }
             }
         }
     }
@@ -175,7 +206,15 @@ class CaptureEvents @Inject constructor(
                 logger.debug { "Connecting to Driver: ${driver::class.simpleName}" }
                 coroutineScope {
                     mutableConnectionState.value = ConnectionState.Connected
-                    val transmitJob = launch { transmitLoop(driver) }
+                    val transmitJob = launch {
+                        locationTransmitState
+                            .collectLatest {
+                                when (it) {
+                                    ConnectionState.Connected -> transmitLoop(driver)
+                                    else -> logger.trace("Skipping transmit loop for connection state: $it")
+                                }
+                            }
+                    }
                     launch {
                         try {
                             driver.connect()
@@ -185,7 +224,7 @@ class CaptureEvents @Inject constructor(
                             logger.info("Driver connection canceling")
                             transmitJob.cancel()
                             mutableConnectionState.value = ConnectionState.Disconnected
-                            mutableLocationTransmitState.value = false
+                            mutableLocationTransmitState.value = ConnectionState.Disconnected
                         }
                     }
                 }
@@ -196,6 +235,7 @@ class CaptureEvents @Inject constructor(
      * Transmit an APRS packet to the specified driver at the configured interval.
      */
     private suspend fun transmitLoop(driver: PacketDriver) {
+        logger.trace("Starting transmit loop")
         readSettings.observeData(connectionSettings.address)
             .filterNotNull()
             .combine(readSettings.observeData(transmitSettings.digipath)) { callsign, path ->
@@ -228,13 +268,14 @@ class CaptureEvents @Inject constructor(
             .combine(readSettings.observeData(transmitSettings.distance)) { prototype, distance ->
                 prototype.copy(distance = distance)
             }
+            .onEach { logger.debug("Location Transmit Prototype: $it") }
             .flatMapLatest { prototype ->
                 locationAccess.observeLocationChanges(prototype.maxRate, prototype.distance)
                     .map { prototype to it }
+                    .onCompletion { logger.warn("Location Transmit Stopped") }
             }
-            .combineTriple(locationTransmitState)
-            .collectLatest { (prototype, update, transmitting) ->
-                while (coroutineContext.isActive && transmitting) {
+            .collectLatest { (prototype, update) ->
+                while (coroutineContext.isActive) {
                     val packet = AprsPacket(
                         route = PacketRoute(
                             source = prototype.callsign,
