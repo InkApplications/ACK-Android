@@ -10,6 +10,7 @@ import com.inkapplications.ack.data.drivers.PacketDriver
 import com.inkapplications.ack.data.CapturedPacket
 import com.inkapplications.ack.data.PacketSource
 import com.inkapplications.ack.data.PacketStorage
+import com.inkapplications.ack.data.drivers.DriverConnectionState
 import com.inkapplications.ack.structures.AprsPacket
 import com.inkapplications.ack.structures.EncodingConfig
 import com.inkapplications.ack.structures.PacketData
@@ -44,9 +45,11 @@ object StubSettings: SettingsReadAccess {
 }
 
 object AprsAccessStub: PacketDriver {
+    override val connectionState: Flow<DriverConnectionState> = flow {}
     override val incoming: Flow<CapturedPacket> = flow {}
     override suspend fun transmitPacket(packet: AprsPacket, encodingConfig: EncodingConfig) {}
     override suspend fun connect() {}
+    override suspend fun disconnect() {}
 }
 
 object PacketStorageStub: PacketStorage {

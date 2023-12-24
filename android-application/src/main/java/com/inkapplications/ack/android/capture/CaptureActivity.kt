@@ -4,8 +4,6 @@ import android.Manifest
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.os.Build.VERSION.SDK_INT
-import android.os.Build.VERSION_CODES
 import android.view.View
 import androidx.activity.compose.setContent
 import androidx.compose.runtime.collectAsState
@@ -26,7 +24,7 @@ import com.inkapplications.ack.android.map.*
 import com.inkapplications.ack.android.map.mapbox.createController
 import com.inkapplications.ack.android.settings.SettingsActivity
 import com.inkapplications.ack.android.station.startStationActivity
-import com.inkapplications.ack.android.tnc.ConnectTncActivity
+import com.inkapplications.ack.android.tnc.startConnectTncActivity
 import com.inkapplications.ack.android.trackNavigation
 import com.inkapplications.ack.structures.station.Callsign
 import com.inkapplications.android.PermissionGate
@@ -40,6 +38,7 @@ import kimchi.analytics.intProperty
 import kimchi.analytics.stringProperty
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.first
 import javax.inject.Inject
 
 /**
@@ -83,25 +82,6 @@ class CaptureActivity: ExtendedActivity(), CaptureNavController, LogIndexControl
                 mapFactory = ::createMapView,
                 controller = this,
             )
-        }
-
-        lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED) {
-                captureEvents.collectConnectionEvents(
-                    requestPermissions = { permissions ->
-                        Kimchi.debug("Permissions Request: ${permissions.joinToString()}")
-                        permissionGate.requestPermissions(*permissions.toTypedArray())
-                    },
-                    startBackgroundService = {
-                        Kimchi.info("Starting Background Capture Service")
-                        startService(backgroundCaptureServiceIntent)
-                    },
-                    stopBackgroundService = {
-                        Kimchi.info("Stopping Background Capture Service")
-                        stopService(backgroundCaptureServiceIntent)
-                    },
-                )
-            }
         }
     }
 
@@ -169,33 +149,41 @@ class CaptureActivity: ExtendedActivity(), CaptureNavController, LogIndexControl
         startActivity(SettingsActivity::class)
     }
 
-    override fun onDeviceSettingsClick() {
-        val bluetoothPermissions = when {
-            SDK_INT > VERSION_CODES.S -> arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.BLUETOOTH_CONNECT, Manifest.permission.BLUETOOTH_SCAN)
-            else -> arrayOf(Manifest.permission.ACCESS_FINE_LOCATION)
-        }
+    override fun onConnectClick() {
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.CREATED) {
-                permissionGate.withPermissions(*bluetoothPermissions) {
-                    Kimchi.trackNavigation("connect_tnc")
-                    startActivity(ConnectTncActivity::class)
+                permissionGate.withPermissions(*captureEvents.getDriverConnectPermissions().toTypedArray()) {
+                    lifecycleScope.launch {
+                        if (captureEvents.driverSelection.first() == DriverSelection.Tnc) {
+                            startConnectTncActivity(backgroundCaptureServiceIntent)
+                        } else {
+                            startService(backgroundCaptureServiceIntent)
+                        }
+                    }
                 }
             }
         }
     }
 
-    override fun onConnectionToggleClick() {
-        Kimchi.trackEvent("connection_toggle", listOf(stringProperty("current", captureEvents.connectionState.value.name)))
-        captureEvents.toggleConnectionState()
+    override fun onDisconnectClick() {
+        lifecycleScope.launch {
+            captureEvents.disconnectDriver()
+            stopService(backgroundCaptureServiceIntent)
+        }
     }
 
-    override fun onPositionTransmitToggleClick() {
-        Kimchi.trackEvent("position_transmit_toggle", listOf(stringProperty("current", captureEvents.locationTransmitState.value.toString())))
-        captureEvents.toggleLocationTransmitState()
+    override fun onEnableLocationTransmitClick() {
+        captureEvents.locationTransmitState.value = true
+    }
+
+    override fun onDisableLocationTransmitClick() {
+        captureEvents.locationTransmitState.value = false
     }
 
     override fun onDriverSelected(selection: DriverSelection) {
-        Kimchi.trackEvent("driver_select", listOf(stringProperty("selection", selection.name)))
-        captureEvents.changeDriver(selection)
+        lifecycleScope.launch {
+            Kimchi.trackEvent("driver_select", listOf(stringProperty("selection", selection.name)))
+            captureEvents.changeDriver(selection)
+        }
     }
 }

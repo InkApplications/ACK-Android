@@ -2,7 +2,7 @@ package com.inkapplications.ack.android.tnc
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.inkapplications.ack.data.drivers.TncDriver
+import com.inkapplications.ack.data.drivers.PacketDrivers
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -15,10 +15,10 @@ import javax.inject.Inject
  */
 @HiltViewModel
 class ConnectTncViewModel @Inject constructor(
-    deviceAccess: TncDriver,
+    drivers: PacketDrivers,
     stateFactory: ConnectTncStateFactory,
 ): ViewModel() {
-    val state: StateFlow<ConnectTncState> = deviceAccess.deviceData
+    val state: StateFlow<ConnectTncState> = drivers.tncDriver.deviceData
         .map { stateFactory.create(it) }
         .stateIn(viewModelScope, SharingStarted.Eagerly, ConnectTncState.Initial)
 }

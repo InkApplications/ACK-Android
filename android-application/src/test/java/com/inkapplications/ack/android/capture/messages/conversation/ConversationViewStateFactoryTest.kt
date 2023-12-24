@@ -6,11 +6,11 @@ import androidx.compose.material.icons.filled.SettingsInputAntenna
 import androidx.compose.material.icons.filled.Storage
 import androidx.compose.ui.Alignment
 import com.inkapplications.ack.android.*
-import com.inkapplications.ack.android.capture.ConnectionState
 import com.inkapplications.ack.android.capture.messages.MessageData
 import com.inkapplications.ack.android.connection.DriverSelection
 import com.inkapplications.ack.data.CapturedPacket
 import com.inkapplications.ack.data.PacketSource
+import com.inkapplications.ack.data.drivers.DriverConnectionState
 import com.inkapplications.ack.structures.PacketData
 import com.inkapplications.ack.structures.station.toStationAddress
 import kotlinx.datetime.Instant
@@ -33,7 +33,7 @@ class ConversationViewStateFactoryTest {
 
     @Test
     fun emptyMessageList() {
-        val result = factory.createMessageList(addressee.callsign, emptyList(), ConnectionState.Disconnected, DriverSelection.Audio)
+        val result = factory.createMessageList(addressee.callsign, emptyList(), DriverConnectionState.Disconnected, DriverSelection.Audio)
 
         assertTrue(result is ConversationViewState.Empty)
         assertEquals("KE0YOF", result.title)
@@ -42,7 +42,7 @@ class ConversationViewStateFactoryTest {
 
     @Test
     fun connected() {
-        val result = factory.createMessageList(addressee.callsign, emptyList(), ConnectionState.Connected, DriverSelection.Audio)
+        val result = factory.createMessageList(addressee.callsign, emptyList(), DriverConnectionState.Connected, DriverSelection.Audio)
         assertEquals(true, result.sendEnabled)
     }
 
@@ -87,7 +87,7 @@ class ConversationViewStateFactoryTest {
 
     private fun getMessageState(packet: CapturedPacket): MessageItemState {
         val data = MessageData(me.callsign, packet)
-        val result = factory.createMessageList(addressee.callsign, listOf(data), ConnectionState.Disconnected, DriverSelection.Audio)
+        val result = factory.createMessageList(addressee.callsign, listOf(data), DriverConnectionState.Disconnected, DriverSelection.Audio)
 
         assertTrue(result is ConversationViewState.MessageList)
         assertEquals(1, result.messages.size)

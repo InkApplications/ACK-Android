@@ -53,7 +53,6 @@ class ApplicationModule {
         bluetooth: BluetoothAdapter,
     ): BluetoothDeviceAccess = AndroidBluetoothAccess(
         context = context,
-        scope = CoroutineScope(Dispatchers.IO + SupervisorJob()),
         bluetoothAdapter = bluetooth,
     )
 }

@@ -12,10 +12,9 @@ import com.inkapplications.coroutines.combinePair
 import inkapplications.spondee.scalar.toWholePercentage
 import inkapplications.spondee.structure.roundToInt
 import kimchi.logger.KimchiLogger
+import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.BufferOverflow
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.*
-import kotlinx.coroutines.launch
 
 class AfskDriver internal constructor(
     private val aprsCodec: AprsCodec,
@@ -23,8 +22,16 @@ class AfskDriver internal constructor(
     private val audioProcessor: AudioDataProcessor,
     private val modulator: AndroidAfskModulator,
     private val settings: DriverSettingsProvider,
+    private val runScope: CoroutineScope,
     private val logger: KimchiLogger,
 ): PacketDriver, AudioConnectionMonitor {
+    private val runJob = MutableStateFlow<Job?>(null)
+    override val connectionState: Flow<DriverConnectionState> = runJob.map { job ->
+        when {
+            job?.isActive == true -> DriverConnectionState.Connected
+            else -> DriverConnectionState.Disconnected
+        }
+    }
     override val incoming = MutableSharedFlow<CapturedPacket>()
     override val receivePermissions: Set<String> = when {
         Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU -> setOf(Manifest.permission.RECORD_AUDIO, Manifest.permission.POST_NOTIFICATIONS)
@@ -49,23 +56,35 @@ class AfskDriver internal constructor(
     }
 
     override suspend fun connect() {
-        logger.debug("Starting Audio Packet Capture")
+        logger.debug("Connecting Audio Packet Capture")
 
-        coroutineScope {
-            launch {
-                audioProcessor.data
-                    .mapNotNull { captureAx25Packet(it) }
-                    .onEach { logger.debug("APRS Packet Parsed: $it") }
-                    .collect { incoming.emit(it) }
-            }
-            launch {
-                settings.afskConfiguration.combinePair(transmitQueue)
-                    .collect { (config, data) ->
-                        logger.info("Modulating ${data.size} bytes with a ${config.preamble} preamble at ${config.volume.toWholePercentage().roundToInt()}% volume")
-                        modulator.modulate(data, config.preamble, config.volume)
-                    }
-            }
+        runJob.updateAndGet { priorJob ->
+            priorJob?.takeIf { it.isActive } ?: launchNewJob()
         }
+    }
+
+    private fun launchNewJob(): Job {
+        logger.debug("Launching new job for Audio Packet Capture")
+        val job = Job()
+        runScope.launch(job) {
+            audioProcessor.data
+                .mapNotNull { captureAx25Packet(it) }
+                .onEach { logger.debug("APRS Packet Parsed: $it") }
+                .collect { incoming.emit(it) }
+        }
+        runScope.launch(job) {
+            settings.afskConfiguration.combinePair(transmitQueue)
+                .collect { (config, data) ->
+                    logger.info("Modulating ${data.size} bytes with a ${config.preamble} preamble at ${config.volume.toWholePercentage().roundToInt()}% volume")
+                    modulator.modulate(data, config.preamble, config.volume)
+                }
+        }
+
+        return job
+    }
+
+    override suspend fun disconnect() {
+        runJob.value?.cancelAndJoin()
     }
 
     private suspend fun captureAx25Packet(data: ByteArray): CapturedPacket? {

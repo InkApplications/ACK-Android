@@ -25,7 +25,6 @@ import java.util.UUID
  */
 internal class AndroidBluetoothAccess(
     context: Context,
-    private val scope: CoroutineScope,
     private val bluetoothAdapter: BluetoothAdapter,
 ): BluetoothDeviceAccess {
     /**
@@ -85,18 +84,16 @@ internal class AndroidBluetoothAccess(
      * Once the method returns, the bluetooth socket will be closed.
      */
     @RequiresPermission(allOf = [Manifest.permission.BLUETOOTH_CONNECT, Manifest.permission.BLUETOOTH_SCAN])
-    override fun connect(
+    override suspend fun connect(
         device: BluetoothDeviceData,
         uuid: UUID,
         onConnect: suspend (InputStream, OutputStream) -> Unit,
     ) {
-        scope.launch {
-            val bluetoothDevice = bluetoothAdapter.getRemoteDevice(device.address)
-            bluetoothAdapter.cancelDiscovery()
-            val socket = bluetoothDevice.createRfcommSocketToServiceRecord(uuid)
-            socket.connect()
-            onConnect(socket.inputStream, socket.outputStream)
-            socket.close()
-        }
+        val bluetoothDevice = bluetoothAdapter.getRemoteDevice(device.address)
+        bluetoothAdapter.cancelDiscovery()
+        val socket = bluetoothDevice.createRfcommSocketToServiceRecord(uuid)
+        socket.connect()
+        onConnect(socket.inputStream, socket.outputStream)
+        socket.close()
     }
 }

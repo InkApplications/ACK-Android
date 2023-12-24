@@ -41,6 +41,7 @@ class BackgroundCaptureService: Service() {
         startForeground(notificationId, notification)
         runScope.launch {
             captureEvents.connectDriver()
+            captureEvents.locationTransmitLoop()
             stopSelf()
         }
 

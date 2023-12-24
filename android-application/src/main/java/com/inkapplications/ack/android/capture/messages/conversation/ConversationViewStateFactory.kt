@@ -7,11 +7,11 @@ import androidx.compose.material.icons.filled.SettingsInputAntenna
 import androidx.compose.material.icons.filled.Storage
 import androidx.compose.ui.Alignment
 import com.inkapplications.ack.android.R
-import com.inkapplications.ack.android.capture.ConnectionState
 import com.inkapplications.ack.android.capture.messages.MessageData
 import com.inkapplications.ack.android.connection.DriverSelection
 import com.inkapplications.ack.android.connection.readableName
 import com.inkapplications.ack.data.PacketSource
+import com.inkapplications.ack.data.drivers.DriverConnectionState
 import com.inkapplications.ack.structures.PacketData
 import com.inkapplications.ack.structures.station.Callsign
 import com.inkapplications.android.extensions.StringResources
@@ -48,25 +48,25 @@ class ConversationViewStateFactory @Inject constructor(
     fun createMessageList(
         addressee: Callsign,
         messages: List<MessageData>,
-        connectionState: ConnectionState,
+        connectionState: DriverConnectionState,
         driverSelection: DriverSelection,
     ): ConversationViewState {
         val title = createTitle(addressee)
         val connectionText = when (connectionState) {
-            ConnectionState.Connected -> stringResources.getString(R.string.messages_conversation_connected, stringResources.getString(driverSelection.readableName))
-            ConnectionState.Connecting, ConnectionState.Disconnected -> stringResources.getString(R.string.messages_conversation_disconnected)
+            DriverConnectionState.Connected -> stringResources.getString(R.string.messages_conversation_connected, stringResources.getString(driverSelection.readableName))
+            else -> stringResources.getString(R.string.messages_conversation_disconnected)
         }
 
         return when {
             messages.isEmpty() -> ConversationViewState.Empty(
                 title = title,
-                sendEnabled = connectionState == ConnectionState.Connected,
+                sendEnabled = connectionState == DriverConnectionState.Connected,
                 connectionText = connectionText,
             )
             else -> ConversationViewState.MessageList(
                 title = title,
                 messages = messages.map { createMessageView(it) },
-                sendEnabled = connectionState == ConnectionState.Connected,
+                sendEnabled = connectionState == DriverConnectionState.Connected,
                 connectionText = connectionText,
             )
         }

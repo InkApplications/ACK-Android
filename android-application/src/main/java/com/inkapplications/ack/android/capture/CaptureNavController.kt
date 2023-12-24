@@ -30,19 +30,24 @@ interface CaptureNavController {
     fun onSettingsClick()
 
     /**
-     * Invoked when the user clicks on the device connection settings button.
+     * Invoked when the user clicks on the button to enable the driver connection.
      */
-    fun onDeviceSettingsClick()
+    fun onConnectClick()
 
     /**
-     * Invoked when the user clicks on the connected/disconnected button toggle.
+     * Invoked when the user clicks on the button to disable the driver connection.
      */
-    fun onConnectionToggleClick()
+    fun onDisconnectClick()
 
     /**
-     * Invoked when the user clicks on the transmit position toggle.
+     * Invoked when the user clicks on the location transmit enable button.
      */
-    fun onPositionTransmitToggleClick()
+    fun onEnableLocationTransmitClick()
+
+    /**
+     * Invoked when the user clicks on the location transmit disable button.
+     */
+    fun onDisableLocationTransmitClick()
 
     /**
      * Invoked when the user selects a new radio driver.

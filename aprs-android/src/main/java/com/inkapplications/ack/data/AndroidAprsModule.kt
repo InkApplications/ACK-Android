@@ -12,12 +12,15 @@ import com.inkapplications.ack.data.drivers.InternetDriver
 import com.inkapplications.ack.data.drivers.PacketDrivers
 import com.inkapplications.ack.data.drivers.TncDriver
 import com.inkapplications.ack.data.upgrade.V4Upgrade
+import com.inkapplications.android.extensions.bluetooth.BluetoothDeviceAccess
 import dagger.Module
 import dagger.Provides
 import dagger.Reusable
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import kimchi.logger.KimchiLogger
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.datetime.Clock
 import javax.inject.Singleton
 
@@ -61,10 +64,11 @@ object AndroidAprsModule {
         androidLocationProvider: AndroidLocationProvider,
         driverSettings: DriverSettingsProvider,
         packetStorage: PacketStorage,
-        tncDriver: TncDriver,
+        bluetoothAccess: BluetoothDeviceAccess,
     ): PacketDrivers {
         val audioCapture = AudioDataCapture(logger)
         val audioProcessor = AudioDataProcessor(audioCapture)
+        val backgroundScope = CoroutineScope(Dispatchers.Default)
 
         val internet = InternetDriver(
             aprsCodec = codec,
@@ -72,6 +76,7 @@ object AndroidAprsModule {
             client = AprsClientModule.createDataClient(),
             locationProvider = androidLocationProvider,
             settings = driverSettings,
+            runScope = backgroundScope,
             logger = logger,
         )
         val afsk = AfskDriver(
@@ -80,6 +85,15 @@ object AndroidAprsModule {
             audioProcessor = audioProcessor,
             modulator = AndroidAfskModulator(),
             settings = driverSettings,
+            runScope = backgroundScope,
+            logger = logger,
+        )
+
+        val tncDriver = TncDriver(
+            bluetoothAccess = bluetoothAccess,
+            packetStorage = packetStorage,
+            ack = codec,
+            runScope = backgroundScope,
             logger = logger,
         )
 

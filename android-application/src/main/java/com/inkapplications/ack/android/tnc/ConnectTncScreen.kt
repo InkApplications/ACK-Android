@@ -1,28 +1,11 @@
 package com.inkapplications.ack.android.tnc
 
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.Card
-import androidx.compose.material.CircularProgressIndicator
-import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
-import androidx.compose.material.LinearProgressIndicator
-import androidx.compose.material.Text
+import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.BluetoothSearching
-import androidx.compose.material.icons.filled.Close
-import androidx.compose.material.icons.filled.Sync
-import androidx.compose.material.icons.filled.SyncDisabled
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
@@ -85,7 +68,6 @@ fun DeviceList(
                         is RowType.Device -> Device(
                             device = row.device,
                             onConnectClick = { controller.onDeviceConnectClick(row.device) },
-                            onDisconnectClick = controller::onDisconnect,
                         )
                     }
                 }
@@ -110,12 +92,13 @@ private sealed interface RowType {
 }
 
 @Composable
+@OptIn(ExperimentalMaterialApi::class)
 private fun Device(
     device: DeviceItem,
     onConnectClick: () -> Unit,
-    onDisconnectClick: () -> Unit,
 ) {
     Card(
+        onClick = onConnectClick,
         modifier = Modifier
             .fillMaxWidth()
             .padding(
@@ -139,9 +122,6 @@ private fun Device(
                 }
                 DeviceConnectionOptions(
                     device = device,
-                    onConnectClick = onConnectClick,
-                    onDisconnectClick = onDisconnectClick,
-                    onReconnectClick = {},
                 )
             }
         }
@@ -151,37 +131,10 @@ private fun Device(
 @Composable
 private fun DeviceConnectionOptions(
     device: DeviceItem,
-    onConnectClick: () -> Unit,
-    onDisconnectClick: () -> Unit,
-    onReconnectClick: () -> Unit,
 ) = Row(
     verticalAlignment = Alignment.CenterVertically,
 ) {
     when (device) {
-        is DeviceItem.Connected -> {
-            // TODO: Reconnection implementation
-//            if (device.reconnect) {
-//                IconButton(onClick = onReconnectClick) {
-//                    Icon(
-//                        imageVector = Icons.Default.SyncDisabled,
-//                        contentDescription = "",
-//                    )
-//                }
-//            } else {
-//                IconButton(onClick = onReconnectClick) {
-//                    Icon(
-//                        imageVector = Icons.Default.Sync,
-//                        contentDescription = "",
-//                    )
-//                }
-//            }
-            IconButton(onClick = onDisconnectClick) {
-                Icon(
-                    imageVector = Icons.Default.Close,
-                    contentDescription = "Disconnect",
-                )
-            }
-        }
         is DeviceItem.Connecting -> {
             Box(Modifier.padding(AckTheme.spacing.clickSafety)) {
                 CircularProgressIndicator(
@@ -189,36 +142,9 @@ private fun DeviceConnectionOptions(
                 )
             }
         }
-        is DeviceItem.NotConnected -> {
-            // TODO: Reconnection implementation
-//            if (device.reconnect) {
-//                IconButton(onClick = onReconnectClick) {
-//                    Icon(
-//                        imageVector = Icons.Default.SyncDisabled,
-//                        contentDescription = "",
-//                    )
-//                }
-//            } else {
-//                IconButton(onClick = onReconnectClick) {
-//                    Icon(
-//                        imageVector = Icons.Default.Sync,
-//                        contentDescription = "",
-//                    )
-//                }
-//            }
-            IconButton(onClick = onConnectClick) {
-                Icon(
-                    imageVector = Icons.Default.Add,
-                    contentDescription = "Connect",
-                )
-            }
-        }
-        is DeviceItem.Unpaired -> {
-            IconButton(onClick = onConnectClick) {
-                Icon(
-                    imageVector = Icons.Default.Add,
-                    contentDescription = "Connect",
-                )
+        else -> {
+            Box(Modifier.padding(AckTheme.spacing.clickSafety)) {
+                Spacer(modifier = Modifier.size(AckTheme.sizing.iconButton))
             }
         }
     }

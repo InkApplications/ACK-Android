@@ -1,6 +1,5 @@
 package com.inkapplications.ack.android.capture
 
-import android.Manifest
 import com.inkapplications.ack.android.connection.ConnectionSettings
 import com.inkapplications.ack.android.connection.DriverSelection
 import com.inkapplications.ack.android.settings.SettingsReadAccess
@@ -9,6 +8,7 @@ import com.inkapplications.ack.android.settings.observeData
 import com.inkapplications.ack.android.settings.observeString
 import com.inkapplications.ack.android.settings.setData
 import com.inkapplications.ack.android.transmit.TransmitSettings
+import com.inkapplications.ack.data.drivers.DriverConnectionState
 import com.inkapplications.ack.data.drivers.PacketDriver
 import com.inkapplications.ack.data.drivers.PacketDrivers
 import com.inkapplications.ack.structures.AprsPacket
@@ -18,27 +18,9 @@ import com.inkapplications.ack.structures.PacketData
 import com.inkapplications.ack.structures.PacketRoute
 import com.inkapplications.android.extensions.location.LocationAccess
 import com.inkapplications.coroutines.combinePair
-import com.inkapplications.coroutines.combineTriple
 import kimchi.logger.KimchiLogger
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.distinctUntilChanged
-import kotlinx.coroutines.flow.filter
-import kotlinx.coroutines.flow.filterNotNull
-import kotlinx.coroutines.flow.flatMapLatest
-import kotlinx.coroutines.flow.getAndUpdate
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.onCompletion
-import kotlinx.coroutines.flow.onEach
-import kotlinx.coroutines.flow.updateAndGet
-import kotlinx.coroutines.isActive
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.*
+import kotlinx.coroutines.flow.*
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.coroutines.coroutineContext
@@ -56,10 +38,6 @@ class CaptureEvents @Inject constructor(
     private val locationAccess: LocationAccess,
     private val logger: KimchiLogger,
 ) {
-    private val mutableConnectionState = MutableStateFlow(ConnectionState.Disconnected)
-    private val connectionEnabled = mutableConnectionState.map { it != ConnectionState.Disconnected }.distinctUntilChanged()
-    private val mutableLocationTransmitState = MutableStateFlow(ConnectionState.Disconnected)
-
     val driverSelection = readSettings.observeData(connectionSettings.driver)
 
     private val currentDriver = driverSelection
@@ -74,12 +52,13 @@ class CaptureEvents @Inject constructor(
     /**
      * The current state of the selected APRS driver connection.
      */
-    val connectionState: StateFlow<ConnectionState> = mutableConnectionState
+    val connectionState: Flow<DriverConnectionState> = currentDriver
+        .flatMapLatest { it.connectionState }
 
     /**
      * Whether the option to repeatedly transmit the device location is enabled.
      */
-    val locationTransmitState: StateFlow<ConnectionState> = mutableLocationTransmitState
+    val locationTransmitState = MutableStateFlow(false)
 
     /**
      * The current audio input level, or null when not capturing.
@@ -92,142 +71,32 @@ class CaptureEvents @Inject constructor(
      * Note: This will disconnect the current driver and location state
      * if enabled, and will require a reconnection.
      */
-    fun changeDriver(value: DriverSelection) {
-        mutableConnectionState.value = ConnectionState.Disconnected
-        mutableLocationTransmitState.value = ConnectionState.Disconnected
+    suspend fun changeDriver(value: DriverSelection) {
+        currentDriver.first().disconnect()
+        locationTransmitState.value = false
         writeSettings.setData(connectionSettings.driver, value)
     }
 
-    /**
-     * Connect or disconnect the currently selected APRS driver.
-     *
-     * This will transition through the [ConnectionState.Connecting] state
-     * until the driver is ready during connection.
-     */
-    fun toggleConnectionState() {
-        mutableConnectionState.updateAndGet {
-            when (it) {
-                ConnectionState.Disconnected -> ConnectionState.Connecting
-                ConnectionState.Connecting, ConnectionState.Connected -> ConnectionState.Disconnected
-            }
-        }.also {
-            if (it == ConnectionState.Disconnected) {
-                mutableLocationTransmitState.value = ConnectionState.Disconnected
-            }
-        }
+    suspend fun getDriverConnectPermissions(): Set<String> {
+        return currentDriver.first().receivePermissions
     }
 
-    /**
-     * Enable/disable the repeated transmission of device location.
-     */
-    fun toggleLocationTransmitState() {
-        mutableLocationTransmitState.getAndUpdate {
-            when (it) {
-                ConnectionState.Disconnected -> ConnectionState.Connecting
-                ConnectionState.Connecting, ConnectionState.Connected -> ConnectionState.Disconnected
-            }
-        }
+    suspend fun getDriverTransmitPermissions(): Set<String> {
+        return currentDriver.first().transmitPermissions
     }
 
-    /**
-     * Bind listeners required to start the collection of APRS packets.
-     *
-     * This should be called from an activity to handle the start of the
-     * [BackgroundCaptureService] as well as handling permissions requests
-     * that drivers may need.
-     */
-    suspend fun collectConnectionEvents(
-        requestPermissions: suspend (permissions: Set<String>) -> Boolean,
-        startBackgroundService: suspend () -> Unit,
-        stopBackgroundService: suspend () -> Unit,
-    ) {
-        coroutineScope {
-            launch {
-                currentDriver.combinePair(connectionEnabled)
-                    .collectLatest { (driver, connect) ->
-                        when {
-                            !connect -> {
-                                logger.info("Disconnecting Background Service.")
-                                stopBackgroundService()
-                            }
-                            connect && requestPermissions(driver.receivePermissions) -> {
-                                logger.info("Starting Background Service")
-                                startBackgroundService()
-                            }
-                            else -> {
-                                logger.info("Permissions not granted. Stopping Service")
-                                stopBackgroundService()
-                            }
-                        }
-                    }
-            }
-            launch {
-                currentDriver.combinePair(mutableLocationTransmitState)
-                    .collectLatest { (driver, transmitState) ->
-                        when {
-                            transmitState != ConnectionState.Connecting -> {
-                                logger.trace("Permission request not needed for state: $transmitState")
-                            }
-                            requestPermissions(driver.transmitPermissions + Manifest.permission.ACCESS_FINE_LOCATION) -> {
-                                logger.info("Transmit permissions granted. Setting to connected state.")
-                                mutableLocationTransmitState.value = ConnectionState.Connected
-                            }
-                            else -> {
-                                logger.warn("Location transmit permissions not granted.")
-                                mutableLocationTransmitState.value = ConnectionState.Disconnected
-                            }
-                        }
-                    }
-            }
-        }
-    }
-
-    /**
-     * Start the collection and transmission of APRS packets for the current
-     * driver.
-     *
-     * This should be called from a background service so that the application
-     * does not need to remain in the foreground.
-     *
-     * This method will suspend indefinitely while connected! to stop
-     * transmission, cancel the job that this is called inside.
-     * Cancellation is handled gracefully and will set the connection state
-     * back to [ConnectionState.Disconnected] when canceled.
-     *
-     * Note that the driver may become disconnected for external reasons,
-     * such as when changing the source driver, which will also cause the
-     * suspension to end.
-     */
     suspend fun connectDriver() {
-        logger.info("Connect Driver")
-        currentDriver.combinePair(connectionState.filter { it != ConnectionState.Connected })
-            .collectLatest { (driver, connection) ->
-                if (connection != ConnectionState.Connecting) return@collectLatest
-                logger.debug { "Connecting to Driver: ${driver::class.simpleName}" }
-                coroutineScope {
-                    mutableConnectionState.value = ConnectionState.Connected
-                    val transmitJob = launch {
-                        locationTransmitState
-                            .collectLatest {
-                                when (it) {
-                                    ConnectionState.Connected -> transmitLoop(driver)
-                                    else -> logger.trace("Skipping transmit loop for connection state: $it")
-                                }
-                            }
-                    }
-                    launch {
-                        try {
-                            driver.connect()
-                        } catch (e: Throwable) {
-                            logger.error(e) { "Driver connection failed" }
-                        } finally {
-                            logger.info("Driver connection canceling")
-                            transmitJob.cancel()
-                            mutableConnectionState.value = ConnectionState.Disconnected
-                            mutableLocationTransmitState.value = ConnectionState.Disconnected
-                        }
-                    }
-                }
+        currentDriver.first().connect()
+    }
+
+    suspend fun disconnectDriver() {
+        currentDriver.first().disconnect()
+    }
+
+    suspend fun locationTransmitLoop() {
+        locationTransmitState.combinePair(currentDriver)
+            .collectLatest { (transmit, driver) ->
+                if (transmit) transmitLoop(driver)
             }
     }
 
