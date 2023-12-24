@@ -4,6 +4,7 @@ import com.inkapplications.ack.android.ParrotStringResources
 import com.inkapplications.ack.android.connection.DriverSelection
 import com.inkapplications.ack.android.settings.LicenseData
 import com.inkapplications.ack.android.settings.Passcode
+import com.inkapplications.ack.data.drivers.DriverConnectionState
 import com.inkapplications.ack.structures.station.toStationAddress
 import com.inkapplications.android.extensions.bluetooth.BluetoothDeviceData
 import com.inkapplications.android.extensions.control.ControlState
@@ -24,10 +25,9 @@ class CaptureScreenFactoryTest {
         val result = factory.controlPanelState(
             inputAudioLevel = null,
             currentDriver = DriverSelection.Internet,
-            driverConnected = false,
+            driverConnectionState = DriverConnectionState.Disconnected,
             positionTransmit = false,
             license = LicenseData(),
-            connectedTncDevice = null
         )
 
         assertTrue(result is ControlPanelState.Loaded)
@@ -44,12 +44,11 @@ class CaptureScreenFactoryTest {
         val result = factory.controlPanelState(
             inputAudioLevel = null,
             currentDriver = DriverSelection.Internet,
-            driverConnected = false,
+            driverConnectionState = DriverConnectionState.Disconnected,
             positionTransmit = false,
             license = LicenseData(
                 address = "KE0YOG-7".toStationAddress()
             ),
-            connectedTncDevice = null,
         )
 
         assertTrue(result is ControlPanelState.Loaded)
@@ -63,13 +62,12 @@ class CaptureScreenFactoryTest {
         val result = factory.controlPanelState(
             inputAudioLevel = null,
             currentDriver = DriverSelection.Internet,
-            driverConnected = false,
+            driverConnectionState = DriverConnectionState.Disconnected,
             positionTransmit = false,
             license = LicenseData(
                 address = "KE0YOG-7".toStationAddress(),
                 passcode = Passcode(12345),
             ),
-            connectedTncDevice = null,
         )
 
         assertTrue(result is ControlPanelState.Loaded)
@@ -83,13 +81,12 @@ class CaptureScreenFactoryTest {
         val result = factory.controlPanelState(
             inputAudioLevel = null,
             currentDriver = DriverSelection.Internet,
-            driverConnected = true,
+            driverConnectionState = DriverConnectionState.Connected,
             positionTransmit = false,
             license = LicenseData(
                 address = "KE0YOG-7".toStationAddress(),
                 passcode = Passcode(12345),
             ),
-            connectedTncDevice = null,
         )
 
         assertTrue(result is ControlPanelState.Loaded)
@@ -103,13 +100,12 @@ class CaptureScreenFactoryTest {
         val result = factory.controlPanelState(
             inputAudioLevel = null,
             currentDriver = DriverSelection.Internet,
-            driverConnected = true,
+            driverConnectionState = DriverConnectionState.Connected,
             positionTransmit = true,
             license = LicenseData(
                 address = "KE0YOG-7".toStationAddress(),
                 passcode = Passcode(12345),
             ),
-            connectedTncDevice = null,
         )
 
         assertTrue(result is ControlPanelState.Loaded)
@@ -123,10 +119,9 @@ class CaptureScreenFactoryTest {
         val result = factory.controlPanelState(
             inputAudioLevel = null,
             currentDriver = DriverSelection.Audio,
-            driverConnected = false,
+            driverConnectionState = DriverConnectionState.Disconnected,
             positionTransmit = false,
             license = LicenseData(),
-            connectedTncDevice = null,
         )
 
         assertTrue(result is ControlPanelState.Loaded)
@@ -140,10 +135,9 @@ class CaptureScreenFactoryTest {
         val result = factory.controlPanelState(
             inputAudioLevel = 12.percent,
             currentDriver = DriverSelection.Audio,
-            driverConnected = true,
+            driverConnectionState = DriverConnectionState.Connected,
             positionTransmit = false,
             license = LicenseData(),
-            connectedTncDevice = null,
         )
 
         assertTrue(result is ControlPanelState.Loaded)
@@ -157,12 +151,11 @@ class CaptureScreenFactoryTest {
         val result = factory.controlPanelState(
             inputAudioLevel = 12.percent,
             currentDriver = DriverSelection.Audio,
-            driverConnected = false,
+            driverConnectionState = DriverConnectionState.Disconnected,
             positionTransmit = false,
             license = LicenseData(
                 address = "KE0YOG-7".toStationAddress(),
             ),
-            connectedTncDevice = null,
         )
 
         assertTrue(result is ControlPanelState.Loaded)
@@ -176,12 +169,11 @@ class CaptureScreenFactoryTest {
         val result = factory.controlPanelState(
             inputAudioLevel = 12.percent,
             currentDriver = DriverSelection.Audio,
-            driverConnected = true,
+            driverConnectionState = DriverConnectionState.Connected,
             positionTransmit = false,
             license = LicenseData(
                 address = "KE0YOG-7".toStationAddress(),
             ),
-            connectedTncDevice = null,
         )
 
         assertTrue(result is ControlPanelState.Loaded)
@@ -195,12 +187,11 @@ class CaptureScreenFactoryTest {
         val result = factory.controlPanelState(
             inputAudioLevel = 12.percent,
             currentDriver = DriverSelection.Audio,
-            driverConnected = true,
+            driverConnectionState = DriverConnectionState.Connected,
             positionTransmit = true,
             license = LicenseData(
                 address = "KE0YOG-7".toStationAddress(),
             ),
-            connectedTncDevice = null,
         )
 
         assertTrue(result is ControlPanelState.Loaded)
@@ -214,14 +205,13 @@ class CaptureScreenFactoryTest {
         val result = factory.controlPanelState(
             inputAudioLevel = null,
             currentDriver = DriverSelection.Tnc,
-            driverConnected = false,
+            driverConnectionState = DriverConnectionState.Disconnected,
             positionTransmit = false,
             license = LicenseData(),
-            connectedTncDevice = null,
         )
 
         assertTrue(result is ControlPanelState.Loaded)
-        assertEquals(ControlState.Disabled, result.connectState)
+        assertEquals(ControlState.Off, result.connectState)
         assertEquals(ControlState.Disabled, result.positionTransmitState)
         assertEquals(null, result.volumeLevel)
     }
@@ -231,10 +221,9 @@ class CaptureScreenFactoryTest {
         val result = factory.controlPanelState(
             inputAudioLevel = null,
             currentDriver = DriverSelection.Tnc,
-            driverConnected = false,
+            driverConnectionState = DriverConnectionState.Disconnected,
             positionTransmit = false,
             license = LicenseData(),
-            connectedTncDevice = FakeDevice,
         )
 
         assertTrue(result is ControlPanelState.Loaded)
@@ -248,10 +237,9 @@ class CaptureScreenFactoryTest {
         val result = factory.controlPanelState(
             inputAudioLevel = null,
             currentDriver = DriverSelection.Tnc,
-            driverConnected = true,
+            driverConnectionState = DriverConnectionState.Connected,
             positionTransmit = false,
             license = LicenseData(),
-            connectedTncDevice = FakeDevice,
         )
 
         assertTrue(result is ControlPanelState.Loaded)
@@ -265,12 +253,11 @@ class CaptureScreenFactoryTest {
         val result = factory.controlPanelState(
             inputAudioLevel = null,
             currentDriver = DriverSelection.Tnc,
-            driverConnected = true,
+            driverConnectionState = DriverConnectionState.Connected,
             positionTransmit = false,
             license = LicenseData(
                 address = "KE0YOG-7".toStationAddress(),
             ),
-            connectedTncDevice = FakeDevice,
         )
 
         assertTrue(result is ControlPanelState.Loaded)
@@ -284,12 +271,11 @@ class CaptureScreenFactoryTest {
         val result = factory.controlPanelState(
             inputAudioLevel = null,
             currentDriver = DriverSelection.Tnc,
-            driverConnected = true,
+            driverConnectionState = DriverConnectionState.Connected,
             positionTransmit = true,
             license = LicenseData(
                 address = "KE0YOG-7".toStationAddress(),
             ),
-            connectedTncDevice = FakeDevice,
         )
 
         assertTrue(result is ControlPanelState.Loaded)

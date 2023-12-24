@@ -12,7 +12,7 @@ interface BluetoothDeviceAccess {
     val devices: Flow<List<BluetoothDeviceData>>
 
     @RequiresPermission(allOf = [Manifest.permission.BLUETOOTH_CONNECT, Manifest.permission.BLUETOOTH_SCAN])
-    fun connect(
+    suspend fun connect(
         device: BluetoothDeviceData,
         uuid: UUID,
         onConnect: suspend (InputStream, OutputStream) -> Unit,

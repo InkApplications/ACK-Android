@@ -13,7 +13,7 @@ import com.inkapplications.android.extensions.control.ControlState
 fun StateLabelledIconButton(
     icon: ImageVector,
     title: String,
-    onClick: (() -> Unit) = {},
+    onClick: ((ControlState) -> Unit) = {},
     state: ControlState,
     modifier: Modifier = Modifier,
 ) = when (state) {
@@ -22,13 +22,13 @@ fun StateLabelledIconButton(
         icon = icon,
         backgroundColor = AckTheme.colors.accent,
         iconColor = AckTheme.colors.onAccent,
-        onClick = onClick,
+        onClick = { onClick(state) },
         modifier = modifier,
     )
     ControlState.Off -> LabelledIconButton(
         title = title,
         icon = icon,
-        onClick = onClick,
+        onClick = { onClick(state) },
         modifier = modifier,
         backgroundColor = AckTheme.colors.surface,
         border = BorderStroke(1.dp, AckTheme.colors.accent),
@@ -37,7 +37,7 @@ fun StateLabelledIconButton(
     ControlState.Disabled -> LabelledIconButton(
         title = title,
         icon = icon,
-        onClick = onClick,
+        onClick = { onClick(state) },
         modifier = modifier.alpha(.6f),
         enabled = false,
         backgroundColor = AckTheme.colors.surface,

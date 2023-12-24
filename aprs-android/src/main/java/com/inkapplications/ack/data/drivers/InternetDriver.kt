@@ -24,8 +24,12 @@ class InternetDriver internal constructor(
     private val client: AprsDataClient,
     private val locationProvider: AndroidLocationProvider,
     private val settings: DriverSettingsProvider,
+    private val runScope: CoroutineScope,
     private val logger: KimchiLogger,
 ): PacketDriver {
+    private val runJob = MutableStateFlow<Job?>(null)
+    private val clientConnectionState = MutableStateFlow(DriverConnectionState.Disconnected)
+    override val connectionState: Flow<DriverConnectionState> = clientConnectionState
     override val incoming = MutableSharedFlow<CapturedPacket>()
     override val receivePermissions: Set<String> =  when {
         Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU -> setOf(Manifest.permission.POST_NOTIFICATIONS, Manifest.permission.ACCESS_FINE_LOCATION)
@@ -49,23 +53,40 @@ class InternetDriver internal constructor(
     }
 
     override suspend fun connect() {
-        settings.internetServiceConfiguration
-            .combinePair(locationProvider.location)
-            .onEach { logger.debug("New Settings/Location pair: $it") }
-            .flatMapLatest { (settings, location) -> connectWithRetry(settings, location) }
-            .onEach { if (it.startsWith('#')) logger.info("APRS-IS: $it") }
-            .filter { !it.startsWith('#') }
-            .mapNotNull { captureStringPacket(it) }
-            .onEach { logger.debug("IS Packet Parsed: $it") }
-            .flowOn(Dispatchers.IO)
-            .collect { incoming.emit(it) }
+        logger.debug("Connecting Internet Packet Capture")
+
+        runJob.updateAndGet { priorJob ->
+            priorJob?.takeIf { it.isActive } ?: launchNewJob()
+        }
+    }
+
+    override suspend fun disconnect() {
+        clientConnectionState.value = DriverConnectionState.Disconnecting
+        runJob.value?.cancelAndJoin()
+    }
+
+    private fun launchNewJob(): Job {
+        logger.debug("Launching new job for Internet Packet Capture")
+        return runScope.launch {
+            settings.internetServiceConfiguration
+                .combinePair(locationProvider.location)
+                .onEach { logger.debug("New Settings/Location pair: $it") }
+                .flatMapLatest { (settings, location) -> connectWithRetry(settings, location) }
+                .onEach { if (it.startsWith('#')) logger.info("APRS-IS: $it") }
+                .filter { !it.startsWith('#') }
+                .mapNotNull { captureStringPacket(it) }
+                .onEach { logger.debug("IS Packet Parsed: $it") }
+                .flowOn(Dispatchers.IO)
+                .collect { incoming.emit(it) }
+        }
     }
 
     private fun connectWithRetry(settings: ConnectionConfiguration, location: GeoCoordinates): Flow<String> {
         return callbackFlow {
             logger.info("Opening APRS-IS Client to ${settings.host}:${settings.port}")
             var attempts = 0
-            while (true) {
+            while (currentCoroutineContext().isActive) {
+                clientConnectionState.value = DriverConnectionState.Connecting
                 try {
                     client.connect(
                         server = settings.host,
@@ -78,6 +99,7 @@ class InternetDriver internal constructor(
                         )
                     ) { read, write ->
                         logger.info("APRS-IS Connected")
+                        clientConnectionState.value = DriverConnectionState.Connected
                         attempts = 0
                         coroutineScope {
                             launch { read.consumeEach { send(it) } }
@@ -91,6 +113,8 @@ class InternetDriver internal constructor(
                     logger.error("APRS-IS Connection terminated unexpectedly", error)
                     delay(100*(2.0.pow(attempts)).toLong().coerceAtMost(60_000))
                     ++attempts
+                } finally {
+                    clientConnectionState.value = DriverConnectionState.Disconnected
                 }
             }
         }

@@ -11,7 +11,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
-import androidx.compose.material.icons.outlined.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
@@ -248,17 +247,6 @@ private fun CaptureSettingsSheet(
         Row {
             IconButton(
                 onClick = {
-                    captureController.onDeviceSettingsClick()
-                }
-            ) {
-                Icon(
-                    imageVector = Icons.Default.SettingsBluetooth,
-                    contentDescription = stringResource(R.string.capture_controls_settings_name),
-                    tint = AckTheme.colors.foreground,
-                )
-            }
-            IconButton(
-                onClick = {
                     scope.launch {
                         settingsSheetState.bottomSheetState.collapse()
                     }
@@ -357,7 +345,14 @@ private fun CaptureSettingsSheet(
                     ControlState.Hidden, -> stringResource(R.string.capture_controls_connection_off)
                 },
                 state = controlPanelState.connectState,
-                onClick = captureController::onConnectionToggleClick,
+                onClick = {
+                    when (it) {
+                        ControlState.On -> captureController.onDisconnectClick()
+                        ControlState.Off -> captureController.onConnectClick()
+                        ControlState.Disabled,
+                        ControlState.Hidden -> {}
+                    }
+                },
             )
             StateLabelledIconButton(
                 icon = when (controlPanelState.positionTransmitState) {
@@ -373,7 +368,14 @@ private fun CaptureSettingsSheet(
                     ControlState.Hidden, -> stringResource(R.string.capture_controls_position_off)
                 },
                 state = controlPanelState.positionTransmitState,
-                onClick = captureController::onPositionTransmitToggleClick,
+                onClick = {
+                    when (it) {
+                        ControlState.On -> captureController.onDisableLocationTransmitClick()
+                        ControlState.Off -> captureController.onEnableLocationTransmitClick()
+                        ControlState.Disabled,
+                        ControlState.Hidden -> {}
+                    }
+                },
             )
         }
     }

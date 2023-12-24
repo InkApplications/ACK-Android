@@ -59,6 +59,7 @@ dependencies {
     api(inkLibraries.kimchi.logger)
 
     implementation(inkLibraries.watermelon.coroutines)
+    implementation(inkLibraries.watermelon.standard)
     implementation(inkLibraries.spondee.units)
 
     implementation(thirdParty.bundles.dagger.libraries)

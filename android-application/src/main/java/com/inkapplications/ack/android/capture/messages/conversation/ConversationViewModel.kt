@@ -29,8 +29,8 @@ class ConversationViewModel @Inject constructor(
         messageEvents.conversationList(conversationAddress),
         captureEvents.driverSelection,
         captureEvents.connectionState
-    ) { messages, driverSelection, connected ->
-        conversationViewStateFactory.createMessageList(conversationAddress, messages, connected, driverSelection)
+    ) { messages, driverSelection, connectionState ->
+        conversationViewStateFactory.createMessageList(conversationAddress, messages, connectionState, driverSelection)
     }.stateIn(viewModelScope, SharingStarted.Eagerly, conversationViewStateFactory.createInitial(conversationAddress))
 }
 
