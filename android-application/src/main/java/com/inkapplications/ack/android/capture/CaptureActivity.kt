@@ -179,7 +179,13 @@ class CaptureActivity: ExtendedActivity(), CaptureNavController, LogIndexControl
     }
 
     override fun onEnableLocationTransmitClick() {
-        captureEvents.locationTransmitState.value = true
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.CREATED) {
+                permissionGate.withPermissions(*captureEvents.getDriverTransmitPermissions().toTypedArray() + Manifest.permission.ACCESS_FINE_LOCATION) {
+                    captureEvents.locationTransmitState.value = true
+                }
+            }
+        }
     }
 
     override fun onDisableLocationTransmitClick() {
