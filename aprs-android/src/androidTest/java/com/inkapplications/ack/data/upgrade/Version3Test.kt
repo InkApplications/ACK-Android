@@ -6,9 +6,12 @@ import androidx.room.testing.MigrationTestHelper
 import androidx.sqlite.db.framework.FrameworkSQLiteOpenHelperFactory
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.runner.AndroidJUnit4
-import com.inkapplications.ack.data.PacketDatabase
 import com.inkapplications.ack.codec.AprsCodec
-import com.inkapplications.ack.structures.*
+import com.inkapplications.ack.data.PacketDatabase
+import com.inkapplications.ack.structures.AprsPacket
+import com.inkapplications.ack.structures.EncodingConfig
+import com.inkapplications.ack.structures.PacketData
+import com.inkapplications.ack.structures.PacketRoute
 import com.inkapplications.ack.structures.station.StationAddress
 import junit.framework.TestCase.assertEquals
 import org.junit.Rule

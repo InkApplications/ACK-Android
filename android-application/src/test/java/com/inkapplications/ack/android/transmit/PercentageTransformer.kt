@@ -1,7 +1,6 @@
 package com.inkapplications.ack.android.transmit
 
 import com.inkapplications.ack.android.settings.transformer.PercentageTransformer
-import inkapplications.spondee.scalar.WholePercentage
 import inkapplications.spondee.scalar.percent
 import kotlin.test.Test
 import kotlin.test.assertEquals

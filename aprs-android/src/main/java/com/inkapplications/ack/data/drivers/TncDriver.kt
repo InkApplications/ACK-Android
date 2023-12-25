@@ -24,7 +24,7 @@ import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import java.io.IOException
 import java.io.OutputStream
-import java.util.UUID
+import java.util.*
 
 class TncDriver internal constructor(
     private val bluetoothAccess: BluetoothDeviceAccess,

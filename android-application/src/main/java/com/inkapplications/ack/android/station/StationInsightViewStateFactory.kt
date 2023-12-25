@@ -2,7 +2,10 @@ package com.inkapplications.ack.android.station
 
 import com.inkapplications.ack.android.locale.format
 import com.inkapplications.ack.android.log.SummaryFactory
-import com.inkapplications.ack.android.map.*
+import com.inkapplications.ack.android.map.CameraPositionDefaults
+import com.inkapplications.ack.android.map.MapCameraPosition
+import com.inkapplications.ack.android.map.MarkerViewState
+import com.inkapplications.ack.android.map.ZoomLevels
 import com.inkapplications.ack.data.CapturedPacket
 import com.inkapplications.ack.structures.PacketData
 import com.inkapplications.ack.structures.capabilities.Commented

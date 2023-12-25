@@ -4,7 +4,9 @@ package com.inkapplications.ack.android.locale
 
 import inkapplications.spondee.format.SimpleNumberFormats
 import inkapplications.spondee.format.formatDecimal
-import inkapplications.spondee.measure.*
+import inkapplications.spondee.measure.Length
+import inkapplications.spondee.measure.Speed
+import inkapplications.spondee.measure.Temperature
 import inkapplications.spondee.measure.metric.toCelsius
 import inkapplications.spondee.measure.metric.toKilometersPerHourValue
 import inkapplications.spondee.measure.metric.toMetersPerSecondValue
@@ -12,7 +14,9 @@ import inkapplications.spondee.measure.us.toFahrenheit
 import inkapplications.spondee.measure.us.toFeet
 import inkapplications.spondee.measure.us.toMiles
 import inkapplications.spondee.measure.us.toMilesPerHourValue
-import inkapplications.spondee.structure.*
+import inkapplications.spondee.structure.Kilo
+import inkapplications.spondee.structure.compareTo
+import inkapplications.spondee.structure.format
 
 fun Length.format(metric: Boolean) = when {
     metric && toMeters() > 1000.0 -> toMeters().format(Kilo)

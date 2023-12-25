@@ -2,8 +2,11 @@ package com.inkapplications.ack.android.log
 
 import com.inkapplications.ack.android.symbol.SymbolFactoryDummy
 import com.inkapplications.ack.android.toTestPacket
-import com.inkapplications.ack.structures.*
+import com.inkapplications.ack.structures.PacketData
+import com.inkapplications.ack.structures.ReportState
+import com.inkapplications.ack.structures.TelemetryValues
 import com.inkapplications.ack.structures.station.StationAddress
+import com.inkapplications.ack.structures.symbolOf
 import inkapplications.spondee.measure.us.fahrenheit
 import inkapplications.spondee.spatial.GeoCoordinates
 import inkapplications.spondee.spatial.latitude

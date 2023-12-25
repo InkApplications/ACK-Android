@@ -1,16 +1,15 @@
 package com.inkapplications.ack.android
 
 import com.inkapplications.ack.android.map.MarkerViewState
-import com.inkapplications.android.extensions.StringResources
 import com.inkapplications.ack.android.settings.BooleanSetting
 import com.inkapplications.ack.android.settings.IntSetting
 import com.inkapplications.ack.android.settings.SettingsReadAccess
 import com.inkapplications.ack.android.settings.StringSetting
-import com.inkapplications.ack.data.drivers.PacketDriver
 import com.inkapplications.ack.data.CapturedPacket
 import com.inkapplications.ack.data.PacketSource
 import com.inkapplications.ack.data.PacketStorage
 import com.inkapplications.ack.data.drivers.DriverConnectionState
+import com.inkapplications.ack.data.drivers.PacketDriver
 import com.inkapplications.ack.structures.AprsPacket
 import com.inkapplications.ack.structures.EncodingConfig
 import com.inkapplications.ack.structures.PacketData
@@ -18,6 +17,7 @@ import com.inkapplications.ack.structures.PacketRoute
 import com.inkapplications.ack.structures.capabilities.Mapable
 import com.inkapplications.ack.structures.station.Callsign
 import com.inkapplications.ack.structures.station.StationAddress
+import com.inkapplications.android.extensions.StringResources
 import com.inkapplications.android.extensions.ViewStateFactory
 import com.inkapplications.android.extensions.format.DateTimeFormatter
 import inkapplications.spondee.spatial.GeoCoordinates

@@ -6,16 +6,12 @@ import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import com.inkapplications.ack.android.R
-import com.inkapplications.ack.android.symbol.SymbolSelector
 import com.inkapplications.ack.android.ui.theme.AckTheme
-import com.inkapplications.ack.structures.Symbol
 
 /**
  * Displays a dialog asking the user for a number input.

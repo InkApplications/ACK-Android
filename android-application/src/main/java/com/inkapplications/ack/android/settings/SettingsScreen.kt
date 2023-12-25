@@ -15,9 +15,9 @@ import com.inkapplications.ack.android.input.StringPrompt
 import com.inkapplications.ack.android.settings.buildinfo.BuildInfo
 import com.inkapplications.ack.android.symbol.SymbolPrompt
 import com.inkapplications.ack.android.ui.CallsignChip
+import com.inkapplications.ack.android.ui.NavigationRow
 import com.inkapplications.ack.android.ui.theme.AckScreen
 import com.inkapplications.ack.android.ui.theme.AckTheme
-import com.inkapplications.ack.android.ui.NavigationRow
 import com.inkapplications.ack.structures.Symbol
 import com.inkapplications.ack.structures.code
 

@@ -1,23 +1,9 @@
 package com.inkapplications.ack.android.transmit
 
 import com.inkapplications.ack.android.R
-import com.inkapplications.ack.android.input.IntegerValidator
-import com.inkapplications.ack.android.input.MaxLengthValidator
-import com.inkapplications.ack.android.input.MinLengthValidator
-import com.inkapplications.ack.android.input.ValidationResult
-import com.inkapplications.ack.android.input.Validator
-import com.inkapplications.ack.android.input.plus
-import com.inkapplications.ack.android.settings.IntBackedSetting
-import com.inkapplications.ack.android.settings.Setting
-import com.inkapplications.ack.android.settings.SettingVisibility
-import com.inkapplications.ack.android.settings.SettingsProvider
-import com.inkapplications.ack.android.settings.StringBackedSetting
-import com.inkapplications.ack.android.settings.StringSetting
-import com.inkapplications.ack.android.settings.transformer.MileTransformer
-import com.inkapplications.ack.android.settings.transformer.MillisecondTransformer
-import com.inkapplications.ack.android.settings.transformer.MinuteTransformer
-import com.inkapplications.ack.android.settings.transformer.PercentageTransformer
-import com.inkapplications.ack.android.settings.transformer.StationAddressTransformer
+import com.inkapplications.ack.android.input.*
+import com.inkapplications.ack.android.settings.*
+import com.inkapplications.ack.android.settings.transformer.*
 import com.inkapplications.ack.structures.Digipeater
 import com.inkapplications.ack.structures.Symbol
 import com.inkapplications.ack.structures.station.StationAddress

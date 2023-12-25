@@ -6,8 +6,8 @@ import androidx.compose.material.icons.filled.Cloud
 import androidx.compose.material.icons.filled.SettingsInputAntenna
 import androidx.compose.material.icons.filled.Storage
 import com.inkapplications.ack.android.R
-import com.inkapplications.ack.android.log.SummaryFactory
 import com.inkapplications.ack.android.locale.format
+import com.inkapplications.ack.android.log.SummaryFactory
 import com.inkapplications.ack.data.PacketSource
 import com.inkapplications.ack.structures.PacketData.TelemetryReport
 import com.inkapplications.ack.structures.PacketData.Weather

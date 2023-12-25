@@ -1,20 +1,15 @@
 package com.inkapplications.ack.android.connection
 
-import com.inkapplications.ack.android.settings.*
 import com.inkapplications.ack.android.R
 import com.inkapplications.ack.android.input.IntegerValidator
 import com.inkapplications.ack.android.input.RegexValidator
 import com.inkapplications.ack.android.input.enumInputValidator
-import com.inkapplications.ack.android.settings.transformer.MileTransformer
-import com.inkapplications.ack.android.settings.transformer.OptionalIntTransformer
-import com.inkapplications.ack.android.settings.transformer.SentinelOptionalTransformer
-import com.inkapplications.ack.android.settings.transformer.StationAddressTransformer
-import com.inkapplications.ack.android.settings.transformer.Transformer
-import com.inkapplications.ack.android.settings.transformer.TrimmingTransformer
-import com.inkapplications.ack.android.settings.transformer.enumTransformer
-import com.inkapplications.ack.android.settings.transformer.plus
+import com.inkapplications.ack.android.settings.*
+import com.inkapplications.ack.android.settings.transformer.*
+import com.inkapplications.ack.data.DEFAULT_CONNECTION_PORT
+import com.inkapplications.ack.data.DEFAULT_CONNECTION_SERVER
+import com.inkapplications.ack.data.DEFAULT_SEARCH_RADIUS_MILES
 import com.inkapplications.android.extensions.StringResources
-import com.inkapplications.ack.data.*
 import dagger.Reusable
 import inkapplications.spondee.measure.us.miles
 import javax.inject.Inject

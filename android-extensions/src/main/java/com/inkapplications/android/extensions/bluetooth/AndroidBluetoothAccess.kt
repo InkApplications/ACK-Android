@@ -10,15 +10,13 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.os.Build
 import androidx.annotation.RequiresPermission
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.scan
-import kotlinx.coroutines.launch
 import java.io.InputStream
 import java.io.OutputStream
-import java.util.UUID
+import java.util.*
 
 /**
  * Provides access to bluetooth devices via event streams.
