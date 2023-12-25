@@ -5,7 +5,6 @@ import com.inkapplications.ack.structures.AprsPacket
 import com.inkapplications.ack.structures.PacketData
 import com.inkapplications.ack.structures.station.Callsign
 import com.inkapplications.coroutines.filterItemNotNull
-import com.inkapplications.coroutines.filterItems
 import com.inkapplications.coroutines.mapItems
 import kimchi.logger.KimchiLogger
 import kotlinx.coroutines.flow.Flow
@@ -52,6 +51,12 @@ internal class DaoPacketStorage(
         return packetDao.countSources()
     }
 
+    override fun findByStationComments(limit: Int?): Flow<List<CapturedPacket>> {
+        return packetDao.findStationComments(limit ?: -1)
+            .mapItems { createCapturedPacket(it, fromEntityOrNull(it)) }
+            .filterItemNotNull()
+    }
+
     override fun findMostRecentByType(type: KClass<out PacketData>): Flow<CapturedPacket?> {
         return packetDao.findMostRecentByType(type.simpleName!!)
             .map { if (it == null) null else createCapturedPacket(it, fromEntityOrNull(it)) }
@@ -72,6 +77,7 @@ internal class DaoPacketStorage(
             sourceCallsign = packet.route.source.callsign.canonical,
             addresseeCallsign = (packet.data as? PacketData.Message)?.addressee?.callsign?.canonical,
             dataType = packet.data.javaClass.simpleName,
+            comment = packet.data.commentLikeField,
         )
         val id = packetDao.addPacket(entity)
 

@@ -12,6 +12,7 @@ import com.inkapplications.ack.data.drivers.InternetDriver
 import com.inkapplications.ack.data.drivers.PacketDrivers
 import com.inkapplications.ack.data.drivers.TncDriver
 import com.inkapplications.ack.data.upgrade.V4Upgrade
+import com.inkapplications.ack.data.upgrade.V5Upgrade
 import com.inkapplications.android.extensions.bluetooth.BluetoothDeviceAccess
 import dagger.Module
 import dagger.Provides
@@ -52,6 +53,7 @@ object AndroidAprsModule {
         val database = Room.databaseBuilder(context, PacketDatabase::class.java, "aprs_packets")
             .addMigrations(V3Upgrade(codec, logger))
             .addMigrations(V4Upgrade(codec, logger))
+            .addMigrations(V5Upgrade)
             .build()
         return DaoPacketStorage(database.pinsDao(), codec, clock, logger)
     }

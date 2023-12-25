@@ -25,6 +25,9 @@ internal interface PacketDao {
     @Query("SELECT * FROM packets WHERE dataType = :type ORDER BY timestamp DESC LIMIT 1")
     fun findMostRecentByType(type: String): Flow<PacketEntity?>
 
+    @Query("SELECT * FROM packets WHERE comment LIKE '%MHz%' ORDER BY timestamp DESC LIMIT :limit")
+    fun findStationComments(limit: Int): Flow<List<PacketEntity>>
+
     @Query("""
         SELECT * FROM packets 
         WHERE (UPPER(sourceCallsign) = UPPER(:addresseeCallsign) AND UPPER(addresseeCallsign) = UPPER(:callsign))

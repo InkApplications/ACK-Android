@@ -31,6 +31,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.inkapplications.ack.android.R
+import com.inkapplications.ack.android.capture.insights.InsightsController
 import com.inkapplications.ack.android.capture.insights.InsightsScreen
 import com.inkapplications.ack.android.log.index.LogIndexScreen
 import com.inkapplications.ack.android.log.index.LogIndexController
@@ -58,6 +59,7 @@ fun CaptureScreen(
     messagesScreenController: MessagesScreenController,
     mapFactory: (Context) -> View,
     controller: CaptureNavController,
+    insightsController: InsightsController,
     viewModel: CaptureViewModel = hiltViewModel(),
 ) = AckScreen {
     val settingsSheetState = rememberBottomSheetScaffoldState()
@@ -83,6 +85,7 @@ fun CaptureScreen(
                     messagesScreenController = messagesScreenController,
                     mapFactory = mapFactory,
                     captureController = controller,
+                    insightsController = insightsController,
                 )
             }
         }
@@ -389,6 +392,7 @@ private fun CaptureNavHost(
     messagesScreenController: MessagesScreenController,
     mapFactory: (Context) -> View,
     captureController: CaptureNavController,
+    insightsController: InsightsController,
 ) {
     NavHost(
         navController = navController,
@@ -418,7 +422,9 @@ private fun CaptureNavHost(
             )
         }
         composable("insights") {
-            InsightsScreen()
+            InsightsScreen(
+                controller = insightsController
+            )
         }
     }
 }

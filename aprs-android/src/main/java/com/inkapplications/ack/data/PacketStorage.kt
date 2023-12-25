@@ -50,6 +50,11 @@ interface PacketStorage {
     fun countStations(): Flow<Int>
 
     /**
+     * Find packets with comments that appear to be broadcasting a station frequency.
+     */
+    fun findByStationComments(limit: Int? = null): Flow<List<CapturedPacket>>
+
+    /**
      * Find the most recent packet received of a specific data type.
      *
      * @param type The data type of the packet to find.
