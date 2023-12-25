@@ -60,6 +60,7 @@ object PacketStorageStub: PacketStorage {
     override suspend fun save(data: ByteArray, packet: AprsPacket, source: PacketSource): CapturedPacket = TODO()
     override fun count(): Flow<Int> = flow {}
     override fun countStations(): Flow<Int> = flow {}
+    override fun findByStationComments(limit: Int?): Flow<List<CapturedPacket>> = TODO()
     override fun findMostRecentByType(type: KClass<out PacketData>): Flow<CapturedPacket?> = flow {}
     override fun findBySource(callsign: Callsign, limit: Int?): Flow<List<CapturedPacket>> = flow {}
 }

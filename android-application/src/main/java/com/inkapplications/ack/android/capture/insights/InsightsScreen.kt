@@ -1,6 +1,8 @@
 package com.inkapplications.ack.android.capture.insights
 
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Icon
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
@@ -13,23 +15,48 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.inkapplications.ack.android.R
+import com.inkapplications.ack.android.log.AprsLogItem
 import com.inkapplications.ack.android.ui.theme.AckScreen
 import com.inkapplications.ack.android.ui.theme.AckTheme
 
 @Composable
 fun InsightsScreen(
-    viewModel: InsightsViewModel = hiltViewModel()
+    viewModel: InsightsViewModel = hiltViewModel(),
+    controller: InsightsController,
 ) {
     AckScreen {
         val weatherState = viewModel.weatherState.collectAsState()
+        val stationsState = viewModel.stations.collectAsState()
         val statsState = viewModel.statsState.collectAsState()
 
         Column(
-            modifier = Modifier.padding(AckTheme.spacing.gutter)
+            modifier = Modifier.padding(AckTheme.spacing.gutter).verticalScroll(rememberScrollState())
         ) {
             Text(stringResource(R.string.insights_title), style = AckTheme.typography.h1)
             Weather(weatherState.value)
+            NearbyStations(stationsState.value, controller)
             Stats(statsState.value)
+        }
+    }
+}
+
+@Composable
+private fun NearbyStations(
+    state: NearbyStationsState,
+    controller: InsightsController,
+) {
+    Column {
+        Text(stringResource(R.string.insights_stations_title), style = AckTheme.typography.h2, modifier = Modifier.padding(bottom = AckTheme.spacing.content))
+        when (state) {
+            NearbyStationsState.Initial -> {}
+            NearbyStationsState.Empty -> {
+                Text(stringResource(id = R.string.insights_stations_empty_caption), style = AckTheme.typography.caption)
+            }
+            is NearbyStationsState.StationList -> {
+                state.stations.forEach { station ->
+                    AprsLogItem(station, onClick = controller::onStationItemClicked)
+                }
+            }
         }
     }
 }

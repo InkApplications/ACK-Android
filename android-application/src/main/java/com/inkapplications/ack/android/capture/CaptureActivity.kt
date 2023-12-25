@@ -12,6 +12,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.inkapplications.ack.android.R
+import com.inkapplications.ack.android.capture.insights.InsightsController
 import com.inkapplications.ack.android.log.LogItemViewState
 import com.inkapplications.ack.android.log.index.LogIndexController
 import com.inkapplications.ack.android.log.details.startLogInspectActivity
@@ -48,7 +49,7 @@ import javax.inject.Inject
  * to capture APRS packets and explore the data that has been captured.
  */
 @AndroidEntryPoint
-class CaptureActivity: ExtendedActivity(), CaptureNavController, LogIndexController {
+class CaptureActivity: ExtendedActivity(), CaptureNavController, LogIndexController, InsightsController {
     @Inject
     lateinit var mapEvents: MapEvents
 
@@ -79,6 +80,7 @@ class CaptureActivity: ExtendedActivity(), CaptureNavController, LogIndexControl
                 mapState = mapState,
                 logIndexController = this,
                 messagesScreenController = messagesScreenController,
+                insightsController = this,
                 mapFactory = ::createMapView,
                 controller = this,
             )
@@ -127,6 +129,10 @@ class CaptureActivity: ExtendedActivity(), CaptureNavController, LogIndexControl
     }
 
     override fun onLogListItemClick(item: LogItemViewState) {
+        startLogInspectActivity(item.id)
+    }
+
+    override fun onStationItemClicked(item: LogItemViewState) {
         startLogInspectActivity(item.id)
     }
 

@@ -15,4 +15,5 @@ internal class PacketEntity(
     val sourceCallsign: String,
     val addresseeCallsign: String?,
     val dataType: String,
+    val comment: String?,
 )
