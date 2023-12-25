@@ -65,26 +65,28 @@ class AfskDriver internal constructor(
 
     private fun launchNewJob(): Job {
         logger.debug("Launching new job for Audio Packet Capture")
-        val job = Job()
-        runScope.launch(job) {
-            audioProcessor.data
-                .mapNotNull { captureAx25Packet(it) }
-                .onEach { logger.debug("APRS Packet Parsed: $it") }
-                .collect { incoming.emit(it) }
+        return runScope.launch {
+            launch {
+                audioProcessor.data
+                    .mapNotNull { captureAx25Packet(it) }
+                    .onEach { logger.debug("APRS Packet Parsed: $it") }
+                    .collect { incoming.emit(it) }
+            }
+            launch {
+                settings.afskConfiguration.combinePair(transmitQueue)
+                    .collect { (config, data) ->
+                        logger.info("Modulating ${data.size} bytes with a ${config.preamble} preamble at ${config.volume.toWholePercentage().roundToInt()}% volume")
+                        modulator.modulate(data, config.preamble, config.volume)
+                    }
+            }
         }
-        runScope.launch(job) {
-            settings.afskConfiguration.combinePair(transmitQueue)
-                .collect { (config, data) ->
-                    logger.info("Modulating ${data.size} bytes with a ${config.preamble} preamble at ${config.volume.toWholePercentage().roundToInt()}% volume")
-                    modulator.modulate(data, config.preamble, config.volume)
-                }
-        }
-
-        return job
     }
 
     override suspend fun disconnect() {
+        logger.debug("Disconnecting Audio Packet Capture")
         runJob.value?.cancelAndJoin()
+        runJob.value = null
+        logger.debug("Audio Packet Capture Disconnected")
     }
 
     private suspend fun captureAx25Packet(data: ByteArray): CapturedPacket? {

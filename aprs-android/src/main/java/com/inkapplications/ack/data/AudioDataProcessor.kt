@@ -27,11 +27,11 @@ internal class AudioDataProcessor(
 
         audioIn.capture()
 
-        audioIn.audioData.consumeEach { decode(it) }
-        awaitClose {
+        invokeOnClose {
             audioIn.cancel()
             peak.value = null
         }
+        audioIn.audioData.consumeEach { decode(it) }
     }
 
     private val peak = MutableStateFlow<Short?>(null)
