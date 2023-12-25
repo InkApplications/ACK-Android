@@ -69,6 +69,7 @@ object AckTheme {
         @ReadOnlyComposable
         get() = SizingVariant(
             dispayIcon = 120.dp,
+            displayDecorationIcon = 80.dp,
             iconButton = 16.dp,
         )
 

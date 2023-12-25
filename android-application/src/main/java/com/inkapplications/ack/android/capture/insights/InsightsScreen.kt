@@ -128,7 +128,7 @@ private fun WeatherPlaceholder() {
 private fun WeatherIcon(
     iconState: InsightsWeatherState.WeatherIcon,
 ) {
-    val iconModifier = Modifier.size(AckTheme.sizing.dispayIcon)
+    val iconModifier = Modifier.size(AckTheme.sizing.displayDecorationIcon)
     val iconTint = AckTheme.colors.foreground
 
     when (iconState) {
