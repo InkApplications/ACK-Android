@@ -46,7 +46,7 @@ private fun NearbyStations(
     controller: InsightsController,
 ) {
     Column {
-        Text(stringResource(R.string.insights_stations_title), style = AckTheme.typography.h2, modifier = Modifier.padding(bottom = AckTheme.spacing.content))
+        Text(stringResource(R.string.insights_stations_title), style = AckTheme.typography.h2, modifier = Modifier.padding(vertical = AckTheme.spacing.content))
         when (state) {
             NearbyStationsState.Initial -> {}
             NearbyStationsState.Empty -> {
@@ -66,7 +66,7 @@ private fun Stats(
     state: InsightsStatsState,
 ) {
     Column {
-        Text(stringResource(R.string.insights_packets_title), style = AckTheme.typography.h2, modifier = Modifier.padding(bottom = AckTheme.spacing.content))
+        Text(stringResource(R.string.insights_packets_title), style = AckTheme.typography.h2, modifier = Modifier.padding(vertical = AckTheme.spacing.content))
         when (state) {
             InsightsStatsState.Initial -> {}
             InsightsStatsState.None -> {
