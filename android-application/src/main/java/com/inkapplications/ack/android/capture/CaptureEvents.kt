@@ -63,7 +63,12 @@ class CaptureEvents @Inject constructor(
     /**
      * The current audio input level, or null when not capturing.
      */
-    val audioInputVolume = drivers.afskDriver.volume
+    val audioInputVolume = drivers.afskDriver.volume.combine(connectionState) { volume, state ->
+        when (state) {
+            DriverConnectionState.Connected -> volume
+            else -> null
+        }
+    }
 
     /**
      * Change the current APRS driver.

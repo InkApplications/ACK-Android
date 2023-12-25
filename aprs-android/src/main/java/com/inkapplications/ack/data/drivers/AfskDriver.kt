@@ -84,7 +84,10 @@ class AfskDriver internal constructor(
     }
 
     override suspend fun disconnect() {
+        logger.debug("Disconnecting Audio Packet Capture")
         runJob.value?.cancelAndJoin()
+        runJob.value = null
+        logger.debug("Audio Packet Capture Disconnected")
     }
 
     private suspend fun captureAx25Packet(data: ByteArray): CapturedPacket? {
