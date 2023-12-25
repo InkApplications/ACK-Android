@@ -1,8 +1,8 @@
 package com.inkapplications.ack.android.onboard
 
 import com.inkapplications.ack.android.R
-import com.inkapplications.android.extensions.StringResources
 import com.inkapplications.ack.android.settings.*
+import com.inkapplications.android.extensions.StringResources
 import dagger.Reusable
 import javax.inject.Inject
 

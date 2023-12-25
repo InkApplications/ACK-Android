@@ -6,9 +6,7 @@ import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
 import com.inkapplications.ack.codec.AprsCodec
 import com.inkapplications.ack.structures.AprsPacket
-import com.inkapplications.ack.structures.PacketData
 import kimchi.logger.KimchiLogger
-import java.lang.IllegalStateException
 
 /**
  * Migrates denormalized packet data by extracting the raw packet and parsing it.

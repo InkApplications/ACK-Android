@@ -13,10 +13,16 @@ import com.inkapplications.ack.structures.station.StationAddress
 import com.inkapplications.ack.structures.symbolOf
 import inkapplications.spondee.measure.us.fahrenheit
 import inkapplications.spondee.measure.us.milesPerHour
-import inkapplications.spondee.spatial.*
+import inkapplications.spondee.spatial.GeoCoordinates
+import inkapplications.spondee.spatial.degrees
+import inkapplications.spondee.spatial.latitude
+import inkapplications.spondee.spatial.longitude
 import kotlinx.datetime.Instant
 import org.junit.Test
-import kotlin.test.*
+import kotlin.test.assertEquals
+import kotlin.test.assertFalse
+import kotlin.test.assertNull
+import kotlin.test.assertTrue
 
 class StationViewStateFactoryTest {
     val dummySummaryFactory = SummaryFactory(ParrotStringResources)

@@ -2,7 +2,9 @@ package com.inkapplications.ack.android
 
 import com.inkapplications.ack.data.CapturedPacket
 import com.inkapplications.ack.data.PacketSource
-import com.inkapplications.ack.structures.*
+import com.inkapplications.ack.structures.AprsPacket
+import com.inkapplications.ack.structures.PacketData
+import com.inkapplications.ack.structures.PacketRoute
 import com.inkapplications.ack.structures.station.StationAddress
 import kotlinx.datetime.Instant
 

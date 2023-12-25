@@ -5,7 +5,7 @@ import androidx.annotation.RequiresPermission
 import kotlinx.coroutines.flow.Flow
 import java.io.InputStream
 import java.io.OutputStream
-import java.util.UUID
+import java.util.*
 
 interface BluetoothDeviceAccess {
     @get:RequiresPermission(allOf = [Manifest.permission.BLUETOOTH_CONNECT, Manifest.permission.BLUETOOTH_SCAN])

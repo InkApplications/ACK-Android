@@ -17,7 +17,9 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.inkapplications.ack.android.R
 import com.inkapplications.ack.android.log.AprsLogItem
 import com.inkapplications.ack.android.map.mapbox.MarkerMap
-import com.inkapplications.ack.android.ui.*
+import com.inkapplications.ack.android.ui.IconRow
+import com.inkapplications.ack.android.ui.NavigationRow
+import com.inkapplications.ack.android.ui.TelemetryTable
 import com.inkapplications.ack.android.ui.theme.AckTheme
 
 @Composable

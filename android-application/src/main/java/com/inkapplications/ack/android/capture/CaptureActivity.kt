@@ -13,15 +13,17 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.inkapplications.ack.android.R
 import com.inkapplications.ack.android.capture.insights.InsightsController
-import com.inkapplications.ack.android.log.LogItemViewState
-import com.inkapplications.ack.android.log.index.LogIndexController
-import com.inkapplications.ack.android.log.details.startLogInspectActivity
-import com.inkapplications.ack.android.capture.messages.index.MessagesScreenController
 import com.inkapplications.ack.android.capture.messages.conversation.startConversationActivity
 import com.inkapplications.ack.android.capture.messages.create.CreateConversationActivity
+import com.inkapplications.ack.android.capture.messages.index.MessagesScreenController
 import com.inkapplications.ack.android.capture.service.BackgroundCaptureService
 import com.inkapplications.ack.android.connection.DriverSelection
-import com.inkapplications.ack.android.map.*
+import com.inkapplications.ack.android.log.LogItemViewState
+import com.inkapplications.ack.android.log.details.startLogInspectActivity
+import com.inkapplications.ack.android.log.index.LogIndexController
+import com.inkapplications.ack.android.map.MapController
+import com.inkapplications.ack.android.map.MapEvents
+import com.inkapplications.ack.android.map.MapViewState
 import com.inkapplications.ack.android.map.mapbox.createController
 import com.inkapplications.ack.android.settings.SettingsActivity
 import com.inkapplications.ack.android.station.startStationActivity
@@ -37,9 +39,12 @@ import dagger.hilt.android.AndroidEntryPoint
 import kimchi.Kimchi
 import kimchi.analytics.intProperty
 import kimchi.analytics.stringProperty
-import kotlinx.coroutines.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 /**

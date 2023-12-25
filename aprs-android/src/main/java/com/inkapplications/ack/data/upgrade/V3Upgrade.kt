@@ -7,7 +7,6 @@ import androidx.sqlite.db.SupportSQLiteDatabase
 import com.inkapplications.ack.codec.AprsCodec
 import kimchi.logger.EmptyLogger
 import kimchi.logger.KimchiLogger
-import java.lang.IllegalStateException
 
 internal class V3Upgrade(
     private val aprsCodec: AprsCodec,

@@ -1,10 +1,10 @@
 package com.inkapplications.ack.android.log
 
 import com.inkapplications.ack.android.R
-import com.inkapplications.android.extensions.StringResources
 import com.inkapplications.ack.android.settings.BooleanSetting
 import com.inkapplications.ack.android.settings.Setting
 import com.inkapplications.ack.android.settings.SettingsProvider
+import com.inkapplications.android.extensions.StringResources
 import dagger.Reusable
 import javax.inject.Inject
 

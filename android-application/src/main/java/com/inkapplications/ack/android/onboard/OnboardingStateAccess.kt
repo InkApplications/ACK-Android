@@ -2,11 +2,7 @@ package com.inkapplications.ack.android.onboard
 
 import com.inkapplications.ack.android.R
 import com.inkapplications.ack.android.connection.ConnectionSettings
-import com.inkapplications.ack.android.settings.SettingsReadAccess
-import com.inkapplications.ack.android.settings.SettingsWriteAccess
-import com.inkapplications.ack.android.settings.observeBoolean
-import com.inkapplications.ack.android.settings.observeData
-import com.inkapplications.ack.android.settings.observeInt
+import com.inkapplications.ack.android.settings.*
 import com.inkapplications.android.extensions.IntegerResources
 import dagger.Reusable
 import kotlinx.coroutines.flow.combine

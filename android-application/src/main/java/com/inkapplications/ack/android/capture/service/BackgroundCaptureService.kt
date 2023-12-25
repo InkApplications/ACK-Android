@@ -7,11 +7,7 @@ import com.inkapplications.ack.android.R
 import com.inkapplications.ack.android.capture.CaptureEvents
 import dagger.hilt.android.AndroidEntryPoint
 import kimchi.Kimchi
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.SupervisorJob
-import kotlinx.coroutines.cancel
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 import javax.inject.Inject
 
 /**

@@ -1,8 +1,7 @@
 package com.inkapplications.ack.android.settings
 
+import org.junit.Assert.assertTrue
 import org.junit.Test
-
-import org.junit.Assert.*
 
 class CompositeSettingsProviderTest {
     @Test

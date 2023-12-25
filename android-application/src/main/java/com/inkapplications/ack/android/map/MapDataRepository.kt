@@ -1,8 +1,8 @@
 package com.inkapplications.ack.android.map
 
-import com.inkapplications.ack.android.log.LogItemViewState
-import com.inkapplications.ack.android.log.CombinedLogItemViewStateFactory
 import com.inkapplications.ack.android.locale.LocaleSettings
+import com.inkapplications.ack.android.log.CombinedLogItemViewStateFactory
+import com.inkapplications.ack.android.log.LogItemViewState
 import com.inkapplications.ack.android.settings.SettingsReadAccess
 import com.inkapplications.ack.android.settings.observeBoolean
 import com.inkapplications.ack.android.settings.observeInt

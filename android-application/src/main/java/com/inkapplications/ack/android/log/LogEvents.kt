@@ -3,11 +3,7 @@ package com.inkapplications.ack.android.log
 import com.inkapplications.ack.android.locale.LocaleSettings
 import com.inkapplications.ack.android.log.details.LogDetailData
 import com.inkapplications.ack.android.log.index.LogIndexData
-import com.inkapplications.ack.android.map.CameraPositionDefaults
-import com.inkapplications.ack.android.map.MapCameraPosition
-import com.inkapplications.ack.android.map.MapState
-import com.inkapplications.ack.android.map.MarkerViewStateFactory
-import com.inkapplications.ack.android.map.ZoomLevels
+import com.inkapplications.ack.android.map.*
 import com.inkapplications.ack.android.settings.SettingsReadAccess
 import com.inkapplications.ack.android.settings.observeBoolean
 import com.inkapplications.ack.android.station.StationSettings
@@ -18,11 +14,7 @@ import com.inkapplications.coroutines.combinePair
 import com.inkapplications.coroutines.filterItems
 import dagger.Reusable
 import kimchi.logger.KimchiLogger
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.filterNotNull
-import kotlinx.coroutines.flow.flatMapLatest
-import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.*
 import javax.inject.Inject
 
 @Reusable

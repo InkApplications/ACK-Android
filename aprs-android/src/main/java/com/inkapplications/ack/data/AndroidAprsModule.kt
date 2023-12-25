@@ -2,15 +2,11 @@ package com.inkapplications.ack.data
 
 import android.content.Context
 import androidx.room.Room
-import com.inkapplications.ack.data.upgrade.V3Upgrade
 import com.inkapplications.ack.client.AprsClientModule
 import com.inkapplications.ack.codec.Ack
 import com.inkapplications.ack.codec.AprsCodec
-import com.inkapplications.ack.data.drivers.AfskDriver
-import com.inkapplications.ack.data.drivers.DriverSettingsProvider
-import com.inkapplications.ack.data.drivers.InternetDriver
-import com.inkapplications.ack.data.drivers.PacketDrivers
-import com.inkapplications.ack.data.drivers.TncDriver
+import com.inkapplications.ack.data.drivers.*
+import com.inkapplications.ack.data.upgrade.V3Upgrade
 import com.inkapplications.ack.data.upgrade.V4Upgrade
 import com.inkapplications.ack.data.upgrade.V5Upgrade
 import com.inkapplications.android.extensions.bluetooth.BluetoothDeviceAccess

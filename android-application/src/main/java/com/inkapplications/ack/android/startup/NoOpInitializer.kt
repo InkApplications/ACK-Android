@@ -1,7 +1,5 @@
 package com.inkapplications.ack.android.startup
 
-import android.app.Application
-
 /**
  * An Initializer implementation that does nothing.
  *

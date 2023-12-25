@@ -8,8 +8,8 @@ import com.inkapplications.ack.structures.station.Callsign
 import com.inkapplications.android.extensions.ExtendedActivity
 import com.inkapplications.android.startActivity
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.*
 import kimchi.Kimchi
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 /**

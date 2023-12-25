@@ -4,17 +4,18 @@ import android.Manifest
 import android.os.Build
 import com.inkapplications.ack.codec.AprsCodec
 import com.inkapplications.ack.data.*
-import com.inkapplications.ack.data.AndroidAfskModulator
-import com.inkapplications.ack.data.AudioDataProcessor
 import com.inkapplications.ack.structures.AprsPacket
 import com.inkapplications.ack.structures.EncodingConfig
 import com.inkapplications.coroutines.combinePair
 import inkapplications.spondee.scalar.toWholePercentage
 import inkapplications.spondee.structure.roundToInt
 import kimchi.logger.KimchiLogger
-import kotlinx.coroutines.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.cancelAndJoin
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.launch
 
 class AfskDriver internal constructor(
     private val aprsCodec: AprsCodec,

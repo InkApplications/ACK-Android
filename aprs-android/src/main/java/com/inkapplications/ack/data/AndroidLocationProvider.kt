@@ -14,7 +14,6 @@ import inkapplications.spondee.spatial.longitude
 import inkapplications.spondee.structure.Kilo
 import inkapplications.spondee.structure.scale
 import inkapplications.spondee.structure.toFloat
-import inkapplications.spondee.structure.value
 import kimchi.logger.KimchiLogger
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.awaitClose
@@ -26,7 +25,6 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 import kotlin.time.Duration.Companion.minutes
-import kotlin.time.ExperimentalTime
 
 @Reusable
 class AndroidLocationProvider @Inject constructor(

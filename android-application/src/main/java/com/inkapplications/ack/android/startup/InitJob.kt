@@ -1,11 +1,7 @@
 package com.inkapplications.ack.android.startup
 
 import android.app.Application
-import kotlinx.coroutines.CompletableJob
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 
 /**
  * Contains and executes the Initialization Job for the application.
