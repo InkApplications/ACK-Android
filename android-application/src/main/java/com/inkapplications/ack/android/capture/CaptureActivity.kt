@@ -183,6 +183,7 @@ class CaptureActivity: ExtendedActivity(), CaptureNavController, LogIndexControl
     override fun onDriverSelected(selection: DriverSelection) {
         lifecycleScope.launch {
             Kimchi.trackEvent("driver_select", listOf(stringProperty("selection", selection.name)))
+            stopService(backgroundCaptureServiceIntent)
             captureEvents.changeDriver(selection)
         }
     }
