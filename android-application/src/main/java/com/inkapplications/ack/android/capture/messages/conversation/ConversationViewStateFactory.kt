@@ -10,7 +10,7 @@ import com.inkapplications.ack.android.R
 import com.inkapplications.ack.android.capture.messages.MessageData
 import com.inkapplications.ack.android.connection.DriverSelection
 import com.inkapplications.ack.android.connection.readableName
-import com.inkapplications.ack.data.PacketSource
+import com.inkapplications.ack.data.PacketOrigin
 import com.inkapplications.ack.data.drivers.DriverConnectionState
 import com.inkapplications.ack.structures.PacketData
 import com.inkapplications.ack.structures.station.Callsign
@@ -86,17 +86,17 @@ class ConversationViewStateFactory @Inject constructor(
             } else {
                 Alignment.CenterStart
             },
-            icon = when (data.message.source) {
-                PacketSource.Ax25 -> Icons.Default.SettingsInputAntenna
-                PacketSource.AprsIs -> Icons.Default.Cloud
-                PacketSource.Tnc -> Icons.Default.Bluetooth
-                PacketSource.Local -> Icons.Default.Storage
+            icon = when (data.message.origin) {
+                PacketOrigin.Ax25 -> Icons.Default.SettingsInputAntenna
+                PacketOrigin.AprsIs -> Icons.Default.Cloud
+                PacketOrigin.Tnc -> Icons.Default.Bluetooth
+                PacketOrigin.Local -> Icons.Default.Storage
             },
-            iconDescription = when (data.message.source) {
-                PacketSource.Ax25 -> stringResources.getString(R.string.messages_item_icon_ax25_description)
-                PacketSource.AprsIs -> stringResources.getString(R.string.messages_item_icon_internet_description)
-                PacketSource.Tnc -> stringResources.getString(R.string.messages_item_icon_tnc_description)
-                PacketSource.Local -> stringResources.getString(R.string.messages_item_icon_local_description)
+            iconDescription = when (data.message.origin) {
+                PacketOrigin.Ax25 -> stringResources.getString(R.string.messages_item_icon_ax25_description)
+                PacketOrigin.AprsIs -> stringResources.getString(R.string.messages_item_icon_internet_description)
+                PacketOrigin.Tnc -> stringResources.getString(R.string.messages_item_icon_tnc_description)
+                PacketOrigin.Local -> stringResources.getString(R.string.messages_item_icon_local_description)
             },
         )
     }

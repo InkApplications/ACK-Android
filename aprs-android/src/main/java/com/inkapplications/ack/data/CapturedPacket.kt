@@ -7,6 +7,6 @@ data class CapturedPacket(
     val id: CaptureId,
     val received: Instant,
     val parsed: AprsPacket,
-    val source: PacketSource,
+    val origin: PacketOrigin,
     val raw: ByteArray,
 )

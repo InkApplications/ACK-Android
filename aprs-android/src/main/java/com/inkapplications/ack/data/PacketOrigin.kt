@@ -1,6 +1,6 @@
 package com.inkapplications.ack.data
 
-enum class PacketSource {
+enum class PacketOrigin {
     Ax25,
     AprsIs,
     Tnc,

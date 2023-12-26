@@ -2,7 +2,7 @@ package com.inkapplications.ack.android
 
 import com.inkapplications.ack.data.CaptureId
 import com.inkapplications.ack.data.CapturedPacket
-import com.inkapplications.ack.data.PacketSource
+import com.inkapplications.ack.data.PacketOrigin
 import com.inkapplications.ack.structures.AprsPacket
 import com.inkapplications.ack.structures.PacketData
 import com.inkapplications.ack.structures.PacketRoute
@@ -19,7 +19,7 @@ fun AprsPacket.toTestCapturedPacket() = CapturedPacket(
     id = CaptureId(1),
     received = Instant.fromEpochMilliseconds(0),
     parsed = this,
-    source = PacketSource.AprsIs,
+    origin = PacketOrigin.AprsIs,
     raw = byteArrayOf(),
 )
 

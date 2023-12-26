@@ -7,7 +7,7 @@ import com.inkapplications.ack.android.settings.SettingsReadAccess
 import com.inkapplications.ack.android.settings.StringSetting
 import com.inkapplications.ack.data.CaptureId
 import com.inkapplications.ack.data.CapturedPacket
-import com.inkapplications.ack.data.PacketSource
+import com.inkapplications.ack.data.PacketOrigin
 import com.inkapplications.ack.data.PacketStorage
 import com.inkapplications.ack.data.drivers.DriverConnectionState
 import com.inkapplications.ack.data.drivers.PacketDriver
@@ -58,7 +58,7 @@ object PacketStorageStub: PacketStorage {
     override fun findLatestByConversation(callsign: Callsign): Flow<List<CapturedPacket>> = flow {}
     override fun findConversation(addressee: Callsign, callsign: Callsign): Flow<List<CapturedPacket>> = flow {}
     override fun findById(id: CaptureId): Flow<CapturedPacket?> = flow {}
-    override suspend fun save(data: ByteArray, packet: AprsPacket, source: PacketSource): CapturedPacket = TODO()
+    override suspend fun save(data: ByteArray, packet: AprsPacket, origin: PacketOrigin): CapturedPacket = TODO()
     override fun count(): Flow<Long> = flow {}
     override fun countStations(): Flow<Long> = flow {}
     override fun findByStationComments(limit: Long?): Flow<List<CapturedPacket>> = TODO()
@@ -92,7 +92,7 @@ val DummyPacket = CapturedPacket(
         ),
         data = PacketData.Unknown(""),
     ),
-    source = PacketSource.Local,
+    origin = PacketOrigin.Local,
     raw = byteArrayOf(),
 )
 

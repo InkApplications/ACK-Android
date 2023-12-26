@@ -84,13 +84,13 @@ internal class DaoPacketStorage(
             .filterItemNotNull()
     }
 
-    override suspend fun save(data: ByteArray, packet: AprsPacket, source: PacketSource): CapturedPacket {
+    override suspend fun save(data: ByteArray, packet: AprsPacket, origin: PacketOrigin): CapturedPacket {
         val now = clock.now()
         return packetDao.transactionWithResult {
             packetDao.addPacket(
                 timestamp = now,
                 raw_data = data,
-                packet_origin = source,
+                packet_origin = origin,
                 source_callsign = packet.route.source.callsign,
                 addressee_callsign = (packet.data as? PacketData.Message)?.addressee?.callsign,
                 data_type = packet.data.javaClass.simpleName,
@@ -103,7 +103,7 @@ internal class DaoPacketStorage(
                 id = CaptureId(it),
                 received = now,
                 parsed = packet,
-                source = source,
+                origin = origin,
                 raw = data,
             )
         }
@@ -112,8 +112,8 @@ internal class DaoPacketStorage(
     private fun fromEntityOrNull(data: CapturedPacketEntity): AprsPacket? {
         try {
             return when (data.packet_origin) {
-                PacketSource.Ax25, PacketSource.Tnc -> codec.fromAx25(data.raw_data)
-                PacketSource.AprsIs, PacketSource.Local -> codec.fromString(data.raw_data.toString(Charsets.UTF_8))
+                PacketOrigin.Ax25, PacketOrigin.Tnc -> codec.fromAx25(data.raw_data)
+                PacketOrigin.AprsIs, PacketOrigin.Local -> codec.fromString(data.raw_data.toString(Charsets.UTF_8))
             }
         } catch (error: Throwable) {
             logger.warn("Unable to parse packet", error)
@@ -128,7 +128,7 @@ internal class DaoPacketStorage(
             id = entity.id,
             received = entity.timestamp,
             parsed = parsed,
-            source = entity.packet_origin,
+            origin = entity.packet_origin,
             raw = entity.raw_data,
         )
     }

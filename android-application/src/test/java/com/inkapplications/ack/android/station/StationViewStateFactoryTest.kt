@@ -5,7 +5,7 @@ import com.inkapplications.ack.android.log.SummaryFactory
 import com.inkapplications.ack.android.map.MarkerViewState
 import com.inkapplications.ack.data.CaptureId
 import com.inkapplications.ack.data.CapturedPacket
-import com.inkapplications.ack.data.PacketSource
+import com.inkapplications.ack.data.PacketOrigin
 import com.inkapplications.ack.structures.AprsPacket
 import com.inkapplications.ack.structures.PacketData
 import com.inkapplications.ack.structures.WindData
@@ -41,7 +41,7 @@ class StationViewStateFactoryTest {
                     body = "test",
                 ),
             ),
-            source = PacketSource.AprsIs,
+            origin = PacketOrigin.AprsIs,
             raw = byteArrayOf(),
         )
         val data = StationData(

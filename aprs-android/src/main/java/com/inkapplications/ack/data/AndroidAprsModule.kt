@@ -8,7 +8,7 @@ import com.inkapplications.ack.codec.AprsCodec
 import com.inkapplications.ack.data.adapters.CallsignAdapter
 import com.inkapplications.ack.data.adapters.CaptureIdColumnAdapter
 import com.inkapplications.ack.data.adapters.InstantAdapter
-import com.inkapplications.ack.data.adapters.PacketSourceAdapter
+import com.inkapplications.ack.data.adapters.PacketOriginAdapter
 import com.inkapplications.ack.data.drivers.*
 import com.inkapplications.android.extensions.bluetooth.BluetoothDeviceAccess
 import dagger.Module
@@ -53,7 +53,7 @@ object AndroidAprsModule {
             CapturedPacketEntity.Adapter(
                 idAdapter = CaptureIdColumnAdapter,
                 timestampAdapter = InstantAdapter,
-                packet_originAdapter = PacketSourceAdapter,
+                packet_originAdapter = PacketOriginAdapter,
                 source_callsignAdapter = CallsignAdapter,
                 addressee_callsignAdapter = CallsignAdapter,
             ),

@@ -73,7 +73,7 @@ interface PacketStorage {
      *
      * @param data The raw data of the packet received.
      * @param packet The parsed version of the packet data,
-     * @param source The origin of the packet data.
+     * @param origin The origin of the packet data.
      */
-    suspend fun save(data: ByteArray, packet: AprsPacket, source: PacketSource): CapturedPacket
+    suspend fun save(data: ByteArray, packet: AprsPacket, origin: PacketOrigin): CapturedPacket
 }

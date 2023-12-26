@@ -128,6 +128,6 @@ class InternetDriver internal constructor(
             return null
         }
 
-        return packetStorage.save(data.toByteArray(Charsets.US_ASCII), parsed, PacketSource.AprsIs)
+        return packetStorage.save(data.toByteArray(Charsets.US_ASCII), parsed, PacketOrigin.AprsIs)
     }
 }
