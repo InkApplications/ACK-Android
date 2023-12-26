@@ -1,5 +1,6 @@
 package com.inkapplications.ack.android.map
 
+import com.inkapplications.ack.data.CaptureId
 import com.inkapplications.android.extensions.location.LocationAccess
 import kotlinx.coroutines.flow.*
 import javax.inject.Inject
@@ -14,7 +15,7 @@ class MapEvents @Inject constructor(
     private val location: LocationAccess,
 ) {
     val trackingEnabled = MutableStateFlow(false)
-    val selectedItemId = MutableStateFlow<Long?>(null)
+    val selectedItemId = MutableStateFlow<CaptureId?>(null)
     private val selectedItem = selectedItemId.flatMapLatest {
         it?.let { mapData.findLogItem(it) } ?: flowOf(null)
     }

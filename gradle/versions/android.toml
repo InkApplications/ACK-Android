@@ -1,7 +1,6 @@
 [versions]
-room = "2.5.0"
 activity = "1.7.2"
-compose-compiler = "1.4.8"
+compose-compiler = "1.5.7"
 
 [libraries.android-gradle]
 version = "8.1.1"
@@ -26,22 +25,6 @@ module = "androidx.appcompat:appcompat"
 [libraries.androidx-preference]
 version = "1.2.0"
 module = "androidx.preference:preference-ktx"
-
-[libraries.androidx-room-runtime]
-version.ref = "room"
-module = "androidx.room:room-runtime"
-
-[libraries.androidx-room-compiler]
-version.ref = "room"
-module = "androidx.room:room-compiler"
-
-[libraries.androidx-room-ktx]
-version.ref = "room"
-module = "androidx.room:room-ktx"
-
-[libraries.androidx-room-testing]
-version.ref = "room"
-module = "androidx.room:room-testing"
 
 [libraries.androidx-compose-ui]
 version = "1.4.3"

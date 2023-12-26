@@ -1,5 +1,6 @@
 package com.inkapplications.ack.android
 
+import com.inkapplications.ack.data.CaptureId
 import com.inkapplications.ack.data.CapturedPacket
 import com.inkapplications.ack.data.PacketSource
 import com.inkapplications.ack.structures.AprsPacket
@@ -15,7 +16,7 @@ val testRoute = PacketRoute(
 )
 
 fun AprsPacket.toTestCapturedPacket() = CapturedPacket(
-    id = 1,
+    id = CaptureId(1),
     received = Instant.fromEpochMilliseconds(0),
     parsed = this,
     source = PacketSource.AprsIs,

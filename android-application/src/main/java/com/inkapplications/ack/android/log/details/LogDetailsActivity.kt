@@ -11,6 +11,7 @@ import com.inkapplications.ack.android.map.mapbox.createController
 import com.inkapplications.ack.android.station.startStationActivity
 import com.inkapplications.ack.android.trackNavigation
 import com.inkapplications.ack.android.ui.theme.AckScreen
+import com.inkapplications.ack.data.CaptureId
 import com.inkapplications.ack.structures.station.Callsign
 import com.inkapplications.android.extensions.ExtendedActivity
 import com.inkapplications.android.startActivity
@@ -32,7 +33,7 @@ class LogDetailsActivity: ExtendedActivity(), LogDetailsController {
 
     private var mapView: MapView? = null
 
-    private val id get() = intent.getLongExtra(EXTRA_LOG_ID, -1)
+    private val id get() = CaptureId(intent.getLongExtra(EXTRA_LOG_ID, -1))
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -63,7 +64,7 @@ class LogDetailsActivity: ExtendedActivity(), LogDetailsController {
         }
     }
 
-    private fun onMapItemClicked(id: Long?) {
+    private fun onMapItemClicked(id: CaptureId?) {
         Kimchi.debug("Map Item Clicked: No-Op")
     }
 
@@ -75,9 +76,9 @@ class LogDetailsActivity: ExtendedActivity(), LogDetailsController {
 /**
  * Start an Activity displaying the details for the specified packet.
  */
-fun Activity.startLogInspectActivity(packetId: Long) {
+fun Activity.startLogInspectActivity(packetId: CaptureId) {
     Kimchi.trackNavigation("log-inspect")
     startActivity(LogDetailsActivity::class) {
-        putExtra(EXTRA_LOG_ID, packetId)
+        putExtra(EXTRA_LOG_ID, packetId.value)
     }
 }

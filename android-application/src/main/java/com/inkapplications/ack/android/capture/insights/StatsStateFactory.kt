@@ -14,9 +14,9 @@ class StatsStateFactory @Inject constructor() {
      * @param packetCount The total number of packets that have been collected.
      * @param stationCount The number of distinct stations that have reported packets.
      */
-    fun createState(packetCount: Int, stationCount: Int): InsightsStatsState {
+    fun createState(packetCount: Long, stationCount: Long): InsightsStatsState {
         return when (packetCount) {
-            0 -> InsightsStatsState.None
+            0L -> InsightsStatsState.None
             else -> InsightsStatsState.LoadedData(
                 packets = packetCount,
                 stations = stationCount,

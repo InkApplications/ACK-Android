@@ -8,6 +8,7 @@ import androidx.compose.ui.viewinterop.AndroidView
 import com.inkapplications.ack.android.map.MapCameraPosition
 import com.inkapplications.ack.android.map.MapController
 import com.inkapplications.ack.android.map.MarkerViewState
+import com.inkapplications.ack.data.CaptureId
 import com.mapbox.maps.MapView
 import com.mapbox.maps.Style
 
@@ -17,7 +18,7 @@ import com.mapbox.maps.Style
 inline fun MapView.createController(
     activity: Context,
     crossinline onInit: (MapController) -> Unit,
-    noinline onSelect: (Long?) -> Unit,
+    noinline onSelect: (CaptureId?) -> Unit,
 ) {
     val map = getMapboxMap()
     val styleUri = if (activity.resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK == Configuration.UI_MODE_NIGHT_YES) {
@@ -37,7 +38,7 @@ inline fun MapView.createController(
 fun MarkerMap(
     markers: Collection<MarkerViewState>,
     cameraPosition: MapCameraPosition,
-    onMapItemClicked: (Long?) -> Unit,
+    onMapItemClicked: (CaptureId?) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     var controllerState by remember { mutableStateOf<MapController?>(null) }

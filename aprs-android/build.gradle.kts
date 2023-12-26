@@ -2,6 +2,15 @@ plugins {
     id("com.android.library")
     kotlin("android")
     kotlin("kapt")
+    id("app.cash.sqldelight")
+}
+
+sqldelight {
+    databases {
+        create("PacketDatabase") {
+            packageName.set("com.inkapplications.ack.data")
+        }
+    }
 }
 
 android {
@@ -46,10 +55,6 @@ android {
 dependencies {
     api(kotlinLibraries.coroutines.core)
 
-    kapt(androidLibraries.androidx.room.compiler)
-    implementation(androidLibraries.androidx.room.runtime)
-    implementation(androidLibraries.androidx.room.ktx)
-
     implementation(projects.androidExtensions)
 
     api(inkLibraries.ack.codec)
@@ -62,10 +67,10 @@ dependencies {
     implementation(inkLibraries.watermelon.standard)
     implementation(inkLibraries.spondee.units)
 
+    implementation(thirdParty.bundles.sqldelight.android)
     implementation(thirdParty.bundles.dagger.libraries)
     kapt(thirdParty.bundles.dagger.kapt)
 
     androidTestImplementation(androidLibraries.androidx.test.runner)
     androidTestImplementation(androidLibraries.androidx.test.core)
-    androidTestImplementation(androidLibraries.androidx.room.testing)
 }

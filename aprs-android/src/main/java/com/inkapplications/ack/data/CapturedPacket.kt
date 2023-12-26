@@ -4,7 +4,7 @@ import com.inkapplications.ack.structures.AprsPacket
 import kotlinx.datetime.Instant
 
 data class CapturedPacket(
-    val id: Long,
+    val id: CaptureId,
     val received: Instant,
     val parsed: AprsPacket,
     val source: PacketSource,
