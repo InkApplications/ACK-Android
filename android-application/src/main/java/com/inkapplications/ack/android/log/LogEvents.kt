@@ -7,6 +7,7 @@ import com.inkapplications.ack.android.map.*
 import com.inkapplications.ack.android.settings.SettingsReadAccess
 import com.inkapplications.ack.android.settings.observeBoolean
 import com.inkapplications.ack.android.station.StationSettings
+import com.inkapplications.ack.data.CaptureId
 import com.inkapplications.ack.data.PacketStorage
 import com.inkapplications.ack.structures.PacketData
 import com.inkapplications.ack.structures.capabilities.Mapable
@@ -35,7 +36,7 @@ class LogEvents @Inject constructor(
                 .map { LogIndexData(metric, it) }
         }
 
-    fun stateEvents(id: Long): Flow<LogDetailData> {
+    fun stateEvents(id: CaptureId): Flow<LogDetailData> {
         logger.trace("Observing packet: $id")
         return packetStorage.findById(id)
             .filterNotNull()
@@ -50,7 +51,7 @@ class LogEvents @Inject constructor(
             }
     }
 
-    fun mapState(id: Long): Flow<MapState> {
+    fun mapState(id: CaptureId): Flow<MapState> {
         return packetStorage.findById(id)
             .filterNotNull()
             .map { packet ->

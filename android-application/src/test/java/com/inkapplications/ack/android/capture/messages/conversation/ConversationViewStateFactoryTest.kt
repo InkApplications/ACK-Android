@@ -9,7 +9,7 @@ import com.inkapplications.ack.android.*
 import com.inkapplications.ack.android.capture.messages.MessageData
 import com.inkapplications.ack.android.connection.DriverSelection
 import com.inkapplications.ack.data.CapturedPacket
-import com.inkapplications.ack.data.PacketSource
+import com.inkapplications.ack.data.PacketOrigin
 import com.inkapplications.ack.data.drivers.DriverConnectionState
 import com.inkapplications.ack.structures.PacketData
 import com.inkapplications.ack.structures.station.toStationAddress
@@ -102,13 +102,13 @@ class ConversationViewStateFactoryTest {
             message = "test",
         ).toTestPacket().toTestCapturedPacket()
         val local = getMessageState(basePacket.copy(
-            source = PacketSource.Local,
+            origin = PacketOrigin.Local,
         ))
         val radio = getMessageState(basePacket.copy(
-            source = PacketSource.Ax25,
+            origin = PacketOrigin.Ax25,
         ))
         val internet = getMessageState(basePacket.copy(
-            source = PacketSource.AprsIs,
+            origin = PacketOrigin.AprsIs,
         ))
 
         assertEquals(Icons.Default.Storage, local.icon)

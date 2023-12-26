@@ -97,6 +97,6 @@ class AfskDriver internal constructor(
             logger.warn("Unable to parse packet", parsingError)
             return null
         }
-        return packetStorage.save(data, parsed, PacketSource.Ax25)
+        return packetStorage.save(data, parsed, PacketOrigin.Ax25)
     }
 }

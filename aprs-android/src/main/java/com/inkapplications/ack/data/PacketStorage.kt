@@ -15,7 +15,7 @@ interface PacketStorage {
      *
      * @param count The max limit of packets to find.
      */
-    fun findRecent(count: Int): Flow<List<CapturedPacket>>
+    fun findRecent(count: Long): Flow<List<CapturedPacket>>
 
     /**
      * Find the latest packet in every conversation.
@@ -37,22 +37,22 @@ interface PacketStorage {
      *
      * @param id The locally generated ID to find a packet by
      */
-    fun findById(id: Long): Flow<CapturedPacket?>
+    fun findById(id: CaptureId): Flow<CapturedPacket?>
 
     /**
      * Find the quantity of packets saved.
      */
-    fun count(): Flow<Int>
+    fun count(): Flow<Long>
 
     /**
      * Find the number of distinct stations in the packets received.
      */
-    fun countStations(): Flow<Int>
+    fun countStations(): Flow<Long>
 
     /**
      * Find packets with comments that appear to be broadcasting a station frequency.
      */
-    fun findByStationComments(limit: Int? = null): Flow<List<CapturedPacket>>
+    fun findByStationComments(limit: Long? = null): Flow<List<CapturedPacket>>
 
     /**
      * Find the most recent packet received of a specific data type.
@@ -66,14 +66,14 @@ interface PacketStorage {
      *
      * @param callsign The source/origin callsign to find packets of.
      */
-    fun findBySource(callsign: Callsign, limit: Int? = null): Flow<List<CapturedPacket>>
+    fun findBySource(callsign: Callsign, limit: Long? = null): Flow<List<CapturedPacket>>
 
     /**
      * Store a packet locally.
      *
      * @param data The raw data of the packet received.
      * @param packet The parsed version of the packet data,
-     * @param source The origin of the packet data.
+     * @param origin The origin of the packet data.
      */
-    suspend fun save(data: ByteArray, packet: AprsPacket, source: PacketSource): CapturedPacket
+    suspend fun save(data: ByteArray, packet: AprsPacket, origin: PacketOrigin): CapturedPacket
 }

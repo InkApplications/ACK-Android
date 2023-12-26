@@ -6,7 +6,7 @@ import android.os.Build
 import androidx.annotation.RequiresPermission
 import com.inkapplications.ack.codec.AprsCodec
 import com.inkapplications.ack.data.CapturedPacket
-import com.inkapplications.ack.data.PacketSource
+import com.inkapplications.ack.data.PacketOrigin
 import com.inkapplications.ack.data.PacketStorage
 import com.inkapplications.ack.data.kiss.kissData
 import com.inkapplications.ack.data.kiss.writeKissData
@@ -114,7 +114,7 @@ class TncDriver internal constructor(
                                 input.kissData().collect { data ->
                                     runCatching {
                                         val packet = ack.fromAx25(data)
-                                        val saved = packetStorage.save(data, packet, PacketSource.Tnc)
+                                        val saved = packetStorage.save(data, packet, PacketOrigin.Tnc)
                                         incoming.emit(saved)
                                     }.throwCancels().onFailure {
                                         logger.error("Failed to capture packet", it)

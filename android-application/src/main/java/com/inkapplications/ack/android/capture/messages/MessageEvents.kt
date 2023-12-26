@@ -7,7 +7,7 @@ import com.inkapplications.ack.android.settings.observeData
 import com.inkapplications.ack.android.settings.observeString
 import com.inkapplications.ack.android.transmit.TransmitSettings
 import com.inkapplications.ack.codec.AprsCodec
-import com.inkapplications.ack.data.PacketSource
+import com.inkapplications.ack.data.PacketOrigin
 import com.inkapplications.ack.data.PacketStorage
 import com.inkapplications.ack.data.drivers.PacketDrivers
 import com.inkapplications.ack.structures.*
@@ -105,6 +105,6 @@ class MessageEvents @Inject constructor(
 
         currentDriver.first().transmitPacket(packet, encodingConfig)
         val encoded = codec.toString(packet)
-        packetStorage.save(encoded.toByteArray(), packet, PacketSource.Local)
+        packetStorage.save(encoded.toByteArray(), packet, PacketOrigin.Local)
     }
 }

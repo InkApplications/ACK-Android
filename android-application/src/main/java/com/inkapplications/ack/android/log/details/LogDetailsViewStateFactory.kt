@@ -8,7 +8,7 @@ import androidx.compose.material.icons.filled.Storage
 import com.inkapplications.ack.android.R
 import com.inkapplications.ack.android.locale.format
 import com.inkapplications.ack.android.log.SummaryFactory
-import com.inkapplications.ack.data.PacketSource
+import com.inkapplications.ack.data.PacketOrigin
 import com.inkapplications.ack.structures.PacketData.TelemetryReport
 import com.inkapplications.ack.structures.PacketData.Weather
 import com.inkapplications.ack.structures.capabilities.Commented
@@ -41,17 +41,17 @@ class LogDetailsViewStateFactory @Inject constructor(
             rawSource = data.packet.raw.decodeToString().takeIf { data.debug },
             telemetryValues = (packetData as? TelemetryReport)?.data,
             telemetrySequence = (packetData as? TelemetryReport)?.sequenceId,
-            receiveIcon = when (data.packet.source) {
-                PacketSource.AprsIs -> Icons.Default.Cloud
-                PacketSource.Ax25 -> Icons.Default.SettingsInputAntenna
-                PacketSource.Tnc -> Icons.Default.Bluetooth
-                PacketSource.Local -> Icons.Default.Storage
+            receiveIcon = when (data.packet.origin) {
+                PacketOrigin.AprsIs -> Icons.Default.Cloud
+                PacketOrigin.Ax25 -> Icons.Default.SettingsInputAntenna
+                PacketOrigin.Tnc -> Icons.Default.Bluetooth
+                PacketOrigin.Local -> Icons.Default.Storage
             },
-            receiveIconDescription = when (data.packet.source) {
-                PacketSource.Ax25 -> stringResources.getString(R.string.log_icon_ax25)
-                PacketSource.AprsIs -> stringResources.getString(R.string.log_icon_aprs_is)
-                PacketSource.Tnc -> stringResources.getString(R.string.log_icon_tnc)
-                PacketSource.Local -> stringResources.getString(R.string.log_icon_local)
+            receiveIconDescription = when (data.packet.origin) {
+                PacketOrigin.Ax25 -> stringResources.getString(R.string.log_icon_ax25)
+                PacketOrigin.AprsIs -> stringResources.getString(R.string.log_icon_aprs_is)
+                PacketOrigin.Tnc -> stringResources.getString(R.string.log_icon_tnc)
+                PacketOrigin.Local -> stringResources.getString(R.string.log_icon_local)
             },
         )
     }

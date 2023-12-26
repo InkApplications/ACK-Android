@@ -22,11 +22,11 @@ sealed interface InsightsStatsState {
         /**
          * Total number of captured packets.
          */
-        val packets: Int,
+        val packets: Long,
 
         /**
          * Distinct stations that have been seen in the captured packets.
          */
-        val stations: Int,
+        val stations: Long,
     ): InsightsStatsState
 }

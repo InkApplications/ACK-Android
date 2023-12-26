@@ -1,6 +1,7 @@
 package com.inkapplications.ack.android.station
 
 import com.inkapplications.ack.android.log.LogItemViewState
+import com.inkapplications.ack.data.CaptureId
 
 /**
  * Actions invoked on the station screen
@@ -22,5 +23,5 @@ interface StationScreenController {
      *
      * @param id The id of the map marker that was clicked.
      */
-    fun onMapItemClicked(id: Long?)
+    fun onMapItemClicked(id: CaptureId?)
 }

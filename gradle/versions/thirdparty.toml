@@ -1,5 +1,22 @@
 [versions]
 dagger = "2.46.1"
+sqldelight = "2.0.1"
+
+[libraries.sqldelight-gradle]
+version.ref = "sqldelight"
+module = "app.cash.sqldelight:app.cash.sqldelight.gradle.plugin"
+
+[libraries.sqldelight-android-driver]
+version.ref = "sqldelight"
+module = "app.cash.sqldelight:android-driver"
+
+[libraries.sqldelight-primitives]
+version.ref = "sqldelight"
+module = "app.cash.sqldelight:primitive-adapters"
+
+[libraries.sqldelight-coroutines-extensions]
+version.ref = "sqldelight"
+module = "app.cash.sqldelight:coroutines-extensions"
 
 [libraries.dagger-core]
 version.ref = "dagger"
@@ -80,4 +97,9 @@ dagger-libraries = [
     "hilt-core",
     "androidx-hilt-common",
     "androidx-hilt-navigation-compose",
+]
+sqldelight-android = [
+    "sqldelight-android-driver",
+    "sqldelight-primitives",
+    "sqldelight-coroutines-extensions",
 ]

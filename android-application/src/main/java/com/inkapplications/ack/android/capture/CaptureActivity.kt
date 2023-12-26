@@ -29,6 +29,7 @@ import com.inkapplications.ack.android.settings.SettingsActivity
 import com.inkapplications.ack.android.station.startStationActivity
 import com.inkapplications.ack.android.tnc.startConnectTncActivity
 import com.inkapplications.ack.android.trackNavigation
+import com.inkapplications.ack.data.CaptureId
 import com.inkapplications.ack.structures.station.Callsign
 import com.inkapplications.android.PermissionGate
 import com.inkapplications.android.extensions.ExtendedActivity
@@ -102,7 +103,7 @@ class CaptureActivity: ExtendedActivity(), CaptureNavController, LogIndexControl
         }
     }
 
-    private fun onMapItemSelected(id: Long?) {
+    private fun onMapItemSelected(id: CaptureId?) {
         mapEvents.selectedItemId.value = id
     }
 

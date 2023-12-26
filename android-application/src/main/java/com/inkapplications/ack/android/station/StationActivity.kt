@@ -7,6 +7,7 @@ import com.inkapplications.ack.android.log.LogItemViewState
 import com.inkapplications.ack.android.log.details.startLogInspectActivity
 import com.inkapplications.ack.android.trackNavigation
 import com.inkapplications.ack.android.ui.theme.AckScreen
+import com.inkapplications.ack.data.CaptureId
 import com.inkapplications.ack.structures.station.Callsign
 import com.inkapplications.android.extensions.ExtendedActivity
 import com.inkapplications.android.startActivity
@@ -36,7 +37,7 @@ class StationActivity: ExtendedActivity(), StationScreenController {
         }
     }
 
-    override fun onMapItemClicked(id: Long?) {
+    override fun onMapItemClicked(id: CaptureId?) {
         Kimchi.debug("Map Item Clicked: No-Op")
     }
 

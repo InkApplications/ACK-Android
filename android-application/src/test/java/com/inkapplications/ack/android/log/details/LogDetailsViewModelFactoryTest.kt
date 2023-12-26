@@ -6,7 +6,7 @@ import androidx.compose.material.icons.filled.SettingsInputAntenna
 import androidx.compose.material.icons.filled.Storage
 import com.inkapplications.ack.android.*
 import com.inkapplications.ack.android.log.SummaryFactory
-import com.inkapplications.ack.data.PacketSource
+import com.inkapplications.ack.data.PacketOrigin
 import com.inkapplications.ack.structures.PacketData
 import com.inkapplications.ack.structures.WindData
 import com.inkapplications.ack.structures.station.StationAddress
@@ -46,9 +46,9 @@ class StationViewStateFactoryTest {
             body = "Test"
         ).toTestPacket().toTestCapturedPacket()
 
-        val localResult = LogDetailData(packet = base.copy(source = PacketSource.Local)).let(factoryWithNullMarkers::create)
-        val isResult = LogDetailData(packet = base.copy(source = PacketSource.AprsIs)).let(factoryWithNullMarkers::create)
-        val ax25Result = LogDetailData(packet = base.copy(source = PacketSource.Ax25)).let(factoryWithNullMarkers::create)
+        val localResult = LogDetailData(packet = base.copy(origin = PacketOrigin.Local)).let(factoryWithNullMarkers::create)
+        val isResult = LogDetailData(packet = base.copy(origin = PacketOrigin.AprsIs)).let(factoryWithNullMarkers::create)
+        val ax25Result = LogDetailData(packet = base.copy(origin = PacketOrigin.Ax25)).let(factoryWithNullMarkers::create)
 
         assertEquals(Icons.Default.Storage, localResult.receiveIcon)
         assertEquals(Icons.Default.Cloud, isResult.receiveIcon)

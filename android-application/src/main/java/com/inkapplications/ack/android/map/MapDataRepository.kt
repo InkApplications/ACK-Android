@@ -7,6 +7,7 @@ import com.inkapplications.ack.android.settings.SettingsReadAccess
 import com.inkapplications.ack.android.settings.observeBoolean
 import com.inkapplications.ack.android.settings.observeInt
 import com.inkapplications.ack.android.symbol.SymbolFactory
+import com.inkapplications.ack.data.CaptureId
 import com.inkapplications.ack.data.PacketStorage
 import com.inkapplications.ack.structures.PacketData
 import com.inkapplications.coroutines.filterItemNotNull
@@ -35,7 +36,7 @@ class MapDataRepository @Inject constructor(
     fun findMarkers(): Flow<Collection<MarkerViewState>> {
         return settings.observeInt(mapSettings.pinCount)
             .flatMapLatest { pinCount ->
-                aprs.findRecent(pinCount)
+                aprs.findRecent(pinCount.toLong())
                     .map { it.distinctBy { it.parsed.route.source } }
                     .mapItems { packet ->
                         when (val data = packet.parsed.data) {
@@ -48,7 +49,7 @@ class MapDataRepository @Inject constructor(
             }
     }
 
-    fun findLogItem(id: Long): Flow<LogItemViewState?> {
+    fun findLogItem(id: CaptureId): Flow<LogItemViewState?> {
         return settings.observeBoolean(localeSettings.preferMetric).flatMapLatest { metric ->
             aprs.findById(id).map { it?.let { logStateFactory.create(it.id, it.parsed, metric) } }
         }

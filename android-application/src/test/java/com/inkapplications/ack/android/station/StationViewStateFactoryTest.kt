@@ -3,8 +3,9 @@ package com.inkapplications.ack.android.station
 import com.inkapplications.ack.android.*
 import com.inkapplications.ack.android.log.SummaryFactory
 import com.inkapplications.ack.android.map.MarkerViewState
+import com.inkapplications.ack.data.CaptureId
 import com.inkapplications.ack.data.CapturedPacket
-import com.inkapplications.ack.data.PacketSource
+import com.inkapplications.ack.data.PacketOrigin
 import com.inkapplications.ack.structures.AprsPacket
 import com.inkapplications.ack.structures.PacketData
 import com.inkapplications.ack.structures.WindData
@@ -24,13 +25,13 @@ import kotlin.test.assertTrue
 
 class StationViewStateFactoryTest {
     val dummySummaryFactory = SummaryFactory(ParrotStringResources)
-    val dummyMarker = MarkerViewState(0, GeoCoordinates(0.latitude, 0.longitude), null)
+    val dummyMarker = MarkerViewState(CaptureId(0), GeoCoordinates(0.latitude, 0.longitude), null)
 
     @Test
     fun unknownPacket() {
         val factory = StationInsightViewStateFactory(NullMarkerFactoryMock, dummySummaryFactory)
         val packet = CapturedPacket(
-            id = 1,
+            id = CaptureId(1),
             received = Instant.fromEpochMilliseconds(2),
             parsed = AprsPacket(
                 route = testRoute.copy(
@@ -40,7 +41,7 @@ class StationViewStateFactoryTest {
                     body = "test",
                 ),
             ),
-            source = PacketSource.AprsIs,
+            origin = PacketOrigin.AprsIs,
             raw = byteArrayOf(),
         )
         val data = StationData(

@@ -9,6 +9,7 @@ import androidx.annotation.RequiresPermission
 import com.google.gson.JsonObject
 import com.inkapplications.ack.android.R
 import com.inkapplications.ack.android.map.*
+import com.inkapplications.ack.data.CaptureId
 import com.inkapplications.android.continuePropagation
 import com.mapbox.geojson.Point
 import com.mapbox.maps.CameraOptions
@@ -37,7 +38,7 @@ class MapboxMapController(
     private val map: MapboxMap,
     private val style: Style,
     private val resources: Resources,
-    private val onSelect: (Long?) -> Unit,
+    private val onSelect: (CaptureId?) -> Unit,
 ): MapController {
     private val defaultMarkerId = UUID.randomUUID().toString()
 
@@ -50,7 +51,7 @@ class MapboxMapController(
                     .center(Point.fromLngLat(json.get("lon").asDouble, json.get("lat").asDouble))
                     .build()
             )
-            onSelect(json.get("id").asLong)
+            onSelect(CaptureId(json.get("id").asLong))
             true
         }
         map.addOnMapClickListener {
@@ -77,7 +78,7 @@ class MapboxMapController(
             .map { marker ->
                 PointAnnotationOptions()
                     .withData(JsonObject().also {
-                        it.addProperty("id", marker.id)
+                        it.addProperty("id", marker.id.value)
                         it.addProperty("lat", marker.coordinates.latitude.asDecimal)
                         it.addProperty("lon", marker.coordinates.longitude.asDecimal)
                     })

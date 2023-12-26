@@ -5,6 +5,7 @@ import com.inkapplications.ack.android.log.LogItemViewStateFactory
 import com.inkapplications.ack.android.settings.SettingsReadAccess
 import com.inkapplications.ack.android.settings.observeBoolean
 import com.inkapplications.ack.android.settings.observeInt
+import com.inkapplications.ack.data.CaptureId
 import com.inkapplications.ack.data.PacketStorage
 import com.inkapplications.ack.structures.station.Callsign
 import dagger.Reusable
@@ -23,12 +24,12 @@ class StationEvents @Inject constructor(
     private val stationSettings: StationSettings,
     private val logger: KimchiLogger = EmptyLogger,
 )  {
-    suspend fun packet(id: Long) = aprs.findById(id).first()
+    suspend fun packet(id: CaptureId) = aprs.findById(id).first()
 
     fun stationData(callsign: Callsign): Flow<StationData> {
         logger.trace("Observing Station Data for: $callsign")
         return settings.observeInt(stationSettings.recentStationEvents)
-            .flatMapLatest { aprs.findBySource(callsign, it) }
+            .flatMapLatest { aprs.findBySource(callsign, it.toLong()) }
             .combine(settings.observeBoolean(localeSettings.preferMetric)) { packets, metric ->
                 StationData(
                     packets = packets,
@@ -41,7 +42,7 @@ class StationEvents @Inject constructor(
         logger.trace("Observing Callsign: $callsign")
 
         return settings.observeInt(stationSettings.recentStationEvents)
-            .flatMapLatest { aprs.findBySource(callsign, it) }
+            .flatMapLatest { aprs.findBySource(callsign, it.toLong()) }
             .combine(settings.observeBoolean(localeSettings.preferMetric)) { packets, metric ->
                 StationData(
                     packets = packets,

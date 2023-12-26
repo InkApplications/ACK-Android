@@ -4,6 +4,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.inkapplications.ack.android.log.LogEvents
+import com.inkapplications.ack.data.CaptureId
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.map
@@ -19,7 +20,7 @@ class LogDetailsViewModel @Inject constructor(
     savedState: SavedStateHandle,
     logDetailsViewStateFactory: LogDetailsViewStateFactory,
 ): ViewModel() {
-    private val logId = savedState.get<Long>(EXTRA_LOG_ID)!!
+    private val logId = CaptureId(savedState.get<Long>(EXTRA_LOG_ID)!!)
 
     /**
      * Detail state about the packet data.

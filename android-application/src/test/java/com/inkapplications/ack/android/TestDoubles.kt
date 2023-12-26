@@ -5,8 +5,9 @@ import com.inkapplications.ack.android.settings.BooleanSetting
 import com.inkapplications.ack.android.settings.IntSetting
 import com.inkapplications.ack.android.settings.SettingsReadAccess
 import com.inkapplications.ack.android.settings.StringSetting
+import com.inkapplications.ack.data.CaptureId
 import com.inkapplications.ack.data.CapturedPacket
-import com.inkapplications.ack.data.PacketSource
+import com.inkapplications.ack.data.PacketOrigin
 import com.inkapplications.ack.data.PacketStorage
 import com.inkapplications.ack.data.drivers.DriverConnectionState
 import com.inkapplications.ack.data.drivers.PacketDriver
@@ -53,16 +54,16 @@ object AprsAccessStub: PacketDriver {
 }
 
 object PacketStorageStub: PacketStorage {
-    override fun findRecent(count: Int): Flow<List<CapturedPacket>> = flow {}
+    override fun findRecent(count: Long): Flow<List<CapturedPacket>> = flow {}
     override fun findLatestByConversation(callsign: Callsign): Flow<List<CapturedPacket>> = flow {}
     override fun findConversation(addressee: Callsign, callsign: Callsign): Flow<List<CapturedPacket>> = flow {}
-    override fun findById(id: Long): Flow<CapturedPacket?> = flow {}
-    override suspend fun save(data: ByteArray, packet: AprsPacket, source: PacketSource): CapturedPacket = TODO()
-    override fun count(): Flow<Int> = flow {}
-    override fun countStations(): Flow<Int> = flow {}
-    override fun findByStationComments(limit: Int?): Flow<List<CapturedPacket>> = TODO()
+    override fun findById(id: CaptureId): Flow<CapturedPacket?> = flow {}
+    override suspend fun save(data: ByteArray, packet: AprsPacket, origin: PacketOrigin): CapturedPacket = TODO()
+    override fun count(): Flow<Long> = flow {}
+    override fun countStations(): Flow<Long> = flow {}
+    override fun findByStationComments(limit: Long?): Flow<List<CapturedPacket>> = TODO()
     override fun findMostRecentByType(type: KClass<out PacketData>): Flow<CapturedPacket?> = flow {}
-    override fun findBySource(callsign: Callsign, limit: Int?): Flow<List<CapturedPacket>> = flow {}
+    override fun findBySource(callsign: Callsign, limit: Long?): Flow<List<CapturedPacket>> = flow {}
 }
 
 object EpochFormatterFake: DateTimeFormatter {
@@ -75,9 +76,9 @@ object NullMarkerFactoryMock: ViewStateFactory<CapturedPacket, MarkerViewState?>
     }
 }
 
-val DummyMarker = MarkerViewState(0, GeoCoordinates(0.latitude, 0.longitude), null)
+val DummyMarker = MarkerViewState(CaptureId(0), GeoCoordinates(0.latitude, 0.longitude), null)
 val DummyPacket = CapturedPacket(
-    id = 0L,
+    id = CaptureId(0L),
     received = Instant.DISTANT_PAST,
     parsed = AprsPacket(
         route = PacketRoute(
@@ -91,7 +92,7 @@ val DummyPacket = CapturedPacket(
         ),
         data = PacketData.Unknown(""),
     ),
-    source = PacketSource.Local,
+    origin = PacketOrigin.Local,
     raw = byteArrayOf(),
 )
 

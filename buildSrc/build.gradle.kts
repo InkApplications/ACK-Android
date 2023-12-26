@@ -13,4 +13,5 @@ dependencies {
     implementation(thirdParty.google.license.plugin)
     implementation(thirdParty.firebase.crashlytics.gradle)
     implementation(thirdParty.hilt.plugin)
+    implementation(thirdParty.sqldelight.gradle)
 }

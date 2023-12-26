@@ -1,14 +1,15 @@
 package com.inkapplications.ack.data
 
 import android.content.Context
-import androidx.room.Room
+import app.cash.sqldelight.driver.android.AndroidSqliteDriver
 import com.inkapplications.ack.client.AprsClientModule
 import com.inkapplications.ack.codec.Ack
 import com.inkapplications.ack.codec.AprsCodec
+import com.inkapplications.ack.data.adapters.CallsignAdapter
+import com.inkapplications.ack.data.adapters.CaptureIdColumnAdapter
+import com.inkapplications.ack.data.adapters.InstantAdapter
+import com.inkapplications.ack.data.adapters.PacketOriginAdapter
 import com.inkapplications.ack.data.drivers.*
-import com.inkapplications.ack.data.upgrade.V3Upgrade
-import com.inkapplications.ack.data.upgrade.V4Upgrade
-import com.inkapplications.ack.data.upgrade.V5Upgrade
 import com.inkapplications.android.extensions.bluetooth.BluetoothDeviceAccess
 import dagger.Module
 import dagger.Provides
@@ -46,12 +47,18 @@ object AndroidAprsModule {
         clock: Clock,
         logger: KimchiLogger,
     ): PacketStorage {
-        val database = Room.databaseBuilder(context, PacketDatabase::class.java, "aprs_packets")
-            .addMigrations(V3Upgrade(codec, logger))
-            .addMigrations(V4Upgrade(codec, logger))
-            .addMigrations(V5Upgrade)
-            .build()
-        return DaoPacketStorage(database.pinsDao(), codec, clock, logger)
+        val driver = AndroidSqliteDriver(PacketDatabase.Schema, context, "packets.db")
+        val database = PacketDatabase(
+            driver = driver,
+            CapturedPacketEntity.Adapter(
+                idAdapter = CaptureIdColumnAdapter,
+                timestampAdapter = InstantAdapter,
+                packet_originAdapter = PacketOriginAdapter,
+                source_callsignAdapter = CallsignAdapter,
+                addressee_callsignAdapter = CallsignAdapter,
+            ),
+        )
+        return DaoPacketStorage(database.capturedPacketEntityQueries, codec, clock, logger)
     }
 
     @Provides
