@@ -1,13 +1,13 @@
 import kotlinx.datetime.Instant;
 import com.inkapplications.ack.data.CaptureId;
-import com.inkapplications.ack.data.PacketSource;
+import com.inkapplications.ack.data.PacketOrigin;
 import com.inkapplications.ack.structures.station.Callsign;
 
 CREATE TABLE CapturedPacketEntity (
     id INTEGER AS CaptureId PRIMARY KEY AUTOINCREMENT,
     timestamp INTEGER AS Instant NOT NULL,
     raw_data BLOB NOT NULL,
-    packet_origin TEXT AS PacketSource NOT NULL,
+    packet_origin TEXT AS PacketOrigin NOT NULL,
     source_callsign TEXT AS Callsign NOT NULL,
     addressee_callsign TEXT AS Callsign,
     data_type TEXT NOT NULL,
