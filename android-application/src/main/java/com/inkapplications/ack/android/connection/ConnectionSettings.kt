@@ -34,6 +34,7 @@ class ConnectionSettings @Inject constructor(
         inputValidator = RegexValidator(
             regex = callsignRegex,
             error = resources.getString(R.string.connection_setting_address_invalid),
+            allowEmpty = true,
         ),
     )
 

@@ -30,7 +30,12 @@ fun InsightsScreen(
         val statsState = viewModel.statsState.collectAsState()
 
         Column(
-            modifier = Modifier.padding(AckTheme.spacing.gutter).verticalScroll(rememberScrollState())
+            modifier = Modifier.verticalScroll(rememberScrollState()).padding(
+                top = AckTheme.spacing.gutter,
+                start = AckTheme.spacing.gutter,
+                end = AckTheme.spacing.gutter,
+                bottom = AckTheme.spacing.navigationProtection + AckTheme.spacing.gutter,
+            )
         ) {
             Text(stringResource(R.string.insights_title), style = AckTheme.typography.h1)
             Weather(weatherState.value)
