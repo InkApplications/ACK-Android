@@ -10,8 +10,10 @@ class RegexValidator(
     private val regex: Regex,
     private val error: String,
     private val trim: Boolean = true,
+    private val allowEmpty: Boolean = false,
 ): Validator<String> {
     override fun validate(input: String): ValidationResult {
+        if (input.isBlank() && allowEmpty) return ValidationResult.Valid
         return if (regex.matches(input.let { if(trim) it.trim() else it })) {
             ValidationResult.Valid
         } else {
