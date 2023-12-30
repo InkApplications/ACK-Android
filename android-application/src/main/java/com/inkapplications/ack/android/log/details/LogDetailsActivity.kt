@@ -37,6 +37,7 @@ class LogDetailsActivity: ExtendedActivity(), LogDetailsController {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        Kimchi.trackScreen("log_details")
 
         setContent {
             AckScreen {
@@ -65,10 +66,12 @@ class LogDetailsActivity: ExtendedActivity(), LogDetailsController {
     }
 
     private fun onMapItemClicked(id: CaptureId?) {
+        Kimchi.trackEvent("log_details_map_item_click")
         Kimchi.debug("Map Item Clicked: No-Op")
     }
 
     override fun onViewStationDetails(station: Callsign) {
+        Kimchi.trackEvent("log_details_view_station")
         startStationActivity(station)
     }
 }
@@ -77,7 +80,7 @@ class LogDetailsActivity: ExtendedActivity(), LogDetailsController {
  * Start an Activity displaying the details for the specified packet.
  */
 fun Activity.startLogInspectActivity(packetId: CaptureId) {
-    Kimchi.trackNavigation("log-inspect")
+    Kimchi.trackNavigation("log_inspect")
     startActivity(LogDetailsActivity::class) {
         putExtra(EXTRA_LOG_ID, packetId.value)
     }

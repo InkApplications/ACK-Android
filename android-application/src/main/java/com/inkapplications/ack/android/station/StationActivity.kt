@@ -27,6 +27,7 @@ class StationActivity: ExtendedActivity(), StationScreenController {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        Kimchi.trackScreen("station")
 
         setContent {
             AckScreen {
@@ -38,10 +39,12 @@ class StationActivity: ExtendedActivity(), StationScreenController {
     }
 
     override fun onMapItemClicked(id: CaptureId?) {
+        Kimchi.trackEvent("station_map_item_click")
         Kimchi.debug("Map Item Clicked: No-Op")
     }
 
     override fun onLogItemClicked(item: LogItemViewState) {
+        Kimchi.trackEvent("station_log_item_click")
         startLogInspectActivity(item.id)
     }
 }

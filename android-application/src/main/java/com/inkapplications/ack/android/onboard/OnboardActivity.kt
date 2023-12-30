@@ -31,6 +31,7 @@ class OnboardActivity: ExtendedActivity(), UserAgreementController {
 
     override fun onCreate() {
         super.onCreate()
+        Kimchi.trackScreen("onboard")
 
         setContent {
             val viewModel: OnboardingViewModel = hiltViewModel()
@@ -65,11 +66,12 @@ class OnboardActivity: ExtendedActivity(), UserAgreementController {
     }
 
     override fun onTermsAgreeClick() {
-        Kimchi.trackEvent("onboard_agreement")
+        Kimchi.trackEvent("onboard_terms_agreement")
         stateAccess.setUserAgreed()
     }
 
     override fun onTermsDeclineClick() {
+        // Intentionally no logging.
         finish()
     }
 }
