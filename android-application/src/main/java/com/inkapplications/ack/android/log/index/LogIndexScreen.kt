@@ -15,6 +15,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.inkapplications.ack.android.R
 import com.inkapplications.ack.android.log.AprsLogItem
+import com.inkapplications.ack.android.log.LogItemViewState
 import com.inkapplications.ack.android.ui.theme.AckScreen
 import com.inkapplications.ack.android.ui.theme.AckTheme
 
@@ -62,8 +63,27 @@ private fun LogList(
     LazyColumn(
         contentPadding = PaddingValues(top = AckTheme.spacing.gutter, bottom = AckTheme.spacing.navigationProtection)
     ) {
-        items(state.logs) { log ->
-            AprsLogItem(log, controller::onLogListItemClick)
+        val logItems = state.logs.map { LogListItem.Log(it) }
+        items(listOf(LogListItem.Header) + logItems) { item ->
+            when (item) {
+                LogListItem.Header -> Text(
+                    text = "Packet Log",
+                    style = AckTheme.typography.h1,
+                    modifier = Modifier.padding(
+                        top = AckTheme.spacing.gutter,
+                        start = AckTheme.spacing.gutter,
+                        end = AckTheme.spacing.gutter,
+                        bottom = AckTheme.spacing.content,
+                    )
+                )
+                is LogListItem.Log -> AprsLogItem(item.log, controller::onLogListItemClick)
+            }
+
         }
     }
+}
+
+private sealed interface LogListItem {
+    object Header: LogListItem
+    data class Log(val log: LogItemViewState): LogListItem
 }
