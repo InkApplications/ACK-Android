@@ -22,6 +22,7 @@ class SettingsActivity: ExtendedActivity(), SettingsController {
 
     override fun onCreate() {
         super.onCreate()
+        Kimchi.trackScreen("settings")
 
         setContent {
             SettingsScreen(
@@ -66,6 +67,7 @@ class SettingsActivity: ExtendedActivity(), SettingsController {
     }
 
     override fun onAckLicenseClick() {
+        Kimchi.trackEvent("settings_self_license")
         startActivity(UserAgreementActivity::class)
     }
 
@@ -75,6 +77,9 @@ class SettingsActivity: ExtendedActivity(), SettingsController {
     }
 
     override fun onAdvancedChanged(checked: Boolean) {
+        Kimchi.trackEvent("settings_advanced", listOf(
+            intProperty("enabled", if (checked) 1 else 0)
+        ))
         viewModel.showAdvanced(checked)
     }
 }

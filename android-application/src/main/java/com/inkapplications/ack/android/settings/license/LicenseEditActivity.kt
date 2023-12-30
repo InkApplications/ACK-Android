@@ -23,6 +23,8 @@ class LicenseEditActivity: ExtendedActivity() {
 
     override fun onCreate() {
         super.onCreate()
+        Kimchi.trackScreen("license_edit")
+
         setContent {
             val viewModel: LicenseEditViewModel = hiltViewModel()
             val state = viewModel.state.collectAsState().value

@@ -104,6 +104,7 @@ class CaptureActivity: ExtendedActivity(), CaptureNavController, LogIndexControl
     }
 
     private fun onMapItemSelected(id: CaptureId?) {
+        Kimchi.trackEvent("map_item_select")
         mapEvents.selectedItemId.value = id
     }
 
@@ -131,14 +132,17 @@ class CaptureActivity: ExtendedActivity(), CaptureNavController, LogIndexControl
     }
 
     override fun onLogMapItemClick(log: LogItemViewState) {
+        Kimchi.trackEvent("map_log_click")
         startStationActivity(log.source)
     }
 
     override fun onLogListItemClick(item: LogItemViewState) {
+        Kimchi.trackEvent("log_item_click")
         startLogInspectActivity(item.id)
     }
 
     override fun onStationItemClicked(item: LogItemViewState) {
+        Kimchi.trackEvent("insights_item_click")
         startLogInspectActivity(item.id)
     }
 
@@ -162,6 +166,7 @@ class CaptureActivity: ExtendedActivity(), CaptureNavController, LogIndexControl
     }
 
     override fun onConnectClick() {
+        Kimchi.trackEvent("capture_connect")
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.CREATED) {
                 permissionGate.withPermissions(*captureEvents.getDriverConnectPermissions().toTypedArray()) {
@@ -178,6 +183,7 @@ class CaptureActivity: ExtendedActivity(), CaptureNavController, LogIndexControl
     }
 
     override fun onDisconnectClick() {
+        Kimchi.trackEvent("capture_disconnect")
         lifecycleScope.launch {
             captureEvents.disconnectDriver()
             stopService(backgroundCaptureServiceIntent)
@@ -185,6 +191,7 @@ class CaptureActivity: ExtendedActivity(), CaptureNavController, LogIndexControl
     }
 
     override fun onEnableLocationTransmitClick() {
+        Kimchi.trackEvent("transmit_enable")
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.CREATED) {
                 permissionGate.withPermissions(*captureEvents.getDriverTransmitPermissions().toTypedArray() + Manifest.permission.ACCESS_FINE_LOCATION) {
@@ -195,12 +202,13 @@ class CaptureActivity: ExtendedActivity(), CaptureNavController, LogIndexControl
     }
 
     override fun onDisableLocationTransmitClick() {
+        Kimchi.trackEvent("transmit_disable")
         captureEvents.locationTransmitState.value = false
     }
 
     override fun onDriverSelected(selection: DriverSelection) {
+        Kimchi.trackEvent("driver_select", listOf(stringProperty("selection", selection.name)))
         lifecycleScope.launch {
-            Kimchi.trackEvent("driver_select", listOf(stringProperty("selection", selection.name)))
             stopService(backgroundCaptureServiceIntent)
             captureEvents.changeDriver(selection)
         }

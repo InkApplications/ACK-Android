@@ -2,6 +2,7 @@ package com.inkapplications.ack.android.settings.agreement
 
 import androidx.activity.compose.setContent
 import com.inkapplications.android.extensions.ExtendedActivity
+import kimchi.Kimchi
 
 /**
  * Displays the user-agreement for the application.
@@ -12,6 +13,7 @@ import com.inkapplications.android.extensions.ExtendedActivity
 class UserAgreementActivity: ExtendedActivity() {
     override fun onCreate() {
         super.onCreate()
+        Kimchi.trackScreen("user_agreement")
 
         setContent {
             UsageAgreementReviewScreen(onBackPressedDispatcher::onBackPressed)

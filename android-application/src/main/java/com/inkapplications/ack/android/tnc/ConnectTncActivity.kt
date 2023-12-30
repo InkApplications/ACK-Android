@@ -5,11 +5,14 @@ import android.app.Activity
 import android.content.Intent
 import androidx.activity.compose.setContent
 import androidx.lifecycle.lifecycleScope
+import com.inkapplications.ack.android.trackNavigation
 import com.inkapplications.ack.data.drivers.DriverConnectionState
 import com.inkapplications.ack.data.drivers.PacketDrivers
 import com.inkapplications.android.extensions.ExtendedActivity
 import com.inkapplications.android.startActivity
 import dagger.hilt.android.AndroidEntryPoint
+import kimchi.Kimchi
+import kimchi.analytics.stringProperty
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
@@ -30,6 +33,8 @@ class ConnectTncActivity: ExtendedActivity(), DeviceListController {
     override fun onCreate() {
         super.onCreate()
 
+        Kimchi.trackScreen("connect_tnc")
+
         backgroundService = intent.getParcelableExtra(ARG_BACKGROUND_INTENT)!!
 
         setContent {
@@ -39,6 +44,9 @@ class ConnectTncActivity: ExtendedActivity(), DeviceListController {
 
     @SuppressLint("MissingPermission")
     override fun onDeviceConnectClick(device: DeviceItem) {
+        Kimchi.trackEvent("connect_tnc_connect", listOf(
+            stringProperty("device_name", device.name)
+        ))
         lifecycleScope.launch {
             drivers.tncDriver.selectDevice(device.data)
             startService(backgroundService)
@@ -48,6 +56,7 @@ class ConnectTncActivity: ExtendedActivity(), DeviceListController {
     }
 
     override fun onCloseClick() {
+        Kimchi.trackEvent("connect_tnc_close")
         finish()
     }
 }
@@ -55,6 +64,7 @@ class ConnectTncActivity: ExtendedActivity(), DeviceListController {
 fun Activity.startConnectTncActivity(
     backgroundService: Intent,
 ) {
+    Kimchi.trackNavigation("connect_tnc")
     startActivity(ConnectTncActivity::class) {
         putExtra(ARG_BACKGROUND_INTENT, backgroundService)
     }

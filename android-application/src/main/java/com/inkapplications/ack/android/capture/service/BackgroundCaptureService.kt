@@ -30,6 +30,7 @@ class BackgroundCaptureService: Service() {
     override fun onCreate() {
         super.onCreate()
         Kimchi.info("onCreate BackgroundCaptureService")
+        Kimchi.trackEvent("background_capture_start")
         runScope = CoroutineScope(Dispatchers.Main + SupervisorJob())
     }
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
@@ -45,7 +46,7 @@ class BackgroundCaptureService: Service() {
     }
 
     override fun onDestroy() {
-        Kimchi.info("onDestroy ${this::class.java.simpleName}")
+        Kimchi.trackEvent("background_capture_destroy")
         runScope.cancel()
         super.onDestroy()
     }

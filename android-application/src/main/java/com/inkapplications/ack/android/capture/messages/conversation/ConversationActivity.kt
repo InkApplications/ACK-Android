@@ -29,6 +29,7 @@ class ConversationActivity: ExtendedActivity(), ConversationController {
 
     override fun onCreate() {
         super.onCreate()
+        Kimchi.trackScreen("conversation")
         setContent {
             ConversationScreen(this)
         }
