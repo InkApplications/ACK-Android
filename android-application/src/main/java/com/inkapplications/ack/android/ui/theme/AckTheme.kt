@@ -51,7 +51,7 @@ object AckTheme {
     val colors
         @Composable
         @ReadOnlyComposable
-        get() = if (isSystemInDarkTheme()) darkColors else lightColors
+        get() = if (isSystemInDarkTheme() || Build.VERSION.SDK_INT < Build.VERSION_CODES.N) darkColors else lightColors
 
     val spacing
         @Composable
