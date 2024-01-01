@@ -58,12 +58,15 @@ android {
                 signingConfigs.getByName("debug")
             }
 
-            isMinifyEnabled = false
+            isMinifyEnabled = true
+            isShrinkResources = true
+            proguardFiles(getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro")
         }
     }
     compileOptions {
         targetCompatibility = JavaVersion.VERSION_1_8
         sourceCompatibility = JavaVersion.VERSION_1_8
+        isCoreLibraryDesugaringEnabled = true
     }
     kotlinOptions {
         jvmTarget = "1.8"
@@ -127,4 +130,5 @@ dependencies {
     testImplementation(thirdParty.junit)
     testImplementation(kotlinLibraries.coroutines.test)
     testImplementation(kotlinLibraries.kotlin.test.core)
+    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.0.4")
 }
