@@ -10,6 +10,7 @@ import android.location.LocationManager
 import androidx.preference.PreferenceManager
 import com.inkapplications.android.extensions.bluetooth.AndroidBluetoothAccess
 import com.inkapplications.android.extensions.bluetooth.BluetoothDeviceAccess
+import com.inkapplications.android.extensions.bluetooth.DummyBluetoothDeviceAccess
 import com.inkapplications.android.extensions.format.AndroidResourceDateTimeFormatter
 import com.inkapplications.android.extensions.format.DateTimeFormatter
 import com.inkapplications.android.extensions.location.AndroidLocationAccess
@@ -47,11 +48,13 @@ class ApplicationModule {
     @Reusable
     fun bluetoothAccess(
         context: Context,
-        bluetooth: BluetoothAdapter,
-    ): BluetoothDeviceAccess = AndroidBluetoothAccess(
-        context = context,
-        bluetoothAdapter = bluetooth,
-    )
+    ): BluetoothDeviceAccess {
+        val bluetooth = BluetoothAdapter.getDefaultAdapter() ?: return DummyBluetoothDeviceAccess
+        return AndroidBluetoothAccess(
+            context = context,
+            bluetoothAdapter = bluetooth,
+        )
+    }
 }
 
 @Module
