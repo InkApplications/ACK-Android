@@ -20,7 +20,7 @@ android {
         jvmTarget = JavaVersion.VERSION_1_8.toString()
     }
     composeOptions {
-        kotlinCompilerExtensionVersion = androidLibraries.versions.compose.compiler.get()
+        kotlinCompilerExtensionVersion = libs.versions.compose.compiler.get()
     }
     compileOptions {
         targetCompatibility = JavaVersion.VERSION_1_8
@@ -29,19 +29,19 @@ android {
 }
 
 dependencies {
-    implementation(kotlinLibraries.coroutines.core)
+    implementation(libs.coroutines.core)
 
-    api(androidLibraries.androidx.core)
-    api(androidLibraries.androidx.compose.ui)
-    api(androidLibraries.androidx.compose.foundation)
-    implementation(androidLibraries.androidx.preference)
+    api(libs.androidx.core)
+    api(libs.androidx.compose.ui)
+    api(libs.androidx.compose.foundation)
+    implementation(libs.androidx.preference)
 
-    api(inkLibraries.ack.structures)
+    api(libs.ack.structures)
 
-    implementation(thirdParty.bundles.dagger.libraries)
-    kapt(thirdParty.bundles.dagger.kapt)
+    implementation(libs.bundles.dagger.libraries)
+    kapt(libs.bundles.dagger.kapt)
 
-    testImplementation(thirdParty.junit)
-    testImplementation(kotlinLibraries.coroutines.test)
-    testImplementation(kotlinLibraries.kotlin.test.core)
+    testImplementation(libs.junit)
+    testImplementation(libs.coroutines.test)
+    testImplementation(libs.kotlin.test.core)
 }

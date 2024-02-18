@@ -78,7 +78,7 @@ android {
     }
 
     composeOptions {
-        kotlinCompilerExtensionVersion = androidLibraries.versions.compose.compiler.get()
+        kotlinCompilerExtensionVersion = libs.versions.compose.compiler.get()
     }
 
     packaging {
@@ -99,36 +99,36 @@ dependencies {
     implementation(projects.androidExtensions)
     implementation(projects.aprsAndroid)
 
-    implementation(kotlinLibraries.coroutines.android)
+    implementation(libs.coroutines.android)
 
-    implementation(androidLibraries.androidx.appcompat)
-    implementation(androidLibraries.androidx.preference)
-    implementation(androidLibraries.androidx.activity.ktx)
-    implementation(androidLibraries.bundles.androidx.compose.full)
+    implementation(libs.androidx.appcompat)
+    implementation(libs.androidx.preference)
+    implementation(libs.androidx.activity.ktx)
+    implementation(libs.bundles.androidx.compose.full)
 
-    implementation(thirdParty.google.material.core)
+    implementation(libs.google.material.core)
 
-    implementation(thirdParty.mapbox.android.sdk)
+    implementation(libs.mapbox.android.sdk)
 
-    implementation(thirdParty.bundles.dagger.libraries)
-    kapt(thirdParty.bundles.dagger.kapt)
+    implementation(libs.bundles.dagger.libraries)
+    kapt(libs.bundles.dagger.kapt)
 
-    implementation(thirdParty.google.license.core)
+    implementation(libs.google.license.core)
 
-    implementation(inkLibraries.kimchi.core)
-    implementation(inkLibraries.kimchi.firebase.analytics)
-    implementation(inkLibraries.kimchi.firebase.crashlytics)
+    implementation(libs.kimchi.core)
+    implementation(libs.kimchi.firebase.analytics)
+    implementation(libs.kimchi.firebase.crashlytics)
 
-    api(inkLibraries.spondee.units)
-    implementation(inkLibraries.ack.client)
+    api(libs.spondee.units)
+    implementation(libs.ack.client)
 
-    implementation(inkLibraries.bundles.watermelon)
+    implementation(libs.bundles.watermelon)
 
-    implementation(thirdParty.firebase.config)
-    implementation(thirdParty.firebase.analytics)
+    implementation(libs.firebase.config)
+    implementation(libs.firebase.analytics)
 
-    testImplementation(thirdParty.junit)
-    testImplementation(kotlinLibraries.coroutines.test)
-    testImplementation(kotlinLibraries.kotlin.test.core)
-    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.0.4")
+    testImplementation(libs.junit)
+    testImplementation(libs.coroutines.test)
+    testImplementation(libs.kotlin.test.core)
+    coreLibraryDesugaring(libs.android.tools.desugar.jdk)
 }
