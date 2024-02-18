@@ -1,5 +1,6 @@
 package com.inkapplications.ack.android.map
 
+import com.inkapplications.ack.android.maps.MarkerViewState
 import com.inkapplications.ack.android.symbol.SymbolFactory
 import com.inkapplications.ack.data.CapturedPacket
 import com.inkapplications.ack.structures.PacketData

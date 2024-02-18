@@ -1,4 +1,4 @@
-package com.inkapplications.ack.android.map
+package com.inkapplications.ack.android.maps
 
 import android.Manifest.permission
 import androidx.annotation.RequiresPermission
@@ -45,5 +45,10 @@ interface MapController {
      * Disable the device's current location from being tracked and displayed.
      */
     fun disablePositionTracking()
+
+    /**
+     * Enable or disable panning the map view.
+     */
+    fun setPanEnabled(boolean: Boolean)
 }
 

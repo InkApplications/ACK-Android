@@ -1,4 +1,4 @@
-package com.inkapplications.ack.android.map
+package com.inkapplications.ack.android.maps
 
 import inkapplications.spondee.spatial.GeoCoordinates
 import inkapplications.spondee.spatial.latitude

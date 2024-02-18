@@ -1,5 +1,6 @@
 package com.inkapplications.ack.android.log.details
 
+import com.inkapplications.ack.data.CaptureId
 import com.inkapplications.ack.structures.station.Callsign
 
 /**
@@ -15,4 +16,11 @@ interface LogDetailsController {
      * Invoked when the user clicks on the station details button.
      */
     fun onViewStationDetails(station: Callsign)
+
+    /**
+     * Invoked when the user clicks on a map marker.
+     *
+     * @param id The id of the map marker that was clicked.
+     */
+    fun onMapItemClicked(id: CaptureId?)
 }

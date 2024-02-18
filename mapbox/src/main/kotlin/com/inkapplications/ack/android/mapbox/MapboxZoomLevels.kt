@@ -1,11 +1,11 @@
-package com.inkapplications.ack.android.map.mapbox
+package com.inkapplications.ack.android.mapbox
 
-import com.inkapplications.ack.android.map.ZoomLevels
+import com.inkapplications.ack.android.maps.ZoomLevels
 
 /**
  * Mapbox adaptation of zoom levels.
  */
-val ZoomLevels.mapboxValue: Double get() = when (this) {
+internal val ZoomLevels.mapboxValue: Double get() = when (this) {
     ZoomLevels.MIN -> 0.0
     ZoomLevels.CONTINENT -> 2.0
     ZoomLevels.ISLANDS -> 4.0

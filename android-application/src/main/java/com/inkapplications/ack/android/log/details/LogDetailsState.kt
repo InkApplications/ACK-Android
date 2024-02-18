@@ -1,6 +1,7 @@
 package com.inkapplications.ack.android.log.details
 
 import androidx.compose.ui.graphics.vector.ImageVector
+import com.inkapplications.ack.android.maps.MapViewModel
 import com.inkapplications.ack.structures.TelemetryValues
 import com.inkapplications.ack.structures.station.Callsign
 
@@ -23,6 +24,7 @@ sealed interface LogDetailsState {
         val receiveIconDescription: String,
         val timestamp: String,
         val mapable: Boolean,
+        val mapViewState: MapViewModel,
         val comment: String? = null,
         val temperature: String? = null,
         val wind: String? = null,

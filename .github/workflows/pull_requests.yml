@@ -1,0 +1,18 @@
+name: PR Checks
+on: [pull_request]
+jobs:
+    build:
+        runs-on: ubuntu-latest
+        steps:
+            -
+                name: Checkout
+                uses: actions/checkout@v2.4.0
+            -
+                name: Configure Java
+                uses: actions/setup-java@v4.0.0
+                with:
+                    java-version: 17
+                    distribution: oracle
+            -
+                name: Tests
+                run: ./gradlew android-application:testStubDebugUnitTest android-extensions:testDebugUnitTest aprs-android:testDebugUnitTest maps:testDebugUnitTest

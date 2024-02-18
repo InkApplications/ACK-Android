@@ -1,6 +1,6 @@
 package com.inkapplications.ack.android
 
-import com.inkapplications.ack.android.map.MarkerViewState
+import com.inkapplications.ack.android.maps.MarkerViewState
 import com.inkapplications.ack.android.settings.BooleanSetting
 import com.inkapplications.ack.android.settings.IntSetting
 import com.inkapplications.ack.android.settings.SettingsReadAccess

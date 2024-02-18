@@ -1,17 +1,12 @@
 package com.inkapplications.ack.android.capture
 
 import android.Manifest
-import android.content.Context
 import android.content.Intent
-import android.content.pm.PackageManager
-import android.view.View
 import androidx.activity.compose.setContent
 import androidx.compose.runtime.collectAsState
-import androidx.core.content.ContextCompat
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import com.inkapplications.ack.android.R
 import com.inkapplications.ack.android.capture.insights.InsightsController
 import com.inkapplications.ack.android.capture.messages.conversation.startConversationActivity
 import com.inkapplications.ack.android.capture.messages.create.CreateConversationActivity
@@ -21,10 +16,10 @@ import com.inkapplications.ack.android.connection.DriverSelection
 import com.inkapplications.ack.android.log.LogItemViewState
 import com.inkapplications.ack.android.log.details.startLogInspectActivity
 import com.inkapplications.ack.android.log.index.LogIndexController
-import com.inkapplications.ack.android.map.MapController
 import com.inkapplications.ack.android.map.MapEvents
 import com.inkapplications.ack.android.map.MapViewState
-import com.inkapplications.ack.android.map.mapbox.createController
+import com.inkapplications.ack.android.maps.CameraPositionDefaults
+import com.inkapplications.ack.android.maps.MapViewModel
 import com.inkapplications.ack.android.settings.SettingsActivity
 import com.inkapplications.ack.android.station.startStationActivity
 import com.inkapplications.ack.android.tnc.startConnectTncActivity
@@ -34,16 +29,9 @@ import com.inkapplications.ack.structures.station.Callsign
 import com.inkapplications.android.PermissionGate
 import com.inkapplications.android.extensions.ExtendedActivity
 import com.inkapplications.android.startActivity
-import com.inkapplications.coroutines.collectOn
-import com.mapbox.maps.MapView
 import dagger.hilt.android.AndroidEntryPoint
 import kimchi.Kimchi
-import kimchi.analytics.intProperty
 import kimchi.analytics.stringProperty
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.MainScope
-import kotlinx.coroutines.cancel
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -62,9 +50,6 @@ class CaptureActivity: ExtendedActivity(), CaptureNavController, LogIndexControl
     @Inject
     lateinit var captureEvents: CaptureEvents
 
-    private var mapView: MapView? = null
-    private var mapScope: CoroutineScope = MainScope()
-    private val mapViewState = MutableStateFlow(MapViewState())
     private val permissionGate = PermissionGate(this)
     private val backgroundCaptureServiceIntent by lazy { Intent(this, BackgroundCaptureService::class.java) }
 
@@ -72,7 +57,12 @@ class CaptureActivity: ExtendedActivity(), CaptureNavController, LogIndexControl
         super.onCreate()
 
         setContent {
-            val mapState = mapViewState.collectAsState()
+            val mapState = mapEvents.viewState.collectAsState(MapViewState(
+                mapViewModel = MapViewModel(
+                    cameraPosition = CameraPositionDefaults.unknownLocation,
+                    markers = emptyList(),
+                )
+            ))
             val messagesScreenController = object: MessagesScreenController {
                 override fun onCreateMessageClick() {
                     startActivity(CreateConversationActivity::class)
@@ -87,53 +77,19 @@ class CaptureActivity: ExtendedActivity(), CaptureNavController, LogIndexControl
                 logIndexController = this,
                 messagesScreenController = messagesScreenController,
                 insightsController = this,
-                mapFactory = ::createMapView,
                 controller = this,
             )
-        }
-    }
-
-    private fun createMapView(context: Context): View {
-        return if(mapView != null) mapView!! else  MapView(context).also { mapView ->
-            this.mapView = mapView
-
-            mapView.createController(this, ::onMapLoaded, ::onMapItemSelected)
-
-            return mapView
-        }
-    }
-
-    private fun onMapItemSelected(id: CaptureId?) {
-        Kimchi.trackEvent("map_item_select")
-        mapEvents.selectedItemId.value = id
-    }
-
-    private fun onMapLoaded(map: MapController) {
-        mapScope.cancel()
-        mapScope = MainScope()
-
-        map.setBottomPadding(resources.getDimension(R.dimen.mapbox_logo_padding_bottom))
-
-        when(ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)) {
-            PackageManager.PERMISSION_GRANTED -> map.zoomTo(mapEvents.initialState)
-        }
-
-        mapEvents.viewState.collectOn(mapScope) { state ->
-            Kimchi.trackEvent("map_markers", listOf(intProperty("quantity", state.markers.size)))
-            mapViewState.emit(state)
-            map.showMarkers(state.markers)
-
-            if (state.trackPosition) {
-                map.enablePositionTracking()
-            } else {
-                map.disablePositionTracking()
-            }
         }
     }
 
     override fun onLogMapItemClick(log: LogItemViewState) {
         Kimchi.trackEvent("map_log_click")
         startStationActivity(log.source)
+    }
+
+    override fun onMapItemClick(captureId: CaptureId?) {
+        Kimchi.trackEvent("map_item_select")
+        mapEvents.selectedItemId.value = captureId
     }
 
     override fun onLogListItemClick(item: LogItemViewState) {

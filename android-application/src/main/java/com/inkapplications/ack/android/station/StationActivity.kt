@@ -13,7 +13,6 @@ import com.inkapplications.android.extensions.ExtendedActivity
 import com.inkapplications.android.startActivity
 import dagger.hilt.android.AndroidEntryPoint
 import kimchi.Kimchi
-import javax.inject.Inject
 
 const val EXTRA_CALLSIGN = "aprs.station.extra.callsign"
 
@@ -22,9 +21,6 @@ const val EXTRA_CALLSIGN = "aprs.station.extra.callsign"
  */
 @AndroidEntryPoint
 class StationActivity: ExtendedActivity(), StationScreenController {
-    @Inject
-    lateinit var stationEvents: StationEvents
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         Kimchi.trackScreen("station")
