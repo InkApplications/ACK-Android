@@ -3,7 +3,11 @@ package com.inkapplications.ack.android.log
 import com.inkapplications.ack.android.locale.LocaleSettings
 import com.inkapplications.ack.android.log.details.LogDetailData
 import com.inkapplications.ack.android.log.index.LogIndexData
-import com.inkapplications.ack.android.map.*
+import com.inkapplications.ack.android.map.MarkerViewStateFactory
+import com.inkapplications.ack.android.maps.CameraPositionDefaults
+import com.inkapplications.ack.android.maps.MapCameraPosition
+import com.inkapplications.ack.android.maps.MapViewModel
+import com.inkapplications.ack.android.maps.ZoomLevels
 import com.inkapplications.ack.android.settings.SettingsReadAccess
 import com.inkapplications.ack.android.settings.observeBoolean
 import com.inkapplications.ack.android.station.StationSettings
@@ -51,13 +55,13 @@ class LogEvents @Inject constructor(
             }
     }
 
-    fun mapState(id: CaptureId): Flow<MapState> {
+    fun mapState(id: CaptureId): Flow<MapViewModel> {
         return packetStorage.findById(id)
             .filterNotNull()
             .map { packet ->
-                MapState(
+                MapViewModel(
                     markers = markerViewStateFactory.create(packet)?.let { listOf(it) }.orEmpty(),
-                    mapCameraPosition = (packet.parsed.data as? Mapable)?.coordinates
+                    cameraPosition = (packet.parsed.data as? Mapable)?.coordinates
                         ?.let { MapCameraPosition(it, ZoomLevels.ROADS) }
                         ?: CameraPositionDefaults.unknownLocation,
                 )

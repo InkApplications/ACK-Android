@@ -1,6 +1,7 @@
 package com.inkapplications.ack.android.map
 
 import com.inkapplications.ack.android.log.LogItemViewState
+import com.inkapplications.ack.android.maps.MapViewModel
 
 /**
  * Model the state of the entire map page.
@@ -9,9 +10,8 @@ import com.inkapplications.ack.android.log.LogItemViewState
  * separately.
  */
 data class MapViewState(
-    val markers: Collection<MarkerViewState> = emptyList(),
+    val mapViewModel: MapViewModel,
     val selectedItem: LogItemViewState? = null,
-    val trackPosition: Boolean = false,
 ) {
     val selectedItemVisible = selectedItem != null
 }

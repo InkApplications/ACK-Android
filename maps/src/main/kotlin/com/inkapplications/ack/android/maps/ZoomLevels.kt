@@ -1,4 +1,4 @@
-package com.inkapplications.ack.android.map
+package com.inkapplications.ack.android.maps
 
 /**
  * Shorthand for common zoom levels.

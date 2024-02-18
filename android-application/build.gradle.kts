@@ -21,7 +21,6 @@ android {
         minSdk = 21
         targetSdk = 34
         multiDexEnabled = true
-        buildConfigField("String", "MAPBOX_ACCESS_TOKEN", optionalStringProperty("mapboxPublic").buildQuote())
         buildConfigField("boolean", "USE_GOOGLE_SERVICES", useGoogleServices.toString())
         buildConfigField("String", "COMMIT", optionalStringProperty("commit").buildQuote())
         versionCode = intProperty("versionCode", 1)
@@ -61,6 +60,16 @@ android {
             isMinifyEnabled = true
             isShrinkResources = true
             proguardFiles(getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro")
+        }
+    }
+    flavorDimensions += "function"
+    productFlavors {
+        create("functional") {
+            isDefault = true
+            dimension = "function"
+        }
+        create("stub") {
+            dimension = "function"
         }
     }
     compileOptions {
@@ -108,8 +117,6 @@ dependencies {
 
     implementation(libs.google.material.core)
 
-    implementation(libs.mapbox.android.sdk)
-
     implementation(libs.bundles.dagger.libraries)
     kapt(libs.bundles.dagger.kapt)
 
@@ -126,6 +133,9 @@ dependencies {
 
     implementation(libs.firebase.config)
     implementation(libs.firebase.analytics)
+
+    implementation(projects.maps)
+    "functionalImplementation"(projects.mapbox)
 
     testImplementation(libs.junit)
     testImplementation(libs.coroutines.test)

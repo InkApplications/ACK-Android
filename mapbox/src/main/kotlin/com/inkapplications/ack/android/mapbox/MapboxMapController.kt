@@ -1,4 +1,4 @@
-package com.inkapplications.ack.android.map.mapbox
+package com.inkapplications.ack.android.mapbox
 
 import android.Manifest
 import android.annotation.SuppressLint
@@ -7,8 +7,7 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import androidx.annotation.RequiresPermission
 import com.google.gson.JsonObject
-import com.inkapplications.ack.android.R
-import com.inkapplications.ack.android.map.*
+import com.inkapplications.ack.android.maps.*
 import com.inkapplications.ack.data.CaptureId
 import com.inkapplications.android.continuePropagation
 import com.mapbox.geojson.Point
@@ -22,6 +21,7 @@ import com.mapbox.maps.plugin.annotation.generated.PointAnnotationOptions
 import com.mapbox.maps.plugin.annotation.generated.createPointAnnotationManager
 import com.mapbox.maps.plugin.attribution.attribution
 import com.mapbox.maps.plugin.gestures.addOnMapClickListener
+import com.mapbox.maps.plugin.gestures.gestures
 import com.mapbox.maps.plugin.locationcomponent.location
 import com.mapbox.maps.plugin.logo.logo
 import com.mapbox.maps.plugin.scalebar.scalebar
@@ -57,11 +57,13 @@ class MapboxMapController(
         map.addOnMapClickListener {
             continuePropagation { onSelect(null) }
         }
-        style.addImage(defaultMarkerId, BitmapFactory.decodeResource(resources, R.drawable.symbol_14))
+        style.addImage(defaultMarkerId, BitmapFactory.decodeResource(resources, R.drawable.default_marker))
     }
 
     override fun initDefaults() {
         view.scalebar.enabled = false
+        view.gestures.rotateEnabled = false
+        view.gestures.pitchEnabled = false
         setCamera(CameraPositionDefaults.unknownLocation)
         view.location.updateSettings {
             pulsingEnabled = true
@@ -122,6 +124,10 @@ class MapboxMapController(
     @SuppressLint("MissingPermission")
     override fun disablePositionTracking() {
         view.location.enabled = false
+    }
+
+    override fun setPanEnabled(boolean: Boolean) {
+        view.gestures.scrollEnabled = boolean
     }
 
     private fun createImage(image: Bitmap, style: Style): String {

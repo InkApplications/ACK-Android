@@ -1,6 +1,8 @@
 package com.inkapplications.ack.android.startup
 
+import android.app.Application
 import com.inkapplications.ack.android.capture.service.CaptureServiceNotifications
+import com.inkapplications.ack.android.maps.MapsImplementation
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
@@ -22,7 +24,11 @@ class StartupModule {
     fun initializers(
         captureService: CaptureServiceNotifications
     ): Set<ApplicationInitializer> = setOf(
-        MapboxInitializer,
+        object: ApplicationInitializer {
+            override suspend fun initialize(application: Application) {
+                MapsImplementation.initialize(application)
+            }
+        },
         KimchiInitializer,
         captureService,
     )

@@ -8,6 +8,8 @@ import androidx.compose.material.icons.filled.Storage
 import com.inkapplications.ack.android.R
 import com.inkapplications.ack.android.locale.format
 import com.inkapplications.ack.android.log.SummaryFactory
+import com.inkapplications.ack.android.maps.*
+import com.inkapplications.ack.data.CapturedPacket
 import com.inkapplications.ack.data.PacketOrigin
 import com.inkapplications.ack.structures.PacketData.TelemetryReport
 import com.inkapplications.ack.structures.PacketData.Weather
@@ -15,6 +17,7 @@ import com.inkapplications.ack.structures.capabilities.Commented
 import com.inkapplications.ack.structures.capabilities.Mapable
 import com.inkapplications.ack.structures.capabilities.Report
 import com.inkapplications.android.extensions.StringResources
+import com.inkapplications.android.extensions.ViewStateFactory
 import com.inkapplications.android.extensions.format.DateTimeFormatter
 import javax.inject.Inject
 
@@ -23,6 +26,7 @@ import javax.inject.Inject
  */
 class LogDetailsViewStateFactory @Inject constructor(
     private val summaryFactory: SummaryFactory,
+    private val markerViewStateFactory: ViewStateFactory<CapturedPacket, MarkerViewState?>,
     private val timeFormatter: DateTimeFormatter,
     private val stringResources: StringResources,
 ) {
@@ -35,6 +39,12 @@ class LogDetailsViewStateFactory @Inject constructor(
                 .let { stringResources.getString(R.string.log_details_received_format, it) },
             comment = (packetData as? Commented)?.comment,
             mapable = packetData is Mapable && packetData.coordinates != null,
+            mapViewState = MapViewModel(
+                markers = markerViewStateFactory.create(data.packet)?.let { listOf(it) }.orEmpty(),
+                cameraPosition = (data.packet.parsed.data as? Mapable)?.coordinates
+                    ?.let { MapCameraPosition(it, ZoomLevels.ROADS) }
+                    ?: CameraPositionDefaults.unknownLocation,
+            ),
             temperature = (packetData as? Weather)?.temperature?.format(data.metric),
             wind = (packetData as? Weather)?.let { summaryFactory.createWindSummary(it.windData, data.metric) },
             altitude = (packetData as? Report)?.altitude?.format(data.metric),

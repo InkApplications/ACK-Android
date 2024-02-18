@@ -2,6 +2,7 @@ package com.inkapplications.ack.android.capture
 
 import com.inkapplications.ack.android.connection.DriverSelection
 import com.inkapplications.ack.android.log.LogItemViewState
+import com.inkapplications.ack.data.CaptureId
 
 /**
  * Capture navigation and control panel options.
@@ -53,4 +54,9 @@ interface CaptureNavController {
      * Invoked when the user selects a new radio driver.
      */
     fun onDriverSelected(selection: DriverSelection)
+
+    /**
+     * Invoked when the user clicks an item on the map
+     */
+    fun onMapItemClick(captureId: CaptureId?)
 }

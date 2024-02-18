@@ -16,7 +16,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.inkapplications.ack.android.R
 import com.inkapplications.ack.android.log.AprsLogItem
-import com.inkapplications.ack.android.map.mapbox.MarkerMap
+import com.inkapplications.ack.android.map.MarkerMap
 import com.inkapplications.ack.android.ui.IconRow
 import com.inkapplications.ack.android.ui.NavigationRow
 import com.inkapplications.ack.android.ui.TelemetryTable
@@ -41,13 +41,13 @@ private fun StationDetails(
     Column(
         modifier = Modifier.verticalScroll(rememberScrollState()),
     ) {
-        if (viewState.insight.markers.isNotEmpty()) {
+        if (viewState.mapState.markers.isNotEmpty()) {
             Column {
                 Box {
                     MarkerMap(
-                        markers = viewState.insight.markers,
-                        cameraPosition = viewState.insight.mapCameraPosition,
+                        viewModel = viewState.mapState,
                         onMapItemClicked = controller::onMapItemClicked,
+                        interactive = false,
                         modifier = Modifier.aspectRatio(16f / 9f),
                     )
                     IconButton(

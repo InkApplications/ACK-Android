@@ -6,12 +6,14 @@ subprojects {
         mavenCentral()
         google()
         maven(url = "https://jitpack.io")
-        maven(url = "https://api.mapbox.com/downloads/v2/releases/maven") {
-            authentication {
-                create<BasicAuthentication>("basic")
+        if (!optionalStringProperty("mapboxPrivate").isNullOrBlank()) {
+            maven(url = "https://api.mapbox.com/downloads/v2/releases/maven") {
+                authentication {
+                    create<BasicAuthentication>("basic")
+                }
+                credentials.username = "mapbox"
+                credentials.password = stringProperty("mapboxPrivate", "")
             }
-            credentials.username = "mapbox"
-            credentials.password = stringProperty("mapboxPrivate", "")
         }
         mavenLocal()
     }

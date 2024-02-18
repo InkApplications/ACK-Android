@@ -2,8 +2,6 @@
 
 package com.inkapplications.ack.android.capture
 
-import android.content.Context
-import android.view.View
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -49,7 +47,6 @@ fun CaptureScreen(
     mapState: State<MapViewState>,
     logIndexController: LogIndexController,
     messagesScreenController: MessagesScreenController,
-    mapFactory: (Context) -> View,
     controller: CaptureNavController,
     insightsController: InsightsController,
     viewModel: CaptureViewModel = hiltViewModel(),
@@ -75,7 +72,6 @@ fun CaptureScreen(
                     mapState = mapState,
                     logIndexController = logIndexController,
                     messagesScreenController = messagesScreenController,
-                    mapFactory = mapFactory,
                     captureController = controller,
                     insightsController = insightsController,
                 )
@@ -382,7 +378,6 @@ private fun CaptureNavHost(
     mapState: State<MapViewState>,
     logIndexController: LogIndexController,
     messagesScreenController: MessagesScreenController,
-    mapFactory: (Context) -> View,
     captureController: CaptureNavController,
     insightsController: InsightsController,
 ) {
@@ -394,7 +389,7 @@ private fun CaptureNavHost(
         composable("map") {
             MapScreen(
                 state = mapState.value,
-                mapFactory = mapFactory,
+                onMapItemClick = captureController::onMapItemClick,
                 onLogItemClick = captureController::onLogMapItemClick,
                 onEnableLocation = captureController::onLocationEnableClick,
                 onDisableLocation = captureController::onLocationDisableClick,

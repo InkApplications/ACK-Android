@@ -1,8 +1,8 @@
 package com.inkapplications.ack.android.log.details
 
-import android.content.Context
-import android.view.View
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Card
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
@@ -14,9 +14,9 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.viewinterop.AndroidView
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.inkapplications.ack.android.R
+import com.inkapplications.ack.android.map.MarkerMap
 import com.inkapplications.ack.android.ui.IconRow
 import com.inkapplications.ack.android.ui.NavigationRow
 import com.inkapplications.ack.android.ui.TelemetryTable
@@ -29,13 +29,12 @@ import com.inkapplications.ack.android.ui.theme.AckTheme
 fun LogDetailsScreen(
     viewModel: LogDetailsViewModel = hiltViewModel(),
     controller: LogDetailsController,
-    mapViewFactory: (Context) -> View,
 ) {
     val viewState = viewModel.detailsState.collectAsState().value
 
     when (viewState) {
         is LogDetailsState.Initial -> {}
-        is LogDetailsState.Loaded -> Details(viewState, controller, mapViewFactory)
+        is LogDetailsState.Loaded -> Details(viewState, controller)
     }
 }
 
@@ -43,14 +42,17 @@ fun LogDetailsScreen(
 private fun Details(
     viewState: LogDetailsState.Loaded,
     controller: LogDetailsController,
-    mapViewFactory: (Context) -> View,
 ) {
-    Column {
+    Column(
+        modifier = Modifier.verticalScroll(rememberScrollState()),
+    ) {
         if (viewState.mapable) {
             Column {
                 Box {
-                    AndroidView(
-                        factory = mapViewFactory,
+                    MarkerMap(
+                        viewModel = viewState.mapViewState,
+                        onMapItemClicked = controller::onMapItemClicked,
+                        interactive = false,
                         modifier = Modifier.aspectRatio(16f / 9f),
                     )
                     IconButton(

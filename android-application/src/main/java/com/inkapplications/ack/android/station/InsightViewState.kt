@@ -1,8 +1,5 @@
 package com.inkapplications.ack.android.station
 
-import com.inkapplications.ack.android.map.CameraPositionDefaults
-import com.inkapplications.ack.android.map.MapCameraPosition
-import com.inkapplications.ack.android.map.MarkerViewState
 import com.inkapplications.ack.structures.TelemetryValues
 
 /**
@@ -10,8 +7,6 @@ import com.inkapplications.ack.structures.TelemetryValues
  */
 data class InsightViewState(
     val name: String = "",
-    val markers: List<MarkerViewState> = emptyList(),
-    val mapCameraPosition: MapCameraPosition = CameraPositionDefaults.unknownLocation,
     val comment: String? = null,
     val temperature: String? = null,
     val wind: String? = null,
