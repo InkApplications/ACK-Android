@@ -53,24 +53,24 @@ android {
 }
 
 dependencies {
-    api(kotlinLibraries.coroutines.core)
+    api(libs.coroutines.core)
 
     implementation(projects.androidExtensions)
 
-    api(inkLibraries.ack.codec)
-    api(inkLibraries.ack.client)
-    api(inkLibraries.ack.structures)
+    api(libs.ack.codec)
+    api(libs.ack.client)
+    api(libs.ack.structures)
 
-    api(inkLibraries.kimchi.logger)
+    api(libs.kimchi.logger)
 
-    implementation(inkLibraries.watermelon.coroutines)
-    implementation(inkLibraries.watermelon.standard)
-    implementation(inkLibraries.spondee.units)
+    implementation(libs.watermelon.coroutines)
+    implementation(libs.watermelon.standard)
+    implementation(libs.spondee.units)
 
-    implementation(thirdParty.bundles.sqldelight.android)
-    implementation(thirdParty.bundles.dagger.libraries)
-    kapt(thirdParty.bundles.dagger.kapt)
+    implementation(libs.bundles.sqldelight.android)
+    implementation(libs.bundles.dagger.libraries)
+    kapt(libs.bundles.dagger.kapt)
 
-    androidTestImplementation(androidLibraries.androidx.test.runner)
-    androidTestImplementation(androidLibraries.androidx.test.core)
+    androidTestImplementation(libs.androidx.test.runner)
+    androidTestImplementation(libs.androidx.test.core)
 }

@@ -35,6 +35,7 @@ class AfskDriver internal constructor(
     }
     override val incoming = MutableSharedFlow<CapturedPacket>()
     override val receivePermissions: Set<String> = when {
+//        Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU
         Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU -> setOf(Manifest.permission.RECORD_AUDIO, Manifest.permission.POST_NOTIFICATIONS)
         else -> setOf(Manifest.permission.RECORD_AUDIO)
     }
