@@ -1,11 +1,11 @@
 [versions]
 activity = "1.7.2"
-compose-compiler = "1.5.7"
+compose-compiler = "1.5.9"
 ack = "1.0.0"
 kimchi-core = "2.1.2"
 kimchi-firebase = "2.0.0"
 watermelon = "1.3.0"
-kotlin = "1.9.21"
+kotlin = "1.9.22"
 coroutines = "1.8.0"
 dagger = "2.46.1"
 sqldelight = "2.0.1"
