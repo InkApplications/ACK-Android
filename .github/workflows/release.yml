@@ -30,7 +30,7 @@ jobs:
                     ORG_GRADLE_PROJECT_mapboxPrivate: ${{ secrets.MAPBOX_KEY_PRIVATE }}
                     ORG_GRADLE_PROJECT_mapboxPublic: ${{ secrets.MAPBOX_KEY_PUBLIC }}
                 name: Build
-                run: ./gradlew check bundleRelease -Pcommit=${{ github.sha }} -PversionName=${{ github.ref_name }} -PversionCode=$((($GITHUB_RUN_NUMBER * 10) + $GITHUB_RUN_ATTEMPT))
+                run: ./gradlew check assembleRelease bundleRelease -Pcommit=${{ github.sha }} -PversionName=${{ github.ref_name }} -PversionCode=$((($GITHUB_RUN_NUMBER * 10) + $GITHUB_RUN_ATTEMPT))
             -
                 name: Prepare Uploads
                 run: |
