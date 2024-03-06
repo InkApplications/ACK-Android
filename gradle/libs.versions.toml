@@ -7,7 +7,7 @@ kimchi-firebase = "2.0.0"
 watermelon = "1.4.0"
 kotlin = "1.9.22"
 coroutines = "1.8.0"
-dagger = "2.46.1"
+dagger = "2.51"
 sqldelight = "2.0.1"
 
 ##
