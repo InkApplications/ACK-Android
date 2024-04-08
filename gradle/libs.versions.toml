@@ -8,7 +8,7 @@ watermelon = "1.5.0"
 kotlin = "1.9.22"
 coroutines = "1.8.0"
 dagger = "2.46.1"
-sqldelight = "2.0.1"
+sqldelight = "2.0.2"
 
 ##
 # Kotlin Dependencies
