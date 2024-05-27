@@ -2,7 +2,7 @@
 activity = "1.9.0"
 compose-compiler = "1.5.9"
 ack = "1.0.0"
-kimchi-core = "2.1.2"
+kimchi-core = "2.2.0"
 kimchi-firebase = "2.0.0"
 watermelon = "1.6.0"
 kotlin = "1.9.22"
