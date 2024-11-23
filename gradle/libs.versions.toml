@@ -1,5 +1,5 @@
 [versions]
-activity = "1.9.2"
+activity = "1.9.3"
 compose-compiler = "1.5.9"
 ack = "1.0.0"
 kimchi-core = "2.2.0"
