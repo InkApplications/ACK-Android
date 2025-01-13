@@ -33,14 +33,14 @@ jobs:
                     cp android-application/build/outputs/bundle/functionalRelease/android-application-functional-release.aab build/output/Ack-${{ github.sha }}.aab
             -
                 name: Archive APK
-                uses: actions/upload-artifact@v4.4.3
+                uses: actions/upload-artifact@v4.6.0
                 with:
                     name: Android APK
                     path: build/output/Ack-${{ github.sha }}.apk
                     retention-days: 15
             -
                 name: Archive Bundle
-                uses: actions/upload-artifact@v4.4.3
+                uses: actions/upload-artifact@v4.6.0
                 with:
                     name: Android AAB
                     path: build/output/Ack-${{ github.sha }}.aab
