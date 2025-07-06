@@ -2,7 +2,12 @@ package com.inkapplications.ack.android.capture
 
 import android.Manifest
 import android.content.Intent
+import android.content.pm.PackageManager
+import android.net.Uri
+import android.os.Build
+import android.provider.Settings
 import androidx.activity.compose.setContent
+import androidx.appcompat.app.AlertDialog
 import androidx.compose.runtime.collectAsState
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
@@ -125,6 +130,26 @@ class CaptureActivity: ExtendedActivity(), CaptureNavController, LogIndexControl
 
     override fun onConnectClick() {
         Kimchi.trackEvent("capture_connect")
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            val hasBackgroundLocation = checkSelfPermission(Manifest.permission.ACCESS_BACKGROUND_LOCATION) == PackageManager.PERMISSION_GRANTED
+
+            if (!hasBackgroundLocation) {
+                AlertDialog.Builder(this)
+                    .setTitle("Background Location Permission Required")
+                    .setMessage("To capture data in the background, this app needs access to your location even when the app is closed.\n\nPlease grant \"Allow all the time\" location permission in the application settings.")
+                    .setPositiveButton("Open Settings") { _, _ ->
+                        val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
+                            data = Uri.fromParts("package", packageName, null)
+                        }
+                        startActivity(intent)
+                    }
+                    .setNegativeButton("Cancel", null)
+                    .show()
+                return
+            }
+        }
+
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.CREATED) {
                 permissionGate.withPermissions(*captureEvents.getDriverConnectPermissions().toTypedArray()) {
