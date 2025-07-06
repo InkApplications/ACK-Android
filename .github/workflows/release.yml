@@ -16,6 +16,12 @@ jobs:
                     java-version: 17
                     distribution: oracle
             -
+                name: Add sdkmanager to PATH
+                run: echo "$ANDROID_HOME/cmdline-tools/latest/bin" >> $GITHUB_PATH
+            -
+                name: Install CMake
+                run: sdkmanager "cmake;4.0.2"
+            -
                 name: Keystore Setup
                 run: echo "${{secrets.ANDROID_KEYSTORE_64}}" | base64 --decode > ack_upload.keystore
             -
