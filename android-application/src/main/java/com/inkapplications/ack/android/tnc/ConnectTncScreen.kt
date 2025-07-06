@@ -33,6 +33,10 @@ fun DeviceList(
         is ConnectTncState.Discovering.Empty -> {
             Box(
                 modifier = Modifier.fillMaxSize()
+                    .padding(
+                        top = WindowInsets.statusBars.asPaddingValues().calculateTopPadding(),
+                        bottom = WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()
+                    ),
             ) {
                 DeviceHeader(controller::onCloseClick)
                 Column(

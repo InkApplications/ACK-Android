@@ -55,13 +55,21 @@ private fun Details(
                         interactive = false,
                         modifier = Modifier.aspectRatio(16f / 9f),
                     )
-                    IconButton(
-                        onClick = controller::onBackPressed
+                    Box(
+                        modifier = Modifier
+                            .padding(top = WindowInsets.statusBars.asPaddingValues().calculateTopPadding())
                     ) {
-                        Icon(Icons.Default.ArrowBack, stringResource(R.string.navigate_up))
+                        IconButton(
+                            onClick = controller::onBackPressed
+                        ) {
+                            Icon(Icons.Default.ArrowBack, stringResource(R.string.navigate_up))
+                        }
                     }
                 }
-                Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.padding(top = AckTheme.spacing.gutter)) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier.padding(top = AckTheme.spacing.gutter)
+                ) {
                     Text(
                         viewState.name,
                         style = AckTheme.typography.h1,
@@ -78,11 +86,15 @@ private fun Details(
             }
         } else {
             Box(
-                Modifier.padding(
-                    start = AckTheme.spacing.gutter,
-                    top = AckTheme.spacing.gutter,
-                    end = AckTheme.spacing.gutter,
-                )
+                Modifier
+                    .padding(
+                        top = WindowInsets.statusBars.asPaddingValues().calculateTopPadding(),
+                    )
+                    .padding(
+                        start = AckTheme.spacing.gutter,
+                        top = AckTheme.spacing.gutter,
+                        end = AckTheme.spacing.gutter,
+                    )
             ) {
                 NavigationRow(
                     title = {
@@ -104,12 +116,16 @@ private fun Details(
             }
         }
         Column(
-            modifier = Modifier.padding(
-                top = AckTheme.spacing.content,
-                start = AckTheme.spacing.gutter,
-                end = AckTheme.spacing.gutter,
-                bottom = AckTheme.spacing.gutter,
-            ),
+            modifier = Modifier
+                .padding(
+                    bottom = WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()
+                )
+                .padding(
+                    top = AckTheme.spacing.content,
+                    start = AckTheme.spacing.gutter,
+                    end = AckTheme.spacing.gutter,
+                    bottom = AckTheme.spacing.gutter,
+                ),
         ) {
             IconRow(
                 icon = viewState.receiveIcon,
