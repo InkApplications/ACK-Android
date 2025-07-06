@@ -38,14 +38,7 @@ class LicensePromptValidator @Inject constructor(
             }
             data == null -> null
             converted != actual -> stringResources.getString(R.string.connection_setting_passcode_incorrect)
-            else -> stringResources.getString(R.string.unknown_error).also {
-                logger.debug("Field Validation: $fieldValidation")
-                logger.debug("Converted: $converted")
-                logger.debug("Input Validation: $inputValidation")
-                logger.debug("Data: $data")
-                logger.debug("Actual: $actual")
-                logger.error("Unexpected error validating passcode.")
-            }
+            else -> null
         }
     }
 
