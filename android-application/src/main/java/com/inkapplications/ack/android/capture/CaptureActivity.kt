@@ -12,6 +12,7 @@ import com.inkapplications.ack.android.capture.messages.conversation.startConver
 import com.inkapplications.ack.android.capture.messages.create.CreateConversationActivity
 import com.inkapplications.ack.android.capture.messages.index.MessagesScreenController
 import com.inkapplications.ack.android.capture.service.BackgroundCaptureService
+import com.inkapplications.ack.android.capture.service.BackgroundCaptureServiceAudio
 import com.inkapplications.ack.android.connection.DriverSelection
 import com.inkapplications.ack.android.log.LogItemViewState
 import com.inkapplications.ack.android.log.details.startLogInspectActivity
@@ -52,6 +53,7 @@ class CaptureActivity: ExtendedActivity(), CaptureNavController, LogIndexControl
 
     private val permissionGate = PermissionGate(this)
     private val backgroundCaptureServiceIntent by lazy { Intent(this, BackgroundCaptureService::class.java) }
+    private val backgroundCaptureAudioServiceIntent by lazy { Intent(this, BackgroundCaptureServiceAudio::class.java) }
 
     override fun onCreate() {
         super.onCreate()
@@ -127,10 +129,16 @@ class CaptureActivity: ExtendedActivity(), CaptureNavController, LogIndexControl
             repeatOnLifecycle(Lifecycle.State.CREATED) {
                 permissionGate.withPermissions(*captureEvents.getDriverConnectPermissions().toTypedArray()) {
                     lifecycleScope.launch {
-                        if (captureEvents.driverSelection.first() == DriverSelection.Tnc) {
-                            startConnectTncActivity(backgroundCaptureServiceIntent)
-                        } else {
-                            startService(backgroundCaptureServiceIntent)
+                        when (captureEvents.driverSelection.first()) {
+                            DriverSelection.Tnc -> {
+                                startConnectTncActivity(backgroundCaptureServiceIntent)
+                            }
+                            DriverSelection.Audio -> {
+                                startForegroundService(backgroundCaptureAudioServiceIntent)
+                            }
+                            else -> {
+                                startForegroundService(backgroundCaptureServiceIntent)
+                            }
                         }
                     }
                 }

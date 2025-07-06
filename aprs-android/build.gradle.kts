@@ -15,7 +15,7 @@ sqldelight {
 
 android {
     namespace = "com.inkapplications.ack.data"
-    compileSdk = 33
+    compileSdk = 34
     ndkVersion = "21.3.6528147"
 
     defaultConfig {

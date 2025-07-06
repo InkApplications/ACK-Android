@@ -14,7 +14,7 @@ import javax.inject.Inject
  * Service that runs in the background to collect and transmit packets.
  */
 @AndroidEntryPoint
-class BackgroundCaptureService: Service() {
+open class BackgroundCaptureService: Service() {
     private lateinit var runScope: CoroutineScope
 
     @Inject
@@ -51,3 +51,5 @@ class BackgroundCaptureService: Service() {
         super.onDestroy()
     }
 }
+
+class BackgroundCaptureServiceAudio: BackgroundCaptureService()
