@@ -42,8 +42,8 @@ jobs:
                 run: |
                     mkdir -p build
                     mkdir -p build/output
-                    cp android-application/build/outputs/apk/functional/release/android-application-functional-release.apk build/output/Ack-${{ github.sha }}.apk
-                    cp android-application/build/outputs/bundle/functionalRelease/android-application-functional-release.aab build/output/Ack-${{ github.sha }}.aab
+                    cp android-application/build/outputs/apk/functional/release/android-application-functional-release.apk build/output/Ack-${{ github.ref_name }}.apk
+                    cp android-application/build/outputs/bundle/functionalRelease/android-application-functional-release.aab build/output/Ack-${{ github.ref_name }}.aab
             -
                 name: Archive APK
                 uses: actions/upload-artifact@v4.6.2
