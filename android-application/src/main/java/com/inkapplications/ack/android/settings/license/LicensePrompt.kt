@@ -20,7 +20,12 @@ fun LicensePromptScreen(
     onContinue: (LicensePromptFieldValues) -> Unit,
 ) = AckScreen {
     Column (
-        modifier = Modifier.padding(AckTheme.spacing.gutter),
+        modifier = Modifier
+            .padding(
+                top = WindowInsets.statusBars.asPaddingValues().calculateTopPadding(),
+                bottom = WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()
+            )
+            .padding(AckTheme.spacing.gutter),
     ) {
         Text(
             "License Info",

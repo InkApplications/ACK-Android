@@ -32,11 +32,21 @@ class InternetDriver internal constructor(
     override val connectionState: Flow<DriverConnectionState> = clientConnectionState
     override val incoming = MutableSharedFlow<CapturedPacket>()
     override val receivePermissions: Set<String> =  when {
-        Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU -> setOf(Manifest.permission.POST_NOTIFICATIONS, Manifest.permission.ACCESS_FINE_LOCATION)
+        Build.VERSION.SDK_INT >= 34 -> setOf(
+            Manifest.permission.POST_NOTIFICATIONS,
+            Manifest.permission.ACCESS_FINE_LOCATION,
+            Manifest.permission.FOREGROUND_SERVICE_LOCATION,
+        )
+        Build.VERSION.SDK_INT >= 33 -> setOf(
+            Manifest.permission.POST_NOTIFICATIONS,
+            Manifest.permission.ACCESS_FINE_LOCATION,
+        )
         else -> setOf(Manifest.permission.ACCESS_FINE_LOCATION)
     }
     override val transmitPermissions: Set<String> = when {
-        Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU -> setOf(Manifest.permission.POST_NOTIFICATIONS)
+        Build.VERSION.SDK_INT >= 33 -> setOf(
+            Manifest.permission.POST_NOTIFICATIONS,
+        )
         else -> emptySet()
     }
     private val transmitQueue = MutableSharedFlow<String>(extraBufferCapacity = 1, onBufferOverflow = BufferOverflow.DROP_OLDEST)

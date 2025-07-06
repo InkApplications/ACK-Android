@@ -35,12 +35,24 @@ class AfskDriver internal constructor(
     }
     override val incoming = MutableSharedFlow<CapturedPacket>()
     override val receivePermissions: Set<String> = when {
-//        Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU
-        Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU -> setOf(Manifest.permission.RECORD_AUDIO, Manifest.permission.POST_NOTIFICATIONS)
+        Build.VERSION.SDK_INT >= 34 -> setOf(
+            Manifest.permission.RECORD_AUDIO,
+            Manifest.permission.FOREGROUND_SERVICE_MICROPHONE,
+            // TODO: This could be simplified/removed if we create separate services for transmit and receive.
+            // Leaving for now, since all the other drivers require it anyway.
+            Manifest.permission.FOREGROUND_SERVICE_LOCATION,
+            Manifest.permission.POST_NOTIFICATIONS,
+        )
+        Build.VERSION.SDK_INT >= 33 -> setOf(
+            Manifest.permission.RECORD_AUDIO,
+            Manifest.permission.POST_NOTIFICATIONS,
+        )
         else -> setOf(Manifest.permission.RECORD_AUDIO)
     }
     override val transmitPermissions: Set<String> = when {
-        Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU -> setOf(Manifest.permission.POST_NOTIFICATIONS)
+        Build.VERSION.SDK_INT >= 33 -> setOf(
+            Manifest.permission.POST_NOTIFICATIONS
+        )
         else -> emptySet()
     }
     override val volume = audioProcessor.volume

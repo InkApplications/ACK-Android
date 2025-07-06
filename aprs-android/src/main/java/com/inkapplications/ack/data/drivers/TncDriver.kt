@@ -49,11 +49,31 @@ class TncDriver internal constructor(
         }
     }
     override val receivePermissions: Set<String> = when {
-        Build.VERSION.SDK_INT > Build.VERSION_CODES.S -> setOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.BLUETOOTH_CONNECT, Manifest.permission.BLUETOOTH_SCAN)
+        Build.VERSION.SDK_INT >= 34 -> setOf(
+            Manifest.permission.ACCESS_FINE_LOCATION,
+            Manifest.permission.FOREGROUND_SERVICE_LOCATION,
+            Manifest.permission.BLUETOOTH_CONNECT,
+            Manifest.permission.BLUETOOTH_SCAN,
+        )
+        Build.VERSION.SDK_INT > 31 -> setOf(
+            Manifest.permission.ACCESS_FINE_LOCATION,
+            Manifest.permission.BLUETOOTH_CONNECT,
+            Manifest.permission.BLUETOOTH_SCAN,
+        )
         else -> setOf(Manifest.permission.ACCESS_FINE_LOCATION)
     }
     override val transmitPermissions: Set<String> = when {
-        Build.VERSION.SDK_INT > Build.VERSION_CODES.S -> setOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.BLUETOOTH_CONNECT, Manifest.permission.BLUETOOTH_SCAN)
+        Build.VERSION.SDK_INT >= 34 -> setOf(
+            Manifest.permission.ACCESS_FINE_LOCATION,
+            Manifest.permission.FOREGROUND_SERVICE_LOCATION,
+            Manifest.permission.BLUETOOTH_CONNECT,
+            Manifest.permission.BLUETOOTH_SCAN
+        )
+        Build.VERSION.SDK_INT > 31 -> setOf(
+            Manifest.permission.ACCESS_FINE_LOCATION,
+            Manifest.permission.BLUETOOTH_CONNECT,
+            Manifest.permission.BLUETOOTH_SCAN
+        )
         else -> setOf(Manifest.permission.ACCESS_FINE_LOCATION)
     }
     private val outputStream = MutableStateFlow<OutputStream?>(null)

@@ -15,11 +15,11 @@ if (useGoogleServices) {
 }
 
 android {
-    compileSdk = 34
+    compileSdk = 35
     namespace = "com.inkapplications.ack.android"
     defaultConfig {
         minSdk = 21
-        targetSdk = 34
+        targetSdk = 35
         multiDexEnabled = true
         buildConfigField("boolean", "USE_GOOGLE_SERVICES", useGoogleServices.toString())
         buildConfigField("String", "COMMIT", optionalStringProperty("commit").buildQuote())

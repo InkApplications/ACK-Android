@@ -62,6 +62,7 @@ fun CaptureScreen(
     ) {
         Column {
             Scaffold(
+                modifier = Modifier.windowInsetsPadding(WindowInsets.navigationBars),
                 bottomBar = { CaptureBottomBar(navController) },
                 floatingActionButton = { CaptureSettingsFab(settingsSheetState) },
                 isFloatingActionButtonDocked = true,
@@ -197,7 +198,10 @@ private fun CaptureSettingsSheet(
     controlPanelState: ControlPanelState,
     captureController: CaptureNavController,
     settingsSheetState: BottomSheetScaffoldState,
-) = Column(horizontalAlignment = Alignment.CenterHorizontally) {
+) = Column(
+    horizontalAlignment = Alignment.CenterHorizontally,
+    modifier = Modifier.windowInsetsPadding(WindowInsets.navigationBars),
+) {
     val scope = rememberCoroutineScope()
     BackHandler(enabled = settingsSheetState.bottomSheetState.isExpanded) {
         scope.launch { settingsSheetState.bottomSheetState.collapse() }

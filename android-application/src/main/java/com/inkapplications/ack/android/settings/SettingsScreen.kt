@@ -27,7 +27,13 @@ fun SettingsScreen(
     controller: SettingsController,
 ) = AckScreen {
     Column(
-        modifier = Modifier.verticalScroll(rememberScrollState()),
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(
+                top = WindowInsets.statusBars.asPaddingValues().calculateTopPadding(),
+                bottom = WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()
+            )
+            .verticalScroll(rememberScrollState()),
     ) {
         NavigationRow(
             title = stringResource(R.string.settings_title),

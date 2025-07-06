@@ -37,7 +37,7 @@ class AndroidSymbolFactory @Inject constructor(
     }
 
     private fun Bitmap.withOverlay(other: Bitmap): Bitmap {
-        val bmOverlay = Bitmap.createBitmap(width, height, config)
+        val bmOverlay = Bitmap.createBitmap(width, height, config ?: Bitmap.Config.ARGB_8888)
         val canvas = Canvas(bmOverlay)
         canvas.drawBitmap(this, Matrix(), null)
         canvas.drawBitmap(other, 0f, 0f, null)

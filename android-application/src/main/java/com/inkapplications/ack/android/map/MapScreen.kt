@@ -1,9 +1,6 @@
 package com.inkapplications.ack.android.map
 
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.material.FloatingActionButton
 import androidx.compose.material.Icon
 import androidx.compose.material.contentColorFor
@@ -40,7 +37,11 @@ fun MapScreen(
     )
     val logState = state.selectedItem
     if (state.selectedItemVisible && logState != null) {
-        Row (modifier = Modifier.padding(top = AckTheme.spacing.gutter)) {
+        Row (
+            modifier = Modifier
+                .padding(top = WindowInsets.statusBars.asPaddingValues().calculateTopPadding())
+                .padding(top = AckTheme.spacing.gutter)
+        ) {
             AprsLogItem(
                 log = logState,
                 onClick = onLogItemClick,
