@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <style name="AckActionBarTheme.Compat">
-        <item name="colorAccent">@android:color/system_accent1_400</item>
-        <item name="colorSecondary">@android:color/system_accent1_400</item>
-    </style>
-</resources>
