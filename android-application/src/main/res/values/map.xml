@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <string name="map_settings_category">Map Settings</string>
-    <string name="map_settings_pins_title">Number of Pins to display</string>
-    <string name="map_location_tracking_stop_action">Disable my location</string>
-    <string name="map_location_tracking_start_action">Center on my location</string>
-</resources>
